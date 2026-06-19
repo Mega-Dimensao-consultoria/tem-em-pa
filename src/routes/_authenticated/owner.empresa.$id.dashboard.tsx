@@ -8,6 +8,7 @@ import { Eye, MessageCircle, Phone, Globe, MapPin, Star, ArrowLeft, ArrowUp, Arr
 import { RatingStars } from "@/components/RatingStars";
 import { OwnerReplyForm } from "@/components/OwnerReplyForm";
 import { ProfileCompleteness } from "@/components/ProfileCompleteness";
+import { QrCodeCard } from "@/components/QrCodeCard";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — Tem em P.A" }] }),

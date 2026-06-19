@@ -41,12 +41,14 @@ function DashboardPage() {
 
   const isOwner = !!user && !!company && company.owner_id === user.id;
 
+  // Período de análise (dias). Sempre buscamos 2x o período para comparar com o anterior.
+  const [periodDays, setPeriodDays] = useState<7 | 30 | 90>(30);
+
   const { data: events = [] } = useQuery({
-    queryKey: ["company-events", id],
+    queryKey: ["company-events", id, periodDays],
     enabled: isOwner,
     queryFn: async () => {
-      // pull last 60 days so we can compare 30d vs prior 30d
-      const since = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString();
+      const since = new Date(Date.now() - periodDays * 2 * 24 * 60 * 60 * 1000).toISOString();
       const { data, error } = await supabase
         .from("company_events")
         .select("event_type, created_at")

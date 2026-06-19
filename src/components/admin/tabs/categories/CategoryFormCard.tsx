@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { slugify } from "../admin-ui";
+import { slugify } from "../../admin-ui";
 import { useSaveCategory } from "@/lib/admin/categories";
 
 export type EditingCategory = {

@@ -1,6 +1,8 @@
 import { Facebook, Globe, Instagram, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { trackEvent } from "@/lib/track";
 
+type ClickEvent = "whatsapp_click" | "phone_click" | "website_click" | "maps_click";
+
 type Company = {
   id: string;
   phone?: string | null;
@@ -20,7 +22,7 @@ export function CompanyContactCard({
   fullAddress: string;
   isPending: boolean;
 }) {
-  const track = (type: string) => {
+  const track = (type: ClickEvent) => {
     if (!isPending) trackEvent(company.id, type);
   };
   return (

@@ -98,7 +98,7 @@ function SearchPage() {
   const approved = data.filter((c) => c.status === "approved");
   const activeCat = categories.find((c) => c.slug === cat);
 
-  function updateSearch(patch: Partial<{ q?: string; cat?: string; sort?: "recent" | "name" | "distance" }>) {
+  function updateSearch(patch: Partial<z.infer<typeof searchSchema>>) {
     navigate({ to: "/buscar", search: (prev: z.infer<typeof searchSchema>) => ({ ...prev, ...patch }) });
   }
 

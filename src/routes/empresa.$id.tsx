@@ -5,19 +5,20 @@ import { PageShell } from "@/components/PageShell";
 import { RatingStars } from "@/components/RatingStars";
 import { getCompanyById } from "@/lib/companies.functions";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Globe, Mail, MessageCircle, Clock, Pencil, Instagram, Facebook } from "lucide-react";
+import { Clock, Pencil } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import { ReviewForm } from "@/components/ReviewForm";
 import { ClaimDialog } from "@/components/ClaimDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { CompanyMap } from "@/components/CompanyMap";
 import { trackEvent } from "@/lib/track";
 import { FavoriteButton } from "@/components/FavoriteButton";
-import { isOpenNow } from "@/lib/hours";
 import { ShareButton } from "@/components/ShareButton";
-import { ReportReviewDialog } from "@/components/ReportReviewDialog";
 import { SimilarCompanies } from "@/components/SimilarCompanies";
-import { Breadcrumbs, breadcrumbJsonLd } from "@/components/Breadcrumbs";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { HoursBlock } from "@/components/company/HoursBlock";
+import { CompanyContactCard } from "@/components/company/CompanyContactCard";
+import { CompanyReviewsSection } from "@/components/company/CompanyReviewsSection";
+import { buildCompanyHead } from "@/components/company/buildCompanyHead";
 
 type CompanyData = NonNullable<Awaited<ReturnType<typeof getCompanyById>>>;
 
@@ -41,103 +42,41 @@ const privateQo = (id: string) =>
       if (error) throw new Error(error.message);
       if (!company) return null;
       const [products, reviews] = await Promise.all([
-        supabase.from("products").select("id, name, description, price, image_url_1, image_url_2").eq("company_id", id).eq("is_active", true),
-        supabase.from("reviews").select("id, rating, comment, created_at, owner_reply, owner_reply_at").eq("company_id", id).eq("status", "approved").order("created_at", { ascending: false }).limit(50),
+        supabase
+          .from("products")
+          .select("id, name, description, price, image_url_1, image_url_2")
+          .eq("company_id", id)
+          .eq("is_active", true),
+        supabase
+          .from("reviews")
+          .select("id, rating, comment, created_at, owner_reply, owner_reply_at")
+          .eq("company_id", id)
+          .eq("status", "approved")
+          .order("created_at", { ascending: false })
+          .limit(50),
       ]);
-      return { ...(company as unknown as CompanyData), products: products.data ?? [], reviews: reviews.data ?? [] } as CompanyData;
+      return {
+        ...(company as unknown as CompanyData),
+        products: products.data ?? [],
+        reviews: reviews.data ?? [],
+      } as CompanyData;
     },
   });
 
 export const Route = createFileRoute("/empresa/$id")({
   loader: ({ context, params }) => context.queryClient.ensureQueryData(publicQo(params.id)),
-  head: ({ loaderData, params }) => {
-    const url = `https://tem-em-pa.lovable.app/empresa/${params.id}`;
-    const name = loaderData?.name ?? "Empresa";
-    const desc = loaderData?.description ?? "Empresa em Pouso Alegre/MG";
-    const img = loaderData?.cover_url ?? loaderData?.logo_url ?? undefined;
-    const reviews = loaderData?.reviews ?? [];
-    const ratingCount = reviews.length;
-    const ratingValue =
-      ratingCount > 0
-        ? Number((reviews.reduce((s: number, r: any) => s + r.rating, 0) / ratingCount).toFixed(2))
-        : 0;
-
-    // openingHoursSpecification (Schema.org)
-    const DAY_MAP = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const hoursArr = Array.isArray((loaderData as any)?.hours) ? ((loaderData as any).hours as any[]) : [];
-    const openingHoursSpecification = hoursArr
-      .filter((r) => r && !r.closed && r.open && r.close && typeof r.day === "number")
-      .map((r) => ({
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: DAY_MAP[r.day],
-        opens: r.open,
-        closes: r.close,
-      }));
-
-    const ld: Record<string, unknown> = {
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      name,
-      description: desc,
-      url,
-      ...(img ? { image: img } : {}),
-      ...(loaderData?.phone ? { telephone: loaderData.phone } : {}),
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: loaderData?.address ?? undefined,
-        addressLocality: "Pouso Alegre",
-        addressRegion: "MG",
-        addressCountry: "BR",
-      },
-      ...(loaderData?.lat && loaderData?.lng
-        ? { geo: { "@type": "GeoCoordinates", latitude: loaderData.lat, longitude: loaderData.lng } }
-        : {}),
-      ...(ratingCount > 0
-        ? {
-            aggregateRating: {
-              "@type": "AggregateRating",
-              ratingValue,
-              reviewCount: ratingCount,
-              bestRating: 5,
-              worstRating: 1,
-            },
-          }
-        : {}),
-      ...(openingHoursSpecification.length > 0 ? { openingHoursSpecification } : {}),
-    };
-    const catName = (loaderData as any)?.categories?.name as string | undefined;
-    const catSlug = (loaderData as any)?.categories?.slug as string | undefined;
-    const crumbLd = breadcrumbJsonLd("https://tem-em-pa.lovable.app", [
-      ...(catName && catSlug
-        ? [{ label: catName, path: `/categoria/${catSlug}` }]
-        : [{ label: "Empresas", path: "/buscar" }]),
-      { label: name, path: `/empresa/${params.id}` },
-    ]);
-    return {
-      meta: [
-        { title: `${name} — Tem em P.A` },
-        { name: "description", content: desc },
-        { property: "og:title", content: `${name} — Tem em P.A` },
-        { property: "og:description", content: desc },
-        { property: "og:url", content: url },
-        { property: "og:type", content: "business.business" },
-        ...(img ? [{ property: "og:image", content: img }, { name: "twitter:image", content: img }] : []),
-      ],
-      links: [{ rel: "canonical", href: url }],
-      scripts: [
-        { type: "application/ld+json", children: JSON.stringify(ld) },
-        { type: "application/ld+json", children: JSON.stringify(crumbLd) },
-      ],
-    };
-  },
-
+  head: ({ loaderData, params }) => buildCompanyHead(loaderData, params.id),
   component: CompanyPage,
   notFoundComponent: () => (
     <PageShell>
       <div className="mx-auto max-w-xl px-4 py-20 text-center">
         <h1 className="font-display text-2xl font-bold">Empresa não encontrada</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Esta empresa não existe ou ainda não foi aprovada.</p>
-        <Button asChild className="mt-6"><Link to="/">Voltar para a home</Link></Button>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Esta empresa não existe ou ainda não foi aprovada.
+        </p>
+        <Button asChild className="mt-6">
+          <Link to="/">Voltar para a home</Link>
+        </Button>
       </div>
     </PageShell>
   ),
@@ -169,11 +108,12 @@ function CompanyPage() {
     if (!publicCompany && (authLoading || (user && privateLoading))) {
       return (
         <PageShell>
-          <div className="mx-auto max-w-xl px-4 py-20 text-center text-sm text-muted-foreground">Carregando…</div>
+          <div className="mx-auto max-w-xl px-4 py-20 text-center text-sm text-muted-foreground">
+            Carregando…
+          </div>
         </PageShell>
       );
     }
-    // Either not logged in, or logged in but no access → throw notFound
     throw notFound();
   }
 
@@ -184,16 +124,23 @@ function CompanyPage() {
   const isOwner = !!user && company.owner_id === user.id;
   const isPending = company.status !== "approved";
   const canClaim = !company.owner_id && !isPending;
-  const fullAddress = [company.address, company.number, company.neighborhood, company.city, company.state]
-    .filter(Boolean).join(", ");
+  const fullAddress = [
+    company.address,
+    company.number,
+    company.neighborhood,
+    company.city,
+    company.state,
+  ]
+    .filter(Boolean)
+    .join(", ");
 
-  // Track a view (deduped per session) for approved, non-owner visits
   useEffect(() => {
     if (!isPending && !isOwner && publicCompany) {
       trackEvent(publicCompany.id, "view");
     }
   }, [isPending, isOwner, publicCompany]);
   const mapsQuery = encodeURIComponent(fullAddress || company.name);
+  const gallery = ((company as any).gallery_urls as string[] | null) ?? [];
 
   return (
     <PageShell>
@@ -206,7 +153,10 @@ function CompanyPage() {
             </p>
             {isOwner ? (
               <Button asChild size="sm" variant="outline" className="shrink-0">
-                <Link to="/owner/empresa/$id/produtos" params={{ id: company.id }}><Pencil className="mr-1 h-3 w-3" />Gerenciar</Link>
+                <Link to="/owner/empresa/$id/produtos" params={{ id: company.id }}>
+                  <Pencil className="mr-1 h-3 w-3" />
+                  Gerenciar
+                </Link>
               </Button>
             ) : null}
           </div>
@@ -227,12 +177,18 @@ function CompanyPage() {
           <Breadcrumbs
             items={[
               ...(company.categories?.name
-                ? [{ label: company.categories.name, to: `/categoria/${(company.categories as any).slug}` }]
+                ? [
+                    {
+                      label: company.categories.name,
+                      to: `/categoria/${(company.categories as any).slug}`,
+                    },
+                  ]
                 : [{ label: "Empresas", to: "/buscar" }]),
               { label: company.name },
             ]}
           />
         </div>
+
         {/* Header */}
         <div className="-mt-12 flex flex-col gap-4 rounded-3xl border border-border bg-card p-6 shadow-soft md:flex-row md:items-end">
           <div className="h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-border bg-background">
@@ -253,7 +209,9 @@ function CompanyPage() {
             <h1 className="font-display text-2xl font-bold md:text-3xl">{company.name}</h1>
             <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
               <RatingStars value={avg} />
-              <span>{avg > 0 ? avg.toFixed(1) : "Sem avaliações"} · {company.reviews.length} avaliação(ões)</span>
+              <span>
+                {avg > 0 ? avg.toFixed(1) : "Sem avaliações"} · {company.reviews.length} avaliação(ões)
+              </span>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -261,7 +219,9 @@ function CompanyPage() {
             {!isPending ? (
               <ShareButton
                 title={company.name}
-                text={company.description?.slice(0, 140) ?? `Conheça ${company.name} no Tem em P.A`}
+                text={
+                  company.description?.slice(0, 140) ?? `Conheça ${company.name} no Tem em P.A`
+                }
               />
             ) : null}
             {canClaim && user ? (
@@ -274,24 +234,36 @@ function CompanyPage() {
           </div>
         </div>
 
-
         {/* Conteúdo */}
         <div className="mt-8 grid gap-8 md:grid-cols-3">
           <div className="space-y-6 md:col-span-2">
             {company.description ? (
               <section>
                 <h2 className="mb-2 font-display text-lg font-semibold">Sobre</h2>
-                <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">{company.description}</p>
+                <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                  {company.description}
+                </p>
               </section>
             ) : null}
 
-            {Array.isArray((company as any).gallery_urls) && (company as any).gallery_urls.length > 0 ? (
+            {gallery.length > 0 ? (
               <section>
                 <h2 className="mb-3 font-display text-lg font-semibold">Galeria</h2>
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                  {((company as any).gallery_urls as string[]).map((url, i) => (
-                    <a key={url + i} href={url} target="_blank" rel="noreferrer" className="group relative aspect-square overflow-hidden rounded-xl border border-border">
-                      <img src={url} alt={`Foto ${i + 1}`} className="h-full w-full object-cover transition group-hover:scale-105" loading="lazy" />
+                  {gallery.map((url, i) => (
+                    <a
+                      key={url + i}
+                      href={url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="group relative aspect-square overflow-hidden rounded-xl border border-border"
+                    >
+                      <img
+                        src={url}
+                        alt={`Foto ${i + 1}`}
+                        className="h-full w-full object-cover transition group-hover:scale-105"
+                        loading="lazy"
+                      />
                     </a>
                   ))}
                 </div>
@@ -307,16 +279,31 @@ function CompanyPage() {
               ) : (
                 <div className="grid gap-3 sm:grid-cols-2">
                   {company.products.map((p) => (
-                    <article key={p.id} className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
-                      {p.image_url_1 ? <img src={p.image_url_1} alt={p.name} className="aspect-video w-full object-cover" loading="lazy" /> : null}
+                    <article
+                      key={p.id}
+                      className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft"
+                    >
+                      {p.image_url_1 ? (
+                        <img
+                          src={p.image_url_1}
+                          alt={p.name}
+                          className="aspect-video w-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : null}
                       <div className="p-3">
                         <h3 className="font-semibold">{p.name}</h3>
                         {p.price != null ? (
                           <p className="text-sm font-bold text-primary">
-                            {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(p.price))}
+                            {new Intl.NumberFormat("pt-BR", {
+                              style: "currency",
+                              currency: "BRL",
+                            }).format(Number(p.price))}
                           </p>
                         ) : null}
-                        {p.description ? <p className="mt-1 text-xs text-muted-foreground">{p.description}</p> : null}
+                        {p.description ? (
+                          <p className="mt-1 text-xs text-muted-foreground">{p.description}</p>
+                        ) : null}
                       </div>
                     </article>
                   ))}
@@ -325,71 +312,24 @@ function CompanyPage() {
             </section>
 
             {!isPending ? (
-              <section>
-                <h2 className="mb-3 font-display text-lg font-semibold">Avaliações</h2>
-                {user ? (
-                  <div className="mb-4">
-                    <ReviewForm
-                      companyId={company.id}
-                      userId={user.id}
-                      onSubmitted={() => qc.invalidateQueries({ queryKey: ["company-public", id] })}
-                    />
-                  </div>
-                ) : (
-                  <div className="mb-4 rounded-2xl border border-border bg-card p-4 text-sm shadow-soft">
-                    <Link to="/auth" className="font-semibold text-primary hover:underline">Entre</Link>{" "}para deixar sua avaliação.
-                  </div>
-                )}
-                {company.reviews.length === 0 ? (
-                  <div className="rounded-2xl border border-dashed border-border bg-card/50 p-6 text-center text-sm text-muted-foreground">
-                    Seja o primeiro a avaliar esta empresa.
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {company.reviews.map((r) => (
-                      <article key={r.id} className="rounded-2xl border border-border bg-card p-4 shadow-soft">
-                        <div className="flex items-center gap-2">
-                          <RatingStars value={r.rating} />
-                          <span className="text-xs text-muted-foreground">
-                            {new Date(r.created_at).toLocaleDateString("pt-BR")}
-                          </span>
-                        </div>
-                        {r.comment ? <p className="mt-2 text-sm">{r.comment}</p> : null}
-                        <div className="mt-2 flex items-center justify-between gap-2">
-                          <p className="text-xs text-muted-foreground">— Avaliação anônima</p>
-                          <ReportReviewDialog reviewId={r.id} />
-                        </div>
-                        {(r as any).owner_reply ? (
-                          <div className="mt-3 rounded-xl border border-primary/30 bg-primary/5 p-3">
-                            <div className="mb-1 flex items-center justify-between gap-2">
-                              <span className="text-xs font-semibold text-primary">Resposta do proprietário</span>
-                              {(r as any).owner_reply_at ? <span className="text-[10px] text-muted-foreground">{new Date((r as any).owner_reply_at).toLocaleDateString("pt-BR")}</span> : null}
-                            </div>
-                            <p className="text-sm">{(r as any).owner_reply}</p>
-                          </div>
-                        ) : null}
-                      </article>
-                    ))}
-                  </div>
-                )}
-              </section>
+              <CompanyReviewsSection
+                companyId={company.id}
+                reviews={company.reviews as any}
+                user={user}
+                onReviewSubmitted={() =>
+                  qc.invalidateQueries({ queryKey: ["company-public", id] })
+                }
+              />
             ) : null}
           </div>
 
           {/* Aside */}
           <aside className="space-y-4">
-            <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
-              <h3 className="mb-3 font-display text-base font-semibold">Contato</h3>
-              <ul className="space-y-2 text-sm">
-                {fullAddress ? <li className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 text-primary" /><span>{fullAddress}</span></li> : null}
-                {company.phone ? <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /><a href={`tel:${company.phone}`} onClick={() => !isPending && trackEvent(company.id, "phone_click")} className="hover:underline">{company.phone}</a></li> : null}
-                {company.whatsapp ? <li className="flex items-center gap-2"><MessageCircle className="h-4 w-4 text-primary" /><a href={`https://wa.me/${company.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noreferrer" onClick={() => !isPending && trackEvent(company.id, "whatsapp_click")} className="hover:underline">{company.whatsapp}</a></li> : null}
-                {company.email ? <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-primary" /><a href={`mailto:${company.email}`} className="hover:underline">{company.email}</a></li> : null}
-                {company.website ? <li className="flex items-center gap-2"><Globe className="h-4 w-4 text-primary" /><a href={company.website} target="_blank" rel="noreferrer" onClick={() => !isPending && trackEvent(company.id, "website_click")} className="hover:underline">{company.website}</a></li> : null}
-                {(company as any).instagram_url ? <li className="flex items-center gap-2"><Instagram className="h-4 w-4 text-primary" /><a href={(company as any).instagram_url} target="_blank" rel="noreferrer" className="hover:underline">Instagram</a></li> : null}
-                {(company as any).facebook_url ? <li className="flex items-center gap-2"><Facebook className="h-4 w-4 text-primary" /><a href={(company as any).facebook_url} target="_blank" rel="noreferrer" className="hover:underline">Facebook</a></li> : null}
-              </ul>
-            </div>
+            <CompanyContactCard
+              company={company as any}
+              fullAddress={fullAddress}
+              isPending={isPending}
+            />
 
             <HoursBlock hours={(company as any).hours} />
 
@@ -404,7 +344,8 @@ function CompanyPage() {
               <div className="p-3">
                 <a
                   href={`https://www.google.com/maps/dir/?api=1&destination=${mapsQuery}`}
-                  target="_blank" rel="noreferrer"
+                  target="_blank"
+                  rel="noreferrer"
                   onClick={() => !isPending && trackEvent(company.id, "maps_click")}
                   className="inline-flex w-full items-center justify-center rounded-full bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground transition hover:bg-secondary/90"
                 >
@@ -428,37 +369,3 @@ function CompanyPage() {
     </PageShell>
   );
 }
-
-const DAY_LABELS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
-type HourRow = { day: number; open: string; close: string; closed?: boolean };
-
-function HoursBlock({ hours }: { hours: unknown }) {
-  if (!Array.isArray(hours) || hours.length === 0) return null;
-  const rows = hours as HourRow[];
-  const hasOpen = rows.some((r) => !r.closed);
-  if (!hasOpen) return null;
-
-  const today = new Date().getDay();
-  const openNow = isOpenNow(hours);
-
-  return (
-    <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
-      <div className="mb-3 flex items-center justify-between">
-        <h3 className="font-display text-base font-semibold">Horário</h3>
-        <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${openNow ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300" : "bg-muted text-muted-foreground"}`}>
-          {openNow ? "Aberto agora" : "Fechado agora"}
-        </span>
-      </div>
-      <ul className="space-y-1 text-sm">
-        {rows.map((r, i) => (
-          <li key={i} className={`flex items-center justify-between gap-3 ${r.day === today ? "font-semibold" : ""}`}>
-            <span>{DAY_LABELS[r.day]}</span>
-            <span className="text-muted-foreground">{r.closed ? "Fechado" : `${r.open} – ${r.close}`}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-

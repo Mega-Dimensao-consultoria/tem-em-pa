@@ -2,21 +2,38 @@ import { breadcrumbJsonLd } from "@/components/Breadcrumbs";
 
 const DAY_MAP = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-type AnyCompany = Record<string, any> | null | undefined;
+type AnyCompany = Record<string, unknown> | null | undefined;
+type HoursRow = {
+  day?: number;
+  open?: string;
+  close?: string;
+  closed?: boolean;
+};
+
+function asRecord(v: unknown): Record<string, unknown> | null {
+  return v && typeof v === "object" ? (v as Record<string, unknown>) : null;
+}
+function asString(v: unknown): string | undefined {
+  return typeof v === "string" ? v : undefined;
+}
 
 export function buildCompanyHead(loaderData: AnyCompany, id: string) {
   const url = `https://tem-em-pa.lovable.app/empresa/${id}`;
-  const name = loaderData?.name ?? "Empresa";
-  const desc = loaderData?.description ?? "Empresa em Pouso Alegre/MG";
-  const img = loaderData?.cover_url ?? loaderData?.logo_url ?? undefined;
-  const reviews: Array<{ rating: number }> = loaderData?.reviews ?? [];
+  const name = asString(loaderData?.name) ?? "Empresa";
+  const desc = asString(loaderData?.description) ?? "Empresa em Pouso Alegre/MG";
+  const img = asString(loaderData?.cover_url) ?? asString(loaderData?.logo_url);
+  const reviews = (Array.isArray(loaderData?.reviews) ? loaderData?.reviews : []) as Array<{
+    rating: number;
+  }>;
   const ratingCount = reviews.length;
   const ratingValue =
     ratingCount > 0
       ? Number((reviews.reduce((s, r) => s + r.rating, 0) / ratingCount).toFixed(2))
       : 0;
 
-  const hoursArr = Array.isArray(loaderData?.hours) ? (loaderData.hours as any[]) : [];
+  const hoursArr: HoursRow[] = Array.isArray(loaderData?.hours)
+    ? (loaderData?.hours as HoursRow[])
+    : [];
   const openingHoursSpecification = hoursArr
     .filter((r) => r && !r.closed && r.open && r.close && typeof r.day === "number")
     .map((r) => ({

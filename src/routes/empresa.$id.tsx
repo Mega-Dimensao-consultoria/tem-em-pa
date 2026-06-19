@@ -4,7 +4,7 @@ import { PageShell } from "@/components/PageShell";
 import { RatingStars } from "@/components/RatingStars";
 import { getCompanyById } from "@/lib/companies.functions";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Globe, Mail, MessageCircle, Clock, Pencil } from "lucide-react";
+import { MapPin, Phone, Globe, Mail, MessageCircle, Clock, Pencil, Instagram, Facebook } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { ReviewForm } from "@/components/ReviewForm";
 import { ClaimDialog } from "@/components/ClaimDialog";
@@ -177,6 +177,19 @@ function CompanyPage() {
               </section>
             ) : null}
 
+            {Array.isArray((company as any).gallery_urls) && (company as any).gallery_urls.length > 0 ? (
+              <section>
+                <h2 className="mb-3 font-display text-lg font-semibold">Galeria</h2>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                  {((company as any).gallery_urls as string[]).map((url, i) => (
+                    <a key={url + i} href={url} target="_blank" rel="noreferrer" className="group relative aspect-square overflow-hidden rounded-xl border border-border">
+                      <img src={url} alt={`Foto ${i + 1}`} className="h-full w-full object-cover transition group-hover:scale-105" loading="lazy" />
+                    </a>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
             <section>
               <h2 className="mb-3 font-display text-lg font-semibold">Produtos & Serviços</h2>
               {company.products.length === 0 ? (
@@ -187,7 +200,7 @@ function CompanyPage() {
                 <div className="grid gap-3 sm:grid-cols-2">
                   {company.products.map((p) => (
                     <article key={p.id} className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
-                      {p.image_url_1 ? <img src={p.image_url_1} alt={p.name} className="aspect-video w-full object-cover" /> : null}
+                      {p.image_url_1 ? <img src={p.image_url_1} alt={p.name} className="aspect-video w-full object-cover" loading="lazy" /> : null}
                       <div className="p-3">
                         <h3 className="font-semibold">{p.name}</h3>
                         {p.price != null ? (
@@ -253,8 +266,12 @@ function CompanyPage() {
                 {company.whatsapp ? <li className="flex items-center gap-2"><MessageCircle className="h-4 w-4 text-primary" /><a href={`https://wa.me/${company.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noreferrer" className="hover:underline">{company.whatsapp}</a></li> : null}
                 {company.email ? <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-primary" /><a href={`mailto:${company.email}`} className="hover:underline">{company.email}</a></li> : null}
                 {company.website ? <li className="flex items-center gap-2"><Globe className="h-4 w-4 text-primary" /><a href={company.website} target="_blank" rel="noreferrer" className="hover:underline">{company.website}</a></li> : null}
+                {(company as any).instagram_url ? <li className="flex items-center gap-2"><Instagram className="h-4 w-4 text-primary" /><a href={(company as any).instagram_url} target="_blank" rel="noreferrer" className="hover:underline">Instagram</a></li> : null}
+                {(company as any).facebook_url ? <li className="flex items-center gap-2"><Facebook className="h-4 w-4 text-primary" /><a href={(company as any).facebook_url} target="_blank" rel="noreferrer" className="hover:underline">Facebook</a></li> : null}
               </ul>
             </div>
+
+            <HoursBlock hours={(company as any).hours} />
 
             <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
               <div className="aspect-square w-full bg-muted">

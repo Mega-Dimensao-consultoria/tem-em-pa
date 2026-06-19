@@ -13,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { CompanyMap } from "@/components/CompanyMap";
 import { trackEvent } from "@/lib/track";
 import { FavoriteButton } from "@/components/FavoriteButton";
+import { isOpenNow } from "@/lib/hours";
 
 type CompanyData = NonNullable<Awaited<ReturnType<typeof getCompanyById>>>;
 

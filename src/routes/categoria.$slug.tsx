@@ -12,12 +12,23 @@ const qo = (slug: string) =>
 
 export const Route = createFileRoute("/categoria/$slug")({
   loader: ({ context, params }) => context.queryClient.ensureQueryData(qo(params.slug)),
-  head: ({ params }) => ({
-    meta: [
-      { title: `${params.slug} — Tem em P.A` },
-      { name: "description", content: `Empresas de ${params.slug} em Pouso Alegre/MG` },
-    ],
-  }),
+  head: ({ params }) => {
+    const label = params.slug.replace(/-/g, " ");
+    const title = `${label.charAt(0).toUpperCase() + label.slice(1)} em Pouso Alegre — Tem em P.A`;
+    const desc = `Encontre as melhores empresas de ${label} em Pouso Alegre/MG. Endereços, contatos, avaliações e mais.`;
+    const url = `https://tem-em-pa.lovable.app/categoria/${params.slug}`;
+    return {
+      meta: [
+        { title },
+        { name: "description", content: desc },
+        { property: "og:title", content: title },
+        { property: "og:description", content: desc },
+        { property: "og:url", content: url },
+        { property: "og:type", content: "website" },
+      ],
+      links: [{ rel: "canonical", href: url }],
+    };
+  },
   component: CategoryPage,
 });
 

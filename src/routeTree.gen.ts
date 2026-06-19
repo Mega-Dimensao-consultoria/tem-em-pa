@@ -9,38 +9,232 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SobreRouteImport } from './routes/sobre'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as ContatoRouteImport } from './routes/contato'
+import { Route as BuscarRouteImport } from './routes/buscar'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as EmpresaIdRouteImport } from './routes/empresa.$id'
+import { Route as CategoriaSlugRouteImport } from './routes/categoria.$slug'
+import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
+import { Route as AuthenticatedOwnerRouteImport } from './routes/_authenticated/owner'
+import { Route as AuthenticatedCadastrarEmpresaRouteImport } from './routes/_authenticated/cadastrar-empresa'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 
+const SobreRoute = SobreRouteImport.update({
+  id: '/sobre',
+  path: '/sobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContatoRoute = ContatoRouteImport.update({
+  id: '/contato',
+  path: '/contato',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BuscarRoute = BuscarRouteImport.update({
+  id: '/buscar',
+  path: '/buscar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmpresaIdRoute = EmpresaIdRouteImport.update({
+  id: '/empresa/$id',
+  path: '/empresa/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoriaSlugRoute = CategoriaSlugRouteImport.update({
+  id: '/categoria/$slug',
+  path: '/categoria/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedOwnerRoute = AuthenticatedOwnerRouteImport.update({
+  id: '/owner',
+  path: '/owner',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCadastrarEmpresaRoute =
+  AuthenticatedCadastrarEmpresaRouteImport.update({
+    id: '/cadastrar-empresa',
+    path: '/cadastrar-empresa',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/buscar': typeof BuscarRoute
+  '/contato': typeof ContatoRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sobre': typeof SobreRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
+  '/owner': typeof AuthenticatedOwnerRoute
+  '/painel': typeof AuthenticatedPainelRoute
+  '/categoria/$slug': typeof CategoriaSlugRoute
+  '/empresa/$id': typeof EmpresaIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/buscar': typeof BuscarRoute
+  '/contato': typeof ContatoRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sobre': typeof SobreRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
+  '/owner': typeof AuthenticatedOwnerRoute
+  '/painel': typeof AuthenticatedPainelRoute
+  '/categoria/$slug': typeof CategoriaSlugRoute
+  '/empresa/$id': typeof EmpresaIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/buscar': typeof BuscarRoute
+  '/contato': typeof ContatoRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sobre': typeof SobreRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
+  '/_authenticated/owner': typeof AuthenticatedOwnerRoute
+  '/_authenticated/painel': typeof AuthenticatedPainelRoute
+  '/categoria/$slug': typeof CategoriaSlugRoute
+  '/empresa/$id': typeof EmpresaIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/buscar'
+    | '/contato'
+    | '/reset-password'
+    | '/sobre'
+    | '/admin'
+    | '/cadastrar-empresa'
+    | '/owner'
+    | '/painel'
+    | '/categoria/$slug'
+    | '/empresa/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/buscar'
+    | '/contato'
+    | '/reset-password'
+    | '/sobre'
+    | '/admin'
+    | '/cadastrar-empresa'
+    | '/owner'
+    | '/painel'
+    | '/categoria/$slug'
+    | '/empresa/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/buscar'
+    | '/contato'
+    | '/reset-password'
+    | '/sobre'
+    | '/_authenticated/admin'
+    | '/_authenticated/cadastrar-empresa'
+    | '/_authenticated/owner'
+    | '/_authenticated/painel'
+    | '/categoria/$slug'
+    | '/empresa/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  BuscarRoute: typeof BuscarRoute
+  ContatoRoute: typeof ContatoRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  SobreRoute: typeof SobreRoute
+  CategoriaSlugRoute: typeof CategoriaSlugRoute
+  EmpresaIdRoute: typeof EmpresaIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sobre': {
+      id: '/sobre'
+      path: '/sobre'
+      fullPath: '/sobre'
+      preLoaderRoute: typeof SobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contato': {
+      id: '/contato'
+      path: '/contato'
+      fullPath: '/contato'
+      preLoaderRoute: typeof ContatoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/buscar': {
+      id: '/buscar'
+      path: '/buscar'
+      fullPath: '/buscar'
+      preLoaderRoute: typeof BuscarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +242,78 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/empresa/$id': {
+      id: '/empresa/$id'
+      path: '/empresa/$id'
+      fullPath: '/empresa/$id'
+      preLoaderRoute: typeof EmpresaIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categoria/$slug': {
+      id: '/categoria/$slug'
+      path: '/categoria/$slug'
+      fullPath: '/categoria/$slug'
+      preLoaderRoute: typeof CategoriaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/painel': {
+      id: '/_authenticated/painel'
+      path: '/painel'
+      fullPath: '/painel'
+      preLoaderRoute: typeof AuthenticatedPainelRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/owner': {
+      id: '/_authenticated/owner'
+      path: '/owner'
+      fullPath: '/owner'
+      preLoaderRoute: typeof AuthenticatedOwnerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/cadastrar-empresa': {
+      id: '/_authenticated/cadastrar-empresa'
+      path: '/cadastrar-empresa'
+      fullPath: '/cadastrar-empresa'
+      preLoaderRoute: typeof AuthenticatedCadastrarEmpresaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedCadastrarEmpresaRoute: typeof AuthenticatedCadastrarEmpresaRoute
+  AuthenticatedOwnerRoute: typeof AuthenticatedOwnerRoute
+  AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedCadastrarEmpresaRoute: AuthenticatedCadastrarEmpresaRoute,
+  AuthenticatedOwnerRoute: AuthenticatedOwnerRoute,
+  AuthenticatedPainelRoute: AuthenticatedPainelRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  BuscarRoute: BuscarRoute,
+  ContatoRoute: ContatoRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  SobreRoute: SobreRoute,
+  CategoriaSlugRoute: CategoriaSlugRoute,
+  EmpresaIdRoute: EmpresaIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

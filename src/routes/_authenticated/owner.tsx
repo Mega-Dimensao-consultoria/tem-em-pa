@@ -1,0 +1,70 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { PageShell } from "@/components/PageShell";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/use-auth";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Store } from "lucide-react";
+
+export const Route = createFileRoute("/_authenticated/owner")({
+  head: () => ({ meta: [{ title: "Painel do proprietário — Tem em P.A" }] }),
+  component: OwnerPage,
+});
+
+function OwnerPage() {
+  const { user } = useAuth();
+  const { data: companies = [], isLoading } = useQuery({
+    queryKey: ["my-companies", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("companies")
+        .select("id, name, status, is_featured")
+        .eq("owner_id", user!.id)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  return (
+    <PageShell>
+      <section className="mx-auto max-w-5xl px-4 py-12">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="font-display text-3xl font-bold">Minhas empresas</h1>
+            <p className="mt-1 text-sm text-muted-foreground">Gerencie seus negócios e produtos.</p>
+          </div>
+          <Button asChild><Link to="/cadastrar-empresa">+ Nova empresa</Link></Button>
+        </div>
+
+        <div className="mt-8">
+          {isLoading ? (
+            <p className="text-sm text-muted-foreground">Carregando…</p>
+          ) : companies.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-border bg-card/50 p-10 text-center">
+              <Store className="mx-auto h-8 w-8 text-muted-foreground" />
+              <p className="mt-3 text-sm text-muted-foreground">Você ainda não tem empresas. Comece cadastrando uma.</p>
+              <Button asChild className="mt-4"><Link to="/cadastrar-empresa">Cadastrar empresa</Link></Button>
+            </div>
+          ) : (
+            <ul className="divide-y rounded-2xl border border-border bg-card shadow-soft">
+              {companies.map((c) => (
+                <li key={c.id} className="flex items-center justify-between gap-3 p-4">
+                  <div>
+                    <p className="font-semibold">{c.name}</p>
+                    <p className="text-xs text-muted-foreground">Status: {c.status}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" disabled>Editar</Button>
+                    <Button size="sm" disabled>Produtos</Button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
+    </PageShell>
+  );
+}

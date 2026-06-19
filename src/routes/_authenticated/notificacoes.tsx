@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { CheckCheck, Inbox, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { useNotifications } from "@/hooks/queries/useNotifications";
+import { useNotifications } from "@/features/notifications/hooks/useNotifications";
 
 export const Route = createFileRoute("/_authenticated/notificacoes")({
   component: NotificacoesPage,

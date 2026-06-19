@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Logo } from "./Logo";
 import { Button } from "@/components/ui/button";
-import { useAuth, useRoles } from "@/hooks/use-auth";
+import { useAuth, useRoles } from "@/features/auth/use-auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +13,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
 import { Heart, LayoutDashboard, LogOut, Shield, Store, User as UserIcon } from "lucide-react";
-import { NotificationsBell } from "./NotificationsBell";
+import { NotificationsBell } from "@/features/notifications/components/NotificationsBell";
 
 export function Header() {
   const { user, loading } = useAuth();

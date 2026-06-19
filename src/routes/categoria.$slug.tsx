@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { PageShell } from "@/components/PageShell";
-import { CompanyCard } from "@/components/CompanyCard";
+import { CompanyCard } from "@/features/companies/components/CompanyCard";
 import { Breadcrumbs, breadcrumbJsonLd } from "@/components/Breadcrumbs";
-import { searchCompanies, getCategoryBySlug } from "@/lib/companies.functions";
+import { searchCompanies, getCategoryBySlug } from "@/features/companies/functions";
 
 const BASE = "https://tem-em-pa.lovable.app";
 

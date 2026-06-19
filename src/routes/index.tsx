@@ -2,10 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { PageShell } from "@/components/PageShell";
 import { SearchBar } from "@/components/SearchBar";
-import { CategoryCard } from "@/components/CategoryCard";
-import { CompanyCard } from "@/components/CompanyCard";
-import { listCategories } from "@/lib/categories.functions";
-import { listFeaturedCompanies } from "@/lib/companies.functions";
+import { CategoryCard } from "@/features/companies/components/CategoryCard";
+import { CompanyCard } from "@/features/companies/components/CompanyCard";
+import { listCategories } from "@/features/companies/functions/categories";
+import { listFeaturedCompanies } from "@/features/companies/functions";
 import { Sparkles, Store, ShieldCheck } from "lucide-react";
 
 const categoriesQO = queryOptions({

@@ -2,11 +2,11 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
 import { PageShell } from "@/components/PageShell";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/features/auth/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { geocodeAddress } from "@/lib/geocode.functions";
-import { CompanyForm, type CompanyFormValues } from "@/components/forms/CompanyForm";
+import { CompanyForm, type CompanyFormValues } from "@/features/companies/components/CompanyForm";
 
 export const Route = createFileRoute("/_authenticated/cadastrar-empresa")({
   head: () => ({ meta: [{ title: "Cadastrar empresa — Tem em P.A" }] }),

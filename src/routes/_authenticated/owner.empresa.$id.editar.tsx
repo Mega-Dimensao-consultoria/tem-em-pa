@@ -4,12 +4,12 @@ import { z } from "zod";
 import { useQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/features/auth/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
-import { CompanyForm, emptyCompanyForm, type CompanyFormValues } from "@/components/forms/CompanyForm";
-import { defaultHours, type HourRow } from "@/components/forms/HoursEditor";
+import { CompanyForm, emptyCompanyForm, type CompanyFormValues } from "@/features/companies/components/CompanyForm";
+import { defaultHours, type HourRow } from "@/features/companies/components/HoursEditor";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/editar")({
   head: () => ({ meta: [{ title: "Editar empresa — Tem em P.A" }] }),
@@ -50,29 +50,28 @@ function EditarEmpresa() {
 
   const initial = useMemo<Partial<CompanyFormValues> | undefined>(() => {
     if (!company) return undefined;
-    const c = company as any;
-    const h = c.hours as HourRow[] | null;
+    const h = company.hours as HourRow[] | null;
     return {
       ...emptyCompanyForm(),
-      name: c.name ?? "",
-      category_id: c.category_id ?? "",
-      description: c.description ?? "",
-      phone: c.phone ?? "",
-      whatsapp: c.whatsapp ?? "",
-      email: c.email ?? "",
-      website: c.website ?? "",
-      instagram_url: c.instagram_url ?? "",
-      facebook_url: c.facebook_url ?? "",
-      cep: c.cep ?? "",
-      address: c.address ?? "",
-      number: c.number ?? "",
-      complement: c.complement ?? "",
-      neighborhood: c.neighborhood ?? "",
-      city: c.city ?? "Pouso Alegre",
-      state: c.state ?? "MG",
-      logo_url: c.logo_url ?? null,
-      cover_url: c.cover_url ?? null,
-      gallery_urls: (c.gallery_urls as string[] | null) ?? [],
+      name: company.name ?? "",
+      category_id: company.category_id ?? "",
+      description: company.description ?? "",
+      phone: company.phone ?? "",
+      whatsapp: company.whatsapp ?? "",
+      email: company.email ?? "",
+      website: company.website ?? "",
+      instagram_url: company.instagram_url ?? "",
+      facebook_url: company.facebook_url ?? "",
+      cep: company.cep ?? "",
+      address: company.address ?? "",
+      number: company.number ?? "",
+      complement: company.complement ?? "",
+      neighborhood: company.neighborhood ?? "",
+      city: company.city ?? "Pouso Alegre",
+      state: company.state ?? "MG",
+      logo_url: company.logo_url ?? null,
+      cover_url: company.cover_url ?? null,
+      gallery_urls: (company.gallery_urls as string[] | null) ?? [],
       hours: h && Array.isArray(h) && h.length === 7 ? h : defaultHours(),
     };
   }, [company]);
@@ -126,7 +125,7 @@ function EditarEmpresa() {
         gallery_urls: v.gallery_urls,
         hours: v.hours,
         ...(lat !== undefined ? { lat, lng } : {}),
-      } as any)
+      })
       .eq("id", id);
     setSubmitting(false);
     if (error) {

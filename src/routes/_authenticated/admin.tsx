@@ -1,17 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/PageShell";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useRoles } from "@/hooks/use-auth";
+import { useRoles } from "@/features/auth/use-auth";
 import { ShieldAlert } from "lucide-react";
-import { AdminStats } from "@/components/admin/AdminStats";
-import { PendingCompaniesTab } from "@/components/admin/tabs/PendingCompaniesTab";
-import { PendingClaimsTab } from "@/components/admin/tabs/PendingClaimsTab";
-import { PendingReviewsTab } from "@/components/admin/tabs/PendingReviewsTab";
-import { ReportsTab } from "@/components/admin/tabs/ReportsTab";
-import { CategoriesTab } from "@/components/admin/tabs/CategoriesTab";
-import { BannedWordsTab } from "@/components/admin/tabs/BannedWordsTab";
-import { UsersTab } from "@/components/admin/tabs/UsersTab";
-import { AuditLogTab } from "@/components/admin/tabs/AuditLogTab";
+import { AdminStats } from "@/features/admin/components/AdminStats";
+import { PendingCompaniesTab } from "@/features/admin/components/tabs/PendingCompaniesTab";
+import { PendingClaimsTab } from "@/features/admin/components/tabs/PendingClaimsTab";
+import { PendingReviewsTab } from "@/features/admin/components/tabs/PendingReviewsTab";
+import { ReportsTab } from "@/features/admin/components/tabs/ReportsTab";
+import { CategoriesTab } from "@/features/admin/components/tabs/CategoriesTab";
+import { BannedWordsTab } from "@/features/admin/components/tabs/BannedWordsTab";
+import { UsersTab } from "@/features/admin/components/tabs/UsersTab";
+import { AuditLogTab } from "@/features/admin/components/tabs/AuditLogTab";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Admin — Tem em P.A" }] }),

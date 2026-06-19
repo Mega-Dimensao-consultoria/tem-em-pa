@@ -3,15 +3,15 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { PageShell } from "@/components/PageShell";
 import { SearchBar } from "@/components/SearchBar";
-import { SearchFilters } from "@/components/search/SearchFilters";
-import { SearchResults } from "@/components/search/SearchResults";
-import { useAuth } from "@/hooks/use-auth";
-import { useCategories } from "@/hooks/queries/useCategories";
+import { SearchFilters } from "@/features/companies/components/SearchFilters";
+import { SearchResults } from "@/features/companies/components/SearchResults";
+import { useAuth } from "@/features/auth/use-auth";
+import { useCategories } from "@/features/companies/hooks/useCategories";
 import { useGeolocation, haversineKm } from "@/hooks/useGeolocation";
 import {
   useSearchCompanies,
   type SearchSort,
-} from "@/hooks/queries/useSearchCompanies";
+} from "@/features/companies/hooks/useSearchCompanies";
 import { isOpenNow } from "@/lib/hours";
 
 const searchSchema = z.object({
@@ -69,7 +69,7 @@ function SearchPage() {
   }
 
   const data = (() => {
-    let rows = rawData as any[];
+    let rows = rawData ?? [];
     if (open) rows = rows.filter((c) => isOpenNow(c.hours));
     if (sort !== "distance" || !coords) return rows;
     return [...rows]

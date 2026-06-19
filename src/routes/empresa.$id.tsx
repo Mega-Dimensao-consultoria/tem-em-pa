@@ -5,23 +5,23 @@ import { Clock, Pencil } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { SimilarCompanies } from "@/components/SimilarCompanies";
-import { HoursBlock } from "@/components/company/HoursBlock";
-import { CompanyContactCard } from "@/components/company/CompanyContactCard";
-import { CompanyReviewsSection } from "@/components/company/CompanyReviewsSection";
-import { CompanyHeader } from "@/components/company/CompanyHeader";
-import { CompanyGalleryBlock } from "@/components/company/CompanyGalleryBlock";
-import { CompanyProductsBlock } from "@/components/company/CompanyProductsBlock";
-import { CompanyMapCard } from "@/components/company/CompanyMapCard";
-import { buildCompanyHead } from "@/components/company/buildCompanyHead";
-import { useAuth } from "@/hooks/use-auth";
+import { SimilarCompanies } from "@/features/companies/components/SimilarCompanies";
+import { HoursBlock } from "@/features/companies/components/HoursBlock";
+import { CompanyContactCard } from "@/features/companies/components/CompanyContactCard";
+import { CompanyReviewsSection } from "@/features/companies/components/CompanyReviewsSection";
+import { CompanyHeader } from "@/features/companies/components/CompanyHeader";
+import { CompanyGalleryBlock } from "@/features/companies/components/CompanyGalleryBlock";
+import { CompanyProductsBlock } from "@/features/companies/components/CompanyProductsBlock";
+import { CompanyMapCard } from "@/features/companies/components/CompanyMapCard";
+import { buildCompanyHead } from "@/features/companies/components/buildCompanyHead";
+import { useAuth } from "@/features/auth/use-auth";
 import { trackEvent } from "@/lib/track";
 import { queryKeys } from "@/lib/queryKeys";
 import {
   publicCompanyQO,
   privateCompanyQO,
-} from "@/hooks/queries/useCompanyDetail";
-import { getCompanyContact } from "@/lib/companies/contact.functions";
+} from "@/features/companies/hooks/useCompanyDetail";
+import { getCompanyContact } from "@/features/companies/functions/contact";
 
 export const Route = createFileRoute("/empresa/$id")({
   loader: ({ context, params }) =>
@@ -108,7 +108,7 @@ function CompanyPage() {
     .filter(Boolean)
     .join(", ");
 
-  const gallery = ((company as any).gallery_urls as string[] | null) ?? [];
+  const gallery = (company.gallery_urls as string[] | null) ?? [];
 
   return (
     <PageShell>
@@ -152,7 +152,7 @@ function CompanyPage() {
                 ? [
                     {
                       label: company.categories.name,
-                      to: `/categoria/${(company.categories as any).slug}`,
+                      to: `/categoria/${company.categories?.slug}`,
                     },
                   ]
                 : [{ label: "Empresas", to: "/buscar" }]),
@@ -162,7 +162,7 @@ function CompanyPage() {
         </div>
 
         <CompanyHeader
-          company={company as any}
+          company={company}
           avg={avg}
           reviewsCount={company.reviews.length}
           isPending={isPending}
@@ -182,12 +182,12 @@ function CompanyPage() {
             ) : null}
 
             <CompanyGalleryBlock urls={gallery} />
-            <CompanyProductsBlock products={company.products as any} />
+            <CompanyProductsBlock products={company.products} />
 
             {!isPending ? (
               <CompanyReviewsSection
                 companyId={company.id}
-                reviews={company.reviews as any}
+                reviews={company.reviews}
                 user={user}
                 onReviewSubmitted={() =>
                   qc.invalidateQueries({ queryKey: queryKeys.companies.public(id) })
@@ -198,16 +198,16 @@ function CompanyPage() {
 
           <aside className="space-y-4">
             <CompanyContactCard
-              company={{ ...(company as any), ...(contact ?? {}) }}
+              company={{ ...company, ...(contact ?? {}) }}
               fullAddress={fullAddress}
               isPending={isPending}
             />
-            <HoursBlock hours={(company as any).hours} />
+            <HoursBlock hours={company.hours} />
             <CompanyMapCard
               companyId={company.id}
               name={company.name}
-              lat={(company as any).lat ?? null}
-              lng={(company as any).lng ?? null}
+              lat={company.lat ?? null}
+              lng={company.lng ?? null}
               address={fullAddress}
               isPending={isPending}
             />
@@ -217,7 +217,7 @@ function CompanyPage() {
         {!isPending ? (
           <SimilarCompanies
             id={company.id}
-            categoryId={(company as any).category_id}
+            categoryId={company.category_id}
             neighborhood={company.neighborhood}
           />
         ) : null}

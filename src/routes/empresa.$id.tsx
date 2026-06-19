@@ -364,9 +364,6 @@ function HoursBlock({ hours }: { hours: unknown }) {
   if (!hasOpen) return null;
 
   const today = new Date().getDay();
-  // Lazy import to avoid circular concerns
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { isOpenNow } = require("@/lib/hours") as typeof import("@/lib/hours");
   const openNow = isOpenNow(hours);
 
   return (

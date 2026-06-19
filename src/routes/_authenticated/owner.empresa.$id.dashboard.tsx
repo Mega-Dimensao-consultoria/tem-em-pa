@@ -1,14 +1,16 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { PageShell } from "@/components/PageShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
-import { Eye, MessageCircle, Phone, Globe, MapPin, Star, ArrowLeft, ArrowUp, ArrowDown, Download } from "lucide-react";
+import { Eye, MessageCircle, Phone, Globe, MapPin, Star, ArrowLeft, ArrowUp, ArrowDown, Download, MessageSquareWarning } from "lucide-react";
 import { RatingStars } from "@/components/RatingStars";
 import { OwnerReplyForm } from "@/components/OwnerReplyForm";
 import { ProfileCompleteness } from "@/components/ProfileCompleteness";
 import { QrCodeCard } from "@/components/QrCodeCard";
+import { ShareButton } from "@/components/ShareButton";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — Tem em P.A" }] }),

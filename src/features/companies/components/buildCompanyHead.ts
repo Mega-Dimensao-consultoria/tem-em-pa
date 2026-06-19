@@ -35,7 +35,10 @@ export function buildCompanyHead(loaderData: AnyCompany, id: string) {
     ? (loaderData?.hours as HoursRow[])
     : [];
   const openingHoursSpecification = hoursArr
-    .filter((r) => r && !r.closed && r.open && r.close && typeof r.day === "number")
+    .filter(
+      (r): r is HoursRow & { day: number; open: string; close: string } =>
+        !!r && !r.closed && !!r.open && !!r.close && typeof r.day === "number",
+    )
     .map((r) => ({
       "@type": "OpeningHoursSpecification",
       dayOfWeek: DAY_MAP[r.day],

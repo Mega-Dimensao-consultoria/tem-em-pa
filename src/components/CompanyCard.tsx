@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { MapPin, Star } from "lucide-react";
 import { FavoriteButton } from "./FavoriteButton";
+import { isOpenNow } from "@/lib/hours";
 
 type Company = {
   id: string;
@@ -11,6 +12,7 @@ type Company = {
   logo_url: string | null;
   cover_url: string | null;
   is_featured: boolean | null;
+  hours?: unknown;
   categories?: { name: string | null } | null;
 };
 

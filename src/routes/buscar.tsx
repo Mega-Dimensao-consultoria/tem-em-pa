@@ -69,7 +69,7 @@ function SearchPage() {
   }
 
   const data = (() => {
-    let rows = rawData as any[];
+    let rows = rawData ?? [];
     if (open) rows = rows.filter((c) => isOpenNow(c.hours));
     if (sort !== "distance" || !coords) return rows;
     return [...rows]

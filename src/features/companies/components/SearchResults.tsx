@@ -24,7 +24,7 @@ export function SearchResults({
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {ownPending.map((c) => (
-              <CompanyCard key={c.id} company={c as any} />
+              <CompanyCard key={c.id} company={c} />
             ))}
           </div>
         </div>
@@ -39,7 +39,7 @@ export function SearchResults({
       ) : (
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {approved.map((c) => (
-            <CompanyCard key={c.id} company={c as any} />
+            <CompanyCard key={c.id} company={c} />
           ))}
         </div>
       )}

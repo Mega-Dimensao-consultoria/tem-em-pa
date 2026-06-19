@@ -223,6 +223,16 @@ function CompanyPage() {
       </div>
 
       <div className="mx-auto max-w-5xl px-4">
+        <div className="pt-4">
+          <Breadcrumbs
+            items={[
+              ...(company.categories?.name
+                ? [{ label: company.categories.name, to: `/categoria/${(company.categories as any).slug}` }]
+                : [{ label: "Empresas", to: "/buscar" }]),
+              { label: company.name },
+            ]}
+          />
+        </div>
         {/* Header */}
         <div className="-mt-12 flex flex-col gap-4 rounded-3xl border border-border bg-card p-6 shadow-soft md:flex-row md:items-end">
           <div className="h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-border bg-background">

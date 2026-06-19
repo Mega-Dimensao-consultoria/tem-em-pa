@@ -1,21 +1,34 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { z } from "zod";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { PageShell } from "@/components/PageShell";
 import { SearchBar } from "@/components/SearchBar";
 import { CompanyCard } from "@/components/CompanyCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { listCategories } from "@/lib/categories.functions";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { X } from "lucide-react";
+import { X, Navigation, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 const searchSchema = z.object({
   q: z.string().trim().max(120).optional(),
   cat: z.string().trim().max(60).optional(),
-  sort: z.enum(["recent", "name"]).optional(),
+  sort: z.enum(["recent", "name", "distance"]).optional(),
 });
+
+function haversineKm(aLat: number, aLng: number, bLat: number, bLng: number) {
+  const R = 6371;
+  const dLat = ((bLat - aLat) * Math.PI) / 180;
+  const dLng = ((bLng - aLng) * Math.PI) / 180;
+  const la1 = (aLat * Math.PI) / 180;
+  const la2 = (bLat * Math.PI) / 180;
+  const x = Math.sin(dLat / 2) ** 2 + Math.sin(dLng / 2) ** 2 * Math.cos(la1) * Math.cos(la2);
+  return 2 * R * Math.asin(Math.sqrt(x));
+}
 
 export const Route = createFileRoute("/buscar")({
   validateSearch: searchSchema,

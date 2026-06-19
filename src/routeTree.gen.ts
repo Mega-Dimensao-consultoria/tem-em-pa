@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SobreRouteImport } from './routes/sobre'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as BuscarRouteImport } from './routes/buscar'
@@ -29,6 +30,11 @@ import { Route as AuthenticatedOwnerEmpresaIdDashboardRouteImport } from './rout
 const SobreRoute = SobreRouteImport.update({
   id: '/sobre',
   path: '/sobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -116,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
@@ -133,6 +140,7 @@ export interface FileRoutesByTo {
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
@@ -152,6 +160,7 @@ export interface FileRoutesById {
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
@@ -171,6 +180,7 @@ export interface FileRouteTypes {
     | '/buscar'
     | '/contato'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/sobre'
     | '/admin'
     | '/cadastrar-empresa'
@@ -188,6 +198,7 @@ export interface FileRouteTypes {
     | '/buscar'
     | '/contato'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/sobre'
     | '/admin'
     | '/cadastrar-empresa'
@@ -206,6 +217,7 @@ export interface FileRouteTypes {
     | '/buscar'
     | '/contato'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/sobre'
     | '/_authenticated/admin'
     | '/_authenticated/cadastrar-empresa'
@@ -225,6 +237,7 @@ export interface RootRouteChildren {
   BuscarRoute: typeof BuscarRoute
   ContatoRoute: typeof ContatoRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SobreRoute: typeof SobreRoute
   CategoriaSlugRoute: typeof CategoriaSlugRoute
   EmpresaIdRoute: typeof EmpresaIdRoute
@@ -237,6 +250,13 @@ declare module '@tanstack/react-router' {
       path: '/sobre'
       fullPath: '/sobre'
       preLoaderRoute: typeof SobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -389,6 +409,7 @@ const rootRouteChildren: RootRouteChildren = {
   BuscarRoute: BuscarRoute,
   ContatoRoute: ContatoRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SobreRoute: SobreRoute,
   CategoriaSlugRoute: CategoriaSlugRoute,
   EmpresaIdRoute: EmpresaIdRoute,

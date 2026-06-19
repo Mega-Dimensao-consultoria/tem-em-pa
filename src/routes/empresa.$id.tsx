@@ -258,6 +258,15 @@ function CompanyPage() {
                         </div>
                         {r.comment ? <p className="mt-2 text-sm">{r.comment}</p> : null}
                         <p className="mt-2 text-xs text-muted-foreground">— Avaliação anônima</p>
+                        {(r as any).owner_reply ? (
+                          <div className="mt-3 rounded-xl border border-primary/30 bg-primary/5 p-3">
+                            <div className="mb-1 flex items-center justify-between gap-2">
+                              <span className="text-xs font-semibold text-primary">Resposta do proprietário</span>
+                              {(r as any).owner_reply_at ? <span className="text-[10px] text-muted-foreground">{new Date((r as any).owner_reply_at).toLocaleDateString("pt-BR")}</span> : null}
+                            </div>
+                            <p className="text-sm">{(r as any).owner_reply}</p>
+                          </div>
+                        ) : null}
                       </article>
                     ))}
                   </div>

@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useQuery } from "@tanstack/react-query";
 import { listCategories } from "@/lib/categories.functions";
 import { lookupCep } from "@/lib/viacep.functions";
-import { ImageUpload } from "@/components/ImageUpload";
+import { ImageUpload, GalleryUpload } from "@/components/ImageUpload";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";

@@ -172,7 +172,15 @@ function SearchPage() {
               {geoLoading ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <Navigation className="mr-1 h-3 w-3" />}
               {geo ? "Atualizar localização" : "Perto de mim"}
             </Button>
-            {(q || cat) ? (
+            <button
+              type="button"
+              onClick={() => updateSearch({ open: open ? undefined : true })}
+              className={`inline-flex h-8 items-center gap-1 rounded-full px-3 text-xs font-semibold transition ${open ? "bg-emerald-500 text-white" : "bg-muted hover:bg-muted/70"}`}
+            >
+              <span className={`h-1.5 w-1.5 rounded-full ${open ? "bg-white" : "bg-emerald-500"}`} />
+              Aberto agora
+            </button>
+            {(q || cat || open) ? (
               <Link to="/buscar" search={{}} className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
                 <X className="h-3 w-3" /> Limpar filtros
               </Link>

@@ -59,7 +59,7 @@ function SearchPage() {
   const activeCat = categories.find((c) => c.slug === cat);
 
   function updateSearch(patch: Partial<{ q?: string; cat?: string; sort?: "recent" | "name" }>) {
-    navigate({ to: "/buscar", search: (prev) => ({ ...prev, ...patch }) });
+    navigate({ to: "/buscar", search: (prev: z.infer<typeof searchSchema>) => ({ ...prev, ...patch }) });
   }
 
   return (

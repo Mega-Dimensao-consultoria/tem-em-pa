@@ -281,10 +281,10 @@ function CompanyPage() {
               <h3 className="mb-3 font-display text-base font-semibold">Contato</h3>
               <ul className="space-y-2 text-sm">
                 {fullAddress ? <li className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 text-primary" /><span>{fullAddress}</span></li> : null}
-                {company.phone ? <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /><a href={`tel:${company.phone}`} className="hover:underline">{company.phone}</a></li> : null}
-                {company.whatsapp ? <li className="flex items-center gap-2"><MessageCircle className="h-4 w-4 text-primary" /><a href={`https://wa.me/${company.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noreferrer" className="hover:underline">{company.whatsapp}</a></li> : null}
+                {company.phone ? <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /><a href={`tel:${company.phone}`} onClick={() => !isPending && trackEvent(company.id, "phone_click")} className="hover:underline">{company.phone}</a></li> : null}
+                {company.whatsapp ? <li className="flex items-center gap-2"><MessageCircle className="h-4 w-4 text-primary" /><a href={`https://wa.me/${company.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noreferrer" onClick={() => !isPending && trackEvent(company.id, "whatsapp_click")} className="hover:underline">{company.whatsapp}</a></li> : null}
                 {company.email ? <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-primary" /><a href={`mailto:${company.email}`} className="hover:underline">{company.email}</a></li> : null}
-                {company.website ? <li className="flex items-center gap-2"><Globe className="h-4 w-4 text-primary" /><a href={company.website} target="_blank" rel="noreferrer" className="hover:underline">{company.website}</a></li> : null}
+                {company.website ? <li className="flex items-center gap-2"><Globe className="h-4 w-4 text-primary" /><a href={company.website} target="_blank" rel="noreferrer" onClick={() => !isPending && trackEvent(company.id, "website_click")} className="hover:underline">{company.website}</a></li> : null}
                 {(company as any).instagram_url ? <li className="flex items-center gap-2"><Instagram className="h-4 w-4 text-primary" /><a href={(company as any).instagram_url} target="_blank" rel="noreferrer" className="hover:underline">Instagram</a></li> : null}
                 {(company as any).facebook_url ? <li className="flex items-center gap-2"><Facebook className="h-4 w-4 text-primary" /><a href={(company as any).facebook_url} target="_blank" rel="noreferrer" className="hover:underline">Facebook</a></li> : null}
               </ul>

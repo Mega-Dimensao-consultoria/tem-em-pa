@@ -81,8 +81,10 @@ function SearchPage() {
   });
 
   const data = (() => {
-    if (sort !== "distance" || !geo) return rawData;
-    return [...rawData]
+    let rows = rawData as any[];
+    if (open) rows = rows.filter((c) => isOpenNow((c as any).hours));
+    if (sort !== "distance" || !geo) return rows;
+    return [...rows]
       .map((c) => {
         const lat = (c as any).lat as number | null;
         const lng = (c as any).lng as number | null;

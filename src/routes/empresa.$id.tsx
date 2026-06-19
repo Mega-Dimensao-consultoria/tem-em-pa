@@ -63,6 +63,15 @@ function CompanyPage() {
 
   const company = publicCompany ?? privateCompany;
 
+  const isOwner = !!user && !!company && company.owner_id === user.id;
+  const isPending = !!company && company.status !== "approved";
+
+  useEffect(() => {
+    if (company && !isPending && !isOwner && publicCompany) {
+      trackEvent(publicCompany.id, "view");
+    }
+  }, [company, isPending, isOwner, publicCompany]);
+
   if (!company) {
     if (!publicCompany && (authLoading || (user && privateLoading))) {
       return (
@@ -80,8 +89,6 @@ function CompanyPage() {
     company.reviews.length > 0
       ? company.reviews.reduce((s, r) => s + r.rating, 0) / company.reviews.length
       : 0;
-  const isOwner = !!user && company.owner_id === user.id;
-  const isPending = company.status !== "approved";
   const canClaim = !company.owner_id && !isPending;
   const fullAddress = [
     company.address,
@@ -92,12 +99,6 @@ function CompanyPage() {
   ]
     .filter(Boolean)
     .join(", ");
-
-  useEffect(() => {
-    if (!isPending && !isOwner && publicCompany) {
-      trackEvent(publicCompany.id, "view");
-    }
-  }, [isPending, isOwner, publicCompany]);
 
   const gallery = ((company as any).gallery_urls as string[] | null) ?? [];
 

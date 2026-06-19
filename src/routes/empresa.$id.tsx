@@ -25,7 +25,7 @@ const privateQo = (id: string) =>
       const { data: company, error } = await supabase
         .from("companies")
         .select(
-          "id, name, description, cep, address, number, complement, neighborhood, city, state, lat, lng, phone, whatsapp, email, website, logo_url, cover_url, status, owner_id, is_featured, category_id, categories:category_id(name, slug, icon)",
+          "id, name, description, cep, address, number, complement, neighborhood, city, state, lat, lng, phone, whatsapp, email, website, instagram_url, facebook_url, hours, gallery_urls, logo_url, cover_url, status, owner_id, is_featured, category_id, categories:category_id(name, slug, icon)",
         )
         .eq("id", id)
         .maybeSingle();

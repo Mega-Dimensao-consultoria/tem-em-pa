@@ -125,7 +125,7 @@ function EditarEmpresa() {
         gallery_urls: v.gallery_urls,
         hours: v.hours,
         ...(lat !== undefined ? { lat, lng } : {}),
-      } as any)
+      })
       .eq("id", id);
     setSubmitting(false);
     if (error) {

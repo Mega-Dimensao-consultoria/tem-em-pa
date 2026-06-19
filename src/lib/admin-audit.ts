@@ -13,7 +13,7 @@ export async function logAdminAction(
       action,
       entity_type: entityType,
       entity_id: entityId,
-      details: details ?? null,
+      details: (details ?? null) as never,
     });
   } catch {
     // best-effort — never block primary admin action

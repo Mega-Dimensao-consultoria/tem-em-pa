@@ -100,9 +100,11 @@ function CompanyPage() {
               <span>{avg > 0 ? avg.toFixed(1) : "Sem avaliações"} · {company.reviews.length} avaliação(ões)</span>
             </div>
           </div>
-          {canClaim ? (
-            <Button variant="outline" disabled className="rounded-full">
-              <Flag className="mr-2 h-4 w-4" /> Reivindicar empresa
+          {canClaim && user ? (
+            <ClaimDialog companyId={company.id} userId={user.id} />
+          ) : canClaim && !user ? (
+            <Button asChild variant="outline" className="rounded-full">
+              <Link to="/auth">Entrar para reivindicar</Link>
             </Button>
           ) : null}
         </div>

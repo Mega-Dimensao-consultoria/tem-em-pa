@@ -141,7 +141,7 @@ function DashboardPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `metricas-${company!.name.replace(/\s+/g, "-").toLowerCase()}-30d.csv`;
+    a.download = `metricas-${company!.name.replace(/\s+/g, "-").toLowerCase()}-${periodDays}d.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

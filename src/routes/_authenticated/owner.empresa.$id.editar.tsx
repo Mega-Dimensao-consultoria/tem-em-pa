@@ -120,6 +120,20 @@ function EditarEmpresa() {
       return;
     }
     setSubmitting(true);
+
+    // Re-geocode se o endereço mudou
+    let lat: number | null | undefined = undefined;
+    let lng: number | null | undefined = undefined;
+    const fullAddr = [form.address, form.number, form.neighborhood, form.city, form.state, "Brasil"].filter(Boolean).join(", ");
+    if (fullAddr.length > 10) {
+      try {
+        const { geocodeAddress } = await import("@/lib/geocode.functions");
+        const geo = await geocodeAddress({ data: { address: fullAddr } });
+        lat = geo.lat;
+        lng = geo.lng;
+      } catch {/* silencioso */}
+    }
+
     const { error } = await supabase.from("companies").update({
       name: form.name,
       category_id: categoryId,
@@ -141,6 +155,7 @@ function EditarEmpresa() {
       cover_url: coverUrl,
       gallery_urls: gallery,
       hours: hours,
+      ...(lat !== undefined ? { lat, lng } : {}),
     } as any).eq("id", id);
     setSubmitting(false);
     if (error) { toast.error(error.message); return; }

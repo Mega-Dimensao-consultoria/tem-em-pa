@@ -14,6 +14,8 @@ import { CompanyMap } from "@/components/CompanyMap";
 import { trackEvent } from "@/lib/track";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { isOpenNow } from "@/lib/hours";
+import { ShareButton } from "@/components/ShareButton";
+import { ReportReviewDialog } from "@/components/ReportReviewDialog";
 
 type CompanyData = NonNullable<Awaited<ReturnType<typeof getCompanyById>>>;
 
@@ -201,6 +203,12 @@ function CompanyPage() {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {!isPending ? <FavoriteButton companyId={company.id} variant="button" /> : null}
+            {!isPending ? (
+              <ShareButton
+                title={company.name}
+                text={company.description?.slice(0, 140) ?? `Conheça ${company.name} no Tem em P.A`}
+              />
+            ) : null}
             {canClaim && user ? (
               <ClaimDialog companyId={company.id} userId={user.id} />
             ) : canClaim && !user ? (
@@ -210,6 +218,7 @@ function CompanyPage() {
             ) : null}
           </div>
         </div>
+
 
         {/* Conteúdo */}
         <div className="mt-8 grid gap-8 md:grid-cols-3">
@@ -291,7 +300,10 @@ function CompanyPage() {
                           </span>
                         </div>
                         {r.comment ? <p className="mt-2 text-sm">{r.comment}</p> : null}
-                        <p className="mt-2 text-xs text-muted-foreground">— Avaliação anônima</p>
+                        <div className="mt-2 flex items-center justify-between gap-2">
+                          <p className="text-xs text-muted-foreground">— Avaliação anônima</p>
+                          <ReportReviewDialog reviewId={r.id} />
+                        </div>
                         {(r as any).owner_reply ? (
                           <div className="mt-3 rounded-xl border border-primary/30 bg-primary/5 p-3">
                             <div className="mb-1 flex items-center justify-between gap-2">

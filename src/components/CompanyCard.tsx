@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { MapPin, Star } from "lucide-react";
+import { FavoriteButton } from "./FavoriteButton";
 
 type Company = {
   id: string;
@@ -31,6 +32,7 @@ export function CompanyCard({ company }: { company: Company }) {
             <Star className="h-3 w-3 fill-primary" /> Destaque
           </span>
         ) : null}
+        <FavoriteButton companyId={company.id} className="absolute right-3 top-3" />
       </div>
       <div className="flex flex-col gap-2 p-4">
         {company.categories?.name ? (

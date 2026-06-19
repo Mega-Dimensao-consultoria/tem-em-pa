@@ -12,6 +12,7 @@ import { ClaimDialog } from "@/components/ClaimDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { CompanyMap } from "@/components/CompanyMap";
 import { trackEvent } from "@/lib/track";
+import { FavoriteButton } from "@/components/FavoriteButton";
 
 type CompanyData = NonNullable<Awaited<ReturnType<typeof getCompanyById>>>;
 
@@ -197,13 +198,16 @@ function CompanyPage() {
               <span>{avg > 0 ? avg.toFixed(1) : "Sem avaliações"} · {company.reviews.length} avaliação(ões)</span>
             </div>
           </div>
-          {canClaim && user ? (
-            <ClaimDialog companyId={company.id} userId={user.id} />
-          ) : canClaim && !user ? (
-            <Button asChild variant="outline" className="rounded-full">
-              <Link to="/auth">Entrar para reivindicar</Link>
-            </Button>
-          ) : null}
+          <div className="flex flex-wrap items-center gap-2">
+            {!isPending ? <FavoriteButton companyId={company.id} variant="button" /> : null}
+            {canClaim && user ? (
+              <ClaimDialog companyId={company.id} userId={user.id} />
+            ) : canClaim && !user ? (
+              <Button asChild variant="outline" className="rounded-full">
+                <Link to="/auth">Entrar para reivindicar</Link>
+              </Button>
+            ) : null}
+          </div>
         </div>
 
         {/* Conteúdo */}

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
-import { logAdminAction } from "@/lib/admin-audit";
+import { logAdminAction } from "./audit";
 import { adminKeys } from "./keys";
 
 /** Invalidate every admin query at once (used after broad mutations). */

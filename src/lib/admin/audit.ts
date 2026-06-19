@@ -12,15 +12,37 @@ export type AuditLogRow = {
   created_at: string;
 };
 
+/**
+ * Best-effort insert into admin_audit_log. Never throws — admin actions must
+ * not be blocked by audit failures.
+ */
+export async function logAdminAction(
+  actorId: string,
+  action: string,
+  entityType: string,
+  entityId: string | null,
+  details?: Record<string, unknown>,
+) {
+  try {
+    await supabase.from("admin_audit_log").insert({
+      actor_id: actorId,
+      action,
+      entity_type: entityType,
+      entity_id: entityId,
+      details: (details ?? null) as never,
+    });
+  } catch {
+    /* swallow */
+  }
+}
+
 export function useAuditLog(limit = 200) {
   return useQuery({
     queryKey: adminKeys.auditLog(),
     queryFn: async () => {
       const { data, error } = await supabase
         .from("admin_audit_log")
-        .select(
-          "id, actor_id, action, entity_type, entity_id, details, created_at",
-        )
+        .select("id, actor_id, action, entity_type, entity_id, details, created_at")
         .order("created_at", { ascending: false })
         .limit(limit);
       if (error) throw error;

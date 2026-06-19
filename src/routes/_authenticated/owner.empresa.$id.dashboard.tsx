@@ -157,9 +157,27 @@ function DashboardPage() {
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h1 className="font-display text-3xl font-bold">{company.name}</h1>
-            <p className="mt-1 text-sm text-muted-foreground">Dashboard · últimos 30 dias (vs 30 dias anteriores)</p>
+            <p className="mt-1 text-sm text-muted-foreground">Dashboard · últimos {periodDays} dias (vs {periodDays} dias anteriores)</p>
           </div>
           <div className="flex flex-wrap gap-2">
+            <div className="inline-flex rounded-full border border-border bg-card p-0.5 text-xs">
+              {([7, 30, 90] as const).map((p) => (
+                <button
+                  key={p}
+                  type="button"
+                  onClick={() => setPeriodDays(p)}
+                  className={`rounded-full px-3 py-1 font-medium transition ${periodDays === p ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                >
+                  {p}d
+                </button>
+              ))}
+            </div>
+            <ShareButton
+              title={company.name}
+              text={`Confira ${company.name} no Tem em P.A`}
+              url={`https://tem-em-pa.lovable.app/empresa/${company.id}`}
+              className="!px-3 !py-1.5 !text-xs"
+            />
             <Button variant="outline" size="sm" onClick={exportCsv}>
               <Download className="mr-1 h-3 w-3" /> Exportar CSV
             </Button>
@@ -168,6 +186,16 @@ function DashboardPage() {
             <Button asChild size="sm"><Link to="/owner/empresa/$id/produtos" params={{ id }}>Produtos</Link></Button>
           </div>
         </div>
+
+        {unansweredCount > 0 ? (
+          <div className="mt-4 flex items-start gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4">
+            <MessageSquareWarning className="mt-0.5 h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
+            <div className="text-sm">
+              <p className="font-semibold">Você tem {unansweredCount} avaliação{unansweredCount > 1 ? "ões" : ""} sem resposta</p>
+              <p className="text-xs text-muted-foreground">Responder ao público mostra que sua empresa se importa — e melhora a percepção de quem visita o perfil.</p>
+            </div>
+          </div>
+        ) : null}
 
         <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {cards.map((c) => {

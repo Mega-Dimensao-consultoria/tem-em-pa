@@ -16,10 +16,6 @@ export const listSimilarCompanies = createServerFn({ method: "GET" })
     const sb = publicClient();
     if (!data.categoryId) return [];
     const baseSelect = (CARD_COLS + ", hours") as typeof CARD_COLS;
-    type Row = Awaited<
-      ReturnType<ReturnType<typeof publicClient>["from"] extends (t: "companies") => infer Q ? Q : never>
-    >;
-    void (null as unknown as Row); // keep TS happy with type-only reference
     let neighborhoodRows: Array<{ id: string }> = [];
     if (data.neighborhood) {
       const { data: rows } = await sb

@@ -17,6 +17,7 @@ type Company = {
 };
 
 export function CompanyCard({ company }: { company: Company }) {
+  const openNow = isOpenNow(company.hours);
   return (
     <Link
       to="/empresa/$id"

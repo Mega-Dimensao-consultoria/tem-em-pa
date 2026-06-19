@@ -67,7 +67,7 @@ export function CompanyMap({
     loadGoogleMaps()
       .then(() => {
         if (cancelled || !ref.current) return;
-        const g = (window as any).google;
+        const g = (window as WindowWithMaps).google!;
         const center = { lat, lng };
         const map = new g.maps.Map(ref.current, {
           center,

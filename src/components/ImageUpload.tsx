@@ -1,60 +1,66 @@
 import { useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Upload, X, Loader2, ImagePlus } from "lucide-react";
+import { Upload, X, Loader2, ImagePlus, FileText } from "lucide-react";
 import { toast } from "sonner";
 
-const BUCKET = "company-logos";
 const MAX_MB = 5;
-const ALLOWED = ["image/jpeg", "image/png", "image/webp"];
+const PRIVATE_BUCKETS = new Set(["claim-documents"]);
 
-function publicUrl(path: string) {
-  return supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+function publicUrl(bucket: string, path: string) {
+  return supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
 }
 
-function pathFromUrl(url: string): string | null {
-  const idx = url.indexOf(`/${BUCKET}/`);
+function pathFromValue(bucket: string, value: string): string | null {
+  if (!value.startsWith("http")) return value; // already a path (private)
+  const idx = value.indexOf(`/${bucket}/`);
   if (idx === -1) return null;
-  return url.slice(idx + BUCKET.length + 2);
+  return value.slice(idx + bucket.length + 2);
 }
 
-function validate(file: File): string | null {
-  if (!ALLOWED.includes(file.type)) return "Use JPG, PNG ou WebP.";
-  if (file.size > MAX_MB * 1024 * 1024) return `Imagem maior que ${MAX_MB}MB.`;
+function validate(file: File, accept: string): string | null {
+  if (file.size > MAX_MB * 1024 * 1024) return `Arquivo maior que ${MAX_MB}MB.`;
+  if (accept && !accept.includes("*")) {
+    // basic mime/ext check
+    const exts = accept.split(",").map((s) => s.trim().toLowerCase());
+    const ok = exts.some((e) => (e.startsWith(".") ? file.name.toLowerCase().endsWith(e) : file.type.startsWith(e.replace("*", ""))));
+    if (!ok) return "Tipo de arquivo não permitido.";
+  }
   return null;
 }
 
-interface SingleProps {
-  companyId: string;
-  kind: "logo" | "cover";
+interface ImageUploadProps {
+  bucket: string;
+  userId: string;
   value: string | null;
-  onChange: (url: string | null) => void;
+  onChange: (value: string | null) => void;
   label: string;
-  aspect?: "square" | "wide";
+  accept?: string;
 }
 
-export function SingleImageUpload({ companyId, kind, value, onChange, label, aspect = "square" }: SingleProps) {
+export function ImageUpload({ bucket, userId, value, onChange, label, accept = "image/*" }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
+  const isPrivate = PRIVATE_BUCKETS.has(bucket);
+  const isPdf = value && (value.toLowerCase().endsWith(".pdf") || (isPrivate && !value.match(/\.(jpe?g|png|webp|gif)$/i)));
 
   async function handleFile(file: File) {
-    const err = validate(file);
+    const err = validate(file, accept);
     if (err) { toast.error(err); return; }
     setBusy(true);
     try {
-      const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-      const path = `${companyId}/${kind}-${Date.now()}.${ext}`;
-      const { error } = await supabase.storage.from(BUCKET).upload(path, file, {
-        upsert: true, contentType: file.type, cacheControl: "3600",
+      const ext = file.name.split(".").pop()?.toLowerCase() || "bin";
+      const path = `${userId}/${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${ext}`;
+      const { error } = await supabase.storage.from(bucket).upload(path, file, {
+        contentType: file.type, cacheControl: "3600", upsert: false,
       });
       if (error) throw error;
-      // remove previous
       if (value) {
-        const oldPath = pathFromUrl(value);
-        if (oldPath && oldPath !== path) await supabase.storage.from(BUCKET).remove([oldPath]);
+        const oldPath = pathFromValue(bucket, value);
+        if (oldPath) await supabase.storage.from(bucket).remove([oldPath]);
       }
-      onChange(publicUrl(path));
-      toast.success("Imagem enviada");
+      onChange(isPrivate ? path : publicUrl(bucket, path));
+      toast.success("Enviado");
     } catch (e) {
       toast.error("Falha no upload", { description: (e as Error).message });
     } finally { setBusy(false); }
@@ -62,27 +68,31 @@ export function SingleImageUpload({ companyId, kind, value, onChange, label, asp
 
   async function handleRemove() {
     if (!value) return;
-    const path = pathFromUrl(value);
     setBusy(true);
     try {
-      if (path) await supabase.storage.from(BUCKET).remove([path]);
+      const path = pathFromValue(bucket, value);
+      if (path) await supabase.storage.from(bucket).remove([path]);
       onChange(null);
     } finally { setBusy(false); }
   }
 
-  const aspectClass = aspect === "wide" ? "aspect-[3/1]" : "aspect-square max-w-[140px]";
-
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium">{label}</label>
-      <div className={`${aspectClass} relative overflow-hidden rounded-xl border border-dashed border-border bg-muted/30`}>
+      <div className="relative aspect-square max-w-[180px] overflow-hidden rounded-xl border border-dashed border-border bg-muted/30">
         {value ? (
           <>
-            <img src={value} alt={label} className="h-full w-full object-cover" />
+            {isPdf ? (
+              <div className="flex h-full w-full flex-col items-center justify-center gap-1 bg-muted/50 p-3 text-center">
+                <FileText className="h-8 w-8 text-primary" />
+                <span className="text-[10px] text-muted-foreground">Documento anexado</span>
+              </div>
+            ) : (
+              <img src={isPrivate ? "" : value} alt={label} className="h-full w-full object-cover" />
+            )}
             <button
               type="button" onClick={handleRemove} disabled={busy}
-              className="absolute right-2 top-2 rounded-full bg-background/90 p-1.5 text-foreground shadow hover:bg-background"
-              aria-label="Remover imagem"
+              className="absolute right-2 top-2 rounded-full bg-background/90 p-1.5 shadow hover:bg-background"
+              aria-label="Remover"
             >
               {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4" />}
             </button>
@@ -93,29 +103,30 @@ export function SingleImageUpload({ companyId, kind, value, onChange, label, asp
             className="flex h-full w-full flex-col items-center justify-center gap-1 text-xs text-muted-foreground hover:bg-muted/50"
           >
             {busy ? <Loader2 className="h-5 w-5 animate-spin" /> : <Upload className="h-5 w-5" />}
-            <span>Enviar imagem</span>
-            <span className="text-[10px]">JPG/PNG/WebP · até {MAX_MB}MB</span>
+            <span className="px-2 text-center">{label}</span>
+            <span className="text-[10px]">até {MAX_MB}MB</span>
           </button>
         )}
       </div>
       <input
-        ref={inputRef} type="file" accept={ALLOWED.join(",")} className="hidden"
+        ref={inputRef} type="file" accept={accept} className="hidden"
         onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = ""; }}
       />
     </div>
   );
 }
 
-interface GalleryProps {
-  companyId: string;
+interface GalleryUploadProps {
+  userId: string;
   value: string[];
   onChange: (urls: string[]) => void;
   max?: number;
 }
 
-export function GalleryUpload({ companyId, value, onChange, max = 8 }: GalleryProps) {
+export function GalleryUpload({ userId, value, onChange, max = 8 }: GalleryUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
+  const bucket = "company-logos";
 
   async function handleFiles(files: FileList) {
     const remaining = max - value.length;
@@ -125,15 +136,15 @@ export function GalleryUpload({ companyId, value, onChange, max = 8 }: GalleryPr
     const newUrls: string[] = [];
     try {
       for (const file of list) {
-        const err = validate(file);
+        const err = validate(file, "image/*");
         if (err) { toast.error(`${file.name}: ${err}`); continue; }
         const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-        const path = `${companyId}/gallery/${crypto.randomUUID()}.${ext}`;
-        const { error } = await supabase.storage.from(BUCKET).upload(path, file, {
+        const path = `${userId}/gallery-${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${ext}`;
+        const { error } = await supabase.storage.from(bucket).upload(path, file, {
           contentType: file.type, cacheControl: "3600",
         });
         if (error) { toast.error(`${file.name}: ${error.message}`); continue; }
-        newUrls.push(publicUrl(path));
+        newUrls.push(publicUrl(bucket, path));
       }
       if (newUrls.length) {
         onChange([...value, ...newUrls]);
@@ -144,15 +155,15 @@ export function GalleryUpload({ companyId, value, onChange, max = 8 }: GalleryPr
 
   async function removeAt(idx: number) {
     const url = value[idx];
-    const path = pathFromUrl(url);
-    if (path) await supabase.storage.from(BUCKET).remove([path]);
+    const path = pathFromValue(bucket, url);
+    if (path) await supabase.storage.from(bucket).remove([path]);
     onChange(value.filter((_, i) => i !== idx));
   }
 
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium">Galeria de fotos ({value.length}/{max})</label>
+        <span className="text-sm font-medium">Galeria de fotos ({value.length}/{max})</span>
         <Button
           type="button" variant="outline" size="sm"
           onClick={() => inputRef.current?.click()}
@@ -164,7 +175,7 @@ export function GalleryUpload({ companyId, value, onChange, max = 8 }: GalleryPr
       </div>
       {value.length === 0 ? (
         <div className="rounded-xl border border-dashed border-border bg-muted/30 p-6 text-center text-xs text-muted-foreground">
-          Nenhuma foto ainda. JPG/PNG/WebP · até {MAX_MB}MB cada.
+          Nenhuma foto ainda. JPG/PNG/WebP, até {MAX_MB}MB cada.
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
@@ -183,7 +194,7 @@ export function GalleryUpload({ companyId, value, onChange, max = 8 }: GalleryPr
         </div>
       )}
       <input
-        ref={inputRef} type="file" accept={ALLOWED.join(",")} multiple className="hidden"
+        ref={inputRef} type="file" accept="image/*" multiple className="hidden"
         onChange={(e) => { if (e.target.files) handleFiles(e.target.files); e.target.value = ""; }}
       />
     </div>

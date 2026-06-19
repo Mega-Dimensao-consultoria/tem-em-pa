@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { ForgotPassword } from "./ForgotPassword";
-import { emailSchema } from "./schemas";
+import { emailSchema } from "../schemas";
 
 export function SignInForm({ onSuccess }: { onSuccess: () => void }) {
   const [loading, setLoading] = useState(false);

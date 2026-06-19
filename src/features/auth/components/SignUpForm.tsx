@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-import { emailSchema, passwordSchema } from "./schemas";
+import { emailSchema, passwordSchema } from "../schemas";
 
 export function SignUpForm({ onSuccess }: { onSuccess: () => void }) {
   const [loading, setLoading] = useState(false);

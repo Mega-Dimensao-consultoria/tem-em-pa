@@ -13,7 +13,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
 import { Heart, LayoutDashboard, LogOut, Shield, Store, User as UserIcon } from "lucide-react";
-import { NotificationsBell } from "./NotificationsBell";
+import { NotificationsBell } from "@/features/notifications/components/NotificationsBell";
 
 export function Header() {
   const { user, loading } = useAuth();

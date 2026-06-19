@@ -119,7 +119,7 @@ function PendingClaimsTab() {
     if (status === "approved") {
       // assign ownership
       const { error: e2 } = await supabase.from("companies")
-        .update({ owner_id: (claim as { user_id?: string }).user_id ?? undefined, status: "approved" })
+        .update({ owner_id: claim.user_id, status: "approved" })
         .eq("id", claim.company_id);
       if (e2) toast.error("Claim aprovada, mas falhou ao atribuir dono: " + e2.message);
     }

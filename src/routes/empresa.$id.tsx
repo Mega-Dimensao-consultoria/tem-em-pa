@@ -16,6 +16,7 @@ import { FavoriteButton } from "@/components/FavoriteButton";
 import { isOpenNow } from "@/lib/hours";
 import { ShareButton } from "@/components/ShareButton";
 import { ReportReviewDialog } from "@/components/ReportReviewDialog";
+import { SimilarCompanies } from "@/components/SimilarCompanies";
 
 type CompanyData = NonNullable<Awaited<ReturnType<typeof getCompanyById>>>;
 
@@ -53,6 +54,25 @@ export const Route = createFileRoute("/empresa/$id")({
     const name = loaderData?.name ?? "Empresa";
     const desc = loaderData?.description ?? "Empresa em Pouso Alegre/MG";
     const img = loaderData?.cover_url ?? loaderData?.logo_url ?? undefined;
+    const reviews = loaderData?.reviews ?? [];
+    const ratingCount = reviews.length;
+    const ratingValue =
+      ratingCount > 0
+        ? Number((reviews.reduce((s: number, r: any) => s + r.rating, 0) / ratingCount).toFixed(2))
+        : 0;
+
+    // openingHoursSpecification (Schema.org)
+    const DAY_MAP = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const hoursArr = Array.isArray((loaderData as any)?.hours) ? ((loaderData as any).hours as any[]) : [];
+    const openingHoursSpecification = hoursArr
+      .filter((r) => r && !r.closed && r.open && r.close && typeof r.day === "number")
+      .map((r) => ({
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: DAY_MAP[r.day],
+        opens: r.open,
+        closes: r.close,
+      }));
+
     const ld: Record<string, unknown> = {
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
@@ -71,6 +91,18 @@ export const Route = createFileRoute("/empresa/$id")({
       ...(loaderData?.lat && loaderData?.lng
         ? { geo: { "@type": "GeoCoordinates", latitude: loaderData.lat, longitude: loaderData.lng } }
         : {}),
+      ...(ratingCount > 0
+        ? {
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue,
+              reviewCount: ratingCount,
+              bestRating: 5,
+              worstRating: 1,
+            },
+          }
+        : {}),
+      ...(openingHoursSpecification.length > 0 ? { openingHoursSpecification } : {}),
     };
     return {
       meta: [
@@ -86,6 +118,7 @@ export const Route = createFileRoute("/empresa/$id")({
       scripts: [{ type: "application/ld+json", children: JSON.stringify(ld) }],
     };
   },
+
   component: CompanyPage,
   notFoundComponent: () => (
     <PageShell>
@@ -359,6 +392,14 @@ function CompanyPage() {
             </div>
           </aside>
         </div>
+
+        {!isPending ? (
+          <SimilarCompanies
+            id={company.id}
+            categoryId={(company as any).category_id}
+            neighborhood={company.neighborhood}
+          />
+        ) : null}
 
         <div className="h-16" />
       </div>

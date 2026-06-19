@@ -16,6 +16,7 @@ import { FavoriteButton } from "@/components/FavoriteButton";
 import { isOpenNow } from "@/lib/hours";
 import { ShareButton } from "@/components/ShareButton";
 import { ReportReviewDialog } from "@/components/ReportReviewDialog";
+import { SimilarCompanies } from "@/components/SimilarCompanies";
 
 type CompanyData = NonNullable<Awaited<ReturnType<typeof getCompanyById>>>;
 

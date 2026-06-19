@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useQuery } from "@tanstack/react-query";
 import { listCategories } from "@/lib/categories.functions";
 import { lookupCep } from "@/lib/viacep.functions";
+import { geocodeAddress } from "@/lib/geocode.functions";
 import { ImageUpload } from "@/components/ImageUpload";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -94,6 +95,22 @@ function CadastrarPage() {
     }
     setSubmitting(true);
     const v = parsed.data;
+
+    // Geocode address (best-effort) — só geocodifica se tiver endereço mínimo
+    let lat: number | null = null;
+    let lng: number | null = null;
+    const fullAddr = [v.address, v.number, v.neighborhood, v.city || "Pouso Alegre", v.state || "MG", "Brasil"]
+      .filter(Boolean).join(", ");
+    if (fullAddr.length > 10) {
+      try {
+        const geo = await geocodeAddress({ data: { address: fullAddr } });
+        lat = geo.lat;
+        lng = geo.lng;
+      } catch {
+        // silencioso: cadastro continua mesmo sem coordenadas
+      }
+    }
+
     const { data, error } = await supabase.from("companies").insert({
       name: v.name,
       slug: slugify(v.name) + "-" + Math.random().toString(36).slice(2, 6),
@@ -111,6 +128,8 @@ function CadastrarPage() {
       website: v.website || null,
       logo_url: logoUrl,
       cover_url: coverUrl,
+      lat,
+      lng,
       owner_id: user.id,
       status: "pending",
     }).select("id").single();

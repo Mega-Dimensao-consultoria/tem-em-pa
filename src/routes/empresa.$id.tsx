@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { ReviewForm } from "@/components/ReviewForm";
 import { ClaimDialog } from "@/components/ClaimDialog";
 import { supabase } from "@/integrations/supabase/client";
+import { CompanyMap } from "@/components/CompanyMap";
 
 type CompanyData = NonNullable<Awaited<ReturnType<typeof getCompanyById>>>;
 
@@ -274,13 +275,13 @@ function CompanyPage() {
             <HoursBlock hours={(company as any).hours} />
 
             <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
-              <div className="aspect-square w-full bg-muted">
-                {fullAddress ? (
-                  <iframe title="Mapa" src={`https://www.google.com/maps?q=${mapsQuery}&output=embed`} className="h-full w-full" loading="lazy" />
-                ) : (
-                  <div className="flex h-full items-center justify-center text-sm text-muted-foreground">Endereço não informado</div>
-                )}
-              </div>
+              <CompanyMap
+                lat={(company as any).lat ?? null}
+                lng={(company as any).lng ?? null}
+                name={company.name}
+                address={fullAddress}
+                height="h-72"
+              />
               <div className="p-3">
                 <a
                   href={`https://www.google.com/maps/dir/?api=1&destination=${mapsQuery}`}

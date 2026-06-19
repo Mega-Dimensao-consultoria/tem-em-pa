@@ -49,7 +49,7 @@ export const Route = createFileRoute("/buscar")({
 });
 
 function SearchPage() {
-  const { q, cat, sort = "recent" } = Route.useSearch();
+  const { q, cat, sort = "recent", open } = Route.useSearch();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const [geo, setGeo] = useState<{ lat: number; lng: number } | null>(null);

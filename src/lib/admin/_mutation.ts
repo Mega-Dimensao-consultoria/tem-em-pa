@@ -7,7 +7,7 @@ import { adminKeys } from "./keys";
 /** Invalidate every admin query at once (used after broad mutations). */
 export function useInvalidateAdmin() {
   const qc = useQueryClient();
-  return (extra: readonly unknown[][] = []) => {
+  return (extra: readonly (readonly unknown[])[] = []) => {
     qc.invalidateQueries({ queryKey: adminKeys.all });
     extra.forEach((k) => qc.invalidateQueries({ queryKey: k }));
   };
@@ -23,7 +23,7 @@ type AdminMutationOptions<TVars, TData> = {
     details?: Record<string, unknown> | null;
   } | null;
   successMessage?: string | ((vars: TVars, data: TData) => string);
-  invalidate?: readonly unknown[][];
+  invalidate?: readonly (readonly unknown[])[];
 };
 
 /**

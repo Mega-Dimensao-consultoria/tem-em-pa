@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { ReviewForm } from "@/components/ReviewForm";
 import { ClaimDialog } from "@/components/ClaimDialog";
 import { supabase } from "@/integrations/supabase/client";
+import { CompanyMap } from "@/components/CompanyMap";
 
 type CompanyData = NonNullable<Awaited<ReturnType<typeof getCompanyById>>>;
 

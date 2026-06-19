@@ -115,10 +115,9 @@ function CadastrarPage() {
       status: "pending",
     }).select("id").single();
     setSubmitting(false);
-    if (error) { toast.error(error.message); return; }
+    if (error || !data) { toast.error(error?.message ?? "Falha ao cadastrar"); return; }
     toast.success("Empresa enviada para aprovação!");
-    navigate({ to: "/owner" });
-    void data;
+    navigate({ to: "/empresa/$id", params: { id: data.id } });
   }
 
   return (

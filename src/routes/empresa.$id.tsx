@@ -17,6 +17,7 @@ import { isOpenNow } from "@/lib/hours";
 import { ShareButton } from "@/components/ShareButton";
 import { ReportReviewDialog } from "@/components/ReportReviewDialog";
 import { SimilarCompanies } from "@/components/SimilarCompanies";
+import { Breadcrumbs, breadcrumbJsonLd } from "@/components/Breadcrumbs";
 
 type CompanyData = NonNullable<Awaited<ReturnType<typeof getCompanyById>>>;
 
@@ -104,6 +105,14 @@ export const Route = createFileRoute("/empresa/$id")({
         : {}),
       ...(openingHoursSpecification.length > 0 ? { openingHoursSpecification } : {}),
     };
+    const catName = (loaderData as any)?.categories?.name as string | undefined;
+    const catSlug = (loaderData as any)?.categories?.slug as string | undefined;
+    const crumbLd = breadcrumbJsonLd("https://tem-em-pa.lovable.app", [
+      ...(catName && catSlug
+        ? [{ label: catName, path: `/categoria/${catSlug}` }]
+        : [{ label: "Empresas", path: "/buscar" }]),
+      { label: name, path: `/empresa/${params.id}` },
+    ]);
     return {
       meta: [
         { title: `${name} — Tem em P.A` },
@@ -115,7 +124,10 @@ export const Route = createFileRoute("/empresa/$id")({
         ...(img ? [{ property: "og:image", content: img }, { name: "twitter:image", content: img }] : []),
       ],
       links: [{ rel: "canonical", href: url }],
-      scripts: [{ type: "application/ld+json", children: JSON.stringify(ld) }],
+      scripts: [
+        { type: "application/ld+json", children: JSON.stringify(ld) },
+        { type: "application/ld+json", children: JSON.stringify(crumbLd) },
+      ],
     };
   },
 
@@ -211,6 +223,16 @@ function CompanyPage() {
       </div>
 
       <div className="mx-auto max-w-5xl px-4">
+        <div className="pt-4">
+          <Breadcrumbs
+            items={[
+              ...(company.categories?.name
+                ? [{ label: company.categories.name, to: `/categoria/${(company.categories as any).slug}` }]
+                : [{ label: "Empresas", to: "/buscar" }]),
+              { label: company.name },
+            ]}
+          />
+        </div>
         {/* Header */}
         <div className="-mt-12 flex flex-col gap-4 rounded-3xl border border-border bg-card p-6 shadow-soft md:flex-row md:items-end">
           <div className="h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-border bg-background">

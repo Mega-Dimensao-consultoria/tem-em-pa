@@ -8,6 +8,7 @@ import { Eye, MessageCircle, Phone, Globe, MapPin, Star, ArrowLeft, ArrowUp, Arr
 import { RatingStars } from "@/components/RatingStars";
 import { OwnerReplyForm } from "@/components/OwnerReplyForm";
 import { ProfileCompleteness } from "@/components/ProfileCompleteness";
+import { QrCodeCard } from "@/components/QrCodeCard";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — Tem em P.A" }] }),
@@ -206,8 +207,12 @@ function DashboardPage() {
           </div>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 grid gap-6 md:grid-cols-[1fr_auto] md:items-start">
           <ProfileCompleteness company={company} />
+          <QrCodeCard
+            url={`https://tem-em-pa.lovable.app/empresa/${company.id}`}
+            companyName={company.name}
+          />
         </div>
 
         <div className="mt-8">

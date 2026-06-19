@@ -393,6 +393,14 @@ function CompanyPage() {
           </aside>
         </div>
 
+        {!isPending ? (
+          <SimilarCompanies
+            id={company.id}
+            categoryId={(company as any).category_id}
+            neighborhood={company.neighborhood}
+          />
+        ) : null}
+
         <div className="h-16" />
       </div>
     </PageShell>

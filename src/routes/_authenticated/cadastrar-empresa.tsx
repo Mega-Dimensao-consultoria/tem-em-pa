@@ -79,7 +79,7 @@ function CadastrarPage() {
     const fd = new FormData(e.currentTarget);
     const parsed = schema.safeParse({
       name: fd.get("name"),
-      category_id: fd.get("category_id"),
+      category_id: categoryId,
       description: fd.get("description") ?? "",
       cep, address, neighborhood, city, state,
       number: fd.get("number") ?? "",

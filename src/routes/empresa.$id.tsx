@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions, useQueryClient, useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { PageShell } from "@/components/PageShell";
 import { RatingStars } from "@/components/RatingStars";
 import { getCompanyById } from "@/lib/companies.functions";
@@ -10,6 +11,7 @@ import { ReviewForm } from "@/components/ReviewForm";
 import { ClaimDialog } from "@/components/ClaimDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { CompanyMap } from "@/components/CompanyMap";
+import { trackEvent } from "@/lib/track";
 
 type CompanyData = NonNullable<Awaited<ReturnType<typeof getCompanyById>>>;
 

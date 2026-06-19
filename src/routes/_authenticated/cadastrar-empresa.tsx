@@ -16,6 +16,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { maskCep, maskPhone, maskUf } from "@/lib/masks";
 
 export const Route = createFileRoute("/_authenticated/cadastrar-empresa")({
   head: () => ({ meta: [{ title: "Cadastrar empresa — Tem em P.A" }] }),
@@ -178,10 +179,10 @@ function CadastrarPage() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="CEP" id="cep">
-              <Input id="cep" value={cep} onChange={(e) => setCep(e.target.value)} onBlur={onCepBlur} placeholder="37550-000" maxLength={9} />
+              <Input id="cep" value={cep} onChange={(e) => setCep(maskCep(e.target.value))} onBlur={onCepBlur} placeholder="37550-000" inputMode="numeric" maxLength={9} />
               {loadingCep ? <p className="text-xs text-muted-foreground">Consultando…</p> : null}
             </Field>
-            <Field label="Número" id="num"><Input id="num" name="number" maxLength={10} /></Field>
+            <Field label="Número" id="num"><Input id="num" name="number" maxLength={10} inputMode="numeric" /></Field>
           </div>
 
           <Field label="Endereço" id="addr">
@@ -190,16 +191,20 @@ function CadastrarPage() {
           <div className="grid gap-4 sm:grid-cols-3">
             <Field label="Bairro" id="bairro"><Input id="bairro" value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)} /></Field>
             <Field label="Cidade" id="city"><Input id="city" value={city} onChange={(e) => setCity(e.target.value)} /></Field>
-            <Field label="UF" id="uf"><Input id="uf" value={state} onChange={(e) => setState(e.target.value)} maxLength={2} /></Field>
+            <Field label="UF" id="uf"><Input id="uf" value={state} onChange={(e) => setState(maskUf(e.target.value))} maxLength={2} /></Field>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Telefone" id="phone"><Input id="phone" name="phone" type="tel" maxLength={20} /></Field>
-            <Field label="WhatsApp" id="wpp"><Input id="wpp" name="whatsapp" type="tel" maxLength={20} /></Field>
+            <Field label="Telefone" id="phone">
+              <MaskedPhone name="phone" placeholder="(35) 3421-0000" />
+            </Field>
+            <Field label="WhatsApp" id="wpp">
+              <MaskedPhone name="whatsapp" placeholder="(35) 99999-0000" />
+            </Field>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="E-mail" id="email"><Input id="email" name="email" type="email" maxLength={120} /></Field>
-            <Field label="Site" id="site"><Input id="site" name="website" type="url" maxLength={200} /></Field>
+            <Field label="Site" id="site"><Input id="site" name="website" type="url" maxLength={200} placeholder="https://..." /></Field>
           </div>
 
           <Button type="submit" className="w-full" disabled={submitting}>
@@ -217,5 +222,19 @@ function Field({ label, id, children }: { label: string; id: string; children: R
       <Label htmlFor={id}>{label}</Label>
       {children}
     </div>
+  );
+}
+
+function MaskedPhone({ name, placeholder }: { name: string; placeholder?: string }) {
+  const [v, setV] = useState("");
+  return (
+    <Input
+      name={name}
+      value={v}
+      onChange={(e) => setV(maskPhone(e.target.value))}
+      placeholder={placeholder}
+      inputMode="tel"
+      maxLength={16}
+    />
   );
 }

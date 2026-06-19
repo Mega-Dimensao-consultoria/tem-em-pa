@@ -48,6 +48,8 @@ function AdminPage() {
         <h1 className="font-display text-3xl font-bold">Painel administrativo</h1>
         <p className="mt-1 text-sm text-muted-foreground">Modere conteúdo, gerencie categorias e usuários.</p>
 
+        <AdminStats />
+
         <Tabs defaultValue="empresas" className="mt-8">
           <TabsList className="flex w-full flex-wrap">
             <TabsTrigger value="empresas">Empresas</TabsTrigger>
@@ -75,12 +77,64 @@ function AdminPage() {
 }
 
 /* ===========================================================
+   STATS RÁPIDAS (cabeçalho)
+=========================================================== */
+function AdminStats() {
+  const { data } = useQuery({
+    queryKey: ["admin", "stats"],
+    queryFn: async () => {
+      const [companiesPending, companiesApproved, claimsPending, reviewsPending, reportsPending, users] = await Promise.all([
+        supabase.from("companies").select("id", { count: "exact", head: true }).in("status", ["pending", "claimed_pending"]),
+        supabase.from("companies").select("id", { count: "exact", head: true }).eq("status", "approved"),
+        supabase.from("company_claims").select("id", { count: "exact", head: true }).eq("status", "pending"),
+        supabase.from("reviews").select("id", { count: "exact", head: true }).in("status", ["pending_moderation", "flagged"]),
+        supabase.from("review_reports").select("id", { count: "exact", head: true }).eq("status", "pending"),
+        supabase.from("profiles").select("id", { count: "exact", head: true }),
+      ]);
+      return {
+        companiesPending: companiesPending.count ?? 0,
+        companiesApproved: companiesApproved.count ?? 0,
+        claimsPending: claimsPending.count ?? 0,
+        reviewsPending: reviewsPending.count ?? 0,
+        reportsPending: reportsPending.count ?? 0,
+        users: users.count ?? 0,
+      };
+    },
+  });
+
+  const stats = [
+    { label: "Empresas ativas", value: data?.companiesApproved ?? "—", tone: "primary" as const },
+    { label: "Empresas pendentes", value: data?.companiesPending ?? "—", tone: data?.companiesPending ? "warn" as const : "muted" as const },
+    { label: "Reivindicações", value: data?.claimsPending ?? "—", tone: data?.claimsPending ? "warn" as const : "muted" as const },
+    { label: "Comentários p/ moderar", value: data?.reviewsPending ?? "—", tone: data?.reviewsPending ? "warn" as const : "muted" as const },
+    { label: "Denúncias abertas", value: data?.reportsPending ?? "—", tone: data?.reportsPending ? "danger" as const : "muted" as const },
+    { label: "Usuários", value: data?.users ?? "—", tone: "muted" as const },
+  ];
+
+  return (
+    <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
+      {stats.map((s) => (
+        <div key={s.label} className="rounded-2xl border border-border bg-card p-3 shadow-soft">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{s.label}</p>
+          <p className={`mt-1 font-display text-2xl font-bold ${
+            s.tone === "warn" ? "text-amber-600 dark:text-amber-400" :
+            s.tone === "danger" ? "text-rose-600 dark:text-rose-400" :
+            s.tone === "primary" ? "text-primary" : ""
+          }`}>{s.value}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ===========================================================
    EMPRESAS PENDENTES
 =========================================================== */
 function PendingCompaniesTab() {
   const { user } = useAuth();
   const qc = useQueryClient();
   const key = ["admin", "pending-companies"];
+  const [filter, setFilter] = useState("");
   const { data = [], isLoading } = useQuery({
     queryKey: key,
     queryFn: async () => {
@@ -98,38 +152,44 @@ function PendingCompaniesTab() {
     const { error } = await supabase.from("companies").update({ status }).eq("id", id);
     if (error) { toast.error(error.message); return; }
     if (user) await logAdminAction(user.id, status === "approved" ? "company.approve" : "company.reject", "company", id, { name });
-    toast.success(status === "approved" ? "Empresa aprovada" : "Empresa rejeitada");
     qc.invalidateQueries({ queryKey: key });
+    qc.invalidateQueries({ queryKey: ["admin", "stats"] });
+    toast.success(status === "approved" ? "Empresa aprovada" : "Empresa rejeitada");
   }
 
   if (isLoading) return <Loading />;
   if (data.length === 0) return <Empty>Nenhuma empresa aguardando aprovação.</Empty>;
 
+  const filtered = data.filter((c) => !filter || c.name.toLowerCase().includes(filter.toLowerCase()) || (c.city ?? "").toLowerCase().includes(filter.toLowerCase()));
+
   return (
-    <ul className="mt-4 divide-y rounded-2xl border border-border bg-card shadow-soft">
-      {data.map((c) => (
-        <li key={c.id} className="flex flex-wrap items-start justify-between gap-3 p-4">
-          <div className="min-w-0 flex-1">
-            <p className="truncate font-semibold">{c.name}</p>
-            <p className="text-xs text-muted-foreground">{c.status} · {c.city ?? "—"} · {new Date(c.created_at).toLocaleDateString("pt-BR")}</p>
-            {c.description ? <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{c.description}</p> : null}
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Button asChild size="sm" variant="outline">
-              <Link to="/empresa/$id" params={{ id: c.id }} target="_blank"><ExternalLink className="mr-1 h-3 w-3" />Ver</Link>
-            </Button>
-            <ConfirmDestructive
-              trigger={<Button size="sm" variant="outline"><X className="mr-1 h-4 w-4" />Rejeitar</Button>}
-              title="Rejeitar empresa?"
-              description={<p>A empresa <strong>{c.name}</strong> ficará oculta para todos. Isso pode ser revertido depois mudando o status.</p>}
-              confirmText="Rejeitar"
-              onConfirm={() => decide(c.id, c.name, "rejected")}
-            />
-            <Button size="sm" onClick={() => decide(c.id, c.name, "approved")}><Check className="mr-1 h-4 w-4" />Aprovar</Button>
-          </div>
-        </li>
-      ))}
-    </ul>
+    <div className="mt-4 space-y-3">
+      <Input placeholder="Filtrar por nome ou cidade…" value={filter} onChange={(e) => setFilter(e.target.value)} />
+      <ul className="divide-y rounded-2xl border border-border bg-card shadow-soft">
+        {filtered.map((c) => (
+          <li key={c.id} className="flex flex-wrap items-start justify-between gap-3 p-4">
+            <div className="min-w-0 flex-1">
+              <p className="truncate font-semibold">{c.name}</p>
+              <p className="text-xs text-muted-foreground">{c.status} · {c.city ?? "—"} · {new Date(c.created_at).toLocaleDateString("pt-BR")}</p>
+              {c.description ? <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{c.description}</p> : null}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button asChild size="sm" variant="outline">
+                <Link to="/empresa/$id" params={{ id: c.id }} target="_blank"><ExternalLink className="mr-1 h-3 w-3" />Ver</Link>
+              </Button>
+              <ConfirmDestructive
+                trigger={<Button size="sm" variant="outline"><X className="mr-1 h-4 w-4" />Rejeitar</Button>}
+                title="Rejeitar empresa?"
+                description={<p>A empresa <strong>{c.name}</strong> ficará oculta para todos. Isso pode ser revertido depois mudando o status.</p>}
+                confirmText="Rejeitar"
+                onConfirm={() => decide(c.id, c.name, "rejected")}
+              />
+              <Button size="sm" onClick={() => decide(c.id, c.name, "approved")}><Check className="mr-1 h-4 w-4" />Aprovar</Button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

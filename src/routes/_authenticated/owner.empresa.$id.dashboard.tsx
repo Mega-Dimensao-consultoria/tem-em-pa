@@ -1,14 +1,16 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { PageShell } from "@/components/PageShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
-import { Eye, MessageCircle, Phone, Globe, MapPin, Star, ArrowLeft, ArrowUp, ArrowDown, Download } from "lucide-react";
+import { Eye, MessageCircle, Phone, Globe, MapPin, Star, ArrowLeft, ArrowUp, ArrowDown, Download, MessageSquareWarning } from "lucide-react";
 import { RatingStars } from "@/components/RatingStars";
 import { OwnerReplyForm } from "@/components/OwnerReplyForm";
 import { ProfileCompleteness } from "@/components/ProfileCompleteness";
 import { QrCodeCard } from "@/components/QrCodeCard";
+import { ShareButton } from "@/components/ShareButton";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — Tem em P.A" }] }),
@@ -39,12 +41,14 @@ function DashboardPage() {
 
   const isOwner = !!user && !!company && company.owner_id === user.id;
 
+  // Período de análise (dias). Sempre buscamos 2x o período para comparar com o anterior.
+  const [periodDays, setPeriodDays] = useState<7 | 30 | 90>(30);
+
   const { data: events = [] } = useQuery({
-    queryKey: ["company-events", id],
+    queryKey: ["company-events", id, periodDays],
     enabled: isOwner,
     queryFn: async () => {
-      // pull last 60 days so we can compare 30d vs prior 30d
-      const since = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString();
+      const since = new Date(Date.now() - periodDays * 2 * 24 * 60 * 60 * 1000).toISOString();
       const { data, error } = await supabase
         .from("company_events")
         .select("event_type, created_at")
@@ -79,13 +83,13 @@ function DashboardPage() {
 
   const now = Date.now();
   const day = 24 * 60 * 60 * 1000;
-  const cutoff30 = now - 30 * day;
-  const cutoff60 = now - 60 * day;
+  const cutoffCurr = now - periodDays * day;
+  const cutoffPrev = now - periodDays * 2 * day;
 
-  const last30 = events.filter((e) => new Date(e.created_at).getTime() >= cutoff30);
+  const last30 = events.filter((e) => new Date(e.created_at).getTime() >= cutoffCurr);
   const prev30 = events.filter((e) => {
     const t = new Date(e.created_at).getTime();
-    return t >= cutoff60 && t < cutoff30;
+    return t >= cutoffPrev && t < cutoffCurr;
   });
 
   function countOf(rows: EventRow[], type: string) {
@@ -97,10 +101,11 @@ function DashboardPage() {
   }
 
   const avg = reviews.length > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0;
+  const unansweredCount = reviews.filter((r) => r.status === "approved" && !r.owner_reply).length;
 
-  // 30-day daily series for views + clicks
+  // Série diária de visualizações e cliques no período selecionado
   const days: { label: string; date: Date; views: number; clicks: number }[] = [];
-  for (let i = 29; i >= 0; i--) {
+  for (let i = periodDays - 1; i >= 0; i--) {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
     d.setDate(d.getDate() - i);
@@ -136,7 +141,7 @@ function DashboardPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `metricas-${company!.name.replace(/\s+/g, "-").toLowerCase()}-30d.csv`;
+    a.download = `metricas-${company!.name.replace(/\s+/g, "-").toLowerCase()}-${periodDays}d.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -152,9 +157,27 @@ function DashboardPage() {
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h1 className="font-display text-3xl font-bold">{company.name}</h1>
-            <p className="mt-1 text-sm text-muted-foreground">Dashboard · últimos 30 dias (vs 30 dias anteriores)</p>
+            <p className="mt-1 text-sm text-muted-foreground">Dashboard · últimos {periodDays} dias (vs {periodDays} dias anteriores)</p>
           </div>
           <div className="flex flex-wrap gap-2">
+            <div className="inline-flex rounded-full border border-border bg-card p-0.5 text-xs">
+              {([7, 30, 90] as const).map((p) => (
+                <button
+                  key={p}
+                  type="button"
+                  onClick={() => setPeriodDays(p)}
+                  className={`rounded-full px-3 py-1 font-medium transition ${periodDays === p ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                >
+                  {p}d
+                </button>
+              ))}
+            </div>
+            <ShareButton
+              title={company.name}
+              text={`Confira ${company.name} no Tem em P.A`}
+              url={`https://tem-em-pa.lovable.app/empresa/${company.id}`}
+              className="!px-3 !py-1.5 !text-xs"
+            />
             <Button variant="outline" size="sm" onClick={exportCsv}>
               <Download className="mr-1 h-3 w-3" /> Exportar CSV
             </Button>
@@ -163,6 +186,16 @@ function DashboardPage() {
             <Button asChild size="sm"><Link to="/owner/empresa/$id/produtos" params={{ id }}>Produtos</Link></Button>
           </div>
         </div>
+
+        {unansweredCount > 0 ? (
+          <div className="mt-4 flex items-start gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4">
+            <MessageSquareWarning className="mt-0.5 h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
+            <div className="text-sm">
+              <p className="font-semibold">Você tem {unansweredCount} avaliação{unansweredCount > 1 ? "ões" : ""} sem resposta</p>
+              <p className="text-xs text-muted-foreground">Responder ao público mostra que sua empresa se importa — e melhora a percepção de quem visita o perfil.</p>
+            </div>
+          </div>
+        ) : null}
 
         <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {cards.map((c) => {

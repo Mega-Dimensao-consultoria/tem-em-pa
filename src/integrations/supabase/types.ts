@@ -213,6 +213,35 @@ export type Database = {
           },
         ]
       }
+      company_events: {
+        Row: {
+          company_id: string
+          created_at: string
+          event_type: string
+          id: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          event_type: string
+          id?: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          event_type?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_events_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           company_id: string
@@ -297,6 +326,8 @@ export type Database = {
           created_at: string
           id: string
           is_anonymous: boolean
+          owner_reply: string | null
+          owner_reply_at: string | null
           rating: number
           status: Database["public"]["Enums"]["review_status"]
           updated_at: string
@@ -308,6 +339,8 @@ export type Database = {
           created_at?: string
           id?: string
           is_anonymous?: boolean
+          owner_reply?: string | null
+          owner_reply_at?: string | null
           rating: number
           status?: Database["public"]["Enums"]["review_status"]
           updated_at?: string
@@ -319,6 +352,8 @@ export type Database = {
           created_at?: string
           id?: string
           is_anonymous?: boolean
+          owner_reply?: string | null
+          owner_reply_at?: string | null
           rating?: number
           status?: Database["public"]["Enums"]["review_status"]
           updated_at?: string

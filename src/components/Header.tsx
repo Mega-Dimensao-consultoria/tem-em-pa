@@ -102,6 +102,7 @@ export function Header() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            </>
           ) : (
             <Button asChild size="sm" className="rounded-full">
               <Link to="/auth">Entrar</Link>

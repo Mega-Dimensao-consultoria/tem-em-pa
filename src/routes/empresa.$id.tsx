@@ -53,6 +53,8 @@ export const Route = createFileRoute("/empresa/$id")({
 function CompanyPage() {
   const { id } = Route.useParams();
   const { data: company } = useSuspenseQuery(qo(id));
+  const { user } = useAuth();
+  const qc = useQueryClient();
   const avg =
     company.reviews.length > 0
       ? company.reviews.reduce((s, r) => s + r.rating, 0) / company.reviews.length

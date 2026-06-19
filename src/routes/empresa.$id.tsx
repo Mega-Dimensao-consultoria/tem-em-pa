@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions, useQueryClient, useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { PageShell } from "@/components/PageShell";
 import { RatingStars } from "@/components/RatingStars";
 import { getCompanyById } from "@/lib/companies.functions";
@@ -10,6 +11,7 @@ import { ReviewForm } from "@/components/ReviewForm";
 import { ClaimDialog } from "@/components/ClaimDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { CompanyMap } from "@/components/CompanyMap";
+import { trackEvent } from "@/lib/track";
 
 type CompanyData = NonNullable<Awaited<ReturnType<typeof getCompanyById>>>;
 
@@ -34,7 +36,7 @@ const privateQo = (id: string) =>
       if (!company) return null;
       const [products, reviews] = await Promise.all([
         supabase.from("products").select("id, name, description, price, image_url_1, image_url_2").eq("company_id", id).eq("is_active", true),
-        supabase.from("reviews").select("id, rating, comment, created_at").eq("company_id", id).eq("status", "approved").order("created_at", { ascending: false }).limit(50),
+        supabase.from("reviews").select("id, rating, comment, created_at, owner_reply, owner_reply_at").eq("company_id", id).eq("status", "approved").order("created_at", { ascending: false }).limit(50),
       ]);
       return { ...(company as unknown as CompanyData), products: products.data ?? [], reviews: reviews.data ?? [] } as CompanyData;
     },
@@ -106,6 +108,13 @@ function CompanyPage() {
   const canClaim = !company.owner_id && !isPending;
   const fullAddress = [company.address, company.number, company.neighborhood, company.city, company.state]
     .filter(Boolean).join(", ");
+
+  // Track a view (deduped per session) for approved, non-owner visits
+  useEffect(() => {
+    if (!isPending && !isOwner && publicCompany) {
+      trackEvent(publicCompany.id, "view");
+    }
+  }, [isPending, isOwner, publicCompany]);
   const mapsQuery = encodeURIComponent(fullAddress || company.name);
 
   return (
@@ -249,6 +258,15 @@ function CompanyPage() {
                         </div>
                         {r.comment ? <p className="mt-2 text-sm">{r.comment}</p> : null}
                         <p className="mt-2 text-xs text-muted-foreground">— Avaliação anônima</p>
+                        {(r as any).owner_reply ? (
+                          <div className="mt-3 rounded-xl border border-primary/30 bg-primary/5 p-3">
+                            <div className="mb-1 flex items-center justify-between gap-2">
+                              <span className="text-xs font-semibold text-primary">Resposta do proprietário</span>
+                              {(r as any).owner_reply_at ? <span className="text-[10px] text-muted-foreground">{new Date((r as any).owner_reply_at).toLocaleDateString("pt-BR")}</span> : null}
+                            </div>
+                            <p className="text-sm">{(r as any).owner_reply}</p>
+                          </div>
+                        ) : null}
                       </article>
                     ))}
                   </div>
@@ -263,10 +281,10 @@ function CompanyPage() {
               <h3 className="mb-3 font-display text-base font-semibold">Contato</h3>
               <ul className="space-y-2 text-sm">
                 {fullAddress ? <li className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 text-primary" /><span>{fullAddress}</span></li> : null}
-                {company.phone ? <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /><a href={`tel:${company.phone}`} className="hover:underline">{company.phone}</a></li> : null}
-                {company.whatsapp ? <li className="flex items-center gap-2"><MessageCircle className="h-4 w-4 text-primary" /><a href={`https://wa.me/${company.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noreferrer" className="hover:underline">{company.whatsapp}</a></li> : null}
+                {company.phone ? <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /><a href={`tel:${company.phone}`} onClick={() => !isPending && trackEvent(company.id, "phone_click")} className="hover:underline">{company.phone}</a></li> : null}
+                {company.whatsapp ? <li className="flex items-center gap-2"><MessageCircle className="h-4 w-4 text-primary" /><a href={`https://wa.me/${company.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noreferrer" onClick={() => !isPending && trackEvent(company.id, "whatsapp_click")} className="hover:underline">{company.whatsapp}</a></li> : null}
                 {company.email ? <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-primary" /><a href={`mailto:${company.email}`} className="hover:underline">{company.email}</a></li> : null}
-                {company.website ? <li className="flex items-center gap-2"><Globe className="h-4 w-4 text-primary" /><a href={company.website} target="_blank" rel="noreferrer" className="hover:underline">{company.website}</a></li> : null}
+                {company.website ? <li className="flex items-center gap-2"><Globe className="h-4 w-4 text-primary" /><a href={company.website} target="_blank" rel="noreferrer" onClick={() => !isPending && trackEvent(company.id, "website_click")} className="hover:underline">{company.website}</a></li> : null}
                 {(company as any).instagram_url ? <li className="flex items-center gap-2"><Instagram className="h-4 w-4 text-primary" /><a href={(company as any).instagram_url} target="_blank" rel="noreferrer" className="hover:underline">Instagram</a></li> : null}
                 {(company as any).facebook_url ? <li className="flex items-center gap-2"><Facebook className="h-4 w-4 text-primary" /><a href={(company as any).facebook_url} target="_blank" rel="noreferrer" className="hover:underline">Facebook</a></li> : null}
               </ul>
@@ -286,6 +304,7 @@ function CompanyPage() {
                 <a
                   href={`https://www.google.com/maps/dir/?api=1&destination=${mapsQuery}`}
                   target="_blank" rel="noreferrer"
+                  onClick={() => !isPending && trackEvent(company.id, "maps_click")}
                   className="inline-flex w-full items-center justify-center rounded-full bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground transition hover:bg-secondary/90"
                 >
                   Como chegar

@@ -105,6 +105,14 @@ export const Route = createFileRoute("/empresa/$id")({
         : {}),
       ...(openingHoursSpecification.length > 0 ? { openingHoursSpecification } : {}),
     };
+    const catName = (loaderData as any)?.categories?.name as string | undefined;
+    const catSlug = (loaderData as any)?.categories?.slug as string | undefined;
+    const crumbLd = breadcrumbJsonLd("https://tem-em-pa.lovable.app", [
+      ...(catName && catSlug
+        ? [{ label: catName, path: `/categoria/${catSlug}` }]
+        : [{ label: "Empresas", path: "/buscar" }]),
+      { label: name, path: `/empresa/${params.id}` },
+    ]);
     return {
       meta: [
         { title: `${name} — Tem em P.A` },
@@ -116,7 +124,10 @@ export const Route = createFileRoute("/empresa/$id")({
         ...(img ? [{ property: "og:image", content: img }, { name: "twitter:image", content: img }] : []),
       ],
       links: [{ rel: "canonical", href: url }],
-      scripts: [{ type: "application/ld+json", children: JSON.stringify(ld) }],
+      scripts: [
+        { type: "application/ld+json", children: JSON.stringify(ld) },
+        { type: "application/ld+json", children: JSON.stringify(crumbLd) },
+      ],
     };
   },
 

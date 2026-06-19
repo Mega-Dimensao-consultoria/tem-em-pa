@@ -135,15 +135,30 @@ function SearchPage() {
               </button>
             ))}
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ordenar por:</span>
-            <Select value={sort} onValueChange={(v) => updateSearch({ sort: v as "recent" | "name" })}>
+            <Select value={sort} onValueChange={(v) => {
+              if (v === "distance" && !geo) { requestGeo(); return; }
+              updateSearch({ sort: v as "recent" | "name" | "distance" });
+            }}>
               <SelectTrigger className="h-8 w-44 text-xs"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="recent">Mais recentes</SelectItem>
                 <SelectItem value="name">Nome (A→Z)</SelectItem>
+                <SelectItem value="distance">Mais próximas</SelectItem>
               </SelectContent>
             </Select>
+            <Button
+              type="button"
+              variant={sort === "distance" && geo ? "default" : "outline"}
+              size="sm"
+              onClick={requestGeo}
+              disabled={geoLoading}
+              className="h-8 rounded-full text-xs"
+            >
+              {geoLoading ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <Navigation className="mr-1 h-3 w-3" />}
+              {geo ? "Atualizar localização" : "Perto de mim"}
+            </Button>
             {(q || cat) ? (
               <Link to="/buscar" search={{}} className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
                 <X className="h-3 w-3" /> Limpar filtros
@@ -151,6 +166,7 @@ function SearchPage() {
             ) : null}
           </div>
         </div>
+
 
         <h1 className="font-display text-2xl font-bold">
           {q ? `Resultados para "${q}"` : activeCat ? activeCat.name : "Todas as empresas"}

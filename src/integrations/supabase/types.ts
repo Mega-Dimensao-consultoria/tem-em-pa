@@ -73,7 +73,11 @@ export type Database = {
           created_at: string
           description: string | null
           email: string | null
+          facebook_url: string | null
+          gallery_urls: string[] | null
+          hours: Json | null
           id: string
+          instagram_url: string | null
           is_featured: boolean
           lat: number | null
           lng: number | null
@@ -100,7 +104,11 @@ export type Database = {
           created_at?: string
           description?: string | null
           email?: string | null
+          facebook_url?: string | null
+          gallery_urls?: string[] | null
+          hours?: Json | null
           id?: string
+          instagram_url?: string | null
           is_featured?: boolean
           lat?: number | null
           lng?: number | null
@@ -127,7 +135,11 @@ export type Database = {
           created_at?: string
           description?: string | null
           email?: string | null
+          facebook_url?: string | null
+          gallery_urls?: string[] | null
+          hours?: Json | null
           id?: string
+          instagram_url?: string | null
           is_featured?: boolean
           lat?: number | null
           lng?: number | null

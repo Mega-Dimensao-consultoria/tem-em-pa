@@ -24,6 +24,7 @@ import { Route as AuthenticatedCadastrarEmpresaRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedOwnerEmpresaIdProdutosRouteImport } from './routes/_authenticated/owner.empresa.$id.produtos'
 import { Route as AuthenticatedOwnerEmpresaIdEditarRouteImport } from './routes/_authenticated/owner.empresa.$id.editar'
+import { Route as AuthenticatedOwnerEmpresaIdDashboardRouteImport } from './routes/_authenticated/owner.empresa.$id.dashboard'
 
 const SobreRoute = SobreRouteImport.update({
   id: '/sobre',
@@ -102,6 +103,12 @@ const AuthenticatedOwnerEmpresaIdEditarRoute =
     path: '/empresa/$id/editar',
     getParentRoute: () => AuthenticatedOwnerRoute,
   } as any)
+const AuthenticatedOwnerEmpresaIdDashboardRoute =
+  AuthenticatedOwnerEmpresaIdDashboardRouteImport.update({
+    id: '/empresa/$id/dashboard',
+    path: '/empresa/$id/dashboard',
+    getParentRoute: () => AuthenticatedOwnerRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -116,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/painel': typeof AuthenticatedPainelRoute
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/empresa/$id': typeof EmpresaIdRoute
+  '/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   '/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
 }
@@ -132,6 +140,7 @@ export interface FileRoutesByTo {
   '/painel': typeof AuthenticatedPainelRoute
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/empresa/$id': typeof EmpresaIdRoute
+  '/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   '/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
 }
@@ -150,6 +159,7 @@ export interface FileRoutesById {
   '/_authenticated/painel': typeof AuthenticatedPainelRoute
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/empresa/$id': typeof EmpresaIdRoute
+  '/_authenticated/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   '/_authenticated/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/_authenticated/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
 }
@@ -168,6 +178,7 @@ export interface FileRouteTypes {
     | '/painel'
     | '/categoria/$slug'
     | '/empresa/$id'
+    | '/owner/empresa/$id/dashboard'
     | '/owner/empresa/$id/editar'
     | '/owner/empresa/$id/produtos'
   fileRoutesByTo: FileRoutesByTo
@@ -184,6 +195,7 @@ export interface FileRouteTypes {
     | '/painel'
     | '/categoria/$slug'
     | '/empresa/$id'
+    | '/owner/empresa/$id/dashboard'
     | '/owner/empresa/$id/editar'
     | '/owner/empresa/$id/produtos'
   id:
@@ -201,6 +213,7 @@ export interface FileRouteTypes {
     | '/_authenticated/painel'
     | '/categoria/$slug'
     | '/empresa/$id'
+    | '/_authenticated/owner/empresa/$id/dashboard'
     | '/_authenticated/owner/empresa/$id/editar'
     | '/_authenticated/owner/empresa/$id/produtos'
   fileRoutesById: FileRoutesById
@@ -324,15 +337,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdEditarRouteImport
       parentRoute: typeof AuthenticatedOwnerRoute
     }
+    '/_authenticated/owner/empresa/$id/dashboard': {
+      id: '/_authenticated/owner/empresa/$id/dashboard'
+      path: '/empresa/$id/dashboard'
+      fullPath: '/owner/empresa/$id/dashboard'
+      preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdDashboardRouteImport
+      parentRoute: typeof AuthenticatedOwnerRoute
+    }
   }
 }
 
 interface AuthenticatedOwnerRouteChildren {
+  AuthenticatedOwnerEmpresaIdDashboardRoute: typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   AuthenticatedOwnerEmpresaIdEditarRoute: typeof AuthenticatedOwnerEmpresaIdEditarRoute
   AuthenticatedOwnerEmpresaIdProdutosRoute: typeof AuthenticatedOwnerEmpresaIdProdutosRoute
 }
 
 const AuthenticatedOwnerRouteChildren: AuthenticatedOwnerRouteChildren = {
+  AuthenticatedOwnerEmpresaIdDashboardRoute:
+    AuthenticatedOwnerEmpresaIdDashboardRoute,
   AuthenticatedOwnerEmpresaIdEditarRoute:
     AuthenticatedOwnerEmpresaIdEditarRoute,
   AuthenticatedOwnerEmpresaIdProdutosRoute:

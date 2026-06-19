@@ -17,6 +17,7 @@ import { isOpenNow } from "@/lib/hours";
 import { ShareButton } from "@/components/ShareButton";
 import { ReportReviewDialog } from "@/components/ReportReviewDialog";
 import { SimilarCompanies } from "@/components/SimilarCompanies";
+import { Breadcrumbs, breadcrumbJsonLd } from "@/components/Breadcrumbs";
 
 type CompanyData = NonNullable<Awaited<ReturnType<typeof getCompanyById>>>;
 

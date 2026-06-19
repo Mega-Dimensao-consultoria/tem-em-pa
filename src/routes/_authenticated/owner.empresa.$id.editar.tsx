@@ -67,7 +67,7 @@ function EditarEmpresa() {
       address: c.address ?? "",
       number: c.number ?? "",
       complement: c.complement ?? "",
-      neighborhood: c.neighborhood ?? "Pouso Alegre".slice(0, 0) || "",
+      neighborhood: c.neighborhood ?? "",
       city: c.city ?? "Pouso Alegre",
       state: c.state ?? "MG",
       logo_url: c.logo_url ?? null,

@@ -300,7 +300,10 @@ function CompanyPage() {
                           </span>
                         </div>
                         {r.comment ? <p className="mt-2 text-sm">{r.comment}</p> : null}
-                        <p className="mt-2 text-xs text-muted-foreground">— Avaliação anônima</p>
+                        <div className="mt-2 flex items-center justify-between gap-2">
+                          <p className="text-xs text-muted-foreground">— Avaliação anônima</p>
+                          <ReportReviewDialog reviewId={r.id} />
+                        </div>
                         {(r as any).owner_reply ? (
                           <div className="mt-3 rounded-xl border border-primary/30 bg-primary/5 p-3">
                             <div className="mb-1 flex items-center justify-between gap-2">

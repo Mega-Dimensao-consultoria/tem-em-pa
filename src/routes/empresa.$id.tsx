@@ -44,15 +44,44 @@ const privateQo = (id: string) =>
 
 export const Route = createFileRoute("/empresa/$id")({
   loader: ({ context, params }) => context.queryClient.ensureQueryData(publicQo(params.id)),
-  head: ({ loaderData }) => ({
-    meta: [
-      { title: `${loaderData?.name ?? "Empresa"} — Tem em P.A` },
-      { name: "description", content: loaderData?.description ?? "Empresa em Pouso Alegre/MG" },
-      { property: "og:title", content: `${loaderData?.name ?? "Empresa"} — Tem em P.A` },
-      { property: "og:description", content: loaderData?.description ?? "Empresa em Pouso Alegre/MG" },
-      ...(loaderData?.cover_url ? [{ property: "og:image", content: loaderData.cover_url }] : []),
-    ],
-  }),
+  head: ({ loaderData, params }) => {
+    const url = `https://tem-em-pa.lovable.app/empresa/${params.id}`;
+    const name = loaderData?.name ?? "Empresa";
+    const desc = loaderData?.description ?? "Empresa em Pouso Alegre/MG";
+    const img = loaderData?.cover_url ?? loaderData?.logo_url ?? undefined;
+    const ld: Record<string, unknown> = {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      name,
+      description: desc,
+      url,
+      ...(img ? { image: img } : {}),
+      ...(loaderData?.phone ? { telephone: loaderData.phone } : {}),
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: loaderData?.address ?? undefined,
+        addressLocality: "Pouso Alegre",
+        addressRegion: "MG",
+        addressCountry: "BR",
+      },
+      ...(loaderData?.lat && loaderData?.lng
+        ? { geo: { "@type": "GeoCoordinates", latitude: loaderData.lat, longitude: loaderData.lng } }
+        : {}),
+    };
+    return {
+      meta: [
+        { title: `${name} — Tem em P.A` },
+        { name: "description", content: desc },
+        { property: "og:title", content: `${name} — Tem em P.A` },
+        { property: "og:description", content: desc },
+        { property: "og:url", content: url },
+        { property: "og:type", content: "business.business" },
+        ...(img ? [{ property: "og:image", content: img }, { name: "twitter:image", content: img }] : []),
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [{ type: "application/ld+json", children: JSON.stringify(ld) }],
+    };
+  },
   component: CompanyPage,
   notFoundComponent: () => (
     <PageShell>

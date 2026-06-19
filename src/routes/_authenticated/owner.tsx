@@ -60,6 +60,9 @@ function OwnerPage() {
                       <Link to="/empresa/$id" params={{ id: c.id }}>Ver página</Link>
                     </Button>
                     <Button asChild variant="outline" size="sm">
+                      <Link to="/owner/empresa/$id/dashboard" params={{ id: c.id }}>Dashboard</Link>
+                    </Button>
+                    <Button asChild variant="outline" size="sm">
                       <Link to="/owner/empresa/$id/editar" params={{ id: c.id }}>Editar</Link>
                     </Button>
                     <Button asChild size="sm">

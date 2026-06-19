@@ -21,10 +21,27 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Tem em P.A — Encontre o melhor de Pouso Alegre" },
-      { name: "description", content: "Restaurantes, mercados, serviços e muito mais perto de você em Pouso Alegre/MG." },
+      { name: "description", content: "Restaurantes, mercados, serviços e muito mais perto de você em Pouso Alegre/MG. Guia comercial completo da cidade." },
       { property: "og:title", content: "Tem em P.A — Guia comercial de Pouso Alegre" },
       { property: "og:description", content: "Restaurantes, mercados, serviços e muito mais perto de você em Pouso Alegre/MG." },
+      { property: "og:url", content: "https://tem-em-pa.lovable.app/" },
+      { property: "og:type", content: "website" },
     ],
+    links: [{ rel: "canonical", href: "https://tem-em-pa.lovable.app/" }],
+    scripts: [{
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "Tem em P.A",
+        url: "https://tem-em-pa.lovable.app/",
+        potentialAction: {
+          "@type": "SearchAction",
+          target: "https://tem-em-pa.lovable.app/buscar?q={search_term_string}",
+          "query-input": "required name=search_term_string",
+        },
+      }),
+    }],
   }),
   loader: ({ context }) =>
     Promise.all([

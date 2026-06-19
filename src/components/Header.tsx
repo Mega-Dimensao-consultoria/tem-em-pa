@@ -13,6 +13,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
 import { LayoutDashboard, LogOut, Shield, Store, User as UserIcon } from "lucide-react";
+import { NotificationsBell } from "./NotificationsBell";
 
 export function Header() {
   const { user, loading } = useAuth();
@@ -56,6 +57,8 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           {loading ? null : user ? (
+            <>
+              <NotificationsBell />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="rounded-full outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
@@ -99,6 +102,7 @@ export function Header() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            </>
           ) : (
             <Button asChild size="sm" className="rounded-full">
               <Link to="/auth">Entrar</Link>

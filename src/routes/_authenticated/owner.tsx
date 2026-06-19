@@ -55,9 +55,12 @@ function OwnerPage() {
                     <p className="font-semibold">{c.name}</p>
                     <p className="text-xs text-muted-foreground">Status: {c.status}</p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <Button asChild variant="outline" size="sm">
                       <Link to="/empresa/$id" params={{ id: c.id }}>Ver página</Link>
+                    </Button>
+                    <Button asChild variant="outline" size="sm">
+                      <Link to="/owner/empresa/$id/editar" params={{ id: c.id }}>Editar</Link>
                     </Button>
                     <Button asChild size="sm">
                       <Link to="/owner/empresa/$id/produtos" params={{ id: c.id }}>Produtos</Link>

@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
-import { logAdminAction } from "@/lib/admin-audit";
+import {
+  useAdminCategories,
+  useDeleteCategory,
+  useSaveCategory,
+} from "@/lib/admin/categories";
 import { Loading, slugify } from "../admin-ui";
 
 type EditingCategory = {
@@ -20,72 +21,28 @@ type EditingCategory = {
 };
 
 export function CategoriesTab() {
-  const { user } = useAuth();
-  const qc = useQueryClient();
-  const key = ["admin", "categories"];
-
-  const { data = [], isLoading } = useQuery({
-    queryKey: key,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("categories")
-        .select("id, name, slug, icon, sort_order")
-        .order("sort_order");
-      if (error) throw error;
-      return data;
-    },
-  });
-
+  const { data = [], isLoading } = useAdminCategories();
+  const saveCategory = useSaveCategory();
+  const deleteCategory = useDeleteCategory();
   const [editing, setEditing] = useState<EditingCategory | null>(null);
 
-  async function save() {
+  function save() {
     if (!editing) return;
     const name = editing.name.trim();
     if (!name) {
       toast.error("Informe o nome.");
       return;
     }
-    const slug = editing.slug.trim() || slugify(name);
-    const payload = {
-      name,
-      slug,
-      icon: editing.icon.trim() || null,
-      sort_order: editing.sort_order || 0,
-    };
-    if (editing.id) {
-      const { error } = await supabase.from("categories").update(payload).eq("id", editing.id);
-      if (error) {
-        toast.error(error.message);
-        return;
-      }
-      if (user) await logAdminAction(user.id, "category.update", "category", editing.id, payload);
-      toast.success("Categoria atualizada");
-    } else {
-      const { data: ins, error } = await supabase
-        .from("categories")
-        .insert(payload)
-        .select("id")
-        .single();
-      if (error) {
-        toast.error(error.message);
-        return;
-      }
-      if (user) await logAdminAction(user.id, "category.create", "category", ins.id, payload);
-      toast.success("Categoria criada");
-    }
-    setEditing(null);
-    qc.invalidateQueries({ queryKey: key });
-  }
-
-  async function remove(id: string, name: string) {
-    const { error } = await supabase.from("categories").delete().eq("id", id);
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-    if (user) await logAdminAction(user.id, "category.delete", "category", id, { name });
-    toast.success("Categoria excluída");
-    qc.invalidateQueries({ queryKey: key });
+    saveCategory.mutate(
+      {
+        id: editing.id,
+        name,
+        slug: editing.slug.trim() || slugify(name),
+        icon: editing.icon.trim() || null,
+        sort_order: editing.sort_order || 0,
+      },
+      { onSuccess: () => setEditing(null) },
+    );
   }
 
   return (
@@ -206,7 +163,7 @@ export function CategoriesTab() {
                     </p>
                   }
                   confirmText="Excluir"
-                  onConfirm={() => remove(c.id, c.name)}
+                  onConfirm={() => deleteCategory.mutate({ id: c.id, name: c.name })}
                 />
               </div>
             </li>

@@ -1,82 +1,20 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Flag, Trash2, X } from "lucide-react";
-import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
-import { logAdminAction } from "@/lib/admin-audit";
+import {
+  REPORT_REASON_LABELS,
+  useResolveReport,
+  useReviewReports,
+  type ReportFilter,
+} from "@/lib/admin/reports";
 import { Empty, Loading } from "../admin-ui";
 
-const REASON_LABELS: Record<string, string> = {
-  spam: "Spam / propaganda",
-  offensive: "Linguagem ofensiva",
-  fake: "Avaliação falsa",
-  personal_info: "Dados pessoais",
-  other: "Outro motivo",
-};
-
-type ReportFilter = "pending" | "resolved" | "all";
-
 export function ReportsTab() {
-  const { user } = useAuth();
-  const qc = useQueryClient();
   const [filter, setFilter] = useState<ReportFilter>("pending");
-
-  const { data = [], isLoading } = useQuery({
-    queryKey: ["admin-review-reports", filter],
-    queryFn: async () => {
-      let q = supabase
-        .from("review_reports")
-        .select(
-          "id, review_id, reporter_id, reason, details, status, created_at, resolved_at, reviews:review_id(id, rating, comment, status, company_id, companies:company_id(id, name))",
-        )
-        .order("created_at", { ascending: false })
-        .limit(200);
-      if (filter !== "all") q = q.eq("status", filter);
-      const { data, error } = await q;
-      if (error) throw error;
-      return data ?? [];
-    },
-  });
-
-  async function resolve(
-    id: string,
-    action: "dismiss" | "remove_review",
-    reviewId: string,
-  ) {
-    if (!user) return;
-    if (action === "remove_review") {
-      const { error } = await supabase.from("reviews").delete().eq("id", reviewId);
-      if (error) {
-        toast.error(error.message);
-        return;
-      }
-      await logAdminAction(user.id, "review.removed_from_report", "reviews", reviewId);
-    }
-    const { error } = await supabase
-      .from("review_reports")
-      .update({
-        status: action === "remove_review" ? "removed" : "dismissed",
-        resolved_by: user.id,
-        resolved_at: new Date().toISOString(),
-      })
-      .eq("id", id);
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-    await logAdminAction(user.id, `report.${action}`, "review_reports", id);
-    toast.success(
-      action === "remove_review"
-        ? "Avaliação removida e denúncia resolvida."
-        : "Denúncia descartada.",
-    );
-    qc.invalidateQueries({ queryKey: ["admin-review-reports"] });
-    qc.invalidateQueries({ queryKey: ["admin", "stats"] });
-  }
+  const { data = [], isLoading } = useReviewReports(filter);
+  const resolve = useResolveReport();
 
   return (
     <div className="mt-4 space-y-4">
@@ -112,7 +50,7 @@ export function ReportsTab() {
                   <div className="flex items-center gap-2">
                     <Flag className="h-4 w-4 text-rose-500" />
                     <span className="text-sm font-semibold">
-                      {REASON_LABELS[r.reason] ?? r.reason}
+                      {REPORT_REASON_LABELS[r.reason] ?? r.reason}
                     </span>
                     <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase">
                       {r.status}
@@ -160,7 +98,9 @@ export function ReportsTab() {
                     <ConfirmDestructive
                       title="Remover esta avaliação?"
                       description="A avaliação será apagada definitivamente e a denúncia marcada como resolvida."
-                      onConfirm={() => resolve(r.id, "remove_review", review.id)}
+                      onConfirm={() =>
+                        resolve.mutate({ id: r.id, action: "remove_review", reviewId: review.id })
+                      }
                       trigger={
                         <Button variant="destructive" size="sm">
                           <Trash2 className="mr-1 h-3 w-3" /> Remover avaliação
@@ -170,7 +110,9 @@ export function ReportsTab() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => resolve(r.id, "dismiss", review.id)}
+                      onClick={() =>
+                        resolve.mutate({ id: r.id, action: "dismiss", reviewId: review.id })
+                      }
                     >
                       <X className="mr-1 h-3 w-3" /> Descartar denúncia
                     </Button>

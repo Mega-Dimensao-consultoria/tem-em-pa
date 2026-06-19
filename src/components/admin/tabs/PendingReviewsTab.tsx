@@ -1,48 +1,12 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, X } from "lucide-react";
-import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
-import { logAdminAction } from "@/lib/admin-audit";
+import { usePendingReviews, useDecideReview } from "@/lib/admin/reviews";
 import { Empty, Loading } from "../admin-ui";
 
 export function PendingReviewsTab() {
-  const { user } = useAuth();
-  const qc = useQueryClient();
-  const key = ["admin", "pending-reviews"];
-
-  const { data = [], isLoading } = useQuery({
-    queryKey: key,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("reviews")
-        .select("id, comment, status, created_at, rating, company_id, companies:company_id(name)")
-        .in("status", ["pending_moderation", "flagged"])
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  async function decide(id: string, status: "approved" | "rejected") {
-    const { error } = await supabase.from("reviews").update({ status }).eq("id", id);
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-    if (user)
-      await logAdminAction(
-        user.id,
-        status === "approved" ? "review.approve" : "review.reject",
-        "review",
-        id,
-      );
-    toast.success(status === "approved" ? "Comentário aprovado" : "Comentário rejeitado");
-    qc.invalidateQueries({ queryKey: key });
-    qc.invalidateQueries({ queryKey: ["admin", "stats"] });
-  }
+  const { data = [], isLoading } = usePendingReviews();
+  const decide = useDecideReview();
 
   if (isLoading) return <Loading />;
   if (data.length === 0) return <Empty>Nenhum comentário em moderação.</Empty>;
@@ -68,9 +32,9 @@ export function PendingReviewsTab() {
                 }
                 title="Rejeitar comentário?"
                 description="O comentário não aparecerá publicamente."
-                onConfirm={() => decide(r.id, "rejected")}
+                onConfirm={() => decide.mutate({ id: r.id, status: "rejected" })}
               />
-              <Button size="sm" onClick={() => decide(r.id, "approved")}>
+              <Button size="sm" onClick={() => decide.mutate({ id: r.id, status: "approved" })}>
                 <Check className="h-4 w-4" />
               </Button>
             </div>

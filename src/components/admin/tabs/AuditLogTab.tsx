@@ -1,21 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
 import { History } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuditLog } from "@/lib/admin/audit";
 import { Empty, Loading } from "../admin-ui";
 
 export function AuditLogTab() {
-  const { data = [], isLoading } = useQuery({
-    queryKey: ["admin", "audit-log"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("admin_audit_log")
-        .select("id, actor_id, action, entity_type, entity_id, details, created_at")
-        .order("created_at", { ascending: false })
-        .limit(200);
-      if (error) throw error;
-      return data;
-    },
-  });
+  const { data = [], isLoading } = useAuditLog(200);
 
   if (isLoading) return <Loading />;
   if (data.length === 0) return <Empty>Nenhuma ação registrada ainda.</Empty>;

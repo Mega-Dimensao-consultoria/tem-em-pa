@@ -1,37 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { useAdminStats } from "@/lib/admin/stats";
 
 type Tone = "primary" | "warn" | "danger" | "muted";
 
 export function AdminStats() {
-  const { data } = useQuery({
-    queryKey: ["admin", "stats"],
-    queryFn: async () => {
-      const [companiesPending, companiesApproved, claimsPending, reviewsPending, reportsPending, users] =
-        await Promise.all([
-          supabase
-            .from("companies")
-            .select("id", { count: "exact", head: true })
-            .in("status", ["pending", "claimed_pending"]),
-          supabase.from("companies").select("id", { count: "exact", head: true }).eq("status", "approved"),
-          supabase.from("company_claims").select("id", { count: "exact", head: true }).eq("status", "pending"),
-          supabase
-            .from("reviews")
-            .select("id", { count: "exact", head: true })
-            .in("status", ["pending_moderation", "flagged"]),
-          supabase.from("review_reports").select("id", { count: "exact", head: true }).eq("status", "pending"),
-          supabase.from("profiles").select("id", { count: "exact", head: true }),
-        ]);
-      return {
-        companiesPending: companiesPending.count ?? 0,
-        companiesApproved: companiesApproved.count ?? 0,
-        claimsPending: claimsPending.count ?? 0,
-        reviewsPending: reviewsPending.count ?? 0,
-        reportsPending: reportsPending.count ?? 0,
-        users: users.count ?? 0,
-      };
-    },
-  });
+  const { data } = useAdminStats();
 
   const stats: { label: string; value: number | string; tone: Tone }[] = [
     { label: "Empresas ativas", value: data?.companiesApproved ?? "—", tone: "primary" },

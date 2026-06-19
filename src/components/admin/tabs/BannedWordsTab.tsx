@@ -1,59 +1,23 @@
 import { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus, X } from "lucide-react";
-import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
-import { logAdminAction } from "@/lib/admin-audit";
+import {
+  useAddBannedWord,
+  useBannedWords,
+  useRemoveBannedWord,
+} from "@/lib/admin/bannedWords";
 import { Empty, Loading } from "../admin-ui";
 
 export function BannedWordsTab() {
-  const { user } = useAuth();
-  const qc = useQueryClient();
-  const key = ["admin", "banned-words"];
-  const { data = [], isLoading } = useQuery({
-    queryKey: key,
-    queryFn: async () => {
-      const { data, error } = await supabase.from("banned_words").select("id, word").order("word");
-      if (error) throw error;
-      return data;
-    },
-  });
+  const { data = [], isLoading } = useBannedWords();
+  const addWord = useAddBannedWord();
+  const removeWord = useRemoveBannedWord();
   const [word, setWord] = useState("");
 
-  async function add() {
-    const w = word.trim().toLowerCase();
-    if (w.length < 2) {
-      toast.error("Palavra muito curta.");
-      return;
-    }
-    const { data: ins, error } = await supabase
-      .from("banned_words")
-      .insert({ word: w })
-      .select("id")
-      .single();
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-    if (user) await logAdminAction(user.id, "banned_word.add", "banned_word", ins.id, { word: w });
-    setWord("");
-    toast.success("Palavra adicionada");
-    qc.invalidateQueries({ queryKey: key });
-  }
-
-  async function remove(id: string, w: string) {
-    const { error } = await supabase.from("banned_words").delete().eq("id", id);
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-    if (user) await logAdminAction(user.id, "banned_word.remove", "banned_word", id, { word: w });
-    toast.success("Palavra removida");
-    qc.invalidateQueries({ queryKey: key });
+  function submit() {
+    addWord.mutate({ word }, { onSuccess: () => setWord("") });
   }
 
   return (
@@ -64,9 +28,9 @@ export function BannedWordsTab() {
           onChange={(e) => setWord(e.target.value)}
           placeholder="Nova palavra…"
           maxLength={40}
-          onKeyDown={(e) => e.key === "Enter" && add()}
+          onKeyDown={(e) => e.key === "Enter" && submit()}
         />
-        <Button onClick={add}>
+        <Button onClick={submit}>
           <Plus className="mr-1 h-4 w-4" />
           Adicionar
         </Button>
@@ -95,7 +59,7 @@ export function BannedWordsTab() {
                     A palavra <code className="font-mono">{b.word}</code> deixará de bloquear novos comentários.
                   </p>
                 }
-                onConfirm={() => remove(b.id, b.word)}
+                onConfirm={() => removeWord.mutate({ id: b.id, word: b.word })}
               />
             </li>
           ))}

@@ -299,3 +299,45 @@ function CompanyPage() {
     </PageShell>
   );
 }
+
+const DAY_LABELS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+type HourRow = { day: number; open: string; close: string; closed?: boolean };
+
+function HoursBlock({ hours }: { hours: unknown }) {
+  if (!Array.isArray(hours) || hours.length === 0) return null;
+  const rows = hours as HourRow[];
+  // Check if any day is actually open
+  const hasOpen = rows.some((r) => !r.closed);
+  if (!hasOpen) return null;
+
+  const now = new Date();
+  const today = now.getDay();
+  const todayRow = rows.find((r) => r.day === today);
+  let openNow = false;
+  if (todayRow && !todayRow.closed) {
+    const cur = now.getHours() * 60 + now.getMinutes();
+    const [oh, om] = todayRow.open.split(":").map(Number);
+    const [ch, cm] = todayRow.close.split(":").map(Number);
+    openNow = cur >= oh * 60 + om && cur <= ch * 60 + cm;
+  }
+
+  return (
+    <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="font-display text-base font-semibold">Horário</h3>
+        <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${openNow ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300" : "bg-muted text-muted-foreground"}`}>
+          {openNow ? "Aberto agora" : "Fechado agora"}
+        </span>
+      </div>
+      <ul className="space-y-1 text-sm">
+        {rows.map((r, i) => (
+          <li key={i} className={`flex items-center justify-between gap-3 ${r.day === today ? "font-semibold" : ""}`}>
+            <span>{DAY_LABELS[r.day]}</span>
+            <span className="text-muted-foreground">{r.closed ? "Fechado" : `${r.open} – ${r.close}`}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+

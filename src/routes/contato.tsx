@@ -6,8 +6,12 @@ export const Route = createFileRoute("/contato")({
   head: () => ({
     meta: [
       { title: "Contato — Tem em P.A" },
-      { name: "description", content: "Fale com a equipe do Tem em P.A." },
+      { name: "description", content: "Fale com a equipe do Tem em P.A. Tire dúvidas, envie sugestões ou reporte problemas." },
+      { property: "og:title", content: "Contato — Tem em P.A" },
+      { property: "og:description", content: "Fale com a equipe do Tem em P.A." },
+      { property: "og:url", content: "https://tem-em-pa.lovable.app/contato" },
     ],
+    links: [{ rel: "canonical", href: "https://tem-em-pa.lovable.app/contato" }],
   }),
   component: () => (
     <PageShell>

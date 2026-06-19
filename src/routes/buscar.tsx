@@ -33,7 +33,16 @@ function haversineKm(aLat: number, aLng: number, bLat: number, bLng: number) {
 export const Route = createFileRoute("/buscar")({
   validateSearch: searchSchema,
   ssr: false,
-  head: () => ({ meta: [{ title: "Buscar — Tem em P.A" }] }),
+  head: () => ({
+    meta: [
+      { title: "Buscar empresas em Pouso Alegre — Tem em P.A" },
+      { name: "description", content: "Busque empresas, restaurantes, serviços e produtos em Pouso Alegre/MG. Filtre por categoria e encontre o que está mais perto de você." },
+      { property: "og:title", content: "Buscar empresas em Pouso Alegre — Tem em P.A" },
+      { property: "og:description", content: "Encontre empresas e serviços perto de você em Pouso Alegre/MG." },
+      { property: "og:url", content: "https://tem-em-pa.lovable.app/buscar" },
+    ],
+    links: [{ rel: "canonical", href: "https://tem-em-pa.lovable.app/buscar" }],
+  }),
   component: SearchPage,
 });
 

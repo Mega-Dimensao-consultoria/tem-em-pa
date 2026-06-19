@@ -21,6 +21,7 @@ import {
   publicCompanyQO,
   privateCompanyQO,
 } from "@/hooks/queries/useCompanyDetail";
+import { getCompanyContact } from "@/lib/companies/contact.functions";
 
 export const Route = createFileRoute("/empresa/$id")({
   loader: ({ context, params }) =>
@@ -62,6 +63,13 @@ function CompanyPage() {
   });
 
   const company = publicCompany ?? privateCompany;
+
+  const { data: contact } = useQuery({
+    queryKey: ["company-contact", id],
+    queryFn: () => getCompanyContact({ data: { id } }),
+    enabled: !!user && !!publicCompany,
+    staleTime: 60_000,
+  });
 
   const isOwner = !!user && !!company && company.owner_id === user.id;
   const isPending = !!company && company.status !== "approved";
@@ -190,7 +198,7 @@ function CompanyPage() {
 
           <aside className="space-y-4">
             <CompanyContactCard
-              company={company as any}
+              company={{ ...(company as any), ...(contact ?? {}) }}
               fullAddress={fullAddress}
               isPending={isPending}
             />

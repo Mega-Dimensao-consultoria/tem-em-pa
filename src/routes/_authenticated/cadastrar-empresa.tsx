@@ -133,13 +133,12 @@ function CadastrarPage() {
           <Field label="Nome da empresa *" id="name"><Input id="name" name="name" required maxLength={120} /></Field>
 
           <Field label="Categoria *" id="cat">
-            <Select name="category_id" required>
+            <Select value={categoryId} onValueChange={setCategoryId}>
               <SelectTrigger id="cat"><SelectValue placeholder="Selecione…" /></SelectTrigger>
               <SelectContent>
                 {categories.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
               </SelectContent>
             </Select>
-            {/* hidden mirror so FormData picks it up regardless of Select internals */}
           </Field>
 
           <Field label="Descrição" id="desc">

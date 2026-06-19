@@ -1,11 +1,12 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/PageShell";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRoles } from "@/hooks/use-auth";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { ShieldAlert } from "lucide-react";
+import { ShieldAlert, Check, X } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Admin — Tem em P.A" }] }),
@@ -61,59 +62,142 @@ function AdminPage() {
 }
 
 function PendingCompaniesTab() {
+  const qc = useQueryClient();
+  const key = ["admin", "pending-companies"];
   const { data = [], isLoading } = useQuery({
-    queryKey: ["admin", "pending-companies"],
+    queryKey: key,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("companies")
         .select("id, name, status, created_at")
-        .in("status", ["pending", "claimed_pending"]);
+        .in("status", ["pending", "claimed_pending"])
+        .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
     },
   });
-  return <AdminList isLoading={isLoading} items={data} emptyText="Nenhuma empresa aguardando aprovação." />;
-}
 
-function PendingClaimsTab() {
-  const { data = [], isLoading } = useQuery({
-    queryKey: ["admin", "pending-claims"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("company_claims")
-        .select("id, company_id, status, created_at")
-        .eq("status", "pending");
-      if (error) throw error;
-      return data;
-    },
-  });
+  async function decide(id: string, status: "approved" | "rejected") {
+    const { error } = await supabase.from("companies").update({ status }).eq("id", id);
+    if (error) { toast.error(error.message); return; }
+    toast.success(status === "approved" ? "Empresa aprovada" : "Empresa rejeitada");
+    qc.invalidateQueries({ queryKey: key });
+  }
+
   return (
     <AdminList
       isLoading={isLoading}
-      items={data.map((c) => ({ id: c.id, name: `Reivindicação ${c.id.slice(0, 8)}`, status: c.status, created_at: c.created_at }))}
-      emptyText="Nenhuma reivindicação pendente."
+      items={data}
+      emptyText="Nenhuma empresa aguardando aprovação."
+      onApprove={(id) => decide(id, "approved")}
+      onReject={(id) => decide(id, "rejected")}
     />
   );
 }
 
-function PendingReviewsTab() {
+function PendingClaimsTab() {
+  const qc = useQueryClient();
+  const key = ["admin", "pending-claims"];
   const { data = [], isLoading } = useQuery({
-    queryKey: ["admin", "pending-reviews"],
+    queryKey: key,
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("reviews")
-        .select("id, comment, status, created_at")
-        .in("status", ["pending_moderation", "flagged"]);
+        .from("company_claims")
+        .select("id, company_id, status, created_at, message, document_urls, companies:company_id(name)")
+        .eq("status", "pending")
+        .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
     },
   });
+
+  async function decide(claim: typeof data[number], status: "approved" | "rejected") {
+    const { error } = await supabase.from("company_claims").update({
+      status, reviewed_at: new Date().toISOString(),
+    }).eq("id", claim.id);
+    if (error) { toast.error(error.message); return; }
+    if (status === "approved") {
+      // assign ownership
+      const { error: e2 } = await supabase.from("companies")
+        .update({ owner_id: (claim as { user_id?: string }).user_id ?? undefined, status: "approved" })
+        .eq("id", claim.company_id);
+      if (e2) toast.error("Claim aprovada, mas falhou ao atribuir dono: " + e2.message);
+    }
+    toast.success(status === "approved" ? "Reivindicação aprovada" : "Reivindicação rejeitada");
+    qc.invalidateQueries({ queryKey: key });
+  }
+
+  if (isLoading) return <p className="mt-4 text-sm text-muted-foreground">Carregando…</p>;
+  if (data.length === 0)
+    return <Empty>Nenhuma reivindicação pendente.</Empty>;
+
   return (
-    <AdminList
-      isLoading={isLoading}
-      items={data.map((r) => ({ id: r.id, name: r.comment ?? "(sem texto)", status: r.status, created_at: r.created_at }))}
-      emptyText="Nenhum comentário em moderação."
-    />
+    <ul className="mt-4 space-y-3">
+      {data.map((c) => (
+        <li key={c.id} className="rounded-2xl border border-border bg-card p-4 shadow-soft">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="font-semibold">{c.companies?.name ?? `Empresa ${c.company_id.slice(0, 8)}`}</p>
+              <p className="text-xs text-muted-foreground">{new Date(c.created_at).toLocaleString("pt-BR")}</p>
+              {c.message ? <p className="mt-2 text-sm">{c.message}</p> : null}
+              {Array.isArray(c.document_urls) && c.document_urls.length > 0 ? (
+                <p className="mt-2 text-xs text-muted-foreground">{c.document_urls.length} documento(s) anexado(s)</p>
+              ) : null}
+            </div>
+            <div className="flex shrink-0 gap-2">
+              <Button size="sm" variant="outline" onClick={() => decide(c, "rejected")}><X className="h-4 w-4" /></Button>
+              <Button size="sm" onClick={() => decide(c, "approved")}><Check className="h-4 w-4" /></Button>
+            </div>
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function PendingReviewsTab() {
+  const qc = useQueryClient();
+  const key = ["admin", "pending-reviews"];
+  const { data = [], isLoading } = useQuery({
+    queryKey: key,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("reviews")
+        .select("id, comment, status, created_at, rating")
+        .in("status", ["pending_moderation", "flagged"])
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  async function decide(id: string, status: "approved" | "rejected") {
+    const { error } = await supabase.from("reviews").update({ status }).eq("id", id);
+    if (error) { toast.error(error.message); return; }
+    toast.success(status === "approved" ? "Comentário aprovado" : "Comentário rejeitado");
+    qc.invalidateQueries({ queryKey: key });
+  }
+
+  if (isLoading) return <p className="mt-4 text-sm text-muted-foreground">Carregando…</p>;
+  if (data.length === 0) return <Empty>Nenhum comentário em moderação.</Empty>;
+
+  return (
+    <ul className="mt-4 space-y-3">
+      {data.map((r) => (
+        <li key={r.id} className="rounded-2xl border border-border bg-card p-4 shadow-soft">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="text-xs text-muted-foreground">Nota: {r.rating} · {new Date(r.created_at).toLocaleString("pt-BR")}</p>
+              <p className="mt-1 text-sm">{r.comment ?? "(sem texto)"}</p>
+            </div>
+            <div className="flex shrink-0 gap-2">
+              <Button size="sm" variant="outline" onClick={() => decide(r.id, "rejected")}><X className="h-4 w-4" /></Button>
+              <Button size="sm" onClick={() => decide(r.id, "approved")}><Check className="h-4 w-4" /></Button>
+            </div>
+          </div>
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -128,10 +212,7 @@ function CategoriesTab() {
   });
   return (
     <div className="mt-4 rounded-2xl border border-border bg-card p-4 shadow-soft">
-      <div className="mb-3 flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">{data.length} categoria(s)</p>
-        <Button size="sm" disabled>+ Nova categoria</Button>
-      </div>
+      <p className="mb-3 text-sm text-muted-foreground">{data.length} categoria(s)</p>
       {isLoading ? <p className="text-sm text-muted-foreground">Carregando…</p> : (
         <ul className="divide-y">
           {data.map((c) => (
@@ -147,32 +228,80 @@ function CategoriesTab() {
 }
 
 function UsersTab() {
+  const qc = useQueryClient();
+  const key = ["admin", "users"];
+  const { data = [], isLoading } = useQuery({
+    queryKey: key,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, full_name, is_banned, created_at")
+        .order("created_at", { ascending: false })
+        .limit(100);
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  async function toggleBan(id: string, banned: boolean) {
+    const { error } = await supabase.from("profiles").update({ is_banned: !banned }).eq("id", id);
+    if (error) { toast.error(error.message); return; }
+    toast.success(!banned ? "Usuário banido" : "Banimento removido");
+    qc.invalidateQueries({ queryKey: key });
+  }
+
+  if (isLoading) return <p className="mt-4 text-sm text-muted-foreground">Carregando…</p>;
+  if (data.length === 0) return <Empty>Nenhum usuário ainda.</Empty>;
+
+  return (
+    <ul className="mt-4 divide-y rounded-2xl border border-border bg-card shadow-soft">
+      {data.map((u) => (
+        <li key={u.id} className="flex items-center justify-between gap-3 p-4">
+          <div className="min-w-0">
+            <p className="truncate font-semibold">{u.full_name ?? "(sem nome)"}</p>
+            <p className="text-xs text-muted-foreground">
+              {u.is_banned ? "Banido · " : ""}{new Date(u.created_at).toLocaleDateString("pt-BR")}
+            </p>
+          </div>
+          <Button size="sm" variant={u.is_banned ? "outline" : "destructive"} onClick={() => toggleBan(u.id, u.is_banned)}>
+            {u.is_banned ? "Desbanir" : "Banir"}
+          </Button>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function Empty({ children }: { children: React.ReactNode }) {
   return (
     <div className="mt-4 rounded-2xl border border-dashed border-border bg-card/50 p-10 text-center text-sm text-muted-foreground">
-      Gestão de usuários (banir, resetar senhas) será habilitada na próxima etapa.
+      {children}
     </div>
   );
 }
 
-function AdminList({ items, isLoading, emptyText }: { items: { id: string; name: string; status: string; created_at: string }[]; isLoading: boolean; emptyText: string }) {
+function AdminList({
+  items, isLoading, emptyText, onApprove, onReject,
+}: {
+  items: { id: string; name: string; status: string; created_at: string }[];
+  isLoading: boolean;
+  emptyText: string;
+  onApprove: (id: string) => void;
+  onReject: (id: string) => void;
+}) {
   if (isLoading) return <p className="mt-4 text-sm text-muted-foreground">Carregando…</p>;
-  if (items.length === 0)
-    return (
-      <div className="mt-4 rounded-2xl border border-dashed border-border bg-card/50 p-10 text-center text-sm text-muted-foreground">
-        {emptyText}
-      </div>
-    );
+  if (items.length === 0) return <Empty>{emptyText}</Empty>;
   return (
     <ul className="mt-4 divide-y rounded-2xl border border-border bg-card shadow-soft">
       {items.map((c) => (
         <li key={c.id} className="flex items-center justify-between gap-3 p-4">
-          <div>
-            <p className="line-clamp-1 font-semibold">{c.name}</p>
+          <div className="min-w-0">
+            <p className="truncate font-semibold">{c.name}</p>
             <p className="text-xs text-muted-foreground">{c.status} · {new Date(c.created_at).toLocaleDateString("pt-BR")}</p>
           </div>
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" disabled>Aprovar</Button>
-            <Button size="sm" variant="outline" disabled>Rejeitar</Button>
+            <Button size="sm" variant="outline" onClick={() => onReject(c.id)}><X className="mr-1 h-4 w-4" />Rejeitar</Button>
+            <Button size="sm" onClick={() => onApprove(c.id)}><Check className="mr-1 h-4 w-4" />Aprovar</Button>
           </div>
         </li>
       ))}

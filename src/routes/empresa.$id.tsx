@@ -108,7 +108,7 @@ function CompanyPage() {
     .filter(Boolean)
     .join(", ");
 
-  const gallery = ((company as any).gallery_urls as string[] | null) ?? [];
+  const gallery = (company.gallery_urls as string[] | null) ?? [];
 
   return (
     <PageShell>
@@ -152,7 +152,7 @@ function CompanyPage() {
                 ? [
                     {
                       label: company.categories.name,
-                      to: `/categoria/${(company.categories as any).slug}`,
+                      to: `/categoria/${company.categories?.slug}`,
                     },
                   ]
                 : [{ label: "Empresas", to: "/buscar" }]),
@@ -162,7 +162,7 @@ function CompanyPage() {
         </div>
 
         <CompanyHeader
-          company={company as any}
+          company={company}
           avg={avg}
           reviewsCount={company.reviews.length}
           isPending={isPending}
@@ -182,12 +182,12 @@ function CompanyPage() {
             ) : null}
 
             <CompanyGalleryBlock urls={gallery} />
-            <CompanyProductsBlock products={company.products as any} />
+            <CompanyProductsBlock products={company.products} />
 
             {!isPending ? (
               <CompanyReviewsSection
                 companyId={company.id}
-                reviews={company.reviews as any}
+                reviews={company.reviews}
                 user={user}
                 onReviewSubmitted={() =>
                   qc.invalidateQueries({ queryKey: queryKeys.companies.public(id) })
@@ -198,16 +198,16 @@ function CompanyPage() {
 
           <aside className="space-y-4">
             <CompanyContactCard
-              company={{ ...(company as any), ...(contact ?? {}) }}
+              company={{ ...company, ...(contact ?? {}) }}
               fullAddress={fullAddress}
               isPending={isPending}
             />
-            <HoursBlock hours={(company as any).hours} />
+            <HoursBlock hours={company.hours} />
             <CompanyMapCard
               companyId={company.id}
               name={company.name}
-              lat={(company as any).lat ?? null}
-              lng={(company as any).lng ?? null}
+              lat={company.lat ?? null}
+              lng={company.lng ?? null}
               address={fullAddress}
               isPending={isPending}
             />
@@ -217,7 +217,7 @@ function CompanyPage() {
         {!isPending ? (
           <SimilarCompanies
             id={company.id}
-            categoryId={(company as any).category_id}
+            categoryId={company.category_id}
             neighborhood={company.neighborhood}
           />
         ) : null}

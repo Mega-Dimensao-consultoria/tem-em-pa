@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ShieldAlert, Check, X, Trash2, Plus, Pencil, Shield, ShieldOff, ExternalLink, History } from "lucide-react";
+import { ShieldAlert, Check, X, Trash2, Plus, Pencil, Shield, ShieldOff, ExternalLink, History, Flag } from "lucide-react";
 import { toast } from "sonner";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
 import { logAdminAction } from "@/lib/admin-audit";

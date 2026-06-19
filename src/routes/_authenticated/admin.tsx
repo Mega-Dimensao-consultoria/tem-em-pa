@@ -53,6 +53,7 @@ function AdminPage() {
             <TabsTrigger value="empresas">Empresas</TabsTrigger>
             <TabsTrigger value="reivindicacoes">Reivindicações</TabsTrigger>
             <TabsTrigger value="comentarios">Comentários</TabsTrigger>
+            <TabsTrigger value="denuncias">Denúncias</TabsTrigger>
             <TabsTrigger value="categorias">Categorias</TabsTrigger>
             <TabsTrigger value="palavras">Palavras proibidas</TabsTrigger>
             <TabsTrigger value="usuarios">Usuários</TabsTrigger>
@@ -62,6 +63,7 @@ function AdminPage() {
           <TabsContent value="empresas"><PendingCompaniesTab /></TabsContent>
           <TabsContent value="reivindicacoes"><PendingClaimsTab /></TabsContent>
           <TabsContent value="comentarios"><PendingReviewsTab /></TabsContent>
+          <TabsContent value="denuncias"><ReportsTab /></TabsContent>
           <TabsContent value="categorias"><CategoriesTab /></TabsContent>
           <TabsContent value="palavras"><BannedWordsTab /></TabsContent>
           <TabsContent value="usuarios"><UsersTab /></TabsContent>

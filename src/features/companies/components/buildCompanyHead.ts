@@ -77,8 +77,9 @@ export function buildCompanyHead(loaderData: AnyCompany, id: string) {
       : {}),
     ...(openingHoursSpecification.length > 0 ? { openingHoursSpecification } : {}),
   };
-  const catName = loaderData?.categories?.name as string | undefined;
-  const catSlug = loaderData?.categories?.slug as string | undefined;
+  const cat = asRecord(loaderData?.categories);
+  const catName = asString(cat?.name);
+  const catSlug = asString(cat?.slug);
   const crumbLd = breadcrumbJsonLd("https://tem-em-pa.lovable.app", [
     ...(catName && catSlug
       ? [{ label: catName, path: `/categoria/${catSlug}` }]

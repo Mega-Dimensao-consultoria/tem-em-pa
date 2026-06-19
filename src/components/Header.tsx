@@ -57,6 +57,8 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           {loading ? null : user ? (
+            <>
+              <NotificationsBell />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="rounded-full outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">

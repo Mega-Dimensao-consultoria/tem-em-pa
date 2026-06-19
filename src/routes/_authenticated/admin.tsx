@@ -103,7 +103,7 @@ function PendingClaimsTab() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("company_claims")
-        .select("id, company_id, status, created_at, message, document_urls, companies:company_id(name)")
+        .select("id, company_id, user_id, status, created_at, message, document_urls, companies:company_id(name)")
         .eq("status", "pending")
         .order("created_at", { ascending: false });
       if (error) throw error;

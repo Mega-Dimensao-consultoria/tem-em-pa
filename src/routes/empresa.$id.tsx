@@ -304,6 +304,7 @@ function CompanyPage() {
                 <a
                   href={`https://www.google.com/maps/dir/?api=1&destination=${mapsQuery}`}
                   target="_blank" rel="noreferrer"
+                  onClick={() => !isPending && trackEvent(company.id, "maps_click")}
                   className="inline-flex w-full items-center justify-center rounded-full bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground transition hover:bg-secondary/90"
                 >
                   Como chegar

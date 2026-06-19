@@ -5,23 +5,23 @@ import { Clock, Pencil } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { SimilarCompanies } from "@/components/SimilarCompanies";
-import { HoursBlock } from "@/components/company/HoursBlock";
-import { CompanyContactCard } from "@/components/company/CompanyContactCard";
-import { CompanyReviewsSection } from "@/components/company/CompanyReviewsSection";
-import { CompanyHeader } from "@/components/company/CompanyHeader";
-import { CompanyGalleryBlock } from "@/components/company/CompanyGalleryBlock";
-import { CompanyProductsBlock } from "@/components/company/CompanyProductsBlock";
-import { CompanyMapCard } from "@/components/company/CompanyMapCard";
-import { buildCompanyHead } from "@/components/company/buildCompanyHead";
-import { useAuth } from "@/hooks/use-auth";
+import { SimilarCompanies } from "@/features/companies/components/SimilarCompanies";
+import { HoursBlock } from "@/features/companies/components/HoursBlock";
+import { CompanyContactCard } from "@/features/companies/components/CompanyContactCard";
+import { CompanyReviewsSection } from "@/features/companies/components/CompanyReviewsSection";
+import { CompanyHeader } from "@/features/companies/components/CompanyHeader";
+import { CompanyGalleryBlock } from "@/features/companies/components/CompanyGalleryBlock";
+import { CompanyProductsBlock } from "@/features/companies/components/CompanyProductsBlock";
+import { CompanyMapCard } from "@/features/companies/components/CompanyMapCard";
+import { buildCompanyHead } from "@/features/companies/components/buildCompanyHead";
+import { useAuth } from "@/features/auth/use-auth";
 import { trackEvent } from "@/lib/track";
 import { queryKeys } from "@/lib/queryKeys";
 import {
   publicCompanyQO,
   privateCompanyQO,
-} from "@/hooks/queries/useCompanyDetail";
-import { getCompanyContact } from "@/lib/companies/contact.functions";
+} from "@/features/companies/hooks/useCompanyDetail";
+import { getCompanyContact } from "@/features/companies/functions/contact";
 
 export const Route = createFileRoute("/empresa/$id")({
   loader: ({ context, params }) =>

@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Logo } from "./Logo";
 import { Button } from "@/components/ui/button";
-import { useAuth, useRoles } from "@/hooks/use-auth";
+import { useAuth, useRoles } from "@/features/auth/use-auth";
 import {
   DropdownMenu,
   DropdownMenuContent,

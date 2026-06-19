@@ -4,14 +4,14 @@ import { ArrowLeft } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/features/auth/use-auth";
 import {
   useCreateProduct,
   useDeleteProduct,
   useProducts,
-} from "@/hooks/queries/useProducts";
-import { ProductForm } from "@/components/products/ProductForm";
-import { ProductList } from "@/components/products/ProductList";
+} from "@/features/products/hooks/useProducts";
+import { ProductForm } from "@/features/products/components/ProductForm";
+import { ProductList } from "@/features/products/components/ProductList";
 import { queryKeys } from "@/lib/queryKeys";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/produtos")({

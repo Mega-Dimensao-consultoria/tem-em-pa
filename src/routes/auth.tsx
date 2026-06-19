@@ -2,9 +2,9 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Logo } from "@/components/Logo";
-import { SignInForm } from "@/components/auth/SignInForm";
-import { SignUpForm } from "@/components/auth/SignUpForm";
-import { OAuthButtons } from "@/components/auth/OAuthButtons";
+import { SignInForm } from "@/features/auth/components/SignInForm";
+import { SignUpForm } from "@/features/auth/components/SignUpForm";
+import { OAuthButtons } from "@/features/auth/components/OAuthButtons";
 
 const searchSchema = z.object({ redirect: z.string().optional() });
 

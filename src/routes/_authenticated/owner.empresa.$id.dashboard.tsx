@@ -14,26 +14,26 @@ import {
 import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { ShareButton } from "@/components/ShareButton";
-import { ProfileCompleteness } from "@/components/ProfileCompleteness";
+import { ProfileCompleteness } from "@/features/auth/components/ProfileCompleteness";
 import { QrCodeCard } from "@/components/QrCodeCard";
-import { Sparkbars } from "@/components/dashboard/Sparkbars";
+import { Sparkbars } from "@/features/owner/components/Sparkbars";
 import {
   MetricCards,
   type MetricCard,
-} from "@/components/dashboard/MetricCards";
-import { PeriodSelector } from "@/components/dashboard/PeriodSelector";
-import { DashboardReviewsList } from "@/components/dashboard/DashboardReviewsList";
-import { useAuth } from "@/hooks/use-auth";
-import { useOwnerCompany } from "@/hooks/queries/useOwnerCompany";
-import { useCompanyEvents } from "@/hooks/queries/useCompanyEvents";
-import { useOwnerReviews } from "@/hooks/queries/useOwnerReviews";
+} from "@/features/owner/components/MetricCards";
+import { PeriodSelector } from "@/features/owner/components/PeriodSelector";
+import { DashboardReviewsList } from "@/features/owner/components/DashboardReviewsList";
+import { useAuth } from "@/features/auth/use-auth";
+import { useOwnerCompany } from "@/features/owner/hooks/useOwnerCompany";
+import { useCompanyEvents } from "@/features/owner/hooks/useCompanyEvents";
+import { useOwnerReviews } from "@/features/owner/hooks/useOwnerReviews";
 import {
   buildDailySeries,
   countOf,
   delta,
   splitByPeriod,
-} from "@/lib/owner/metrics";
-import { exportMetricsCsv } from "@/lib/owner/exportCsv";
+} from "@/features/owner/functions/metrics";
+import { exportMetricsCsv } from "@/features/owner/functions/exportCsv";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — Tem em P.A" }] }),

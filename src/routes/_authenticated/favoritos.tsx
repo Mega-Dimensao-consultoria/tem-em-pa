@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/features/auth/use-auth";
 import { PageShell } from "@/components/PageShell";
-import { CompanyCard } from "@/components/CompanyCard";
+import { CompanyCard } from "@/features/companies/components/CompanyCard";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";

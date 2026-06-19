@@ -1,10 +1,13 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { useSuspenseQuery, queryOptions, useQueryClient } from "@tanstack/react-query";
 import { PageShell } from "@/components/PageShell";
 import { RatingStars } from "@/components/RatingStars";
 import { getCompanyById } from "@/lib/companies.functions";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Globe, Mail, MessageCircle, Flag } from "lucide-react";
+import { MapPin, Phone, Globe, Mail, MessageCircle } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
+import { ReviewForm } from "@/components/ReviewForm";
+import { ClaimDialog } from "@/components/ClaimDialog";
 
 const qo = (id: string) =>
   queryOptions({

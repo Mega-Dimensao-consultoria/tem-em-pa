@@ -1,13 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/use-auth";
 import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCheck, Inbox, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useNotifications } from "@/hooks/queries/useNotifications";
 
 export const Route = createFileRoute("/_authenticated/notificacoes")({
   component: NotificacoesPage,
@@ -16,62 +14,9 @@ export const Route = createFileRoute("/_authenticated/notificacoes")({
   }),
 });
 
-type Notification = {
-  id: string;
-  type: string;
-  title: string;
-  message: string;
-  link: string | null;
-  read_at: string | null;
-  created_at: string;
-};
-
 function NotificacoesPage() {
-  const { user } = useAuth();
-  const [items, setItems] = useState<Notification[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  async function load() {
-    if (!user) return;
-    setLoading(true);
-    const { data } = await supabase
-      .from("notifications")
-      .select("id,type,title,message,link,read_at,created_at")
-      .order("created_at", { ascending: false })
-      .limit(200);
-    setItems((data ?? []) as Notification[]);
-    setLoading(false);
-  }
-
-  useEffect(() => {
-    load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id]);
-
-  async function markAll() {
-    if (!user) return;
-    await supabase
-      .from("notifications")
-      .update({ read_at: new Date().toISOString() })
-      .is("read_at", null)
-      .eq("user_id", user.id);
-    load();
-  }
-
-  async function remove(id: string) {
-    await supabase.from("notifications").delete().eq("id", id);
-    load();
-  }
-
-  async function toggleRead(n: Notification) {
-    await supabase
-      .from("notifications")
-      .update({ read_at: n.read_at ? null : new Date().toISOString() })
-      .eq("id", n.id);
-    load();
-  }
-
-  const unread = items.filter((n) => !n.read_at).length;
+  const { items, unread, isLoading, markAll, toggleRead, remove } =
+    useNotifications(200);
 
   return (
     <PageShell>
@@ -86,13 +31,13 @@ function NotificacoesPage() {
             </p>
           </div>
           {unread > 0 ? (
-            <Button variant="outline" size="sm" onClick={markAll}>
+            <Button variant="outline" size="sm" onClick={() => markAll()}>
               <CheckCheck className="mr-2 h-4 w-4" /> Marcar todas como lidas
             </Button>
           ) : null}
         </div>
 
-        {loading ? (
+        {isLoading ? (
           <div className="py-12 text-center text-sm text-muted-foreground">
             Carregando...
           </div>

@@ -2,28 +2,11 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
 import { PageShell } from "@/components/PageShell";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useQuery } from "@tanstack/react-query";
-import { listCategories } from "@/lib/categories.functions";
-import { lookupCep } from "@/lib/viacep.functions";
-import { geocodeAddress } from "@/lib/geocode.functions";
-import { ImageUpload } from "@/components/ImageUpload";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
-import { maskCep, maskPhone, maskUf } from "@/lib/masks";
-import { FormField } from "@/components/forms/FormSection";
+import { geocodeAddress } from "@/lib/geocode.functions";
+import { CompanyForm, type CompanyFormValues } from "@/components/forms/CompanyForm";
 
 export const Route = createFileRoute("/_authenticated/cadastrar-empresa")({
   head: () => ({ meta: [{ title: "Cadastrar empresa — Tem em P.A" }] }),
@@ -35,11 +18,6 @@ const schema = z.object({
   category_id: z.string().uuid("Selecione uma categoria"),
   description: z.string().trim().max(500).optional().or(z.literal("")),
   cep: z.string().regex(/^\d{5}-?\d{3}$/, "CEP inválido").optional().or(z.literal("")),
-  address: z.string().max(200).optional().or(z.literal("")),
-  number: z.string().max(10).optional().or(z.literal("")),
-  neighborhood: z.string().max(120).optional().or(z.literal("")),
-  city: z.string().max(120).optional().or(z.literal("")),
-  state: z.string().max(2).optional().or(z.literal("")),
   phone: z.string().max(20).optional().or(z.literal("")),
   whatsapp: z.string().max(20).optional().or(z.literal("")),
   email: z.string().email("E-mail inválido").max(120).optional().or(z.literal("")),
@@ -47,193 +25,95 @@ const schema = z.object({
 });
 
 function slugify(s: string) {
-  return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 80);
+  return s
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "")
+    .slice(0, 80);
 }
 
 function CadastrarPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { data: categories = [] } = useQuery({ queryKey: ["categories"], queryFn: () => listCategories() });
-
-  const [categoryId, setCategoryId] = useState<string>("");
-  const [logoUrl, setLogoUrl] = useState<string | null>(null);
-  const [coverUrl, setCoverUrl] = useState<string | null>(null);
-  const [cep, setCep] = useState("");
-  const [address, setAddress] = useState("");
-  const [neighborhood, setNeighborhood] = useState("");
-  const [city, setCity] = useState("Pouso Alegre");
-  const [state, setState] = useState("MG");
-  const [loadingCep, setLoadingCep] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  async function onCepBlur() {
-    if (!/^\d{5}-?\d{3}$/.test(cep)) return;
-    setLoadingCep(true);
-    try {
-      const res = await lookupCep({ data: { cep } });
-      setAddress(res.address);
-      setNeighborhood(res.neighborhood);
-      setCity(res.city || "Pouso Alegre");
-      setState(res.state || "MG");
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Falha ao consultar CEP");
-    } finally {
-      setLoadingCep(false);
-    }
-  }
-
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handleSubmit(v: CompanyFormValues) {
     if (!user) return;
-    const fd = new FormData(e.currentTarget);
-    const parsed = schema.safeParse({
-      name: fd.get("name"),
-      category_id: categoryId,
-      description: fd.get("description") ?? "",
-      cep, address, neighborhood, city, state,
-      number: fd.get("number") ?? "",
-      phone: fd.get("phone") ?? "",
-      whatsapp: fd.get("whatsapp") ?? "",
-      email: fd.get("email") ?? "",
-      website: fd.get("website") ?? "",
-    });
+    const parsed = schema.safeParse(v);
     if (!parsed.success) {
       toast.error(parsed.error.issues[0].message);
       return;
     }
     setSubmitting(true);
-    const v = parsed.data;
 
-    // Geocode address (best-effort) — só geocodifica se tiver endereço mínimo
     let lat: number | null = null;
     let lng: number | null = null;
     const fullAddr = [v.address, v.number, v.neighborhood, v.city || "Pouso Alegre", v.state || "MG", "Brasil"]
-      .filter(Boolean).join(", ");
+      .filter(Boolean)
+      .join(", ");
     if (fullAddr.length > 10) {
       try {
         const geo = await geocodeAddress({ data: { address: fullAddr } });
         lat = geo.lat;
         lng = geo.lng;
       } catch {
-        // silencioso: cadastro continua mesmo sem coordenadas
+        /* silencioso */
       }
     }
 
-    const { data, error } = await supabase.from("companies").insert({
-      name: v.name,
-      slug: slugify(v.name) + "-" + Math.random().toString(36).slice(2, 6),
-      category_id: v.category_id,
-      description: v.description || null,
-      cep: v.cep || null,
-      address: v.address || null,
-      number: v.number || null,
-      neighborhood: v.neighborhood || null,
-      city: v.city || null,
-      state: v.state || null,
-      phone: v.phone || null,
-      whatsapp: v.whatsapp || null,
-      email: v.email || null,
-      website: v.website || null,
-      logo_url: logoUrl,
-      cover_url: coverUrl,
-      lat,
-      lng,
-      owner_id: user.id,
-      status: "pending",
-    }).select("id").single();
+    const { data, error } = await supabase
+      .from("companies")
+      .insert({
+        name: v.name,
+        slug: slugify(v.name) + "-" + Math.random().toString(36).slice(2, 6),
+        category_id: v.category_id,
+        description: v.description || null,
+        cep: v.cep || null,
+        address: v.address || null,
+        number: v.number || null,
+        neighborhood: v.neighborhood || null,
+        city: v.city || null,
+        state: v.state || null,
+        phone: v.phone || null,
+        whatsapp: v.whatsapp || null,
+        email: v.email || null,
+        website: v.website || null,
+        logo_url: v.logo_url,
+        cover_url: v.cover_url,
+        lat,
+        lng,
+        owner_id: user.id,
+        status: "pending",
+      })
+      .select("id")
+      .single();
     setSubmitting(false);
-    if (error || !data) { toast.error(error?.message ?? "Falha ao cadastrar"); return; }
+    if (error || !data) {
+      toast.error(error?.message ?? "Falha ao cadastrar");
+      return;
+    }
     toast.success("Empresa enviada para aprovação!");
     navigate({ to: "/empresa/$id", params: { id: data.id } });
   }
 
   return (
     <PageShell>
-      <section className="mx-auto max-w-2xl px-4 py-12">
+      <section className="mx-auto max-w-3xl px-4 py-12">
         <h1 className="font-display text-3xl font-bold">Cadastrar empresa</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Após o envio, sua empresa passa por aprovação do nosso time antes de ficar visível.
         </p>
-
-        <form onSubmit={onSubmit} className="mt-8 space-y-5 rounded-2xl border border-border bg-card p-6 shadow-soft">
-          <FormField label="Nome da empresa *" id="name"><Input id="name" name="name" required maxLength={120} /></FormField>
-
-          <FormField label="Categoria *" id="cat">
-            <Select value={categoryId} onValueChange={setCategoryId}>
-              <SelectTrigger id="cat"><SelectValue placeholder="Selecione…" /></SelectTrigger>
-              <SelectContent>
-                {categories.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </FormField>
-
-          <FormField label="Descrição" id="desc">
-            <Textarea id="desc" name="description" maxLength={500} rows={4} placeholder="Conte um pouco sobre seu negócio…" />
-          </FormField>
-
-          {user ? (
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <Label className="mb-1.5 block">Logo</Label>
-                <ImageUpload bucket="company-logos" userId={user.id} value={logoUrl} onChange={setLogoUrl} label="Enviar logo" />
-              </div>
-              <div>
-                <Label className="mb-1.5 block">Capa</Label>
-                <ImageUpload bucket="company-logos" userId={user.id} value={coverUrl} onChange={setCoverUrl} label="Enviar capa" />
-              </div>
-            </div>
-          ) : null}
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <FormField label="CEP" id="cep">
-              <Input id="cep" value={cep} onChange={(e) => setCep(maskCep(e.target.value))} onBlur={onCepBlur} placeholder="37550-000" inputMode="numeric" maxLength={9} />
-              {loadingCep ? <p className="text-xs text-muted-foreground">Consultando…</p> : null}
-            </FormField>
-            <FormField label="Número" id="num"><Input id="num" name="number" maxLength={10} inputMode="numeric" /></FormField>
-          </div>
-
-          <FormField label="Endereço" id="addr">
-            <Input id="addr" value={address} onChange={(e) => setAddress(e.target.value)} />
-          </FormField>
-          <div className="grid gap-4 sm:grid-cols-3">
-            <FormField label="Bairro" id="bairro"><Input id="bairro" value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)} /></FormField>
-            <FormField label="Cidade" id="city"><Input id="city" value={city} onChange={(e) => setCity(e.target.value)} /></FormField>
-            <FormField label="UF" id="uf"><Input id="uf" value={state} onChange={(e) => setState(maskUf(e.target.value))} maxLength={2} /></FormField>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <FormField label="Telefone" id="phone">
-              <MaskedPhone name="phone" placeholder="(35) 3421-0000" />
-            </FormField>
-            <FormField label="WhatsApp" id="wpp">
-              <MaskedPhone name="whatsapp" placeholder="(35) 99999-0000" />
-            </FormField>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <FormField label="E-mail" id="email"><Input id="email" name="email" type="email" maxLength={120} /></FormField>
-            <FormField label="Site" id="site"><Input id="site" name="website" type="url" maxLength={200} placeholder="https://..." /></FormField>
-          </div>
-
-          <Button type="submit" className="w-full" disabled={submitting}>
-            {submitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Enviando…</> : "Enviar para aprovação"}
-          </Button>
-        </form>
+        <div className="mt-8">
+          <CompanyForm
+            mode="create"
+            submitting={submitting}
+            submitLabel="Enviar para aprovação"
+            onSubmit={handleSubmit}
+          />
+        </div>
       </section>
     </PageShell>
-  );
-}
-
-
-function MaskedPhone({ name, placeholder }: { name: string; placeholder?: string }) {
-  const [v, setV] = useState("");
-  return (
-    <Input
-      name={name}
-      value={v}
-      onChange={(e) => setV(maskPhone(e.target.value))}
-      placeholder={placeholder}
-      inputMode="tel"
-      maxLength={16}
-    />
   );
 }

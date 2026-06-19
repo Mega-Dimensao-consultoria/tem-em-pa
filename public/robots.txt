@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+Disallow: /auth
+Disallow: /reset-password
+Disallow: /owner
+Disallow: /admin
+Disallow: /cadastrar-empresa
+
+Sitemap: https://tem-em-pa.lovable.app/sitemap.xml

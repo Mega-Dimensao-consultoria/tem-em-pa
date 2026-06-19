@@ -41,10 +41,12 @@ function SearchPage() {
   const { q, cat, sort = "recent" } = Route.useSearch();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+  const [geo, setGeo] = useState<{ lat: number; lng: number } | null>(null);
+  const [geoLoading, setGeoLoading] = useState(false);
 
   const { data: categories = [] } = useQuery({ queryKey: ["categories"], queryFn: () => listCategories() });
 
-  const { data = [], isLoading } = useQuery({
+  const { data: rawData = [], isLoading } = useQuery({
     queryKey: ["search", q ?? "", cat ?? "", sort, user?.id ?? "anon"],
     enabled: !authLoading,
     queryFn: async () => {
@@ -55,8 +57,8 @@ function SearchPage() {
       }
       let query = supabase
         .from("companies")
-        .select("id, name, slug, description, neighborhood, city, state, logo_url, cover_url, is_featured, status, owner_id, category_id, categories:category_id(name, slug, icon)")
-        .limit(60);
+        .select("id, name, slug, description, neighborhood, city, state, lat, lng, logo_url, cover_url, is_featured, status, owner_id, category_id, categories:category_id(name, slug, icon)")
+        .limit(120);
       if (sort === "name") query = query.order("name", { ascending: true });
       else query = query.order("created_at", { ascending: false });
       if (q) query = query.ilike("name", `%${q}%`);
@@ -67,12 +69,45 @@ function SearchPage() {
     },
   });
 
+  const data = (() => {
+    if (sort !== "distance" || !geo) return rawData;
+    return [...rawData]
+      .map((c) => {
+        const lat = (c as any).lat as number | null;
+        const lng = (c as any).lng as number | null;
+        const dist = lat != null && lng != null ? haversineKm(geo.lat, geo.lng, lat, lng) : Infinity;
+        return { ...c, _dist: dist };
+      })
+      .sort((a, b) => (a as any)._dist - (b as any)._dist);
+  })();
+
   const ownPending = user ? data.filter((c) => c.status !== "approved" && c.owner_id === user.id) : [];
   const approved = data.filter((c) => c.status === "approved");
   const activeCat = categories.find((c) => c.slug === cat);
 
-  function updateSearch(patch: Partial<{ q?: string; cat?: string; sort?: "recent" | "name" }>) {
+  function updateSearch(patch: Partial<{ q?: string; cat?: string; sort?: "recent" | "name" | "distance" }>) {
     navigate({ to: "/buscar", search: (prev: z.infer<typeof searchSchema>) => ({ ...prev, ...patch }) });
+  }
+
+  function requestGeo() {
+    if (!navigator.geolocation) {
+      toast.error("Geolocalização não suportada neste navegador.");
+      return;
+    }
+    setGeoLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setGeo({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setGeoLoading(false);
+        updateSearch({ sort: "distance" });
+        toast.success("Localização obtida. Mostrando empresas mais próximas.");
+      },
+      (err) => {
+        setGeoLoading(false);
+        toast.error(err.message || "Não foi possível obter sua localização.");
+      },
+      { enableHighAccuracy: true, timeout: 10000 },
+    );
   }
 
   return (

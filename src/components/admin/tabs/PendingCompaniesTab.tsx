@@ -1,53 +1,16 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, ExternalLink, X } from "lucide-react";
-import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
-import { logAdminAction } from "@/lib/admin-audit";
+import { usePendingCompanies, useDecideCompany } from "@/lib/admin/companies";
 import { Empty, Loading } from "../admin-ui";
 
 export function PendingCompaniesTab() {
-  const { user } = useAuth();
-  const qc = useQueryClient();
-  const key = ["admin", "pending-companies"];
+  const { data = [], isLoading } = usePendingCompanies();
+  const decide = useDecideCompany();
   const [filter, setFilter] = useState("");
-
-  const { data = [], isLoading } = useQuery({
-    queryKey: key,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("companies")
-        .select("id, name, description, city, status, created_at")
-        .in("status", ["pending", "claimed_pending"])
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  async function decide(id: string, name: string, status: "approved" | "rejected") {
-    const { error } = await supabase.from("companies").update({ status }).eq("id", id);
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-    if (user)
-      await logAdminAction(
-        user.id,
-        status === "approved" ? "company.approve" : "company.reject",
-        "company",
-        id,
-        { name },
-      );
-    qc.invalidateQueries({ queryKey: key });
-    qc.invalidateQueries({ queryKey: ["admin", "stats"] });
-    toast.success(status === "approved" ? "Empresa aprovada" : "Empresa rejeitada");
-  }
 
   if (isLoading) return <Loading />;
   if (data.length === 0) return <Empty>Nenhuma empresa aguardando aprovação.</Empty>;
@@ -99,9 +62,12 @@ export function PendingCompaniesTab() {
                   </p>
                 }
                 confirmText="Rejeitar"
-                onConfirm={() => decide(c.id, c.name, "rejected")}
+                onConfirm={() => decide.mutate({ id: c.id, name: c.name, status: "rejected" })}
               />
-              <Button size="sm" onClick={() => decide(c.id, c.name, "approved")}>
+              <Button
+                size="sm"
+                onClick={() => decide.mutate({ id: c.id, name: c.name, status: "approved" })}
+              >
                 <Check className="mr-1 h-4 w-4" />
                 Aprovar
               </Button>

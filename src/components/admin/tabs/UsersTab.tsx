@@ -1,89 +1,29 @@
 import { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Shield, ShieldOff } from "lucide-react";
-import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
-import { logAdminAction } from "@/lib/admin-audit";
+import {
+  useAdminUsers,
+  useDemoteAdmin,
+  usePromoteAdmin,
+  useToggleBan,
+} from "@/lib/admin/users";
 import { Empty, Loading } from "../admin-ui";
 
 export function UsersTab() {
-  const { user } = useAuth();
-  const qc = useQueryClient();
-  const key = ["admin", "users"];
-
-  const { data = [], isLoading } = useQuery({
-    queryKey: key,
-    queryFn: async () => {
-      const { data: profiles, error } = await supabase
-        .from("profiles")
-        .select("id, full_name, is_banned, created_at")
-        .order("created_at", { ascending: false })
-        .limit(200);
-      if (error) throw error;
-      const ids = profiles.map((p) => p.id);
-      const { data: roles } = await supabase
-        .from("user_roles")
-        .select("user_id, role")
-        .in("user_id", ids);
-      const adminSet = new Set(
-        (roles ?? []).filter((r) => r.role === "admin").map((r) => r.user_id),
-      );
-      return profiles.map((p) => ({ ...p, is_admin: adminSet.has(p.id) }));
-    },
-  });
+  const { data = [], isLoading } = useAdminUsers();
+  const toggleBan = useToggleBan();
+  const promote = usePromoteAdmin();
+  const demote = useDemoteAdmin();
   const [filter, setFilter] = useState("");
+
   const filtered = data.filter(
     (u) =>
       !filter ||
       (u.full_name ?? "").toLowerCase().includes(filter.toLowerCase()) ||
       u.id.includes(filter),
   );
-
-  async function toggleBan(id: string, banned: boolean, name: string | null) {
-    const { error } = await supabase.from("profiles").update({ is_banned: !banned }).eq("id", id);
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-    if (user)
-      await logAdminAction(user.id, banned ? "user.unban" : "user.ban", "user", id, { name });
-    toast.success(!banned ? "Usuário banido" : "Banimento removido");
-    qc.invalidateQueries({ queryKey: key });
-  }
-
-  async function promote(id: string, name: string | null) {
-    const { error } = await supabase.from("user_roles").insert({ user_id: id, role: "admin" });
-    if (error && !error.message.includes("duplicate")) {
-      toast.error(error.message);
-      return;
-    }
-    if (user) await logAdminAction(user.id, "user.promote_admin", "user", id, { name });
-    toast.success("Usuário promovido a administrador");
-    qc.invalidateQueries({ queryKey: key });
-  }
-
-  async function demote(id: string, name: string | null) {
-    if (user && id === user.id) {
-      toast.error("Você não pode remover o seu próprio acesso admin.");
-      return;
-    }
-    const { error } = await supabase
-      .from("user_roles")
-      .delete()
-      .eq("user_id", id)
-      .eq("role", "admin");
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-    await logAdminAction(user!.id, "user.demote_admin", "user", id, { name });
-    toast.success("Acesso admin removido");
-    qc.invalidateQueries({ queryKey: key });
-  }
 
   return (
     <div className="mt-4 space-y-3">
@@ -135,7 +75,7 @@ export function UsersTab() {
                     }
                     requirePhrase="REMOVER ADMIN"
                     confirmText="Remover acesso admin"
-                    onConfirm={() => demote(u.id, u.full_name)}
+                    onConfirm={() => demote.mutate({ id: u.id, name: u.full_name })}
                   />
                 ) : (
                   <ConfirmDestructive
@@ -158,7 +98,7 @@ export function UsersTab() {
                     }
                     requirePhrase="PROMOVER ADMIN"
                     confirmText="Promover a admin"
-                    onConfirm={() => promote(u.id, u.full_name)}
+                    onConfirm={() => promote.mutate({ id: u.id, name: u.full_name })}
                   />
                 )}
                 <ConfirmDestructive
@@ -179,7 +119,9 @@ export function UsersTab() {
                   }
                   requirePhrase={u.is_banned ? undefined : "BANIR"}
                   confirmText={u.is_banned ? "Desbanir" : "Banir"}
-                  onConfirm={() => toggleBan(u.id, u.is_banned, u.full_name)}
+                  onConfirm={() =>
+                    toggleBan.mutate({ id: u.id, banned: u.is_banned, name: u.full_name })
+                  }
                 />
               </div>
             </li>

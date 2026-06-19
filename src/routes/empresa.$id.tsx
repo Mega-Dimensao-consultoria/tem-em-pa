@@ -149,6 +149,20 @@ function CompanyPage() {
 
             <section>
               <h2 className="mb-3 font-display text-lg font-semibold">Avaliações</h2>
+              {user ? (
+                <div className="mb-4">
+                  <ReviewForm
+                    companyId={company.id}
+                    userId={user.id}
+                    onSubmitted={() => qc.invalidateQueries({ queryKey: ["company", id] })}
+                  />
+                </div>
+              ) : (
+                <div className="mb-4 rounded-2xl border border-border bg-card p-4 text-sm shadow-soft">
+                  <Link to="/auth" className="font-semibold text-primary hover:underline">Entre</Link>{" "}
+                  para deixar sua avaliação.
+                </div>
+              )}
               {company.reviews.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-border bg-card/50 p-6 text-center text-sm text-muted-foreground">
                   Seja o primeiro a avaliar esta empresa.
@@ -171,6 +185,7 @@ function CompanyPage() {
               )}
             </section>
           </div>
+
 
           {/* Aside */}
           <aside className="space-y-4">

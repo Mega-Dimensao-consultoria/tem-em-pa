@@ -8,7 +8,9 @@ export const Route = createFileRoute("/sobre")({
       { name: "description", content: "Conheça o Tem em P.A, o guia comercial inteligente de Pouso Alegre/MG." },
       { property: "og:title", content: "Sobre o Tem em P.A" },
       { property: "og:description", content: "Conheça o guia comercial inteligente de Pouso Alegre." },
+      { property: "og:url", content: "https://tem-em-pa.lovable.app/sobre" },
     ],
+    links: [{ rel: "canonical", href: "https://tem-em-pa.lovable.app/sobre" }],
   }),
   component: () => (
     <PageShell>

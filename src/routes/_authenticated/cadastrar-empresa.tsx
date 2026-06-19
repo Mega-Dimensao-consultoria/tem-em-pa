@@ -46,6 +46,7 @@ function CadastrarPage() {
   const { user } = useAuth();
   const { data: categories = [] } = useQuery({ queryKey: ["categories"], queryFn: () => listCategories() });
 
+  const [categoryId, setCategoryId] = useState<string>("");
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const [cep, setCep] = useState("");

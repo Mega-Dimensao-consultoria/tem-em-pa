@@ -677,9 +677,8 @@ function ReportsTab() {
                       title="Remover esta avaliação?"
                       description="A avaliação será apagada definitivamente e a denúncia marcada como resolvida."
                       onConfirm={() => resolve(r.id, "remove_review", review.id)}
-                    >
-                      <Button variant="destructive" size="sm"><Trash2 className="mr-1 h-3 w-3" /> Remover avaliação</Button>
-                    </ConfirmDestructive>
+                      trigger={<Button variant="destructive" size="sm"><Trash2 className="mr-1 h-3 w-3" /> Remover avaliação</Button>}
+                    />
                     <Button variant="outline" size="sm" onClick={() => resolve(r.id, "dismiss", review.id)}>
                       <X className="mr-1 h-3 w-3" /> Descartar denúncia
                     </Button>

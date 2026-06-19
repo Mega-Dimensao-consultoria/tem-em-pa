@@ -21,6 +21,7 @@ import { Route as EmpresaIdRouteImport } from './routes/empresa.$id'
 import { Route as CategoriaSlugRouteImport } from './routes/categoria.$slug'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedOwnerRouteImport } from './routes/_authenticated/owner'
+import { Route as AuthenticatedNotificacoesRouteImport } from './routes/_authenticated/notificacoes'
 import { Route as AuthenticatedCadastrarEmpresaRouteImport } from './routes/_authenticated/cadastrar-empresa'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedOwnerEmpresaIdProdutosRouteImport } from './routes/_authenticated/owner.empresa.$id.produtos'
@@ -86,6 +87,12 @@ const AuthenticatedOwnerRoute = AuthenticatedOwnerRouteImport.update({
   path: '/owner',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedNotificacoesRoute =
+  AuthenticatedNotificacoesRouteImport.update({
+    id: '/notificacoes',
+    path: '/notificacoes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCadastrarEmpresaRoute =
   AuthenticatedCadastrarEmpresaRouteImport.update({
     id: '/cadastrar-empresa',
@@ -126,6 +133,7 @@ export interface FileRoutesByFullPath {
   '/sobre': typeof SobreRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
+  '/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/owner': typeof AuthenticatedOwnerRouteWithChildren
   '/painel': typeof AuthenticatedPainelRoute
   '/categoria/$slug': typeof CategoriaSlugRoute
@@ -144,6 +152,7 @@ export interface FileRoutesByTo {
   '/sobre': typeof SobreRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
+  '/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/owner': typeof AuthenticatedOwnerRouteWithChildren
   '/painel': typeof AuthenticatedPainelRoute
   '/categoria/$slug': typeof CategoriaSlugRoute
@@ -164,6 +173,7 @@ export interface FileRoutesById {
   '/sobre': typeof SobreRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
+  '/_authenticated/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/_authenticated/owner': typeof AuthenticatedOwnerRouteWithChildren
   '/_authenticated/painel': typeof AuthenticatedPainelRoute
   '/categoria/$slug': typeof CategoriaSlugRoute
@@ -184,6 +194,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/admin'
     | '/cadastrar-empresa'
+    | '/notificacoes'
     | '/owner'
     | '/painel'
     | '/categoria/$slug'
@@ -202,6 +213,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/admin'
     | '/cadastrar-empresa'
+    | '/notificacoes'
     | '/owner'
     | '/painel'
     | '/categoria/$slug'
@@ -221,6 +233,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/_authenticated/admin'
     | '/_authenticated/cadastrar-empresa'
+    | '/_authenticated/notificacoes'
     | '/_authenticated/owner'
     | '/_authenticated/painel'
     | '/categoria/$slug'
@@ -329,6 +342,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOwnerRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/notificacoes': {
+      id: '/_authenticated/notificacoes'
+      path: '/notificacoes'
+      fullPath: '/notificacoes'
+      preLoaderRoute: typeof AuthenticatedNotificacoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/cadastrar-empresa': {
       id: '/_authenticated/cadastrar-empresa'
       path: '/cadastrar-empresa'
@@ -388,6 +408,7 @@ const AuthenticatedOwnerRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedCadastrarEmpresaRoute: typeof AuthenticatedCadastrarEmpresaRoute
+  AuthenticatedNotificacoesRoute: typeof AuthenticatedNotificacoesRoute
   AuthenticatedOwnerRoute: typeof AuthenticatedOwnerRouteWithChildren
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
 }
@@ -395,6 +416,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedCadastrarEmpresaRoute: AuthenticatedCadastrarEmpresaRoute,
+  AuthenticatedNotificacoesRoute: AuthenticatedNotificacoesRoute,
   AuthenticatedOwnerRoute: AuthenticatedOwnerRouteWithChildren,
   AuthenticatedPainelRoute: AuthenticatedPainelRoute,
 }

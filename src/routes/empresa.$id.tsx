@@ -36,7 +36,7 @@ const privateQo = (id: string) =>
       if (!company) return null;
       const [products, reviews] = await Promise.all([
         supabase.from("products").select("id, name, description, price, image_url_1, image_url_2").eq("company_id", id).eq("is_active", true),
-        supabase.from("reviews").select("id, rating, comment, created_at").eq("company_id", id).eq("status", "approved").order("created_at", { ascending: false }).limit(50),
+        supabase.from("reviews").select("id, rating, comment, created_at, owner_reply, owner_reply_at").eq("company_id", id).eq("status", "approved").order("created_at", { ascending: false }).limit(50),
       ]);
       return { ...(company as unknown as CompanyData), products: products.data ?? [], reviews: reviews.data ?? [] } as CompanyData;
     },

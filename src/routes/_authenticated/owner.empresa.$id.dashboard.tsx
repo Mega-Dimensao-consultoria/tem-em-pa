@@ -83,13 +83,13 @@ function DashboardPage() {
 
   const now = Date.now();
   const day = 24 * 60 * 60 * 1000;
-  const cutoff30 = now - 30 * day;
-  const cutoff60 = now - 60 * day;
+  const cutoffCurr = now - periodDays * day;
+  const cutoffPrev = now - periodDays * 2 * day;
 
-  const last30 = events.filter((e) => new Date(e.created_at).getTime() >= cutoff30);
+  const last30 = events.filter((e) => new Date(e.created_at).getTime() >= cutoffCurr);
   const prev30 = events.filter((e) => {
     const t = new Date(e.created_at).getTime();
-    return t >= cutoff60 && t < cutoff30;
+    return t >= cutoffPrev && t < cutoffCurr;
   });
 
   function countOf(rows: EventRow[], type: string) {
@@ -101,10 +101,11 @@ function DashboardPage() {
   }
 
   const avg = reviews.length > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0;
+  const unansweredCount = reviews.filter((r) => r.status === "approved" && !r.owner_reply).length;
 
-  // 30-day daily series for views + clicks
+  // Série diária de visualizações e cliques no período selecionado
   const days: { label: string; date: Date; views: number; clicks: number }[] = [];
-  for (let i = 29; i >= 0; i--) {
+  for (let i = periodDays - 1; i >= 0; i--) {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
     d.setDate(d.getDate() - i);

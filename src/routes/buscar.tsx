@@ -13,11 +13,13 @@ import { listCategories } from "@/lib/categories.functions";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { X, Navigation, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { isOpenNow } from "@/lib/hours";
 
 const searchSchema = z.object({
   q: z.string().trim().max(120).optional(),
   cat: z.string().trim().max(60).optional(),
   sort: z.enum(["recent", "name", "distance"]).optional(),
+  open: z.coerce.boolean().optional(),
 });
 
 function haversineKm(aLat: number, aLng: number, bLat: number, bLng: number) {

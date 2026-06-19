@@ -15,6 +15,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2, ArrowLeft, X } from "lucide-react";
+import { maskCep, maskPhone, maskUf } from "@/lib/masks";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/editar")({
   head: () => ({ meta: [{ title: "Editar empresa — Tem em P.A" }] }),
@@ -206,10 +207,10 @@ function EditarEmpresa() {
 
           <Card title="Contato & Redes sociais">
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Telefone" id="phone"><Input id="phone" value={form.phone} onChange={(e) => set("phone", e.target.value)} type="tel" /></Field>
-              <Field label="WhatsApp" id="wpp"><Input id="wpp" value={form.whatsapp} onChange={(e) => set("whatsapp", e.target.value)} type="tel" placeholder="35999999999" /></Field>
+              <Field label="Telefone" id="phone"><Input id="phone" value={form.phone} onChange={(e) => set("phone", maskPhone(e.target.value))} inputMode="tel" maxLength={16} placeholder="(35) 3421-0000" /></Field>
+              <Field label="WhatsApp" id="wpp"><Input id="wpp" value={form.whatsapp} onChange={(e) => set("whatsapp", maskPhone(e.target.value))} inputMode="tel" maxLength={16} placeholder="(35) 99999-0000" /></Field>
               <Field label="E-mail" id="email"><Input id="email" value={form.email} onChange={(e) => set("email", e.target.value)} type="email" /></Field>
-              <Field label="Site" id="site"><Input id="site" value={form.website} onChange={(e) => set("website", e.target.value)} type="url" /></Field>
+              <Field label="Site" id="site"><Input id="site" value={form.website} onChange={(e) => set("website", e.target.value)} type="url" placeholder="https://..." /></Field>
               <Field label="Instagram (URL)" id="ig"><Input id="ig" value={form.instagram_url} onChange={(e) => set("instagram_url", e.target.value)} placeholder="https://instagram.com/sua-empresa" /></Field>
               <Field label="Facebook (URL)" id="fb"><Input id="fb" value={form.facebook_url} onChange={(e) => set("facebook_url", e.target.value)} placeholder="https://facebook.com/sua-empresa" /></Field>
             </div>
@@ -218,17 +219,17 @@ function EditarEmpresa() {
           <Card title="Endereço">
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="CEP" id="cep">
-                <Input id="cep" value={form.cep} onChange={(e) => set("cep", e.target.value)} onBlur={onCepBlur} maxLength={9} placeholder="37550-000" />
+                <Input id="cep" value={form.cep} onChange={(e) => set("cep", maskCep(e.target.value))} onBlur={onCepBlur} maxLength={9} inputMode="numeric" placeholder="37550-000" />
                 {loadingCep ? <p className="text-xs text-muted-foreground">Consultando…</p> : null}
               </Field>
-              <Field label="Número" id="num"><Input id="num" value={form.number} onChange={(e) => set("number", e.target.value)} /></Field>
+              <Field label="Número" id="num"><Input id="num" value={form.number} onChange={(e) => set("number", e.target.value)} inputMode="numeric" /></Field>
             </div>
             <Field label="Endereço" id="addr"><Input id="addr" value={form.address} onChange={(e) => set("address", e.target.value)} /></Field>
             <Field label="Complemento" id="comp"><Input id="comp" value={form.complement} onChange={(e) => set("complement", e.target.value)} /></Field>
             <div className="grid gap-4 sm:grid-cols-3">
               <Field label="Bairro" id="bairro"><Input id="bairro" value={form.neighborhood} onChange={(e) => set("neighborhood", e.target.value)} /></Field>
               <Field label="Cidade" id="city"><Input id="city" value={form.city} onChange={(e) => set("city", e.target.value)} /></Field>
-              <Field label="UF" id="uf"><Input id="uf" value={form.state} onChange={(e) => set("state", e.target.value)} maxLength={2} /></Field>
+              <Field label="UF" id="uf"><Input id="uf" value={form.state} onChange={(e) => set("state", maskUf(e.target.value))} maxLength={2} /></Field>
             </div>
           </Card>
 

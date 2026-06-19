@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, LogOut, Shield, Store, User as UserIcon } from "lucide-react";
+import { Heart, LayoutDashboard, LogOut, Shield, Store, User as UserIcon } from "lucide-react";
 import { NotificationsBell } from "./NotificationsBell";
 
 export function Header() {
@@ -75,6 +75,11 @@ export function Header() {
                 <DropdownMenuItem asChild>
                   <Link to="/painel">
                     <LayoutDashboard className="mr-2 h-4 w-4" /> Meu painel
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/favoritos">
+                    <Heart className="mr-2 h-4 w-4" /> Favoritos
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>

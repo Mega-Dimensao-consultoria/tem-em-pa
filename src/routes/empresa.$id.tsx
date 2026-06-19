@@ -1,10 +1,13 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { useSuspenseQuery, queryOptions, useQueryClient } from "@tanstack/react-query";
 import { PageShell } from "@/components/PageShell";
 import { RatingStars } from "@/components/RatingStars";
 import { getCompanyById } from "@/lib/companies.functions";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Globe, Mail, MessageCircle, Flag } from "lucide-react";
+import { MapPin, Phone, Globe, Mail, MessageCircle } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
+import { ReviewForm } from "@/components/ReviewForm";
+import { ClaimDialog } from "@/components/ClaimDialog";
 
 const qo = (id: string) =>
   queryOptions({
@@ -50,6 +53,8 @@ export const Route = createFileRoute("/empresa/$id")({
 function CompanyPage() {
   const { id } = Route.useParams();
   const { data: company } = useSuspenseQuery(qo(id));
+  const { user } = useAuth();
+  const qc = useQueryClient();
   const avg =
     company.reviews.length > 0
       ? company.reviews.reduce((s, r) => s + r.rating, 0) / company.reviews.length
@@ -95,9 +100,11 @@ function CompanyPage() {
               <span>{avg > 0 ? avg.toFixed(1) : "Sem avaliações"} · {company.reviews.length} avaliação(ões)</span>
             </div>
           </div>
-          {canClaim ? (
-            <Button variant="outline" disabled className="rounded-full">
-              <Flag className="mr-2 h-4 w-4" /> Reivindicar empresa
+          {canClaim && user ? (
+            <ClaimDialog companyId={company.id} userId={user.id} />
+          ) : canClaim && !user ? (
+            <Button asChild variant="outline" className="rounded-full">
+              <Link to="/auth">Entrar para reivindicar</Link>
             </Button>
           ) : null}
         </div>
@@ -142,6 +149,20 @@ function CompanyPage() {
 
             <section>
               <h2 className="mb-3 font-display text-lg font-semibold">Avaliações</h2>
+              {user ? (
+                <div className="mb-4">
+                  <ReviewForm
+                    companyId={company.id}
+                    userId={user.id}
+                    onSubmitted={() => qc.invalidateQueries({ queryKey: ["company", id] })}
+                  />
+                </div>
+              ) : (
+                <div className="mb-4 rounded-2xl border border-border bg-card p-4 text-sm shadow-soft">
+                  <Link to="/auth" className="font-semibold text-primary hover:underline">Entre</Link>{" "}
+                  para deixar sua avaliação.
+                </div>
+              )}
               {company.reviews.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-border bg-card/50 p-6 text-center text-sm text-muted-foreground">
                   Seja o primeiro a avaliar esta empresa.
@@ -164,6 +185,7 @@ function CompanyPage() {
               )}
             </section>
           </div>
+
 
           {/* Aside */}
           <aside className="space-y-4">

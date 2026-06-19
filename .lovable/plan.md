@@ -1,121 +1,97 @@
+# Plano de Refatoração Profunda
 
-# Plano: Fundação do "Tem em P.A"
+Antes de executar mudanças invasivas, quero alinhar o **escopo e a ordem** com você. A refatoração é grande e algumas escolhas têm impacto em vários arquivos — melhor combinar primeiro do que reescrever às cegas.
 
-Entrega da **fundação completa**: design system, banco de dados, autenticação, home navegável e esqueleto de rotas. As funcionalidades de cada painel (claim, moderação, votos, produtos, geolocalização) serão preenchidas nas próximas iterações sobre essa base.
+## Diagnóstico atual
 
-## 1. Setup de infraestrutura
+Pontos fortes: TanStack Start bem usado, server functions já isoladas em `*.functions.ts`, shadcn padronizado, RLS no banco, masks/utils já extraídos.
 
-- **Lovable Cloud** (Supabase gerenciado): habilitado para banco, auth e storage.
-- **Conector Google Maps Platform**: linkado para uso futuro (embed + rotas + cálculo de distância).
-- **Auth providers**: Google (broker Lovable), Apple e Email/Senha. Cloudflare Turnstile ativado para signup/login.
-- **Storage buckets**:
-  - `company-logos` (público)
-  - `product-images` (público)
-  - `claim-documents` (privado — CNPJ/Contrato Social)
+Pontos de melhoria identificados:
 
-## 2. Design system (Tailwind v4)
+1. **Arquivos enormes com múltiplas responsabilidades**
+   - `admin.tsx` (768 linhas) — 5 tabs + stats + queries + mutations + diálogos, tudo no mesmo arquivo.
+   - `empresa.$id.tsx` (464) — header + galeria + horário + reviews + mapa + JSON-LD + breadcrumbs.
+   - `owner.empresa.$id.dashboard.tsx` (306) — métricas + gráfico + reviews sem resposta + share.
+   - `cadastrar-empresa.tsx` (240) e `owner.../editar.tsx` (284) — **forms quase idênticos** duplicados.
 
-Tokens em `src/styles.css` (oklch), tema claro com sotaque institucional de Pouso Alegre:
+2. **Lógica de dados misturada com UI**
+   - Queries Supabase inline em vários componentes (`NotificationsBell`, `FavoriteButton`, `admin`, `dashboard`, `favoritos`, `notificacoes`).
+   - Sem camada consistente: alguns dados vêm de `*.functions.ts`, outros direto do `supabase` client no componente.
 
-- **Primary** vermelho vibrante (institucional PA)
-- **Secondary** azul profundo
-- **Background** branco / cinza muito claro
-- **Foreground** cinza grafite
-- Tipografia: display **Sora** + corpo **Inter** (via `<link>` no `__root.tsx`)
-- Mobile-first, cantos arredondados generosos, sombras suaves, foco em respiração e hierarquia
+3. **Duplicação concreta**
+   - Form de empresa (cadastrar vs editar): mesmos campos, masks, geocode, hours, gallery.
+   - Cards/seções no `admin.tsx` para "pending companies", "claims", "reviews", "reports" seguem a mesma estrutura.
+   - `Card`/`Field` helpers redeclarados localmente em editar e cadastrar.
 
-## 3. Banco de dados (migrations)
+4. **Hooks que faltam**
+   - `useCompany(id)`, `useReviews(companyId)`, `useNotifications()`, `useFavorites()`, `useAdminStats()`, `useOwnerCompanies()` — hoje cada componente chama `supabase.from(...)` direto, sem cache compartilhado.
 
-Tipos:
-- `app_role` enum: `admin`, `owner`, `user`
-- `company_status` enum: `pending`, `approved`, `rejected`, `claimed_pending`
-- `review_status` enum: `pending_moderation`, `approved`, `flagged`, `rejected`
+5. **Organização de pastas**
+   - `src/lib/` mistura server functions, utils puros e helpers de domínio.
+   - Não há separação por feature/domínio (companies, reviews, claims, notifications, admin).
 
-Tabelas:
-- `profiles` (id ↔ auth.users, full_name, avatar_url, phone, is_banned)
-- `user_roles` (user_id, role) + função `has_role(_user_id, _role)` SECURITY DEFINER
-- `categories` (id, name, slug, icon, sort_order)
-- `companies` (id, name, category_id, cep, address, number, complement, neighborhood, city, state, lat, lng, phone, whatsapp, email, website, description, logo_url, cover_url, status, owner_id, is_featured, created_at)
-- `products` (id, company_id, name, description, price, image_url_1, image_url_2, is_active)
-  - Trigger: rejeita insert se a empresa já tem 20 produtos ativos
-  - Check constraint: no máximo 2 imagens (já garantido pelos 2 campos)
-- `reviews` (id, company_id, user_id, rating 1–5, comment, is_anonymous default true, status, created_at)
-  - **Unique constraint (company_id, user_id)** → voto único
-- `company_claims` (id, company_id, user_id, document_urls jsonb, message, status, created_at, reviewed_by, reviewed_at)
-- `banned_words` (id, word) — usado pelo trigger de moderação
+6. **Tipagem**
+   - Vários `as any` em campos novos (`instagram_url`, `gallery_urls`, `hours`) por causa de tipos auto-gerados desatualizados — tratáveis com tipos de domínio próprios.
 
-Triggers:
-- `handle_new_user`: cria `profiles` + role `user` no signup
-- `enforce_product_limit`: máximo 20 produtos ativos por empresa
-- `moderate_review`: se `comment` contém palavra de `banned_words`, status = `pending_moderation`; senão `approved`
-- `set_updated_at` genérico
+## Proposta de refatoração — em 4 fases
 
-**RLS + GRANTs** em todas as tabelas públicas, com `service_role` sempre e `authenticated`/`anon` conforme a tabela. Políticas resumidas:
-- `categories`, `companies` (status=`approved`), `products` (de empresas aprovadas), `reviews` (status=`approved`): leitura pública (`anon`+`authenticated`)
-- `companies`: owner pode editar a sua; admin pode tudo
-- `products`: owner CRUD nos próprios; admin tudo
-- `reviews`: usuário autenticado insere; só o autor edita/apaga o seu enquanto pendente; admin modera
-- `company_claims`: usuário cria a sua, vê só as suas; admin vê todas
-- `user_roles`: leitura só via `has_role`, escrita só admin/service_role
+Cada fase é **independente e segura** (sem mudança de comportamento). Posso parar entre fases para você revisar.
 
-## 4. Autenticação
+### Fase 1 — Organização de pastas e tipos de domínio
+- Criar estrutura por feature:
+  ```text
+  src/features/
+    companies/   (functions, hooks, components, types)
+    reviews/
+    claims/
+    notifications/
+    admin/
+    auth/
+  ```
+- Mover `*.functions.ts` e componentes relacionados para suas features.
+- Criar `src/features/*/types.ts` com tipos de domínio (Company, Review, Claim, Notification) — elimina `as any`.
+- Re-exports em `src/lib/` mantidos como shim temporário para não quebrar imports (depois removidos).
 
-- Tela `/auth` com tabs **Entrar / Criar conta**, Email/Senha + botões Google e Apple
-- Widget Turnstile integrado nos formulários (validação no submit)
-- Reset de senha: link envia para `/reset-password` (página pública)
-- Listener `onAuthStateChange` único no `__root.tsx`
-- Layout protegido `_authenticated/route.tsx` (gerenciado pela integração) redireciona para `/auth`
-- Após login, redireciona para `redirect` search param ou `/`
+### Fase 2 — Camada de dados (hooks com React Query)
+- Criar hooks padronizados:
+  - `useCompany(id)`, `useCompanyReviews(id)`, `useOwnerCompanies()`,
+  - `useNotifications()`, `useUnreadCount()`,
+  - `useFavorites()`, `useToggleFavorite()`,
+  - `useAdminPending()`, `useAdminClaims()`, `useAdminReports()`, `useAdminStats()`.
+- Cada hook = `queryKey` consistente + `queryFn` chamando server fn (ou supabase client encapsulado).
+- Substituir as chamadas inline `supabase.from(...).select(...)` espalhadas pelos componentes.
+- Mutations com `invalidateQueries` centralizado → fim do problema "contador não atualiza".
 
-## 5. Rotas (fundação)
+### Fase 3 — Quebra dos arquivos grandes
+- `admin.tsx` → vira shell de tabs; cada tab vira componente em `features/admin/components/`:
+  - `PendingCompaniesTab`, `ClaimsTab`, `ReviewsModerationTab`, `ReportsTab`, `UsersTab`, `AdminStats`.
+- `empresa.$id.tsx` → split em `CompanyHeader`, `CompanyGallery`, `CompanyHours`, `CompanyContactCard`, `CompanyReviewsSection`, `CompanyJsonLd`.
+- `owner.../dashboard.tsx` → `DashboardMetrics`, `DashboardChart`, `UnansweredReviews`, `PeriodSelector`.
+- Form de empresa: extrair `<CompanyForm mode="create" | "edit">` único em `features/companies/components/CompanyForm.tsx`. `cadastrar-empresa.tsx` e `editar.tsx` viram wrappers finos (~30 linhas).
+- Extrair `Card`/`Field` helpers duplicados para `components/ui/form-card.tsx`.
 
-Públicas:
-- `/` Home: hero com barra de busca centralizada, grid de cards de categorias (ícone + nome), seção de empresas em destaque (`is_featured`), CTA "Cadastre sua empresa"
-- `/buscar` resultados de busca (estrutura + filtros básicos)
-- `/categoria/$slug` listagem por categoria
-- `/empresa/$id` página da empresa (estrutura: header, info, mapa placeholder, produtos, reviews, botão "Reivindicar" condicional)
-- `/auth`, `/reset-password`
-- `/sobre`, `/contato`
+### Fase 4 — Limpeza final
+- Padronizar imports (ordem: react → libs → @/features → @/components → @/lib → relativos).
+- Remover shims temporários de `src/lib/` que viraram re-export.
+- Remover `as any` restantes.
+- ESLint rule check (sem auto-fix destrutivo) e build.
 
-Protegidas (`_authenticated/`):
-- `/_authenticated/painel` dashboard do usuário (placeholder com avaliações feitas)
-- `/_authenticated/cadastrar-empresa` formulário com ViaCEP
-- `/_authenticated/owner` painel do proprietário (lista empresas dele, link p/ gerenciar produtos) — bloqueado se não tiver role `owner`
-- `/_authenticated/owner/empresa/$id/produtos` CRUD de produtos (esqueleto)
-- `/_authenticated/admin` painel admin (gate via `has_role('admin')`) com sub-abas: Empresas pendentes, Reivindicações, Comentários em moderação, Categorias, Usuários
+## O que NÃO vou mexer
+- Migrations / schema do banco.
+- Comportamento de UI, fluxos, URLs, design tokens.
+- Arquivos auto-gerados (`routeTree.gen.ts`, `integrations/supabase/*`).
+- Server functions já existentes (só movidas, não reescritas).
 
-Cada painel admin/owner entra como esqueleto navegável com tabela vazia + ações desabilitadas marcadas "em breve", para a próxima iteração preencher a lógica sem refator estrutural.
+## Validação por fase
+- Build (`tsc`/Vite) verde após cada fase.
+- Smoke test via Playwright nas rotas críticas: home, busca, empresa, admin, dashboard do dono, cadastro.
 
-## 6. Componentes principais
+## Pergunta antes de começar
 
-- `Header` com logo "Tem em P.A", busca compacta, menu de conta (avatar dropdown: Meu painel, Sair / Entrar)
-- `Footer` institucional
-- `CategoryCard`, `CompanyCard`, `SearchBar`, `RatingStars` (display)
-- `RoleGate` helper para esconder UI por role no cliente (a segurança real é RLS)
-- `CepInput` com integração ViaCEP (autopreenche endereço/bairro/cidade/UF) — pronto para o form de cadastro
+Esse plano de 4 fases é grande (≈ 30–40 arquivos tocados, vários novos). Como quer prosseguir?
 
-## 7. Server functions iniciais
+**A)** Executo as 4 fases em sequência, em um único turno longo, e te entrego tudo no final.
+**B)** Executo **fase por fase** (paro entre cada uma para você ver o diff).
+**C)** Faço só as fases de maior impacto: **Fase 2 (hooks de dados) + Fase 3 (quebrar arquivões + unificar CompanyForm)** — pula reorganização de pastas e tipos de domínio, mantém estrutura atual.
 
-Em `src/lib/`:
-- `categories.functions.ts` — `listCategories` (público, server publishable client)
-- `companies.functions.ts` — `listFeaturedCompanies`, `searchCompanies`, `getCompanyById` (público)
-- `viacep.functions.ts` — `lookupCep` (fetch público para ViaCEP)
-
-Placeholders prontos para próxima iteração: `createCompany`, `claimCompany`, `submitReview`, `moderateReview`, `adminListPendingCompanies`, etc.
-
-## 8. O que NÃO entra nesta entrega
-
-- Lógica completa de criação/edição de empresa e produtos (forms ficam estruturados mas a submissão completa fica para próximo passo)
-- Upload real de documentos de reivindicação (UI sim, processamento depois)
-- Integração do conector Google Maps no front (linkado, mas embed/distância na próxima)
-- Cron / notificações por email ao admin
-
-## Detalhes técnicos
-
-- Stack: TanStack Start + React 19 + Tailwind v4 + shadcn/ui + Supabase
-- Validação client/server com Zod
-- Server functions com `createServerFn`; protegidas com `requireSupabaseAuth`
-- ViaCEP chamado via server function para evitar CORS e validar input
-- Nenhum dado de seed em código — categorias iniciais inseridas via migration (Restaurantes, Mercados, Saúde, Beleza, Serviços, Moda, Lazer, Educação, Automotivo, Pet)
-
-Após sua aprovação, executo tudo numa só rodada de build.
+Qual prefere?

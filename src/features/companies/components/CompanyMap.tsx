@@ -3,16 +3,31 @@ import { useEffect, useRef, useState } from "react";
 const BROWSER_KEY = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY as string | undefined;
 const TRACKING_ID = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_TRACKING_ID as string | undefined;
 
+// Minimal structural typing for the Google Maps JS API we use.
+type GMaps = {
+  maps: {
+    Map: new (el: HTMLElement, opts: Record<string, unknown>) => unknown;
+    Marker: new (opts: { position: { lat: number; lng: number }; map: unknown; title?: string }) => {
+      addListener: (event: string, cb: () => void) => void;
+    };
+    InfoWindow: new (opts: { content: string }) => {
+      open: (opts: { map: unknown; anchor: unknown }) => void;
+    };
+  };
+};
+type WindowWithMaps = Window & { google?: GMaps; __lovableInitMap?: () => void };
+
 let loaderPromise: Promise<void> | null = null;
 
 function loadGoogleMaps(): Promise<void> {
   if (typeof window === "undefined") return Promise.reject(new Error("SSR"));
-  if ((window as any).google?.maps?.Map) return Promise.resolve();
+  const w = window as WindowWithMaps;
+  if (w.google?.maps?.Map) return Promise.resolve();
   if (loaderPromise) return loaderPromise;
   if (!BROWSER_KEY) return Promise.reject(new Error("Missing Google Maps browser key"));
 
   loaderPromise = new Promise<void>((resolve, reject) => {
-    (window as any).__lovableInitMap = () => resolve();
+    w.__lovableInitMap = () => resolve();
     const script = document.createElement("script");
     const params = new URLSearchParams({
       key: BROWSER_KEY,

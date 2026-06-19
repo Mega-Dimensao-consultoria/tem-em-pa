@@ -156,20 +156,20 @@ function CadastrarPage() {
         </p>
 
         <form onSubmit={onSubmit} className="mt-8 space-y-5 rounded-2xl border border-border bg-card p-6 shadow-soft">
-          <Field label="Nome da empresa *" id="name"><Input id="name" name="name" required maxLength={120} /></Field>
+          <FormField label="Nome da empresa *" id="name"><Input id="name" name="name" required maxLength={120} /></FormField>
 
-          <Field label="Categoria *" id="cat">
+          <FormField label="Categoria *" id="cat">
             <Select value={categoryId} onValueChange={setCategoryId}>
               <SelectTrigger id="cat"><SelectValue placeholder="Selecione…" /></SelectTrigger>
               <SelectContent>
                 {categories.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
               </SelectContent>
             </Select>
-          </Field>
+          </FormField>
 
-          <Field label="Descrição" id="desc">
+          <FormField label="Descrição" id="desc">
             <Textarea id="desc" name="description" maxLength={500} rows={4} placeholder="Conte um pouco sobre seu negócio…" />
-          </Field>
+          </FormField>
 
           {user ? (
             <div className="grid gap-4 sm:grid-cols-2">
@@ -185,33 +185,33 @@ function CadastrarPage() {
           ) : null}
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="CEP" id="cep">
+            <FormField label="CEP" id="cep">
               <Input id="cep" value={cep} onChange={(e) => setCep(maskCep(e.target.value))} onBlur={onCepBlur} placeholder="37550-000" inputMode="numeric" maxLength={9} />
               {loadingCep ? <p className="text-xs text-muted-foreground">Consultando…</p> : null}
-            </Field>
-            <Field label="Número" id="num"><Input id="num" name="number" maxLength={10} inputMode="numeric" /></Field>
+            </FormField>
+            <FormField label="Número" id="num"><Input id="num" name="number" maxLength={10} inputMode="numeric" /></FormField>
           </div>
 
-          <Field label="Endereço" id="addr">
+          <FormField label="Endereço" id="addr">
             <Input id="addr" value={address} onChange={(e) => setAddress(e.target.value)} />
-          </Field>
+          </FormField>
           <div className="grid gap-4 sm:grid-cols-3">
-            <Field label="Bairro" id="bairro"><Input id="bairro" value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)} /></Field>
-            <Field label="Cidade" id="city"><Input id="city" value={city} onChange={(e) => setCity(e.target.value)} /></Field>
-            <Field label="UF" id="uf"><Input id="uf" value={state} onChange={(e) => setState(maskUf(e.target.value))} maxLength={2} /></Field>
+            <FormField label="Bairro" id="bairro"><Input id="bairro" value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)} /></FormField>
+            <FormField label="Cidade" id="city"><Input id="city" value={city} onChange={(e) => setCity(e.target.value)} /></FormField>
+            <FormField label="UF" id="uf"><Input id="uf" value={state} onChange={(e) => setState(maskUf(e.target.value))} maxLength={2} /></FormField>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Telefone" id="phone">
+            <FormField label="Telefone" id="phone">
               <MaskedPhone name="phone" placeholder="(35) 3421-0000" />
-            </Field>
-            <Field label="WhatsApp" id="wpp">
+            </FormField>
+            <FormField label="WhatsApp" id="wpp">
               <MaskedPhone name="whatsapp" placeholder="(35) 99999-0000" />
-            </Field>
+            </FormField>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="E-mail" id="email"><Input id="email" name="email" type="email" maxLength={120} /></Field>
-            <Field label="Site" id="site"><Input id="site" name="website" type="url" maxLength={200} placeholder="https://..." /></Field>
+            <FormField label="E-mail" id="email"><Input id="email" name="email" type="email" maxLength={120} /></FormField>
+            <FormField label="Site" id="site"><Input id="site" name="website" type="url" maxLength={200} placeholder="https://..." /></FormField>
           </div>
 
           <Button type="submit" className="w-full" disabled={submitting}>
@@ -223,14 +223,6 @@ function CadastrarPage() {
   );
 }
 
-function Field({ label, id, children }: { label: string; id: string; children: React.ReactNode }) {
-  return (
-    <div className="space-y-1.5">
-      <Label htmlFor={id}>{label}</Label>
-      {children}
-    </div>
-  );
-}
 
 function MaskedPhone({ name, placeholder }: { name: string; placeholder?: string }) {
   const [v, setV] = useState("");

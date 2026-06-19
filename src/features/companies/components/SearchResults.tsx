@@ -1,7 +1,9 @@
+import type { ComponentProps } from "react";
 import { Badge } from "@/components/ui/badge";
 import { CompanyCard } from "@/features/companies/components/CompanyCard";
 
-type Company = { id: string; status: string; owner_id: string | null };
+type CardCompany = ComponentProps<typeof CompanyCard>["company"];
+type Company = CardCompany & { status: string; owner_id: string | null };
 
 export function SearchResults({
   isLoading,

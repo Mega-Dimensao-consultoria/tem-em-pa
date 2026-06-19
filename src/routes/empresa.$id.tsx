@@ -64,6 +64,13 @@ function CompanyPage() {
 
   const company = publicCompany ?? privateCompany;
 
+  const { data: contact } = useQuery({
+    queryKey: ["company-contact", id],
+    queryFn: () => getCompanyContact({ data: { id } }),
+    enabled: !!user && !!publicCompany,
+    staleTime: 60_000,
+  });
+
   const isOwner = !!user && !!company && company.owner_id === user.id;
   const isPending = !!company && company.status !== "approved";
 

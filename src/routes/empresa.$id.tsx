@@ -14,6 +14,8 @@ import { CompanyMap } from "@/components/CompanyMap";
 import { trackEvent } from "@/lib/track";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { isOpenNow } from "@/lib/hours";
+import { ShareButton } from "@/components/ShareButton";
+import { ReportReviewDialog } from "@/components/ReportReviewDialog";
 
 type CompanyData = NonNullable<Awaited<ReturnType<typeof getCompanyById>>>;
 

@@ -48,7 +48,7 @@ export function useAdminMutation<TVars, TData = unknown>(
           entry.action,
           entry.entityType,
           entry.entityId ?? null,
-          entry.details ?? null,
+          entry.details ?? undefined,
         );
       }
       const msg =

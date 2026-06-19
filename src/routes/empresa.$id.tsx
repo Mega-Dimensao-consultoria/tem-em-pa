@@ -48,7 +48,8 @@ export const Route = createFileRoute("/empresa/$id")({
 });
 
 function CompanyPage() {
-  const company = Route.useLoaderData();
+  const { id } = Route.useParams();
+  const { data: company } = useSuspenseQuery(qo(id));
   const avg =
     company.reviews.length > 0
       ? company.reviews.reduce((s, r) => s + r.rating, 0) / company.reviews.length

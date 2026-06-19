@@ -359,20 +359,14 @@ type HourRow = { day: number; open: string; close: string; closed?: boolean };
 function HoursBlock({ hours }: { hours: unknown }) {
   if (!Array.isArray(hours) || hours.length === 0) return null;
   const rows = hours as HourRow[];
-  // Check if any day is actually open
   const hasOpen = rows.some((r) => !r.closed);
   if (!hasOpen) return null;
 
-  const now = new Date();
-  const today = now.getDay();
-  const todayRow = rows.find((r) => r.day === today);
-  let openNow = false;
-  if (todayRow && !todayRow.closed) {
-    const cur = now.getHours() * 60 + now.getMinutes();
-    const [oh, om] = todayRow.open.split(":").map(Number);
-    const [ch, cm] = todayRow.close.split(":").map(Number);
-    openNow = cur >= oh * 60 + om && cur <= ch * 60 + cm;
-  }
+  const today = new Date().getDay();
+  // Lazy import to avoid circular concerns
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { isOpenNow } = require("@/lib/hours") as typeof import("@/lib/hours");
+  const openNow = isOpenNow(hours);
 
   return (
     <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
@@ -393,4 +387,5 @@ function HoursBlock({ hours }: { hours: unknown }) {
     </div>
   );
 }
+
 

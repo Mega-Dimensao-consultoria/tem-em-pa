@@ -203,6 +203,12 @@ function CompanyPage() {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {!isPending ? <FavoriteButton companyId={company.id} variant="button" /> : null}
+            {!isPending ? (
+              <ShareButton
+                title={company.name}
+                text={company.description?.slice(0, 140) ?? `Conheça ${company.name} no Tem em P.A`}
+              />
+            ) : null}
             {canClaim && user ? (
               <ClaimDialog companyId={company.id} userId={user.id} />
             ) : canClaim && !user ? (
@@ -212,6 +218,7 @@ function CompanyPage() {
             ) : null}
           </div>
         </div>
+
 
         {/* Conteúdo */}
         <div className="mt-8 grid gap-8 md:grid-cols-3">

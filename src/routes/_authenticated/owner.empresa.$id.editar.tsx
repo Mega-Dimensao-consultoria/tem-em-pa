@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useQuery } from "@tanstack/react-query";
 import { listCategories } from "@/lib/categories.functions";
 import { lookupCep } from "@/lib/viacep.functions";
-import { ImageUpload } from "@/components/ImageUpload";
+import { ImageUpload, GalleryUpload } from "@/components/ImageUpload";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -252,30 +252,10 @@ function EditarEmpresa() {
             </div>
           </Card>
 
-          <Card title="Galeria de fotos (até 8)">
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {gallery.map((url, i) => (
-                <div key={url + i} className="relative aspect-square overflow-hidden rounded-lg border border-border">
-                  <img src={url} alt={`Foto ${i + 1}`} className="h-full w-full object-cover" loading="lazy" />
-                  <button type="button" onClick={() => setGallery(gallery.filter((_, idx) => idx !== i))}
-                    className="absolute right-1 top-1 rounded-full bg-black/60 p-1 text-white hover:bg-black/80" aria-label="Remover">
-                    <X className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              ))}
-              {gallery.length < 8 ? (
-                <div className="aspect-square">
-                  <ImageUpload
-                    bucket="product-images"
-                    userId={user!.id}
-                    value={null}
-                    onChange={(url) => { if (url) setGallery([...gallery, url]); }}
-                    label="+ Foto"
-                  />
-                </div>
-              ) : null}
-            </div>
+          <Card title="Galeria de fotos">
+            <GalleryUpload userId={user!.id} value={gallery} onChange={setGallery} max={8} />
           </Card>
+
 
           <div className="flex items-center justify-end gap-3">
             <Button type="button" variant="outline" asChild><Link to="/owner">Cancelar</Link></Button>

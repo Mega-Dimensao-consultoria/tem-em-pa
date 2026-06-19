@@ -21,6 +21,7 @@ import {
   publicCompanyQO,
   privateCompanyQO,
 } from "@/hooks/queries/useCompanyDetail";
+import { getCompanyContact } from "@/lib/companies/contact.functions";
 
 export const Route = createFileRoute("/empresa/$id")({
   loader: ({ context, params }) =>

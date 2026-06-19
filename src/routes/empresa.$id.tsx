@@ -108,6 +108,13 @@ function CompanyPage() {
   const canClaim = !company.owner_id && !isPending;
   const fullAddress = [company.address, company.number, company.neighborhood, company.city, company.state]
     .filter(Boolean).join(", ");
+
+  // Track a view (deduped per session) for approved, non-owner visits
+  useEffect(() => {
+    if (!isPending && !isOwner && publicCompany) {
+      trackEvent(publicCompany.id, "view");
+    }
+  }, [isPending, isOwner, publicCompany]);
   const mapsQuery = encodeURIComponent(fullAddress || company.name);
 
   return (

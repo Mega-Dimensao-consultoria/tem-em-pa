@@ -68,7 +68,7 @@ function SearchPage() {
       }
       let query = supabase
         .from("companies")
-        .select("id, name, slug, description, neighborhood, city, state, lat, lng, logo_url, cover_url, is_featured, status, owner_id, category_id, categories:category_id(name, slug, icon)")
+        .select("id, name, slug, description, neighborhood, city, state, lat, lng, hours, logo_url, cover_url, is_featured, status, owner_id, category_id, categories:category_id(name, slug, icon)")
         .limit(120);
       if (sort === "name") query = query.order("name", { ascending: true });
       else query = query.order("created_at", { ascending: false });

@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { MapPin, Star } from "lucide-react";
 import { FavoriteButton } from "./FavoriteButton";
+import { isOpenNow } from "@/lib/hours";
 
 type Company = {
   id: string;
@@ -11,10 +12,12 @@ type Company = {
   logo_url: string | null;
   cover_url: string | null;
   is_featured: boolean | null;
+  hours?: unknown;
   categories?: { name: string | null } | null;
 };
 
 export function CompanyCard({ company }: { company: Company }) {
+  const openNow = isOpenNow(company.hours);
   return (
     <Link
       to="/empresa/$id"
@@ -33,6 +36,11 @@ export function CompanyCard({ company }: { company: Company }) {
           </span>
         ) : null}
         <FavoriteButton companyId={company.id} className="absolute right-3 top-3" />
+        {openNow ? (
+          <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-full bg-emerald-500/90 px-2 py-0.5 text-[10px] font-semibold text-white shadow-soft backdrop-blur">
+            <span className="h-1.5 w-1.5 rounded-full bg-white" /> Aberto agora
+          </span>
+        ) : null}
       </div>
       <div className="flex flex-col gap-2 p-4">
         {company.categories?.name ? (

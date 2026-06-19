@@ -13,11 +13,13 @@ import { listCategories } from "@/lib/categories.functions";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { X, Navigation, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { isOpenNow } from "@/lib/hours";
 
 const searchSchema = z.object({
   q: z.string().trim().max(120).optional(),
   cat: z.string().trim().max(60).optional(),
   sort: z.enum(["recent", "name", "distance"]).optional(),
+  open: z.coerce.boolean().optional(),
 });
 
 function haversineKm(aLat: number, aLng: number, bLat: number, bLng: number) {
@@ -47,7 +49,7 @@ export const Route = createFileRoute("/buscar")({
 });
 
 function SearchPage() {
-  const { q, cat, sort = "recent" } = Route.useSearch();
+  const { q, cat, sort = "recent", open } = Route.useSearch();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const [geo, setGeo] = useState<{ lat: number; lng: number } | null>(null);
@@ -66,7 +68,7 @@ function SearchPage() {
       }
       let query = supabase
         .from("companies")
-        .select("id, name, slug, description, neighborhood, city, state, lat, lng, logo_url, cover_url, is_featured, status, owner_id, category_id, categories:category_id(name, slug, icon)")
+        .select("id, name, slug, description, neighborhood, city, state, lat, lng, hours, logo_url, cover_url, is_featured, status, owner_id, category_id, categories:category_id(name, slug, icon)")
         .limit(120);
       if (sort === "name") query = query.order("name", { ascending: true });
       else query = query.order("created_at", { ascending: false });
@@ -79,8 +81,10 @@ function SearchPage() {
   });
 
   const data = (() => {
-    if (sort !== "distance" || !geo) return rawData;
-    return [...rawData]
+    let rows = rawData as any[];
+    if (open) rows = rows.filter((c) => isOpenNow((c as any).hours));
+    if (sort !== "distance" || !geo) return rows;
+    return [...rows]
       .map((c) => {
         const lat = (c as any).lat as number | null;
         const lng = (c as any).lng as number | null;
@@ -94,7 +98,7 @@ function SearchPage() {
   const approved = data.filter((c) => c.status === "approved");
   const activeCat = categories.find((c) => c.slug === cat);
 
-  function updateSearch(patch: Partial<{ q?: string; cat?: string; sort?: "recent" | "name" | "distance" }>) {
+  function updateSearch(patch: Partial<z.infer<typeof searchSchema>>) {
     navigate({ to: "/buscar", search: (prev: z.infer<typeof searchSchema>) => ({ ...prev, ...patch }) });
   }
 
@@ -168,7 +172,15 @@ function SearchPage() {
               {geoLoading ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <Navigation className="mr-1 h-3 w-3" />}
               {geo ? "Atualizar localização" : "Perto de mim"}
             </Button>
-            {(q || cat) ? (
+            <button
+              type="button"
+              onClick={() => updateSearch({ open: open ? undefined : true })}
+              className={`inline-flex h-8 items-center gap-1 rounded-full px-3 text-xs font-semibold transition ${open ? "bg-emerald-500 text-white" : "bg-muted hover:bg-muted/70"}`}
+            >
+              <span className={`h-1.5 w-1.5 rounded-full ${open ? "bg-white" : "bg-emerald-500"}`} />
+              Aberto agora
+            </button>
+            {(q || cat || open) ? (
               <Link to="/buscar" search={{}} className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
                 <X className="h-3 w-3" /> Limpar filtros
               </Link>

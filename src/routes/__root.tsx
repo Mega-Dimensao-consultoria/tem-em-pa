@@ -95,17 +95,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:title", content: "Tem em P.A — Guia comercial de Pouso Alegre/MG" },
       { name: "twitter:description", content: "Descubra empresas, produtos e serviços em Pouso Alegre/MG. O guia comercial inteligente da cidade." },
     ],
-    scripts: [{
-      type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        name: "Tem em P.A",
-        url: "https://tem-em-pa.lovable.app",
-        logo: "https://tem-em-pa.lovable.app/favicon.png",
-        areaServed: { "@type": "City", name: "Pouso Alegre", containedInPlace: { "@type": "State", name: "Minas Gerais" } },
-      }),
-    }],
+    scripts: [
+      {
+        children: themeNoFlashScript,
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Tem em P.A",
+          url: "https://tem-em-pa.lovable.app",
+          logo: "https://tem-em-pa.lovable.app/favicon.png",
+          areaServed: { "@type": "City", name: "Pouso Alegre", containedInPlace: { "@type": "State", name: "Minas Gerais" } },
+        }),
+      },
+    ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", type: "image/png", href: "/favicon.png" },

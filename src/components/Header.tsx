@@ -19,6 +19,8 @@ import { useMyCompaniesCount } from "@/features/owner/hooks/useMyCompaniesCount"
 export function Header() {
   const { user, loading } = useAuth();
   const { isAdmin, isOwner } = useRoles();
+  const { data: companiesCount = 0 } = useMyCompaniesCount();
+  const hasCompanies = companiesCount > 0;
   const navigate = useNavigate();
 
   const initials = user?.email?.slice(0, 2).toUpperCase() ?? "??";

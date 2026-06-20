@@ -25,6 +25,8 @@ import { Route as AuthenticatedNotificacoesRouteImport } from './routes/_authent
 import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
 import { Route as AuthenticatedCadastrarEmpresaRouteImport } from './routes/_authenticated/cadastrar-empresa'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedPainelConfiguracoesRouteImport } from './routes/_authenticated/painel.configuracoes'
+import { Route as AuthenticatedPainelAvaliacoesRouteImport } from './routes/_authenticated/painel.avaliacoes'
 import { Route as AuthenticatedOwnerEmpresaIdProdutosRouteImport } from './routes/_authenticated/owner.empresa.$id.produtos'
 import { Route as AuthenticatedOwnerEmpresaIdEditarRouteImport } from './routes/_authenticated/owner.empresa.$id.editar'
 import { Route as AuthenticatedOwnerEmpresaIdDashboardRouteImport } from './routes/_authenticated/owner.empresa.$id.dashboard'
@@ -110,6 +112,18 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPainelConfiguracoesRoute =
+  AuthenticatedPainelConfiguracoesRouteImport.update({
+    id: '/configuracoes',
+    path: '/configuracoes',
+    getParentRoute: () => AuthenticatedPainelRoute,
+  } as any)
+const AuthenticatedPainelAvaliacoesRoute =
+  AuthenticatedPainelAvaliacoesRouteImport.update({
+    id: '/avaliacoes',
+    path: '/avaliacoes',
+    getParentRoute: () => AuthenticatedPainelRoute,
+  } as any)
 const AuthenticatedOwnerEmpresaIdProdutosRoute =
   AuthenticatedOwnerEmpresaIdProdutosRouteImport.update({
     id: '/empresa/$id/produtos',
@@ -142,9 +156,11 @@ export interface FileRoutesByFullPath {
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/owner': typeof AuthenticatedOwnerRouteWithChildren
-  '/painel': typeof AuthenticatedPainelRoute
+  '/painel': typeof AuthenticatedPainelRouteWithChildren
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/empresa/$id': typeof EmpresaIdRoute
+  '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
+  '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   '/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
@@ -162,9 +178,11 @@ export interface FileRoutesByTo {
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/owner': typeof AuthenticatedOwnerRouteWithChildren
-  '/painel': typeof AuthenticatedPainelRoute
+  '/painel': typeof AuthenticatedPainelRouteWithChildren
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/empresa/$id': typeof EmpresaIdRoute
+  '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
+  '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   '/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
@@ -184,9 +202,11 @@ export interface FileRoutesById {
   '/_authenticated/favoritos': typeof AuthenticatedFavoritosRoute
   '/_authenticated/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/_authenticated/owner': typeof AuthenticatedOwnerRouteWithChildren
-  '/_authenticated/painel': typeof AuthenticatedPainelRoute
+  '/_authenticated/painel': typeof AuthenticatedPainelRouteWithChildren
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/empresa/$id': typeof EmpresaIdRoute
+  '/_authenticated/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
+  '/_authenticated/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/_authenticated/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   '/_authenticated/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/_authenticated/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
@@ -209,6 +229,8 @@ export interface FileRouteTypes {
     | '/painel'
     | '/categoria/$slug'
     | '/empresa/$id'
+    | '/painel/avaliacoes'
+    | '/painel/configuracoes'
     | '/owner/empresa/$id/dashboard'
     | '/owner/empresa/$id/editar'
     | '/owner/empresa/$id/produtos'
@@ -229,6 +251,8 @@ export interface FileRouteTypes {
     | '/painel'
     | '/categoria/$slug'
     | '/empresa/$id'
+    | '/painel/avaliacoes'
+    | '/painel/configuracoes'
     | '/owner/empresa/$id/dashboard'
     | '/owner/empresa/$id/editar'
     | '/owner/empresa/$id/produtos'
@@ -250,6 +274,8 @@ export interface FileRouteTypes {
     | '/_authenticated/painel'
     | '/categoria/$slug'
     | '/empresa/$id'
+    | '/_authenticated/painel/avaliacoes'
+    | '/_authenticated/painel/configuracoes'
     | '/_authenticated/owner/empresa/$id/dashboard'
     | '/_authenticated/owner/empresa/$id/editar'
     | '/_authenticated/owner/empresa/$id/produtos'
@@ -382,6 +408,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/painel/configuracoes': {
+      id: '/_authenticated/painel/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/painel/configuracoes'
+      preLoaderRoute: typeof AuthenticatedPainelConfiguracoesRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/_authenticated/painel/avaliacoes': {
+      id: '/_authenticated/painel/avaliacoes'
+      path: '/avaliacoes'
+      fullPath: '/painel/avaliacoes'
+      preLoaderRoute: typeof AuthenticatedPainelAvaliacoesRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
     '/_authenticated/owner/empresa/$id/produtos': {
       id: '/_authenticated/owner/empresa/$id/produtos'
       path: '/empresa/$id/produtos'
@@ -424,13 +464,26 @@ const AuthenticatedOwnerRouteChildren: AuthenticatedOwnerRouteChildren = {
 const AuthenticatedOwnerRouteWithChildren =
   AuthenticatedOwnerRoute._addFileChildren(AuthenticatedOwnerRouteChildren)
 
+interface AuthenticatedPainelRouteChildren {
+  AuthenticatedPainelAvaliacoesRoute: typeof AuthenticatedPainelAvaliacoesRoute
+  AuthenticatedPainelConfiguracoesRoute: typeof AuthenticatedPainelConfiguracoesRoute
+}
+
+const AuthenticatedPainelRouteChildren: AuthenticatedPainelRouteChildren = {
+  AuthenticatedPainelAvaliacoesRoute: AuthenticatedPainelAvaliacoesRoute,
+  AuthenticatedPainelConfiguracoesRoute: AuthenticatedPainelConfiguracoesRoute,
+}
+
+const AuthenticatedPainelRouteWithChildren =
+  AuthenticatedPainelRoute._addFileChildren(AuthenticatedPainelRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedCadastrarEmpresaRoute: typeof AuthenticatedCadastrarEmpresaRoute
   AuthenticatedFavoritosRoute: typeof AuthenticatedFavoritosRoute
   AuthenticatedNotificacoesRoute: typeof AuthenticatedNotificacoesRoute
   AuthenticatedOwnerRoute: typeof AuthenticatedOwnerRouteWithChildren
-  AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
+  AuthenticatedPainelRoute: typeof AuthenticatedPainelRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -439,7 +492,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFavoritosRoute: AuthenticatedFavoritosRoute,
   AuthenticatedNotificacoesRoute: AuthenticatedNotificacoesRoute,
   AuthenticatedOwnerRoute: AuthenticatedOwnerRouteWithChildren,
-  AuthenticatedPainelRoute: AuthenticatedPainelRoute,
+  AuthenticatedPainelRoute: AuthenticatedPainelRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -460,13 +513,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

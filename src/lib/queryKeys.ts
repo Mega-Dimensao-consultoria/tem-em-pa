@@ -25,6 +25,22 @@ export const queryKeys = {
     events: (id: string, periodDays: number) => ["company-events", id, periodDays] as const,
     reviews: (id: string) => ["owner-reviews", id] as const,
     products: (id: string) => ["owner-products", id] as const,
+    myCompanies: (userId: string | undefined) =>
+      ["owner", "my-companies", userId ?? "anon"] as const,
+  },
+
+  profile: {
+    me: (userId: string | undefined) => ["profile", userId ?? "anon"] as const,
+  },
+
+  reviews: {
+    mine: (userId: string | undefined) =>
+      ["reviews", "mine", userId ?? "anon"] as const,
+  },
+
+  favorites: {
+    mine: (userId: string | undefined) =>
+      ["favorites", userId ?? "anon"] as const,
   },
 
   notifications: (userId: string | undefined, limit: number) =>

@@ -28,6 +28,7 @@ import { Route as AuthenticatedPainelIndexRouteImport } from './routes/_authenti
 import { Route as AuthenticatedOwnerIndexRouteImport } from './routes/_authenticated/owner.index'
 import { Route as AuthenticatedPainelConfiguracoesRouteImport } from './routes/_authenticated/painel.configuracoes'
 import { Route as AuthenticatedPainelAvaliacoesRouteImport } from './routes/_authenticated/painel.avaliacoes'
+import { Route as ApiPublicPushDispatchRouteImport } from './routes/api/public/push.dispatch'
 import { Route as AuthenticatedOwnerEmpresaIdProdutosRouteImport } from './routes/_authenticated/owner.empresa.$id.produtos'
 import { Route as AuthenticatedOwnerEmpresaIdEditarRouteImport } from './routes/_authenticated/owner.empresa.$id.editar'
 import { Route as AuthenticatedOwnerEmpresaIdDashboardRouteImport } from './routes/_authenticated/owner.empresa.$id.dashboard'
@@ -131,6 +132,11 @@ const AuthenticatedPainelAvaliacoesRoute =
     path: '/avaliacoes',
     getParentRoute: () => AuthenticatedPainelRoute,
   } as any)
+const ApiPublicPushDispatchRoute = ApiPublicPushDispatchRouteImport.update({
+  id: '/api/public/push/dispatch',
+  path: '/api/public/push/dispatch',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedOwnerEmpresaIdProdutosRoute =
   AuthenticatedOwnerEmpresaIdProdutosRouteImport.update({
     id: '/owner/empresa/$id/produtos',
@@ -169,6 +175,7 @@ export interface FileRoutesByFullPath {
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/owner/': typeof AuthenticatedOwnerIndexRoute
   '/painel/': typeof AuthenticatedPainelIndexRoute
+  '/api/public/push/dispatch': typeof ApiPublicPushDispatchRoute
   '/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   '/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
@@ -191,6 +198,7 @@ export interface FileRoutesByTo {
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/owner': typeof AuthenticatedOwnerIndexRoute
   '/painel': typeof AuthenticatedPainelIndexRoute
+  '/api/public/push/dispatch': typeof ApiPublicPushDispatchRoute
   '/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   '/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
@@ -216,6 +224,7 @@ export interface FileRoutesById {
   '/_authenticated/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/_authenticated/owner/': typeof AuthenticatedOwnerIndexRoute
   '/_authenticated/painel/': typeof AuthenticatedPainelIndexRoute
+  '/api/public/push/dispatch': typeof ApiPublicPushDispatchRoute
   '/_authenticated/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   '/_authenticated/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/_authenticated/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
@@ -241,6 +250,7 @@ export interface FileRouteTypes {
     | '/painel/configuracoes'
     | '/owner/'
     | '/painel/'
+    | '/api/public/push/dispatch'
     | '/owner/empresa/$id/dashboard'
     | '/owner/empresa/$id/editar'
     | '/owner/empresa/$id/produtos'
@@ -263,6 +273,7 @@ export interface FileRouteTypes {
     | '/painel/configuracoes'
     | '/owner'
     | '/painel'
+    | '/api/public/push/dispatch'
     | '/owner/empresa/$id/dashboard'
     | '/owner/empresa/$id/editar'
     | '/owner/empresa/$id/produtos'
@@ -287,6 +298,7 @@ export interface FileRouteTypes {
     | '/_authenticated/painel/configuracoes'
     | '/_authenticated/owner/'
     | '/_authenticated/painel/'
+    | '/api/public/push/dispatch'
     | '/_authenticated/owner/empresa/$id/dashboard'
     | '/_authenticated/owner/empresa/$id/editar'
     | '/_authenticated/owner/empresa/$id/produtos'
@@ -303,6 +315,7 @@ export interface RootRouteChildren {
   SobreRoute: typeof SobreRoute
   CategoriaSlugRoute: typeof CategoriaSlugRoute
   EmpresaIdRoute: typeof EmpresaIdRoute
+  ApiPublicPushDispatchRoute: typeof ApiPublicPushDispatchRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -440,6 +453,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPainelAvaliacoesRouteImport
       parentRoute: typeof AuthenticatedPainelRoute
     }
+    '/api/public/push/dispatch': {
+      id: '/api/public/push/dispatch'
+      path: '/api/public/push/dispatch'
+      fullPath: '/api/public/push/dispatch'
+      preLoaderRoute: typeof ApiPublicPushDispatchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/owner/empresa/$id/produtos': {
       id: '/_authenticated/owner/empresa/$id/produtos'
       path: '/owner/empresa/$id/produtos'
@@ -520,6 +540,7 @@ const rootRouteChildren: RootRouteChildren = {
   SobreRoute: SobreRoute,
   CategoriaSlugRoute: CategoriaSlugRoute,
   EmpresaIdRoute: EmpresaIdRoute,
+  ApiPublicPushDispatchRoute: ApiPublicPushDispatchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -44,6 +44,24 @@ export type Database = {
         }
         Relationships: []
       }
+      app_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
       banned_words: {
         Row: {
           created_at: string
@@ -417,6 +435,39 @@ export type Database = {
           onboarding_completed_at?: string | null
           phone?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          last_used_at: string
+          p256dh: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          last_used_at?: string
+          p256dh: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          last_used_at?: string
+          p256dh?: string
+          user_agent?: string | null
+          user_id?: string
         }
         Relationships: []
       }

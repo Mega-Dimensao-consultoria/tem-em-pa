@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/features/auth/use-auth";
+import { queryKeys } from "@/lib/queryKeys";
 
 export type MyCompanyRow = {
   id: string;
@@ -10,15 +11,11 @@ export type MyCompanyRow = {
   created_at: string;
 };
 
-function myCompaniesKey(userId: string | undefined) {
-  return ["owner", "my-companies", userId] as const;
-}
-
 /** All companies owned by the signed-in user, most recent first. */
 export function useMyCompanies() {
   const { user } = useAuth();
   return useQuery({
-    queryKey: myCompaniesKey(user?.id),
+    queryKey: queryKeys.owner.myCompanies(user?.id),
     enabled: !!user,
     queryFn: async (): Promise<MyCompanyRow[]> => {
       const { data, error } = await supabase

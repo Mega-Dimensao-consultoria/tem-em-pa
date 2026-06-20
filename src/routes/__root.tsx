@@ -17,6 +17,9 @@ import { OnboardingDialog } from "@/features/auth/components/OnboardingDialog";
 import { AuthProvider } from "@/features/auth/use-auth";
 import { PushPermissionBanner } from "@/features/notifications/components/PushPermissionBanner";
 import { PushBootstrap } from "@/features/notifications/components/PushBootstrap";
+import { ThemeProvider, themeNoFlashScript } from "@/components/ThemeProvider";
+import { AccessibilityBar } from "@/components/AccessibilityBar";
+import { VLibrasWidget } from "@/components/VLibrasWidget";
 
 function NotFoundComponent() {
   return (

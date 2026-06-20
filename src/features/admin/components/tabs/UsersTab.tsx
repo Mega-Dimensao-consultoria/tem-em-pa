@@ -134,6 +134,7 @@ export function UsersTab() {
           ))}
         </ul>
       )}
+      <UserEditDialog userId={editingId} onClose={() => setEditingId(null)} />
     </div>
   );
 }

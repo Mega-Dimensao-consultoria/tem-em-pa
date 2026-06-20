@@ -85,12 +85,20 @@ export function Header() {
                     <Heart className="mr-2 h-4 w-4" /> Favoritos
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/cadastrar-empresa">
-                    <Store className="mr-2 h-4 w-4" /> Cadastrar empresa
-                  </Link>
-                </DropdownMenuItem>
-                {isOwner ? (
+                {hasCompanies ? (
+                  <DropdownMenuItem asChild>
+                    <Link to="/owner">
+                      <Building2 className="mr-2 h-4 w-4" /> Minhas empresas
+                    </Link>
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem asChild>
+                    <Link to="/cadastrar-empresa">
+                      <Store className="mr-2 h-4 w-4" /> Cadastrar empresa
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+                {isOwner && !hasCompanies ? (
                   <DropdownMenuItem asChild>
                     <Link to="/owner">
                       <UserIcon className="mr-2 h-4 w-4" /> Painel do proprietário

@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRoles } from "@/features/auth/use-auth";
 import { ShieldAlert } from "lucide-react";
 import { AdminStats } from "@/features/admin/components/AdminStats";
-import { PendingCompaniesTab } from "@/features/admin/components/tabs/PendingCompaniesTab";
+import { CompaniesAdminSection } from "@/features/admin/components/tabs/CompaniesAdminSection";
 import { PendingClaimsTab } from "@/features/admin/components/tabs/PendingClaimsTab";
 import { PendingReviewsTab } from "@/features/admin/components/tabs/PendingReviewsTab";
 import { ReportsTab } from "@/features/admin/components/tabs/ReportsTab";
@@ -66,7 +66,7 @@ function AdminPage() {
             <TabsTrigger value="auditoria">Auditoria</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="empresas"><PendingCompaniesTab /></TabsContent>
+          <TabsContent value="empresas"><CompaniesAdminSection /></TabsContent>
           <TabsContent value="reivindicacoes"><PendingClaimsTab /></TabsContent>
           <TabsContent value="comentarios"><PendingReviewsTab /></TabsContent>
           <TabsContent value="denuncias"><ReportsTab /></TabsContent>

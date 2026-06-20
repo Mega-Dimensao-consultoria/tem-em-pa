@@ -43,9 +43,10 @@ export const Route = createFileRoute("/api/public/push/dispatch")({
           return Response.json({ sent: 0, total: 0 });
         }
 
-        const webpushMod = await import("web-push");
-        const webpush = (webpushMod as { default?: typeof webpushMod }).default ??
-          webpushMod;
+        const webpushMod = (await import("web-push")) as unknown as {
+          default?: typeof import("web-push");
+        } & typeof import("web-push");
+        const webpush = webpushMod.default ?? webpushMod;
 
         webpush.setVapidDetails(
           process.env.VAPID_SUBJECT ?? "mailto:contato@tem-em-pa.app",

@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.dispatch_push_for_notification() FROM PUBLIC, anon, authenticated;

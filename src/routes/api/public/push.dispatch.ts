@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { buildPushPayload } from "@block65/webcrypto-web-push";
 import { VAPID_PUBLIC_KEY } from "@/lib/push-config";
 
 export const Route = createFileRoute("/api/public/push/dispatch")({
@@ -43,54 +44,52 @@ export const Route = createFileRoute("/api/public/push/dispatch")({
           return Response.json({ sent: 0, total: 0 });
         }
 
-        const webpushMod = (await import("web-push")) as unknown as {
-          default?: typeof import("web-push");
-        } & typeof import("web-push");
-        const webpush = webpushMod.default ?? webpushMod;
+        const vapid = {
+          subject: process.env.VAPID_SUBJECT ?? "mailto:contato@tem-em-pa.app",
+          publicKey: VAPID_PUBLIC_KEY,
+          privateKey: process.env.VAPID_PRIVATE_KEY,
+        };
 
-        webpush.setVapidDetails(
-          process.env.VAPID_SUBJECT ?? "mailto:contato@tem-em-pa.app",
-          VAPID_PUBLIC_KEY,
-          process.env.VAPID_PRIVATE_KEY!,
-        );
-
-        const payload = JSON.stringify({
+        const payloadData = {
           title: notif.title,
           body: notif.message,
           link: notif.link ?? "/notificacoes",
           tag: notif.id,
-        });
+        };
 
         const results = await Promise.allSettled(
           subs.map(async (s) => {
-            try {
-              await webpush.sendNotification(
-                {
-                  endpoint: s.endpoint,
-                  keys: { p256dh: s.p256dh, auth: s.auth },
-                },
-                payload,
-                { TTL: 60 * 60 * 24 },
-              );
-              return "sent";
-            } catch (err: unknown) {
-              const status =
-                typeof err === "object" && err !== null && "statusCode" in err
-                  ? Number((err as { statusCode: unknown }).statusCode)
-                  : 0;
-              if (status === 404 || status === 410) {
-                await supabaseAdmin
-                  .from("push_subscriptions")
-                  .delete()
-                  .eq("endpoint", s.endpoint);
-              }
-              throw err;
+            const subscription = {
+              endpoint: s.endpoint,
+              expirationTime: null,
+              keys: { p256dh: s.p256dh, auth: s.auth },
+            };
+            const payload = await buildPushPayload(
+              { data: payloadData, options: { ttl: 60 * 60 * 24 } },
+              subscription,
+              vapid,
+            );
+            const res = await fetch(s.endpoint, payload);
+            if (res.status === 404 || res.status === 410) {
+              await supabaseAdmin
+                .from("push_subscriptions")
+                .delete()
+                .eq("endpoint", s.endpoint);
+              throw new Error(`gone:${res.status}`);
             }
+            if (!res.ok) {
+              const text = await res.text().catch(() => "");
+              throw new Error(`push-failed:${res.status}:${text.slice(0, 200)}`);
+            }
+            return "sent";
           }),
         );
 
         const sent = results.filter((r) => r.status === "fulfilled").length;
-        return Response.json({ sent, total: subs.length });
+        const errors = results
+          .filter((r): r is PromiseRejectedResult => r.status === "rejected")
+          .map((r) => (r.reason instanceof Error ? r.reason.message : String(r.reason)));
+        return Response.json({ sent, total: subs.length, errors });
       },
     },
   },

@@ -17,6 +17,9 @@ import { OnboardingDialog } from "@/features/auth/components/OnboardingDialog";
 import { AuthProvider } from "@/features/auth/use-auth";
 import { PushPermissionBanner } from "@/features/notifications/components/PushPermissionBanner";
 import { PushBootstrap } from "@/features/notifications/components/PushBootstrap";
+import { ThemeProvider, themeNoFlashScript } from "@/components/ThemeProvider";
+import { AccessibilityBar } from "@/components/AccessibilityBar";
+import { VLibrasWidget } from "@/components/VLibrasWidget";
 
 function NotFoundComponent() {
   return (
@@ -92,17 +95,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:title", content: "Tem em P.A — Guia comercial de Pouso Alegre/MG" },
       { name: "twitter:description", content: "Descubra empresas, produtos e serviços em Pouso Alegre/MG. O guia comercial inteligente da cidade." },
     ],
-    scripts: [{
-      type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        name: "Tem em P.A",
-        url: "https://tem-em-pa.lovable.app",
-        logo: "https://tem-em-pa.lovable.app/favicon.png",
-        areaServed: { "@type": "City", name: "Pouso Alegre", containedInPlace: { "@type": "State", name: "Minas Gerais" } },
-      }),
-    }],
+    scripts: [
+      {
+        children: themeNoFlashScript,
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Tem em P.A",
+          url: "https://tem-em-pa.lovable.app",
+          logo: "https://tem-em-pa.lovable.app/favicon.png",
+          areaServed: { "@type": "City", name: "Pouso Alegre", containedInPlace: { "@type": "State", name: "Minas Gerais" } },
+        }),
+      },
+    ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
@@ -151,13 +159,17 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <PushBootstrap />
-        <PushPermissionBanner />
-        <Outlet />
-        <OnboardingDialog />
-        <Toaster richColors position="top-center" />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <PushBootstrap />
+          <PushPermissionBanner />
+          <Outlet />
+          <OnboardingDialog />
+          <Toaster richColors position="top-center" />
+          <AccessibilityBar />
+          <VLibrasWidget />
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

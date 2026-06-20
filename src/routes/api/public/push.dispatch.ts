@@ -69,7 +69,11 @@ export const Route = createFileRoute("/api/public/push/dispatch")({
               subscription,
               vapid,
             );
-            const res = await fetch(s.endpoint, payload);
+            const res = await fetch(s.endpoint, {
+              method: payload.method,
+              headers: payload.headers,
+              body: new Uint8Array(payload.body) as BodyInit,
+            });
             if (res.status === 404 || res.status === 410) {
               await supabaseAdmin
                 .from("push_subscriptions")

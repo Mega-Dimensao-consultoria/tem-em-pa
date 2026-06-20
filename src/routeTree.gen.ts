@@ -20,12 +20,12 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as EmpresaIdRouteImport } from './routes/empresa.$id'
 import { Route as CategoriaSlugRouteImport } from './routes/categoria.$slug'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
-import { Route as AuthenticatedOwnerRouteImport } from './routes/_authenticated/owner'
 import { Route as AuthenticatedNotificacoesRouteImport } from './routes/_authenticated/notificacoes'
 import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
 import { Route as AuthenticatedCadastrarEmpresaRouteImport } from './routes/_authenticated/cadastrar-empresa'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedPainelIndexRouteImport } from './routes/_authenticated/painel.index'
+import { Route as AuthenticatedOwnerIndexRouteImport } from './routes/_authenticated/owner.index'
 import { Route as AuthenticatedPainelConfiguracoesRouteImport } from './routes/_authenticated/painel.configuracoes'
 import { Route as AuthenticatedPainelAvaliacoesRouteImport } from './routes/_authenticated/painel.avaliacoes'
 import { Route as AuthenticatedOwnerEmpresaIdProdutosRouteImport } from './routes/_authenticated/owner.empresa.$id.produtos'
@@ -86,11 +86,6 @@ const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
   path: '/painel',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedOwnerRoute = AuthenticatedOwnerRouteImport.update({
-  id: '/owner',
-  path: '/owner',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedNotificacoesRoute =
   AuthenticatedNotificacoesRouteImport.update({
     id: '/notificacoes',
@@ -119,6 +114,11 @@ const AuthenticatedPainelIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedPainelRoute,
   } as any)
+const AuthenticatedOwnerIndexRoute = AuthenticatedOwnerIndexRouteImport.update({
+  id: '/owner/',
+  path: '/owner/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPainelConfiguracoesRoute =
   AuthenticatedPainelConfiguracoesRouteImport.update({
     id: '/configuracoes',
@@ -133,21 +133,21 @@ const AuthenticatedPainelAvaliacoesRoute =
   } as any)
 const AuthenticatedOwnerEmpresaIdProdutosRoute =
   AuthenticatedOwnerEmpresaIdProdutosRouteImport.update({
-    id: '/empresa/$id/produtos',
-    path: '/empresa/$id/produtos',
-    getParentRoute: () => AuthenticatedOwnerRoute,
+    id: '/owner/empresa/$id/produtos',
+    path: '/owner/empresa/$id/produtos',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedOwnerEmpresaIdEditarRoute =
   AuthenticatedOwnerEmpresaIdEditarRouteImport.update({
-    id: '/empresa/$id/editar',
-    path: '/empresa/$id/editar',
-    getParentRoute: () => AuthenticatedOwnerRoute,
+    id: '/owner/empresa/$id/editar',
+    path: '/owner/empresa/$id/editar',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedOwnerEmpresaIdDashboardRoute =
   AuthenticatedOwnerEmpresaIdDashboardRouteImport.update({
-    id: '/empresa/$id/dashboard',
-    path: '/empresa/$id/dashboard',
-    getParentRoute: () => AuthenticatedOwnerRoute,
+    id: '/owner/empresa/$id/dashboard',
+    path: '/owner/empresa/$id/dashboard',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -162,12 +162,12 @@ export interface FileRoutesByFullPath {
   '/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/notificacoes': typeof AuthenticatedNotificacoesRoute
-  '/owner': typeof AuthenticatedOwnerRouteWithChildren
   '/painel': typeof AuthenticatedPainelRouteWithChildren
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/empresa/$id': typeof EmpresaIdRoute
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
+  '/owner/': typeof AuthenticatedOwnerIndexRoute
   '/painel/': typeof AuthenticatedPainelIndexRoute
   '/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   '/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
@@ -185,11 +185,11 @@ export interface FileRoutesByTo {
   '/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/notificacoes': typeof AuthenticatedNotificacoesRoute
-  '/owner': typeof AuthenticatedOwnerRouteWithChildren
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/empresa/$id': typeof EmpresaIdRoute
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
+  '/owner': typeof AuthenticatedOwnerIndexRoute
   '/painel': typeof AuthenticatedPainelIndexRoute
   '/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   '/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
@@ -209,12 +209,12 @@ export interface FileRoutesById {
   '/_authenticated/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
   '/_authenticated/favoritos': typeof AuthenticatedFavoritosRoute
   '/_authenticated/notificacoes': typeof AuthenticatedNotificacoesRoute
-  '/_authenticated/owner': typeof AuthenticatedOwnerRouteWithChildren
   '/_authenticated/painel': typeof AuthenticatedPainelRouteWithChildren
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/empresa/$id': typeof EmpresaIdRoute
   '/_authenticated/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/_authenticated/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
+  '/_authenticated/owner/': typeof AuthenticatedOwnerIndexRoute
   '/_authenticated/painel/': typeof AuthenticatedPainelIndexRoute
   '/_authenticated/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   '/_authenticated/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
@@ -234,12 +234,12 @@ export interface FileRouteTypes {
     | '/cadastrar-empresa'
     | '/favoritos'
     | '/notificacoes'
-    | '/owner'
     | '/painel'
     | '/categoria/$slug'
     | '/empresa/$id'
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
+    | '/owner/'
     | '/painel/'
     | '/owner/empresa/$id/dashboard'
     | '/owner/empresa/$id/editar'
@@ -257,11 +257,11 @@ export interface FileRouteTypes {
     | '/cadastrar-empresa'
     | '/favoritos'
     | '/notificacoes'
-    | '/owner'
     | '/categoria/$slug'
     | '/empresa/$id'
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
+    | '/owner'
     | '/painel'
     | '/owner/empresa/$id/dashboard'
     | '/owner/empresa/$id/editar'
@@ -280,12 +280,12 @@ export interface FileRouteTypes {
     | '/_authenticated/cadastrar-empresa'
     | '/_authenticated/favoritos'
     | '/_authenticated/notificacoes'
-    | '/_authenticated/owner'
     | '/_authenticated/painel'
     | '/categoria/$slug'
     | '/empresa/$id'
     | '/_authenticated/painel/avaliacoes'
     | '/_authenticated/painel/configuracoes'
+    | '/_authenticated/owner/'
     | '/_authenticated/painel/'
     | '/_authenticated/owner/empresa/$id/dashboard'
     | '/_authenticated/owner/empresa/$id/editar'
@@ -384,13 +384,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPainelRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/owner': {
-      id: '/_authenticated/owner'
-      path: '/owner'
-      fullPath: '/owner'
-      preLoaderRoute: typeof AuthenticatedOwnerRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/notificacoes': {
       id: '/_authenticated/notificacoes'
       path: '/notificacoes'
@@ -426,6 +419,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPainelIndexRouteImport
       parentRoute: typeof AuthenticatedPainelRoute
     }
+    '/_authenticated/owner/': {
+      id: '/_authenticated/owner/'
+      path: '/owner'
+      fullPath: '/owner/'
+      preLoaderRoute: typeof AuthenticatedOwnerIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/painel/configuracoes': {
       id: '/_authenticated/painel/configuracoes'
       path: '/configuracoes'
@@ -442,45 +442,27 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/owner/empresa/$id/produtos': {
       id: '/_authenticated/owner/empresa/$id/produtos'
-      path: '/empresa/$id/produtos'
+      path: '/owner/empresa/$id/produtos'
       fullPath: '/owner/empresa/$id/produtos'
       preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdProdutosRouteImport
-      parentRoute: typeof AuthenticatedOwnerRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/owner/empresa/$id/editar': {
       id: '/_authenticated/owner/empresa/$id/editar'
-      path: '/empresa/$id/editar'
+      path: '/owner/empresa/$id/editar'
       fullPath: '/owner/empresa/$id/editar'
       preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdEditarRouteImport
-      parentRoute: typeof AuthenticatedOwnerRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/owner/empresa/$id/dashboard': {
       id: '/_authenticated/owner/empresa/$id/dashboard'
-      path: '/empresa/$id/dashboard'
+      path: '/owner/empresa/$id/dashboard'
       fullPath: '/owner/empresa/$id/dashboard'
       preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdDashboardRouteImport
-      parentRoute: typeof AuthenticatedOwnerRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
-
-interface AuthenticatedOwnerRouteChildren {
-  AuthenticatedOwnerEmpresaIdDashboardRoute: typeof AuthenticatedOwnerEmpresaIdDashboardRoute
-  AuthenticatedOwnerEmpresaIdEditarRoute: typeof AuthenticatedOwnerEmpresaIdEditarRoute
-  AuthenticatedOwnerEmpresaIdProdutosRoute: typeof AuthenticatedOwnerEmpresaIdProdutosRoute
-}
-
-const AuthenticatedOwnerRouteChildren: AuthenticatedOwnerRouteChildren = {
-  AuthenticatedOwnerEmpresaIdDashboardRoute:
-    AuthenticatedOwnerEmpresaIdDashboardRoute,
-  AuthenticatedOwnerEmpresaIdEditarRoute:
-    AuthenticatedOwnerEmpresaIdEditarRoute,
-  AuthenticatedOwnerEmpresaIdProdutosRoute:
-    AuthenticatedOwnerEmpresaIdProdutosRoute,
-}
-
-const AuthenticatedOwnerRouteWithChildren =
-  AuthenticatedOwnerRoute._addFileChildren(AuthenticatedOwnerRouteChildren)
 
 interface AuthenticatedPainelRouteChildren {
   AuthenticatedPainelAvaliacoesRoute: typeof AuthenticatedPainelAvaliacoesRoute
@@ -502,8 +484,11 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCadastrarEmpresaRoute: typeof AuthenticatedCadastrarEmpresaRoute
   AuthenticatedFavoritosRoute: typeof AuthenticatedFavoritosRoute
   AuthenticatedNotificacoesRoute: typeof AuthenticatedNotificacoesRoute
-  AuthenticatedOwnerRoute: typeof AuthenticatedOwnerRouteWithChildren
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRouteWithChildren
+  AuthenticatedOwnerIndexRoute: typeof AuthenticatedOwnerIndexRoute
+  AuthenticatedOwnerEmpresaIdDashboardRoute: typeof AuthenticatedOwnerEmpresaIdDashboardRoute
+  AuthenticatedOwnerEmpresaIdEditarRoute: typeof AuthenticatedOwnerEmpresaIdEditarRoute
+  AuthenticatedOwnerEmpresaIdProdutosRoute: typeof AuthenticatedOwnerEmpresaIdProdutosRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -511,8 +496,14 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCadastrarEmpresaRoute: AuthenticatedCadastrarEmpresaRoute,
   AuthenticatedFavoritosRoute: AuthenticatedFavoritosRoute,
   AuthenticatedNotificacoesRoute: AuthenticatedNotificacoesRoute,
-  AuthenticatedOwnerRoute: AuthenticatedOwnerRouteWithChildren,
   AuthenticatedPainelRoute: AuthenticatedPainelRouteWithChildren,
+  AuthenticatedOwnerIndexRoute: AuthenticatedOwnerIndexRoute,
+  AuthenticatedOwnerEmpresaIdDashboardRoute:
+    AuthenticatedOwnerEmpresaIdDashboardRoute,
+  AuthenticatedOwnerEmpresaIdEditarRoute:
+    AuthenticatedOwnerEmpresaIdEditarRoute,
+  AuthenticatedOwnerEmpresaIdProdutosRoute:
+    AuthenticatedOwnerEmpresaIdProdutosRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -533,13 +524,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

@@ -1,9 +1,19 @@
+import { useId } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { slugify } from "../../admin-ui";
 import { useSaveCategory } from "@/features/admin/functions/categories";
+import { IconPicker } from "./IconPicker";
 
 export type EditingCategory = {
   id?: string;
@@ -25,6 +35,10 @@ export function CategoryFormCard({
   onSaved: () => void;
 }) {
   const saveCategory = useSaveCategory();
+  const nameId = useId();
+  const slugId = useId();
+  const orderId = useId();
+  const iconId = useId();
 
   function save() {
     const name = editing.name.trim();
@@ -45,58 +59,79 @@ export function CategoryFormCard({
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-4 shadow-soft">
-      <h3 className="mb-3 font-semibold">{editing.id ? "Editar" : "Nova"} categoria</h3>
-      <div className="grid gap-3 sm:grid-cols-2">
-        <div>
-          <Label className="text-xs">Nome</Label>
-          <Input
-            value={editing.name}
-            onChange={(e) =>
-              onChange({
-                ...editing,
-                name: e.target.value,
-                slug: editing.id ? editing.slug : slugify(e.target.value),
-              })
-            }
-            maxLength={60}
-          />
+    <Dialog open onOpenChange={(open) => (open ? null : onCancel())}>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>
+            {editing.id ? "Editar categoria" : "Nova categoria"}
+          </DialogTitle>
+          <DialogDescription>
+            Defina o nome, a ordem de exibição e escolha um ícone visual para a categoria.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor={nameId}>Nome</Label>
+            <Input
+              id={nameId}
+              value={editing.name}
+              onChange={(e) =>
+                onChange({
+                  ...editing,
+                  name: e.target.value,
+                  slug: editing.id ? editing.slug : slugify(e.target.value),
+                })
+              }
+              maxLength={60}
+              autoFocus
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor={slugId}>Slug</Label>
+            <Input
+              id={slugId}
+              value={editing.slug}
+              onChange={(e) =>
+                onChange({ ...editing, slug: slugify(e.target.value) })
+              }
+              maxLength={50}
+              aria-describedby={`${slugId}-help`}
+            />
+            <p id={`${slugId}-help`} className="text-xs text-muted-foreground">
+              Aparece na URL: /categoria/{editing.slug || "exemplo"}
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor={orderId}>Ordem de exibição</Label>
+            <Input
+              id={orderId}
+              type="number"
+              value={editing.sort_order}
+              onChange={(e) =>
+                onChange({ ...editing, sort_order: Number(e.target.value) })
+              }
+            />
+          </div>
+          <div className="space-y-2 sm:col-span-2">
+            <Label htmlFor={iconId}>Ícone</Label>
+            <IconPicker
+              id={iconId}
+              value={editing.icon}
+              onChange={(next) => onChange({ ...editing, icon: next })}
+            />
+          </div>
         </div>
-        <div>
-          <Label className="text-xs">Slug</Label>
-          <Input
-            value={editing.slug}
-            onChange={(e) => onChange({ ...editing, slug: slugify(e.target.value) })}
-            maxLength={50}
-          />
-        </div>
-        <div>
-          <Label className="text-xs">Ícone (emoji ou nome)</Label>
-          <Input
-            value={editing.icon}
-            onChange={(e) => onChange({ ...editing, icon: e.target.value })}
-            maxLength={30}
-          />
-        </div>
-        <div>
-          <Label className="text-xs">Ordem</Label>
-          <Input
-            type="number"
-            value={editing.sort_order}
-            onChange={(e) =>
-              onChange({ ...editing, sort_order: Number(e.target.value) })
-            }
-          />
-        </div>
-      </div>
-      <div className="mt-3 flex justify-end gap-2">
-        <Button size="sm" variant="ghost" onClick={onCancel}>
-          Cancelar
-        </Button>
-        <Button size="sm" onClick={save} disabled={saveCategory.isPending}>
-          Salvar
-        </Button>
-      </div>
-    </div>
+
+        <DialogFooter>
+          <Button variant="ghost" onClick={onCancel}>
+            Cancelar
+          </Button>
+          <Button onClick={save} disabled={saveCategory.isPending}>
+            {saveCategory.isPending ? "Salvando..." : "Salvar"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

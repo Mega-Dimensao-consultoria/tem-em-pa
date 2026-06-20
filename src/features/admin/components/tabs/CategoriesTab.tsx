@@ -14,11 +14,18 @@ export function CategoriesTab() {
   const [editing, setEditing] = useState<EditingCategory | null>(null);
 
   return (
-    <div className="mt-4 space-y-4">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">{data.length} categoria(s)</p>
+    <section className="mt-4 space-y-4" aria-labelledby="categories-heading">
+      <header className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 id="categories-heading" className="text-lg font-semibold">
+            Categorias
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            {data.length} categoria{data.length === 1 ? "" : "s"} cadastrada
+            {data.length === 1 ? "" : "s"}.
+          </p>
+        </div>
         <Button
-          size="sm"
           onClick={() =>
             setEditing({
               name: "",
@@ -28,10 +35,10 @@ export function CategoriesTab() {
             })
           }
         >
-          <Plus className="mr-1 h-4 w-4" />
+          <Plus className="mr-1 h-4 w-4" aria-hidden="true" />
           Nova categoria
         </Button>
-      </div>
+      </header>
 
       {editing ? (
         <CategoryFormCard
@@ -44,13 +51,40 @@ export function CategoriesTab() {
 
       {isLoading ? (
         <Loading />
+      ) : data.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
+          Nenhuma categoria cadastrada ainda.
+        </div>
       ) : (
-        <ul className="divide-y rounded-2xl border border-border bg-card shadow-soft">
-          {data.map((c) => (
-            <CategoryRow key={c.id} category={c} onEdit={setEditing} />
-          ))}
-        </ul>
+        <div className="overflow-x-auto rounded-2xl border border-border bg-card shadow-soft">
+          <table className="w-full text-sm">
+            <caption className="sr-only">
+              Lista de categorias com ícone, nome, ordem e ações disponíveis.
+            </caption>
+            <thead className="bg-muted/50 text-left text-xs uppercase tracking-wide text-muted-foreground">
+              <tr>
+                <th scope="col" className="px-4 py-3 font-medium">
+                  Ícone
+                </th>
+                <th scope="col" className="px-4 py-3 font-medium">
+                  Nome
+                </th>
+                <th scope="col" className="px-4 py-3 font-medium">
+                  Ordem
+                </th>
+                <th scope="col" className="px-4 py-3 text-right font-medium">
+                  Ações
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((c) => (
+                <CategoryRow key={c.id} category={c} onEdit={setEditing} />
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
-    </div>
+    </section>
   );
 }

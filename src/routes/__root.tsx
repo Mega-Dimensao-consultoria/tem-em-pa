@@ -15,6 +15,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Toaster } from "@/components/ui/sonner";
 import { OnboardingDialog } from "@/features/auth/components/OnboardingDialog";
 import { AuthProvider } from "@/features/auth/use-auth";
+import { PushPermissionBanner } from "@/features/notifications/components/PushPermissionBanner";
+import { PushBootstrap } from "@/features/notifications/components/PushBootstrap";
 
 function NotFoundComponent() {
   return (
@@ -150,6 +152,8 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
+        <PushBootstrap />
+        <PushPermissionBanner />
         <Outlet />
         <OnboardingDialog />
         <Toaster richColors position="top-center" />

@@ -12,12 +12,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
-import { Heart, LayoutDashboard, LogOut, Shield, Store, User as UserIcon } from "lucide-react";
+import { Heart, LayoutDashboard, LogOut, Shield, Store, User as UserIcon, Building2 } from "lucide-react";
 import { NotificationsBell } from "@/features/notifications/components/NotificationsBell";
+import { useMyCompaniesCount } from "@/features/owner/hooks/useMyCompaniesCount";
 
 export function Header() {
   const { user, loading } = useAuth();
   const { isAdmin, isOwner } = useRoles();
+  const { data: companiesCount = 0 } = useMyCompaniesCount();
+  const hasCompanies = companiesCount > 0;
   const navigate = useNavigate();
 
   const initials = user?.email?.slice(0, 2).toUpperCase() ?? "??";
@@ -82,12 +85,20 @@ export function Header() {
                     <Heart className="mr-2 h-4 w-4" /> Favoritos
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/cadastrar-empresa">
-                    <Store className="mr-2 h-4 w-4" /> Cadastrar empresa
-                  </Link>
-                </DropdownMenuItem>
-                {isOwner ? (
+                {hasCompanies ? (
+                  <DropdownMenuItem asChild>
+                    <Link to="/owner">
+                      <Building2 className="mr-2 h-4 w-4" /> Minhas empresas
+                    </Link>
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem asChild>
+                    <Link to="/cadastrar-empresa">
+                      <Store className="mr-2 h-4 w-4" /> Cadastrar empresa
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+                {isOwner && !hasCompanies ? (
                   <DropdownMenuItem asChild>
                     <Link to="/owner">
                       <UserIcon className="mr-2 h-4 w-4" /> Painel do proprietário

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { CompanyStatusBadge } from "@/features/companies/components/CompanyStatusBadge";
 import { useMyCompanies } from "@/features/owner/hooks/useMyCompanies";
 
-export const Route = createFileRoute("/_authenticated/owner")({
+export const Route = createFileRoute("/_authenticated/owner/")({
   head: () => ({ meta: [{ title: "Painel do proprietário — Tem em P.A" }] }),
   component: OwnerPage,
 });

@@ -551,6 +551,28 @@ export type Database = {
         }
         Returns: string
       }
+      get_my_reviews: {
+        Args: never
+        Returns: {
+          comment: string | null
+          company_id: string
+          created_at: string
+          id: string
+          is_anonymous: boolean
+          owner_reply: string | null
+          owner_reply_at: string | null
+          rating: number
+          status: Database["public"]["Enums"]["review_status"]
+          updated_at: string
+          user_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "reviews"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

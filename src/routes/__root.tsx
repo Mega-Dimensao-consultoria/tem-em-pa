@@ -159,13 +159,17 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <PushBootstrap />
-        <PushPermissionBanner />
-        <Outlet />
-        <OnboardingDialog />
-        <Toaster richColors position="top-center" />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <PushBootstrap />
+          <PushPermissionBanner />
+          <Outlet />
+          <OnboardingDialog />
+          <Toaster richColors position="top-center" />
+          <AccessibilityBar />
+          <VLibrasWidget />
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

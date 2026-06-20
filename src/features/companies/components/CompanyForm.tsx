@@ -11,7 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ImageUpload, GalleryUpload } from "@/components/ImageUpload";
+import { ImageUpload } from "@/components/upload/ImageUpload";
+import { GalleryUpload } from "@/components/upload/GalleryUpload";
 import { FormSection, FormField } from "@/components/forms/FormSection";
 import { HoursEditor, defaultHours, type HourRow } from "@/features/companies/components/HoursEditor";
 import { useCategories } from "@/features/companies/hooks/useCategories";

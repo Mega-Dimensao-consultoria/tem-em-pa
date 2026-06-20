@@ -394,6 +394,7 @@ export type Database = {
           full_name: string | null
           id: string
           is_banned: boolean
+          onboarding_completed_at: string | null
           phone: string | null
           updated_at: string
         }
@@ -403,6 +404,7 @@ export type Database = {
           full_name?: string | null
           id: string
           is_banned?: boolean
+          onboarding_completed_at?: string | null
           phone?: string | null
           updated_at?: string
         }
@@ -412,6 +414,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           is_banned?: boolean
+          onboarding_completed_at?: string | null
           phone?: string | null
           updated_at?: string
         }

@@ -61,6 +61,10 @@ export function UsersTab() {
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
+                <Button size="sm" variant="outline" onClick={() => setEditingId(u.id)}>
+                  <Pencil className="mr-1 h-3 w-3" />
+                  Editar
+                </Button>
                 {u.is_admin ? (
                   <ConfirmDestructive
                     trigger={

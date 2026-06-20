@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { ImageUpload } from "@/components/ImageUpload";
+import { ImageUpload } from "@/components/upload/ImageUpload";
 import { Flag, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 

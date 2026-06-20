@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { supabase } from "@/integrations/supabase/client";
 import { Toaster } from "@/components/ui/sonner";
 import { OnboardingDialog } from "@/features/auth/components/OnboardingDialog";
+import { AuthProvider } from "@/features/auth/use-auth";
 
 function NotFoundComponent() {
   return (
@@ -148,9 +149,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
-      <OnboardingDialog />
-      <Toaster richColors position="top-center" />
+      <AuthProvider>
+        <Outlet />
+        <OnboardingDialog />
+        <Toaster richColors position="top-center" />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

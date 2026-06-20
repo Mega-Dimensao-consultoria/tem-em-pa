@@ -202,7 +202,7 @@ export function UserEditDialog({ userId, onClose }: Props) {
                 }
                 requirePhrase="EXCLUIR CONTA"
                 confirmText="Excluir definitivamente"
-                onConfirm={() => remove.mutateAsync()}
+                onConfirm={async () => { await remove.mutateAsync(); }}
               />
             </div>
           </div>

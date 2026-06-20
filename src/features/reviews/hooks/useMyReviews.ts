@@ -22,15 +22,38 @@ export function useMyReviews() {
     queryKey: queryKeys.reviews.mine(user?.id),
     enabled: !!user,
     queryFn: async (): Promise<MyReviewRow[]> => {
-      const { data, error } = await supabase
-        .from("reviews")
-        .select(
-          "id, rating, comment, status, created_at, owner_reply, owner_reply_at, company:company_id(id, name, logo_url)",
-        )
-        .eq("user_id", user!.id)
-        .order("created_at", { ascending: false });
+      const { data: rows, error } = await supabase.rpc("get_my_reviews");
       if (error) throw error;
-      return (data ?? []) as unknown as MyReviewRow[];
+      const list = (rows ?? []) as Array<{
+        id: string;
+        rating: number;
+        comment: string | null;
+        status: string;
+        created_at: string;
+        owner_reply: string | null;
+        owner_reply_at: string | null;
+        company_id: string;
+      }>;
+      if (list.length === 0) return [];
+      const { data: companies, error: cErr } = await supabase
+        .from("companies")
+        .select("id, name, logo_url")
+        .in(
+          "id",
+          list.map((r) => r.company_id),
+        );
+      if (cErr) throw cErr;
+      const byId = new Map((companies ?? []).map((c) => [c.id, c]));
+      return list.map((r) => ({
+        id: r.id,
+        rating: r.rating,
+        comment: r.comment,
+        status: r.status,
+        created_at: r.created_at,
+        owner_reply: r.owner_reply,
+        owner_reply_at: r.owner_reply_at,
+        company: byId.get(r.company_id) ?? null,
+      }));
     },
   });
 }

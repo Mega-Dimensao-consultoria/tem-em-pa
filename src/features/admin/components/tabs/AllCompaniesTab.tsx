@@ -38,20 +38,35 @@ export function AllCompaniesTab() {
   });
 
   return (
-    <div className="mt-4 space-y-3">
-      <div className="flex flex-wrap gap-2">
+    <section className="mt-4 space-y-4" aria-labelledby="all-companies-heading">
+      <h2 id="all-companies-heading" className="sr-only">
+        Todas as empresas
+      </h2>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <label className="sr-only" htmlFor="all-companies-filter">
+          Filtrar empresas
+        </label>
         <Input
+          id="all-companies-filter"
           placeholder="Filtrar por nome, cidade ou ID…"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
           className="max-w-sm"
         />
-        <div className="flex flex-wrap gap-1">
+        <div
+          role="radiogroup"
+          aria-label="Filtrar por status"
+          className="flex flex-wrap gap-1"
+        >
           {(["all", "approved", "pending", "claimed_pending", "rejected"] as const).map((s) => (
             <button
               key={s}
+              type="button"
+              role="radio"
+              aria-checked={status === s}
               onClick={() => setStatus(s)}
-              className={`rounded-full px-3 py-1 text-xs font-medium transition ${
+              className={`rounded-full px-3 py-1 text-xs font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                 status === s ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/70"
               }`}
             >
@@ -61,44 +76,77 @@ export function AllCompaniesTab() {
         </div>
       </div>
 
-      <p className="text-xs text-muted-foreground">
-        {filtered.length} de {data.length} empresa(s)
+      <p className="text-xs text-muted-foreground" aria-live="polite">
+        {filtered.length} de {data.length} empresa{data.length === 1 ? "" : "s"}
       </p>
 
       {filtered.length === 0 ? (
         <Empty>Nenhuma empresa encontrada.</Empty>
       ) : (
-        <ul className="divide-y rounded-2xl border border-border bg-card shadow-soft">
-          {filtered.map((c) => (
-            <li key={c.id} className="flex flex-wrap items-start justify-between gap-3 p-4">
-              <div className="min-w-0 flex-1">
-                <p className="flex items-center gap-2 truncate font-semibold">
-                  {c.name}
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                      STATUS_STYLE[c.status] ?? "bg-muted"
-                    }`}
-                  >
-                    {STATUS_LABEL[c.status] ?? c.status}
-                  </span>
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {c.city ?? "—"} · {new Date(c.created_at).toLocaleDateString("pt-BR")}
-                </p>
-                {c.description ? (
-                  <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{c.description}</p>
-                ) : null}
-              </div>
-              <Button asChild size="sm" variant="outline">
-                <Link to="/empresa/$id" params={{ id: c.id }} target="_blank">
-                  <ExternalLink className="mr-1 h-3 w-3" />
-                  Ver
-                </Link>
-              </Button>
-            </li>
-          ))}
-        </ul>
+        <div className="overflow-x-auto rounded-2xl border border-border bg-card shadow-soft">
+          <table className="w-full text-sm">
+            <caption className="sr-only">
+              Lista de empresas com nome, status, cidade, data de criação e ações.
+            </caption>
+            <thead className="bg-muted/50 text-left text-xs uppercase tracking-wide text-muted-foreground">
+              <tr>
+                <th scope="col" className="px-4 py-3 font-medium">Empresa</th>
+                <th scope="col" className="px-4 py-3 font-medium">Status</th>
+                <th scope="col" className="px-4 py-3 font-medium">Cidade</th>
+                <th scope="col" className="px-4 py-3 font-medium">Criada em</th>
+                <th scope="col" className="px-4 py-3 text-right font-medium">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((c) => (
+                <tr key={c.id} className="border-t border-border transition hover:bg-muted/40">
+                  <td className="px-4 py-3">
+                    <p className="font-medium text-foreground">{c.name}</p>
+                    {c.description ? (
+                      <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
+                        {c.description}
+                      </p>
+                    ) : null}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
+                        STATUS_STYLE[c.status] ?? "bg-muted"
+                      }`}
+                    >
+                      {STATUS_LABEL[c.status] ?? c.status}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground">{c.city ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground tabular-nums">
+                    {new Date(c.created_at).toLocaleDateString("pt-BR")}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex justify-end">
+                      <Button
+                        asChild
+                        size="sm"
+                        variant="outline"
+                        aria-label={`Visualizar empresa ${c.name}`}
+                      >
+                        <Link
+                          to="/empresa/$id"
+                          params={{ id: c.id }}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <ExternalLink className="mr-1 h-4 w-4" aria-hidden="true" />
+                          Visualizar
+                        </Link>
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
-    </div>
+    </section>
   );
 }

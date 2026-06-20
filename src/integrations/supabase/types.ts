@@ -631,6 +631,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      reply_to_review: {
+        Args: { p_reply: string; p_review_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "owner" | "user"

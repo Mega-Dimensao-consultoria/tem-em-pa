@@ -24,10 +24,10 @@ export function OwnerReplyForm({
     const trimmed = text.trim();
     if (!trimmed) return;
     setSaving(true);
-    const { error } = await supabase
-      .from("reviews")
-      .update({ owner_reply: trimmed, owner_reply_at: new Date().toISOString() })
-      .eq("id", reviewId);
+    const { error } = await supabase.rpc("reply_to_review", {
+      p_review_id: reviewId,
+      p_reply: trimmed,
+    });
     setSaving(false);
     if (error) { toast.error(error.message); return; }
     toast.success("Resposta publicada");
@@ -38,10 +38,10 @@ export function OwnerReplyForm({
   async function remove() {
     if (!confirm("Remover sua resposta?")) return;
     setSaving(true);
-    const { error } = await supabase
-      .from("reviews")
-      .update({ owner_reply: null, owner_reply_at: null })
-      .eq("id", reviewId);
+    const { error } = await supabase.rpc("reply_to_review", {
+      p_review_id: reviewId,
+      p_reply: "",
+    });
     setSaving(false);
     if (error) { toast.error(error.message); return; }
     toast.success("Resposta removida");

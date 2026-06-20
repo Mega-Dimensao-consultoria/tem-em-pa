@@ -40,7 +40,7 @@ export function OwnerReplyForm({
     setSaving(true);
     const { error } = await supabase.rpc("reply_to_review", {
       p_review_id: reviewId,
-      p_reply: null,
+      p_reply: "",
     });
     setSaving(false);
     if (error) { toast.error(error.message); return; }

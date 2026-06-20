@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Shield, ShieldOff } from "lucide-react";
+import { Pencil, Shield, ShieldOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
@@ -10,6 +10,7 @@ import {
   useToggleBan,
 } from "@/features/admin/functions/users";
 import { Empty, Loading } from "../admin-ui";
+import { UserEditDialog } from "../UserEditDialog";
 
 export function UsersTab() {
   const { data = [], isLoading } = useAdminUsers();
@@ -17,6 +18,7 @@ export function UsersTab() {
   const promote = usePromoteAdmin();
   const demote = useDemoteAdmin();
   const [filter, setFilter] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   const filtered = data.filter(
     (u) =>

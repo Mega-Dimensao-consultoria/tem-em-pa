@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { supabase } from "@/integrations/supabase/client";
 import { Toaster } from "@/components/ui/sonner";
+import { OnboardingDialog } from "@/features/auth/components/OnboardingDialog";
 
 function NotFoundComponent() {
   return (

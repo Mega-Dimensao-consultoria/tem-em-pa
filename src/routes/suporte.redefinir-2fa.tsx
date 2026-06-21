@@ -1,3 +1,4 @@
+import { toastError } from "@/lib/safe";
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";

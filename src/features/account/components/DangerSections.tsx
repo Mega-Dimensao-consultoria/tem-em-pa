@@ -1,3 +1,4 @@
+import { toastError } from "@/lib/safe";
 import { useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { LogOut, ShieldAlert } from "lucide-react";

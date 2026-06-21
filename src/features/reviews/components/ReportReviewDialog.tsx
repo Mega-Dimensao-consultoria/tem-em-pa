@@ -1,3 +1,4 @@
+import { toastError } from "@/lib/safe";
 import { useState } from "react";
 import { Flag } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";

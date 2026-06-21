@@ -1,3 +1,4 @@
+import { toastError } from "@/lib/safe";
 import { useEffect, useState } from "react";
 import { ShieldCheck, ShieldAlert, Loader2, Lock } from "lucide-react";
 import { toast } from "sonner";

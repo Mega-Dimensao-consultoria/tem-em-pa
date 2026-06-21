@@ -112,7 +112,7 @@ function NeighborhoodPage() {
             <NoCompanies />
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {companies.map((c) => <CompanyCard key={(c as { id: string }).id} company={c as never} />)}
+              {companies.map((c) => <CompanyCard key={c.id} company={c} />)}
             </div>
           )}
         </div>

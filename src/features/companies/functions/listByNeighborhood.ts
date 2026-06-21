@@ -2,6 +2,27 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { publicClient, CARD_COLS } from "./_client";
 
+type Company = {
+  id: string;
+  name: string;
+  slug: string | null;
+  description: string | null;
+  neighborhood: string | null;
+  city: string | null;
+  state: string | null;
+  logo_url: string | null;
+  cover_url: string | null;
+  is_featured: boolean | null;
+  category_id: string | null;
+  categories: { name: string | null; slug: string | null; icon: string | null } | null;
+};
+
+export type NeighborhoodPayload = {
+  neighborhood: string | null;
+  city: string | null;
+  companies: Company[];
+};
+
 /**
  * Lista empresas aprovadas de um bairro. Slug é normalizado no servidor para
  * casar com `neighborhood` da tabela `companies`.
@@ -19,10 +40,9 @@ export const listCompaniesByNeighborhood = createServerFn({ method: "GET" })
       })
       .parse(input),
   )
-  .handler(async ({ data }) => {
+  .handler(async ({ data }): Promise<NeighborhoodPayload> => {
     const sb = publicClient();
 
-    // Busca distinct neighborhoods aprovados e bate o slug no servidor.
     const { data: rows, error } = await sb
       .from("companies")
       .select("neighborhood, city")
@@ -32,7 +52,7 @@ export const listCompaniesByNeighborhood = createServerFn({ method: "GET" })
 
     const match = (rows ?? []).find((r) => slugifyServer(r.neighborhood) === data.slug);
     if (!match || !match.neighborhood) {
-      return { neighborhood: null as string | null, city: null as string | null, companies: [] as Array<Record<string, unknown>> };
+      return { neighborhood: null, city: null, companies: [] };
     }
 
     const { data: companies, error: err2 } = await sb
@@ -46,7 +66,7 @@ export const listCompaniesByNeighborhood = createServerFn({ method: "GET" })
     return {
       neighborhood: match.neighborhood,
       city: match.city,
-      companies: companies ?? [],
+      companies: (companies ?? []) as unknown as Company[],
     };
   });
 

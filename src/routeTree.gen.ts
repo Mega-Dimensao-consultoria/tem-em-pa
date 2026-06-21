@@ -21,6 +21,7 @@ import { Route as SuporteRedefinir2faRouteImport } from './routes/suporte.redefi
 import { Route as EmpresaIdRouteImport } from './routes/empresa.$id'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as CategoriaSlugRouteImport } from './routes/categoria.$slug'
+import { Route as BairroSlugRouteImport } from './routes/bairro.$slug'
 import { Route as AuthTwoFactorRouteImport } from './routes/auth_.two-factor'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedNotificacoesRouteImport } from './routes/_authenticated/notificacoes'
@@ -99,6 +100,11 @@ const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
 const CategoriaSlugRoute = CategoriaSlugRouteImport.update({
   id: '/categoria/$slug',
   path: '/categoria/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BairroSlugRoute = BairroSlugRouteImport.update({
+  id: '/bairro/$slug',
+  path: '/bairro/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthTwoFactorRoute = AuthTwoFactorRouteImport.update({
@@ -229,6 +235,7 @@ export interface FileRoutesByFullPath {
   '/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/painel': typeof AuthenticatedPainelRouteWithChildren
   '/auth/two-factor': typeof AuthTwoFactorRoute
+  '/bairro/$slug': typeof BairroSlugRoute
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
@@ -261,6 +268,7 @@ export interface FileRoutesByTo {
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/auth/two-factor': typeof AuthTwoFactorRoute
+  '/bairro/$slug': typeof BairroSlugRoute
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
@@ -296,6 +304,7 @@ export interface FileRoutesById {
   '/_authenticated/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/_authenticated/painel': typeof AuthenticatedPainelRouteWithChildren
   '/auth_/two-factor': typeof AuthTwoFactorRoute
+  '/bairro/$slug': typeof BairroSlugRoute
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
@@ -331,6 +340,7 @@ export interface FileRouteTypes {
     | '/notificacoes'
     | '/painel'
     | '/auth/two-factor'
+    | '/bairro/$slug'
     | '/categoria/$slug'
     | '/email/unsubscribe'
     | '/empresa/$id'
@@ -363,6 +373,7 @@ export interface FileRouteTypes {
     | '/favoritos'
     | '/notificacoes'
     | '/auth/two-factor'
+    | '/bairro/$slug'
     | '/categoria/$slug'
     | '/email/unsubscribe'
     | '/empresa/$id'
@@ -397,6 +408,7 @@ export interface FileRouteTypes {
     | '/_authenticated/notificacoes'
     | '/_authenticated/painel'
     | '/auth_/two-factor'
+    | '/bairro/$slug'
     | '/categoria/$slug'
     | '/email/unsubscribe'
     | '/empresa/$id'
@@ -427,6 +439,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SobreRoute: typeof SobreRoute
   AuthTwoFactorRoute: typeof AuthTwoFactorRoute
+  BairroSlugRoute: typeof BairroSlugRoute
   CategoriaSlugRoute: typeof CategoriaSlugRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   EmpresaIdRoute: typeof EmpresaIdRoute
@@ -523,6 +536,13 @@ declare module '@tanstack/react-router' {
       path: '/categoria/$slug'
       fullPath: '/categoria/$slug'
       preLoaderRoute: typeof CategoriaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bairro/$slug': {
+      id: '/bairro/$slug'
+      path: '/bairro/$slug'
+      fullPath: '/bairro/$slug'
+      preLoaderRoute: typeof BairroSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth_/two-factor': {
@@ -725,6 +745,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SobreRoute: SobreRoute,
   AuthTwoFactorRoute: AuthTwoFactorRoute,
+  BairroSlugRoute: BairroSlugRoute,
   CategoriaSlugRoute: CategoriaSlugRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   EmpresaIdRoute: EmpresaIdRoute,

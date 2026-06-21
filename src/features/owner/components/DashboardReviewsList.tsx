@@ -1,6 +1,7 @@
 import { RatingStars } from "@/features/reviews/components/RatingStars";
 import { OwnerReplyForm } from "@/features/reviews/components/OwnerReplyForm";
 import type { OwnerReview } from "@/features/owner/hooks/useOwnerReviews";
+import { NoReviews } from "@/components/feedback/EmptyState";
 
 export function DashboardReviewsList({
   reviews,
@@ -15,9 +16,7 @@ export function DashboardReviewsList({
         Avaliações ({reviews.length})
       </h2>
       {reviews.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-border bg-card/50 p-6 text-center text-sm text-muted-foreground">
-          Ainda não há avaliações.
-        </div>
+        <NoReviews title="Ainda sem avaliações" description="Compartilhe o link da sua empresa para receber avaliações." />
       ) : (
         <div className="space-y-3">
           {reviews.map((r) => (

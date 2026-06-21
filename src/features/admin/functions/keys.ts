@@ -11,4 +11,5 @@ export const adminKeys = {
   categories: () => [...adminKeys.all, "categories"] as const,
   bannedWords: () => [...adminKeys.all, "banned-words"] as const,
   auditLog: () => [...adminKeys.all, "audit-log"] as const,
+  pendingRemovals: () => [...adminKeys.all, "pending-removals"] as const,
 };

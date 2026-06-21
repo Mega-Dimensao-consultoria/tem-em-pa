@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/Logo";
-import { resetMyMfa } from "@/lib/twofa.functions";
+import { requestTwoFaEmailOtp, verifyTwoFaEmailOtp } from "@/lib/twofa.functions";
 
 const searchSchema = z.object({ redirect: z.string().optional() });
 
@@ -24,7 +24,8 @@ type Mode = "totp" | "email-request" | "email-verify";
 function TwoFactorPage() {
   const navigate = useNavigate();
   const { redirect } = Route.useSearch();
-  const reset = useServerFn(resetMyMfa);
+  const requestOtp = useServerFn(requestTwoFaEmailOtp);
+  const verifyOtp = useServerFn(verifyTwoFaEmailOtp);
 
   const [mode, setMode] = useState<Mode>("totp");
   const [factorId, setFactorId] = useState<string | null>(null);
@@ -95,52 +96,34 @@ function TwoFactorPage() {
   }
 
   async function sendEmailOtp() {
-    if (!email) {
-      setError("Sua conta não tem e-mail cadastrado.");
-      return;
-    }
     setError(null);
     setLoading(true);
-    const { error: oErr } = await supabase.auth.signInWithOtp({
-      email,
-      options: { shouldCreateUser: false },
-    });
-    setLoading(false);
-    if (oErr) {
-      setError(oErr.message);
-      return;
+    try {
+      await requestOtp();
+      toast.success("Código enviado para o seu e-mail.");
+      setCode("");
+      setMode("email-verify");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Falha ao enviar o código.");
+    } finally {
+      setLoading(false);
     }
-    toast.success("Código enviado para o seu e-mail.");
-    setCode("");
-    setMode("email-verify");
   }
 
   async function verifyEmailOtp(e: React.FormEvent) {
     e.preventDefault();
-    if (!email) return;
     if (!/^\d{6}$/.test(code)) {
       setError("Digite o código de 6 dígitos enviado por e-mail.");
       return;
     }
     setError(null);
     setLoading(true);
-    const { error: vErr } = await supabase.auth.verifyOtp({
-      email,
-      token: code,
-      type: "email",
-    });
-    if (vErr) {
-      setLoading(false);
-      setError("O código informado está incorreto ou expirou. Solicite um novo código.");
-      return;
-    }
-    // Email proof OK → remove every MFA factor so the user can sign in normally.
     try {
-      await reset();
+      await verifyOtp({ data: { code } });
       toast.success("Acesso restaurado. Configure novamente o 2FA quando puder.");
       navigate({ to: redirect ?? "/", replace: true });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Falha ao remover 2FA.");
+      setError(err instanceof Error ? err.message : "Código incorreto ou expirado.");
     } finally {
       setLoading(false);
     }

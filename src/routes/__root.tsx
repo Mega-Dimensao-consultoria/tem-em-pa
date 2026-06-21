@@ -7,7 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { Suspense, useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -146,35 +146,33 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const router = useRouter();
 
   useEffect(() => {
-    const { data } = supabase.auth.onAuthStateChange(async (event) => {
+    const { data } = supabase.auth.onAuthStateChange((event) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT") return;
       const isAuthRoute =
         typeof window !== "undefined" && window.location.pathname.startsWith("/auth");
       if (event === "SIGNED_OUT") {
-        const { clearPushApproved } = await import("@/lib/push-2fa-session");
-        clearPushApproved();
+        import("@/lib/push-2fa-session").then(({ clearPushApproved }) => clearPushApproved());
         queryClient.clear();
-      } else if (!isAuthRoute) {
-        queryClient.invalidateQueries();
+        return;
       }
-      if (!isAuthRoute) router.invalidate();
-      if (event === "SIGNED_IN" && !isAuthRoute) {
-        try {
+      if (!isAuthRoute) {
+        window.setTimeout(async () => {
+          try {
           const { isPushApproved } = await import("@/lib/push-2fa-session");
           const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
           if (aal?.nextLevel === "aal2" && aal.currentLevel === "aal1" && !isPushApproved()) {
             window.location.replace("/auth/two-factor");
           }
-        } catch {
-          /* ignore */
-        }
+          } catch {
+            /* ignore */
+          }
+        }, 0);
       }
     });
     return () => data.subscription.unsubscribe();
-  }, [router, queryClient]);
+  }, [queryClient]);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -182,7 +180,15 @@ function RootComponent() {
         <AuthProvider>
           <PushBootstrap />
           <PushPermissionBanner />
-          <Outlet />
+          <Suspense
+            fallback={
+              <div className="flex min-h-screen items-center justify-center bg-background px-4 text-sm text-muted-foreground">
+                Carregando…
+              </div>
+            }
+          >
+            <Outlet />
+          </Suspense>
           <OnboardingDialog />
           <Toaster richColors position="top-center" />
           <AccessibilityBar />

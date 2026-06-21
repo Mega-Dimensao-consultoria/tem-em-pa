@@ -1,10 +1,16 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Check, ExternalLink, X } from "lucide-react";
+import { Check, ExternalLink, EyeOff, RotateCcw, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
-import { useAllCompanies, useDecideCompany } from "@/features/admin/functions/companies";
+import {
+  useAllCompanies,
+  useDecideCompany,
+  useDeleteCompany,
+  useRepublishCompany,
+  useSuspendCompany,
+} from "@/features/admin/functions/companies";
 import { Empty, Loading } from "../admin-ui";
 
 const STATUS_LABEL: Record<string, string> = {

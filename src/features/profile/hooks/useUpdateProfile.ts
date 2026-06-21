@@ -1,6 +1,5 @@
 import { toastError } from "@/lib/safe";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/features/auth/use-auth";
 import { queryKeys } from "@/lib/queryKeys";

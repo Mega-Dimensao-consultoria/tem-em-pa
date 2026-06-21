@@ -218,26 +218,6 @@ export const verifyTwoFaEmailOtp = createServerFn({ method: "POST" })
     return { ok: true as const, removed: list?.factors?.length ?? 0 };
   });
 
-/**
- * Deletes all MFA factors of the currently signed-in user (used by the older
- * Supabase-native flow). Kept for compatibility.
- */
-export const resetMyMfa = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data, error } = await supabaseAdmin.auth.admin.mfa.listFactors({
-      userId: context.userId,
-    });
-    if (error) throw new Error(error.message);
-    for (const f of data?.factors ?? []) {
-      await supabaseAdmin.auth.admin.mfa.deleteFactor({
-        userId: context.userId,
-        id: f.id,
-      });
-    }
-    return { ok: true as const, removed: data?.factors?.length ?? 0 };
-  });
 
 async function assertAdmin(ctx: { supabase: any; userId: string }) {
   const { data, error } = await ctx.supabase.rpc("has_role", {

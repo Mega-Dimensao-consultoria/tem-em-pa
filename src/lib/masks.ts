@@ -24,24 +24,6 @@ export function maskPhone(v: string): string {
   return `(${ddd}) ${rest.slice(0, 5)}-${rest.slice(5)}`;
 }
 
-/** 00.000.000/0000-00 */
-export function maskCnpj(v: string): string {
-  const d = onlyDigits(v).slice(0, 14);
-  return d
-    .replace(/^(\d{2})(\d)/, "$1.$2")
-    .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
-    .replace(/\.(\d{3})(\d)/, ".$1/$2")
-    .replace(/(\d{4})(\d)/, "$1-$2");
-}
-
-/** 000.000.000-00 */
-export function maskCpf(v: string): string {
-  const d = onlyDigits(v).slice(0, 11);
-  return d
-    .replace(/^(\d{3})(\d)/, "$1.$2")
-    .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
-    .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-}
 
 /** UF maiúscula, máx 2 letras */
 export function maskUf(v: string): string {

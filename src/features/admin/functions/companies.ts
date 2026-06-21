@@ -114,3 +114,61 @@ export function useDecideCompany() {
       status === "approved" ? "Empresa aprovada" : "Empresa rejeitada",
   });
 }
+
+/** Suspend a published company (hides it from the public catalog). */
+export function useSuspendCompany() {
+  return useAdminMutation<{ id: string; name: string }>({
+    mutationFn: async ({ id }) => {
+      const { error } = await supabase
+        .from("companies")
+        .update({ status: "rejected" })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    audit: ({ id, name }) => ({
+      action: "company.suspend",
+      entityType: "company",
+      entityId: id,
+      details: { name },
+    }),
+    successMessage: "Empresa suspensa",
+  });
+}
+
+/** Re-publish a previously rejected/suspended company. */
+export function useRepublishCompany() {
+  return useAdminMutation<{ id: string; name: string }>({
+    mutationFn: async ({ id }) => {
+      const { error } = await supabase
+        .from("companies")
+        .update({ status: "approved" })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    audit: ({ id, name }) => ({
+      action: "company.republish",
+      entityType: "company",
+      entityId: id,
+      details: { name },
+    }),
+    successMessage: "Empresa republicada",
+  });
+}
+
+/** Permanently delete a company and all related records (cascade). */
+export function useDeleteCompany() {
+  return useAdminMutation<{ id: string; name: string }>({
+    mutationFn: async ({ id }) => {
+      const { error } = await supabase.from("companies").delete().eq("id", id);
+      if (error) throw error;
+    },
+    audit: ({ id, name }) => ({
+      action: "company.delete",
+      entityType: "company",
+      entityId: id,
+      details: { name },
+    }),
+    successMessage: "Empresa removida",
+  });
+}
+

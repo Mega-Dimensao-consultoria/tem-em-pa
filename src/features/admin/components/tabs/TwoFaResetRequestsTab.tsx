@@ -1,3 +1,4 @@
+import { toastError } from "@/lib/safe";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -35,7 +36,7 @@ export function TwoFaResetRequestsTab() {
       .update({ status, resolved_at: new Date().toISOString() })
       .eq("id", id);
     if (error) {
-      toast.error(error.message);
+      toastError(error);
       return;
     }
     toast.success("Pedido atualizado.");

@@ -1,3 +1,4 @@
+import { toastError } from "@/lib/safe";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from "@/components/ui/dialog";
@@ -24,7 +25,7 @@ export function ClaimDialog({ companyId, userId }: { companyId: string; userId: 
       document_urls: [docPath],
     });
     setLoading(false);
-    if (error) { toast.error(error.message); return; }
+    if (error) { toastError(error); return; }
     toast.success("Reivindicação enviada! Aguarde análise.");
     setOpen(false); setMessage(""); setDocPath(null);
   }

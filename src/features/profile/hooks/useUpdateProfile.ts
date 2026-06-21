@@ -1,5 +1,5 @@
+import { toastError } from "@/lib/safe";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/features/auth/use-auth";
 import { queryKeys } from "@/lib/queryKeys";
@@ -29,6 +29,6 @@ export function useUpdateProfile() {
     onSuccess: () => {
       if (user) qc.invalidateQueries({ queryKey: queryKeys.profile.me(user.id) });
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Falha ao salvar"),
+    onError: (e) => toastError(e, "Falha ao salvar"),
   });
 }

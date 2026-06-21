@@ -2,6 +2,8 @@
  * Guardas usadas em todo o app — todas tolerantes a falhas.
  * Nunca lançam exceção; sempre devolvem um fallback.
  */
+import { toast } from "sonner";
+
 
 /** Leitura/gravação de localStorage seguras (modo privado, SSR, quota excedida). */
 export const safeStorage = {
@@ -124,4 +126,13 @@ export function titleCase(input: string): string {
 export function clamp(n: number, min: number, max: number): number {
   if (Number.isNaN(n)) return min;
   return Math.min(Math.max(n, min), max);
+}
+
+/**
+ * Toast de erro padronizado (função pura, pode ser usada fora de componentes).
+ * Sanitiza mensagens do Postgres/JWT/RLS para não vazar detalhes técnicos.
+ */
+export function toastError(error: unknown, prefix?: string): void {
+  const message = extractErrorMessage(error);
+  toast.error(prefix ? `${prefix}: ${message}` : message);
 }

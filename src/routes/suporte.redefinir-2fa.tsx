@@ -1,3 +1,4 @@
+import { toastError } from "@/lib/safe";
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
@@ -60,7 +61,7 @@ function ResetTwoFaSupportPage() {
     });
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      toastError(error);
       return;
     }
     setSent(true);

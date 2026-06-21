@@ -1,3 +1,4 @@
+import { toastError } from "@/lib/safe";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,7 +30,7 @@ export function OwnerReplyForm({
       p_reply: trimmed,
     });
     setSaving(false);
-    if (error) { toast.error(error.message); return; }
+    if (error) { toastError(error); return; }
     toast.success("Resposta publicada");
     setEditing(false);
     onSaved();
@@ -43,7 +44,7 @@ export function OwnerReplyForm({
       p_reply: "",
     });
     setSaving(false);
-    if (error) { toast.error(error.message); return; }
+    if (error) { toastError(error); return; }
     toast.success("Resposta removida");
     setText("");
     setEditing(false);

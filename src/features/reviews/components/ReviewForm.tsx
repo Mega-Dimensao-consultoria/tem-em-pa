@@ -1,3 +1,4 @@
+import { toastError } from "@/lib/safe";
 import { useState } from "react";
 import { z } from "zod";
 import { Star } from "lucide-react";
@@ -31,7 +32,7 @@ export function ReviewForm({ companyId, userId, onSubmitted }: { companyId: stri
     setLoading(false);
     if (error) {
       if (error.code === "23505") toast.error("Você já avaliou esta empresa.");
-      else toast.error(error.message);
+      else toastError(error);
       return;
     }
     toast.success("Avaliação enviada! Pode passar por moderação.");

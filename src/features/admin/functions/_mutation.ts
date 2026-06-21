@@ -1,3 +1,4 @@
+import { toastError } from "@/lib/safe";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuth } from "@/features/auth/use-auth";
@@ -38,7 +39,7 @@ export function useAdminMutation<TVars, TData = unknown>(
   return useMutation({
     mutationFn: opts.mutationFn,
     onError: (e: unknown) => {
-      toast.error(e instanceof Error ? e.message : "Falha na ação");
+      toastError(e, "Falha na ação");
     },
     onSuccess: async (data, vars) => {
       const entry = opts.audit?.(vars, data) ?? null;

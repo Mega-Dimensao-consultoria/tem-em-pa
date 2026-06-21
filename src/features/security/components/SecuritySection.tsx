@@ -1,3 +1,4 @@
+import { toastError } from "@/lib/safe";
 import { useEffect, useState } from "react";
 import { ShieldCheck, ShieldAlert, Loader2, Lock } from "lucide-react";
 import { toast } from "sonner";
@@ -17,7 +18,7 @@ export function SecuritySection() {
   async function load() {
     const { data, error } = await supabase.auth.mfa.listFactors();
     if (error) {
-      toast.error(error.message);
+      toastError(error);
       setFactors([]);
       return;
     }
@@ -42,7 +43,7 @@ export function SecuritySection() {
     const { error } = await supabase.auth.mfa.unenroll({ factorId });
     setRemovingId(null);
     if (error) {
-      toast.error(error.message);
+      toastError(error);
       return;
     }
     toast.success("Autenticação em duas etapas desativada.");

@@ -1,3 +1,4 @@
+import { toastError } from "@/lib/safe";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -77,7 +78,7 @@ export function useDeleteMyReview() {
       toast.success("Avaliação excluída.");
       invalidate();
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: (e: Error) => toastError(e),
   });
 }
 
@@ -100,6 +101,6 @@ export function useUpdateMyReview() {
       );
       invalidate();
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: (e: Error) => toastError(e),
   });
 }

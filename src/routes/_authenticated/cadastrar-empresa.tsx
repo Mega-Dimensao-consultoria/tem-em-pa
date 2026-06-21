@@ -1,3 +1,4 @@
+import { toastError } from "@/lib/safe";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
@@ -91,7 +92,7 @@ function CadastrarPage() {
       .single();
     setSubmitting(false);
     if (error || !data) {
-      toast.error(error?.message ?? "Falha ao cadastrar");
+      toastError(error, "Falha ao cadastrar");
       return;
     }
     toast.success("Empresa enviada para aprovação!");

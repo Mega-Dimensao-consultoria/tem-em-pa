@@ -1,3 +1,4 @@
+import { toastError } from "@/lib/safe";
 import { useState } from "react";
 import { Flag } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
@@ -45,7 +46,7 @@ export function ReportReviewDialog({ reviewId }: { reviewId: string }) {
         setOpen(false);
         return;
       }
-      toast.error(error.message);
+      toastError(error);
       return;
     }
     toast.success("Denúncia enviada. Nossa equipe vai analisar com atenção.");

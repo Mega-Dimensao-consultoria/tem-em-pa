@@ -1,3 +1,4 @@
+import { toastError } from "@/lib/safe";
 import { useState } from "react";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
@@ -40,7 +41,7 @@ export function SignUpForm({ onSuccess }: { onSuccess: () => void }) {
     });
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      toastError(error);
       return;
     }
     toast.success("Conta criada! Você já pode entrar.");

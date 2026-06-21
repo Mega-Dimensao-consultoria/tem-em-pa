@@ -1,3 +1,4 @@
+import { toastError } from "@/lib/safe";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,7 +21,7 @@ export function ForgotPassword() {
     });
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      toastError(error);
       return;
     }
     toast.success("Enviamos um e-mail com o link de recuperação.");

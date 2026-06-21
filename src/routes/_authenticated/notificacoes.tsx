@@ -2,10 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { CheckCheck, Inbox, Trash2 } from "lucide-react";
+import { CheckCheck, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useNotifications } from "@/features/notifications/hooks/useNotifications";
+import { NotificationListSkeleton } from "@/components/feedback/Skeletons";
+import { NoNotifications } from "@/components/feedback/EmptyState";
 
 export const Route = createFileRoute("/_authenticated/notificacoes")({
   component: NotificacoesPage,

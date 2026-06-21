@@ -31,6 +31,7 @@ import { Route as AuthenticatedOwnerIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedPainelSegurancaRouteImport } from './routes/_authenticated/painel.seguranca'
 import { Route as AuthenticatedPainelConfiguracoesRouteImport } from './routes/_authenticated/painel.configuracoes'
 import { Route as AuthenticatedPainelAvaliacoesRouteImport } from './routes/_authenticated/painel.avaliacoes'
+import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as ApiPublicPushDispatchRouteImport } from './routes/api/public/push.dispatch'
 import { Route as AuthenticatedOwnerEmpresaIdProdutosRouteImport } from './routes/_authenticated/owner.empresa.$id.produtos'
 import { Route as AuthenticatedOwnerEmpresaIdEditarRouteImport } from './routes/_authenticated/owner.empresa.$id.editar'
@@ -151,6 +152,12 @@ const AuthenticatedPainelAvaliacoesRoute =
     path: '/avaliacoes',
     getParentRoute: () => AuthenticatedPainelRoute,
   } as any)
+const LovableEmailQueueProcessRoute =
+  LovableEmailQueueProcessRouteImport.update({
+    id: '/lovable/email/queue/process',
+    path: '/lovable/email/queue/process',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicPushDispatchRoute = ApiPublicPushDispatchRouteImport.update({
   id: '/api/public/push/dispatch',
   path: '/api/public/push/dispatch',
@@ -198,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/owner/': typeof AuthenticatedOwnerIndexRoute
   '/painel/': typeof AuthenticatedPainelIndexRoute
   '/api/public/push/dispatch': typeof ApiPublicPushDispatchRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   '/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
@@ -224,6 +232,7 @@ export interface FileRoutesByTo {
   '/owner': typeof AuthenticatedOwnerIndexRoute
   '/painel': typeof AuthenticatedPainelIndexRoute
   '/api/public/push/dispatch': typeof ApiPublicPushDispatchRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   '/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
@@ -253,6 +262,7 @@ export interface FileRoutesById {
   '/_authenticated/owner/': typeof AuthenticatedOwnerIndexRoute
   '/_authenticated/painel/': typeof AuthenticatedPainelIndexRoute
   '/api/public/push/dispatch': typeof ApiPublicPushDispatchRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/_authenticated/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   '/_authenticated/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/_authenticated/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
@@ -282,6 +292,7 @@ export interface FileRouteTypes {
     | '/owner/'
     | '/painel/'
     | '/api/public/push/dispatch'
+    | '/lovable/email/queue/process'
     | '/owner/empresa/$id/dashboard'
     | '/owner/empresa/$id/editar'
     | '/owner/empresa/$id/produtos'
@@ -308,6 +319,7 @@ export interface FileRouteTypes {
     | '/owner'
     | '/painel'
     | '/api/public/push/dispatch'
+    | '/lovable/email/queue/process'
     | '/owner/empresa/$id/dashboard'
     | '/owner/empresa/$id/editar'
     | '/owner/empresa/$id/produtos'
@@ -336,6 +348,7 @@ export interface FileRouteTypes {
     | '/_authenticated/owner/'
     | '/_authenticated/painel/'
     | '/api/public/push/dispatch'
+    | '/lovable/email/queue/process'
     | '/_authenticated/owner/empresa/$id/dashboard'
     | '/_authenticated/owner/empresa/$id/editar'
     | '/_authenticated/owner/empresa/$id/produtos'
@@ -354,6 +367,7 @@ export interface RootRouteChildren {
   EmpresaIdRoute: typeof EmpresaIdRoute
   SuporteRedefinir2faRoute: typeof SuporteRedefinir2faRoute
   ApiPublicPushDispatchRoute: typeof ApiPublicPushDispatchRoute
+  LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -512,6 +526,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPainelAvaliacoesRouteImport
       parentRoute: typeof AuthenticatedPainelRoute
     }
+    '/lovable/email/queue/process': {
+      id: '/lovable/email/queue/process'
+      path: '/lovable/email/queue/process'
+      fullPath: '/lovable/email/queue/process'
+      preLoaderRoute: typeof LovableEmailQueueProcessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/push/dispatch': {
       id: '/api/public/push/dispatch'
       path: '/api/public/push/dispatch'
@@ -613,6 +634,7 @@ const rootRouteChildren: RootRouteChildren = {
   EmpresaIdRoute: EmpresaIdRoute,
   SuporteRedefinir2faRoute: SuporteRedefinir2faRoute,
   ApiPublicPushDispatchRoute: ApiPublicPushDispatchRoute,
+  LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

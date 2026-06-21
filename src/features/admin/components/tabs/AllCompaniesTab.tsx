@@ -166,17 +166,33 @@ export function AllCompaniesTab() {
                           </Button>
                         </>
                       )}
+                      {c.status === "approved" && (
+                        <ConfirmDestructive
+                          trigger={
+                            <Button size="sm" variant="outline" aria-label={`Suspender ${c.name}`}>
+                              <EyeOff className="mr-1 h-4 w-4" aria-hidden="true" />
+                              Suspender
+                            </Button>
+                          }
+                          title="Suspender empresa?"
+                          description={
+                            <p>
+                              A empresa <strong>{c.name}</strong> deixará de aparecer no diretório público. Você pode republicar a qualquer momento.
+                            </p>
+                          }
+                          confirmText="Suspender"
+                          onConfirm={() => suspend.mutate({ id: c.id, name: c.name })}
+                        />
+                      )}
                       {c.status === "rejected" && (
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() =>
-                            decide.mutate({ id: c.id, name: c.name, status: "approved" })
-                          }
-                          aria-label={`Reativar ${c.name}`}
+                          onClick={() => republish.mutate({ id: c.id, name: c.name })}
+                          aria-label={`Republicar ${c.name}`}
                         >
-                          <Check className="mr-1 h-4 w-4" aria-hidden="true" />
-                          Aprovar
+                          <RotateCcw className="mr-1 h-4 w-4" aria-hidden="true" />
+                          Republicar
                         </Button>
                       )}
                       <Button
@@ -195,6 +211,27 @@ export function AllCompaniesTab() {
                           Visualizar
                         </Link>
                       </Button>
+                      <ConfirmDestructive
+                        trigger={
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-destructive hover:bg-destructive/10"
+                            aria-label={`Excluir ${c.name}`}
+                          >
+                            <Trash2 className="mr-1 h-4 w-4" aria-hidden="true" />
+                            Excluir
+                          </Button>
+                        }
+                        title="Excluir empresa permanentemente?"
+                        description={
+                          <p>
+                            Esta ação remove <strong>{c.name}</strong> e todos os dados relacionados (avaliações, reivindicações, produtos). Não pode ser desfeita. Se quiser apenas ocultar do diretório, use <strong>Suspender</strong>.
+                          </p>
+                        }
+                        confirmText="Excluir permanentemente"
+                        onConfirm={() => remove.mutate({ id: c.id, name: c.name })}
+                      />
                     </div>
                   </td>
                 </tr>

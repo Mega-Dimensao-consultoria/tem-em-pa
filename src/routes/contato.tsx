@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/PageShell";
-import { Mail, MessageCircle } from "lucide-react";
+import { Mail } from "lucide-react";
 
 export const Route = createFileRoute("/contato")({
   head: () => ({

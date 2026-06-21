@@ -18,7 +18,7 @@ import { setPushApproved } from "@/lib/push-2fa-session";
 
 const searchSchema = z.object({ redirect: z.string().optional() });
 
-export const Route = createFileRoute("/auth/two-factor")({
+export const Route = createFileRoute("/auth_/two-factor")({
   validateSearch: searchSchema,
   head: () => ({ meta: [{ title: "Verificação em duas etapas — Tem em P.A" }] }),
   component: TwoFactorPage,

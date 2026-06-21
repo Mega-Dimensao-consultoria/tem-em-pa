@@ -4,6 +4,7 @@ import { PageShell } from "@/components/PageShell";
 import { CompanyCard } from "@/features/companies/components/CompanyCard";
 import { Breadcrumbs, breadcrumbJsonLd } from "@/components/Breadcrumbs";
 import { searchCompanies, getCategoryBySlug } from "@/features/companies/functions";
+import { NoCompanies } from "@/components/feedback/EmptyState";
 
 const BASE = "https://tem-em-pa.lovable.app";
 

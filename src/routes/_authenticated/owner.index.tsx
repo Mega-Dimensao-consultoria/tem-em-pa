@@ -3,6 +3,8 @@ import { Store } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { CompanyStatusBadge } from "@/features/companies/components/CompanyStatusBadge";
+import { EmptyState } from "@/components/feedback/EmptyState";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useMyCompanies } from "@/features/owner/hooks/useMyCompanies";
 
 export const Route = createFileRoute("/_authenticated/owner/")({
@@ -30,17 +32,21 @@ function OwnerPage() {
 
         <div className="mt-8">
           {isLoading ? (
-            <p className="text-sm text-muted-foreground">Carregando…</p>
-          ) : companies.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-border bg-card/50 p-10 text-center">
-              <Store className="mx-auto h-8 w-8 text-muted-foreground" />
-              <p className="mt-3 text-sm text-muted-foreground">
-                Você ainda não tem empresas. Comece cadastrando uma.
-              </p>
-              <Button asChild className="mt-4">
-                <Link to="/cadastrar-empresa">Cadastrar empresa</Link>
-              </Button>
+            <div className="space-y-2">
+              <Skeleton className="h-16 w-full" />
+              <Skeleton className="h-16 w-full" />
             </div>
+          ) : companies.length === 0 ? (
+            <EmptyState
+              icon={<Store className="h-6 w-6" />}
+              title="Você ainda não tem empresas"
+              description="Cadastre sua empresa para aparecer no guia."
+              action={
+                <Button asChild>
+                  <Link to="/cadastrar-empresa">Cadastrar empresa</Link>
+                </Button>
+              }
+            />
           ) : (
             <ul className="divide-y rounded-2xl border border-border bg-card shadow-soft">
               {companies.map((c) => (

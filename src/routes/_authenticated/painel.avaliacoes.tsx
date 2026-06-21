@@ -3,6 +3,8 @@ import { ArrowLeft, MessageSquare } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { MyReviewCard } from "@/features/reviews/components/MyReviewCard";
+import { EmptyState } from "@/components/feedback/EmptyState";
+import { ReviewListSkeleton } from "@/components/feedback/Skeletons";
 import { useMyReviews } from "@/features/reviews/hooks/useMyReviews";
 
 export const Route = createFileRoute("/_authenticated/painel/avaliacoes")({
@@ -32,18 +34,18 @@ function MinhasAvaliacoes() {
 
         <div className="mt-8 space-y-4">
           {isLoading ? (
-            <p className="text-sm text-muted-foreground">Carregando…</p>
+            <ReviewListSkeleton count={3} />
           ) : data.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-border bg-card/50 p-10 text-center">
-              <MessageSquare className="mx-auto h-8 w-8 text-muted-foreground" />
-              <p className="mt-3 text-sm text-muted-foreground">
-                Você ainda não avaliou nenhuma empresa. Visite uma página de
-                empresa para deixar sua opinião.
-              </p>
-              <Button asChild className="mt-4">
-                <Link to="/buscar">Procurar empresas</Link>
-              </Button>
-            </div>
+            <EmptyState
+              icon={<MessageSquare className="h-6 w-6" />}
+              title="Você ainda não avaliou nenhuma empresa"
+              description="Visite a página de uma empresa para deixar sua opinião."
+              action={
+                <Button asChild>
+                  <Link to="/buscar">Procurar empresas</Link>
+                </Button>
+              }
+            />
           ) : (
             data.map((r) => <MyReviewCard key={r.id} row={r} />)
           )}

@@ -91,7 +91,7 @@ function CadastrarPage() {
       .single();
     setSubmitting(false);
     if (error || !data) {
-      toast.error(error?.message ?? "Falha ao cadastrar");
+      toastError(error, "Falha ao cadastrar");
       return;
     }
     toast.success("Empresa enviada para aprovação!");

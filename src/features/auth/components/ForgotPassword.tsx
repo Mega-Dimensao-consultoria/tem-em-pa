@@ -20,7 +20,7 @@ export function ForgotPassword() {
     });
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      toastError(error);
       return;
     }
     toast.success("Enviamos um e-mail com o link de recuperação.");

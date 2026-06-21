@@ -60,7 +60,7 @@ function ResetTwoFaSupportPage() {
     });
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      toastError(error);
       return;
     }
     setSent(true);

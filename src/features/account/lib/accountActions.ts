@@ -10,7 +10,7 @@ export async function requestEmailChange(newEmail: string): Promise<boolean> {
   }
   const { error } = await supabase.auth.updateUser({ email: trimmed });
   if (error) {
-    toast.error(error.message);
+    toastError(error);
     return false;
   }
   toast.success(
@@ -55,7 +55,7 @@ export async function changePassword({
   }
   const { error } = await supabase.auth.updateUser({ password: newPassword });
   if (error) {
-    toast.error(error.message);
+    toastError(error);
     return false;
   }
   toast.success("Senha atualizada.");

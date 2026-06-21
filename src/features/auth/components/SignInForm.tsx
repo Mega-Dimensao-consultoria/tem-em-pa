@@ -26,7 +26,7 @@ export function SignInForm({ onSuccess }: { onSuccess: () => void }) {
     const { error } = await supabase.auth.signInWithPassword(parsed.data);
     if (error) {
       setLoading(false);
-      toast.error(error.message);
+      toastError(error);
       return;
     }
     // If MFA is enrolled, Supabase returns AAL1 and expects an AAL2 challenge.

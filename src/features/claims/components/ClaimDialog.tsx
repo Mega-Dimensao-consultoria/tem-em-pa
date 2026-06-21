@@ -24,7 +24,7 @@ export function ClaimDialog({ companyId, userId }: { companyId: string; userId: 
       document_urls: [docPath],
     });
     setLoading(false);
-    if (error) { toast.error(error.message); return; }
+    if (error) { toastError(error); return; }
     toast.success("Reivindicação enviada! Aguarde análise.");
     setOpen(false); setMessage(""); setDocPath(null);
   }

@@ -40,7 +40,7 @@ export function SignUpForm({ onSuccess }: { onSuccess: () => void }) {
     });
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      toastError(error);
       return;
     }
     toast.success("Conta criada! Você já pode entrar.");

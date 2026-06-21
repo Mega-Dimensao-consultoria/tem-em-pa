@@ -46,7 +46,7 @@ export function DangerZoneSection() {
       toast.success("Sua conta foi excluída.");
       navigate({ to: "/", replace: true });
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Falha ao excluir.");
+      toastError(e, "Falha ao excluir.");
     }
   }
 

@@ -77,7 +77,7 @@ export function useDeleteMyReview() {
       toast.success("Avaliação excluída.");
       invalidate();
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: (e: Error) => toastError(e),
   });
 }
 
@@ -100,6 +100,6 @@ export function useUpdateMyReview() {
       );
       invalidate();
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: (e: Error) => toastError(e),
   });
 }

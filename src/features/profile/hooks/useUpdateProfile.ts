@@ -29,6 +29,6 @@ export function useUpdateProfile() {
     onSuccess: () => {
       if (user) qc.invalidateQueries({ queryKey: queryKeys.profile.me(user.id) });
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Falha ao salvar"),
+    onError: (e) => toastError(e, "Falha ao salvar"),
   });
 }

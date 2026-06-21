@@ -45,7 +45,7 @@ export function ReportReviewDialog({ reviewId }: { reviewId: string }) {
         setOpen(false);
         return;
       }
-      toast.error(error.message);
+      toastError(error);
       return;
     }
     toast.success("Denúncia enviada. Nossa equipe vai analisar com atenção.");

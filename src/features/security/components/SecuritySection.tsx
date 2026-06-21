@@ -50,10 +50,10 @@ export function SecuritySection() {
   }
 
   return (
-    <SettingsBlock
-      title="Segurança"
-      description="Proteja sua conta com autenticação em duas etapas usando o Google Authenticator ou app compatível."
-    >
+    <SettingsBlock title="Segurança" icon={<Lock className="h-4 w-4" />}>
+      <p className="mb-4 text-sm text-muted-foreground">
+        Proteja sua conta com autenticação em duas etapas usando o Google Authenticator ou app compatível.
+      </p>
       {factors === null ? (
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Loader2 className="h-4 w-4 animate-spin" /> Verificando…

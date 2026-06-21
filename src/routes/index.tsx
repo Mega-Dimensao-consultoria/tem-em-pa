@@ -117,9 +117,10 @@ function Home() {
           </div>
         </div>
         {featured.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-border bg-card/50 p-10 text-center">
-            <p className="text-sm text-muted-foreground">Ainda não há empresas em destaque. Volte em breve!</p>
-          </div>
+          <NoCompanies
+            title="Em breve novos destaques"
+            description="Ainda não há empresas em destaque. Volte em breve!"
+          />
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {featured.map((c) => <CompanyCard key={c.id} company={c} />)}

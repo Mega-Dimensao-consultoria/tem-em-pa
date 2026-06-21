@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { Loader2, ShieldCheck } from "lucide-react";
+import { Loader2, Smartphone, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/Logo";
 import { requestTwoFaEmailOtp, verifyTwoFaEmailOtp } from "@/lib/twofa.functions";
+import {
+  requestLoginApproval,
+  getLoginApprovalStatus,
+} from "@/lib/login-approval.functions";
+import { setPushApproved } from "@/lib/push-2fa-session";
 
 const searchSchema = z.object({ redirect: z.string().optional() });
 
@@ -19,13 +24,15 @@ export const Route = createFileRoute("/auth/two-factor")({
   component: TwoFactorPage,
 });
 
-type Mode = "totp" | "email-request" | "email-verify";
+type Mode = "totp" | "email-request" | "email-verify" | "push";
 
 function TwoFactorPage() {
   const navigate = useNavigate();
   const { redirect } = Route.useSearch();
   const requestOtp = useServerFn(requestTwoFaEmailOtp);
   const verifyOtp = useServerFn(verifyTwoFaEmailOtp);
+  const requestApproval = useServerFn(requestLoginApproval);
+  const getApprovalStatus = useServerFn(getLoginApprovalStatus);
 
   const [mode, setMode] = useState<Mode>("totp");
   const [factorId, setFactorId] = useState<string | null>(null);
@@ -34,6 +41,9 @@ function TwoFactorPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [bootError, setBootError] = useState<string | null>(null);
+  const [pushApprovalId, setPushApprovalId] = useState<string | null>(null);
+  const [pushSecondsLeft, setPushSecondsLeft] = useState(0);
+  const pushPollRef = useRef<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;

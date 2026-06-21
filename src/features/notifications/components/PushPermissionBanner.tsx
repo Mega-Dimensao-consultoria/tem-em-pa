@@ -3,6 +3,7 @@ import { Bell, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/use-auth";
+import { supabase } from "@/integrations/supabase/client";
 import {
   canRegisterHere,
   pushSupported,
@@ -17,23 +18,30 @@ export function PushPermissionBanner() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (!user) {
-      setShow(false);
-      return;
-    }
-    if (!pushSupported() || !canRegisterHere()) {
-      setShow(false);
-      return;
-    }
-    if (Notification.permission !== "default") {
-      setShow(false);
-      return;
-    }
-    if (localStorage.getItem(DISMISS_KEY)) {
-      setShow(false);
-      return;
-    }
-    setShow(true);
+    let cancelled = false;
+    (async () => {
+      if (!user) { setShow(false); return; }
+      if (!pushSupported() || !canRegisterHere()) { setShow(false); return; }
+      if (Notification.permission !== "default") { setShow(false); return; }
+      if (localStorage.getItem(DISMISS_KEY)) { setShow(false); return; }
+      // Nunca convidar para ativar push em telas de autenticação/2FA.
+      if (typeof window !== "undefined" && window.location.pathname.startsWith("/auth")) {
+        setShow(false); return;
+      }
+      try {
+        const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+        if (cancelled) return;
+        if (aal?.nextLevel === "aal2" && aal.currentLevel !== "aal2") {
+          setShow(false);
+          return;
+        }
+      } catch {
+        /* ignore */
+      }
+      if (cancelled) return;
+      setShow(true);
+    })();
+    return () => { cancelled = true; };
   }, [user]);
 
   if (!show) return null;

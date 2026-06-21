@@ -124,7 +124,52 @@ export function AllCompaniesTab() {
                     {new Date(c.created_at).toLocaleDateString("pt-BR")}
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex justify-end">
+                    <div className="flex flex-wrap justify-end gap-2">
+                      {(c.status === "pending" || c.status === "claimed_pending") && (
+                        <>
+                          <ConfirmDestructive
+                            trigger={
+                              <Button size="sm" variant="outline" aria-label={`Rejeitar ${c.name}`}>
+                                <X className="mr-1 h-4 w-4" aria-hidden="true" />
+                                Rejeitar
+                              </Button>
+                            }
+                            title="Rejeitar empresa?"
+                            description={
+                              <p>
+                                A empresa <strong>{c.name}</strong> ficará oculta para todos. Isso pode ser revertido depois mudando o status.
+                              </p>
+                            }
+                            confirmText="Rejeitar"
+                            onConfirm={() =>
+                              decide.mutate({ id: c.id, name: c.name, status: "rejected" })
+                            }
+                          />
+                          <Button
+                            size="sm"
+                            onClick={() =>
+                              decide.mutate({ id: c.id, name: c.name, status: "approved" })
+                            }
+                            aria-label={`Aprovar ${c.name}`}
+                          >
+                            <Check className="mr-1 h-4 w-4" aria-hidden="true" />
+                            Aprovar
+                          </Button>
+                        </>
+                      )}
+                      {c.status === "rejected" && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() =>
+                            decide.mutate({ id: c.id, name: c.name, status: "approved" })
+                          }
+                          aria-label={`Reativar ${c.name}`}
+                        >
+                          <Check className="mr-1 h-4 w-4" aria-hidden="true" />
+                          Aprovar
+                        </Button>
+                      )}
                       <Button
                         asChild
                         size="sm"

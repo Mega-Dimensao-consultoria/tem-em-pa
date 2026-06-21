@@ -1,6 +1,8 @@
 import type { ComponentProps } from "react";
 import { Badge } from "@/components/ui/badge";
 import { CompanyCard } from "@/features/companies/components/CompanyCard";
+import { NoSearchResults } from "@/components/feedback/EmptyState";
+import { CompanyListSkeleton } from "@/components/feedback/Skeletons";
 
 type CardCompany = ComponentProps<typeof CompanyCard>["company"];
 type Company = CardCompany & { status: string; owner_id: string | null };
@@ -30,11 +32,13 @@ export function SearchResults({
         </div>
       ) : null}
 
-      {!isLoading && approved.length === 0 ? (
-        <div className="mt-8 rounded-2xl border border-dashed border-border bg-card/50 p-10 text-center">
-          <p className="text-sm text-muted-foreground">
-            Nenhuma empresa encontrada. Tente outros termos ou outra categoria.
-          </p>
+      {isLoading ? (
+        <div className="mt-6">
+          <CompanyListSkeleton count={6} />
+        </div>
+      ) : approved.length === 0 ? (
+        <div className="mt-8">
+          <NoSearchResults />
         </div>
       ) : (
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

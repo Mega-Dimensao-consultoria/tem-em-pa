@@ -3,6 +3,7 @@ import type { User } from "@supabase/supabase-js";
 import { RatingStars } from "@/features/reviews/components/RatingStars";
 import { ReviewForm } from "@/features/reviews/components/ReviewForm";
 import { ReportReviewDialog } from "@/features/reviews/components/ReportReviewDialog";
+import { NoReviews } from "@/components/feedback/EmptyState";
 
 type Review = {
   id: string;
@@ -40,9 +41,10 @@ export function CompanyReviewsSection({
         </div>
       )}
       {reviews.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-border bg-card/50 p-6 text-center text-sm text-muted-foreground">
-          Seja o primeiro a avaliar esta empresa.
-        </div>
+        <NoReviews
+          title="Seja o primeiro a avaliar"
+          description="Esta empresa ainda não recebeu avaliações."
+        />
       ) : (
         <div className="space-y-3">
           {reviews.map((r) => (

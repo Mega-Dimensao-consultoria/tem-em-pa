@@ -1,6 +1,8 @@
 import { Trash2 } from "lucide-react";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
 import { Button } from "@/components/ui/button";
+import { NoProducts } from "@/components/feedback/EmptyState";
+import { ProductGridSkeleton } from "@/components/feedback/Skeletons";
 
 export type ProductRowItem = {
   id: string;
@@ -19,13 +21,9 @@ export function ProductList({
   isLoading: boolean;
   onDelete: (id: string) => void;
 }) {
-  if (isLoading) return <p className="text-sm text-muted-foreground">Carregando…</p>;
+  if (isLoading) return <ProductGridSkeleton count={4} />;
   if (products.length === 0) {
-    return (
-      <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 text-center text-sm text-muted-foreground">
-        Nenhum produto ainda.
-      </div>
-    );
+    return <NoProducts title="Nenhum produto ainda" description="Cadastre seu primeiro produto para mostrá-lo na página da empresa." />;
   }
   return (
     <ul className="grid gap-3 sm:grid-cols-2">

@@ -4,6 +4,7 @@ import { PageShell } from "@/components/PageShell";
 import { CompanyCard } from "@/features/companies/components/CompanyCard";
 import { Breadcrumbs, breadcrumbJsonLd } from "@/components/Breadcrumbs";
 import { searchCompanies, getCategoryBySlug } from "@/features/companies/functions";
+import { NoCompanies } from "@/components/feedback/EmptyState";
 
 const BASE = "https://tem-em-pa.lovable.app";
 
@@ -69,8 +70,8 @@ function CategoryPage() {
         </p>
 
         {data.length === 0 ? (
-          <div className="mt-8 rounded-2xl border border-dashed border-border bg-card/50 p-10 text-center">
-            <p className="text-sm text-muted-foreground">Ainda não há empresas cadastradas nesta categoria.</p>
+          <div className="mt-8">
+            <NoCompanies title="Sem empresas nesta categoria" description="Ainda não há empresas cadastradas em " />
           </div>
         ) : (
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

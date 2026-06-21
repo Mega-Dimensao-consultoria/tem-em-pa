@@ -1,3 +1,5 @@
+import { NoProducts } from "@/components/feedback/EmptyState";
+
 type Product = {
   id: string;
   name: string;
@@ -13,9 +15,7 @@ export function CompanyProductsBlock({ products }: { products: Product[] }) {
     <section>
       <h2 className="mb-3 font-display text-lg font-semibold">Produtos & Serviços</h2>
       {products.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-border bg-card/50 p-6 text-center text-sm text-muted-foreground">
-          Esta empresa ainda não cadastrou produtos.
-        </div>
+        <NoProducts />
       ) : (
         <div className="grid gap-3 sm:grid-cols-2">
           {products.map((p) => (

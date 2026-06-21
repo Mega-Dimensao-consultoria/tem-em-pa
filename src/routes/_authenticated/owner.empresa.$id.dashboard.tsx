@@ -12,6 +12,7 @@ import {
   Star,
 } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
+import { CompanyDetailSkeleton } from "@/components/feedback/Skeletons";
 import { Button } from "@/components/ui/button";
 import { ShareButton } from "@/components/ShareButton";
 import { ProfileCompleteness } from "@/features/auth/components/ProfileCompleteness";
@@ -54,8 +55,8 @@ function DashboardPage() {
   if (authLoading || loadingCompany) {
     return (
       <PageShell>
-        <div className="mx-auto max-w-5xl px-4 py-12 text-sm text-muted-foreground">
-          Carregando…
+        <div className="mx-auto max-w-5xl px-4 py-8">
+          <CompanyDetailSkeleton />
         </div>
       </PageShell>
     );

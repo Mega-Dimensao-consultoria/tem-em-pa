@@ -7,6 +7,7 @@ import { CompanyCard } from "@/features/companies/components/CompanyCard";
 import { listCategories } from "@/features/companies/functions/categories";
 import { listFeaturedCompanies } from "@/features/companies/functions";
 import { Sparkles, Store, ShieldCheck } from "lucide-react";
+import { NoCompanies } from "@/components/feedback/EmptyState";
 
 const categoriesQO = queryOptions({
   queryKey: ["categories"],

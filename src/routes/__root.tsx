@@ -158,11 +158,13 @@ function RootComponent() {
         // send them there. Covers OAuth callbacks where the form-level guard
         // can't intercept.
         try {
+          const { isPushApproved } = await import("@/lib/push-2fa-session");
           const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
           if (
             aal?.nextLevel === "aal2" &&
             aal.currentLevel === "aal1" &&
             typeof window !== "undefined" &&
+            !isPushApproved() &&
             !window.location.pathname.startsWith("/auth/two-factor")
           ) {
             window.location.assign("/auth/two-factor");

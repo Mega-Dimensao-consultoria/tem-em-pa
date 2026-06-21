@@ -32,7 +32,12 @@ export function SignInForm({ onSuccess }: { onSuccess: () => void }) {
     // If MFA is enrolled, Supabase returns AAL1 and expects an AAL2 challenge.
     const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
     setLoading(false);
-    if (aal?.nextLevel === "aal2" && aal.currentLevel === "aal1") {
+    const { isPushApproved } = await import("@/lib/push-2fa-session");
+    if (
+      aal?.nextLevel === "aal2" &&
+      aal.currentLevel === "aal1" &&
+      !isPushApproved()
+    ) {
       window.location.assign("/auth/two-factor");
       return;
     }

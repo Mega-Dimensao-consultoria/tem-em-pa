@@ -168,14 +168,17 @@ function TwoFactorPage() {
   useEffect(() => () => stopPushPolling(), []);
 
   async function startPushApproval() {
+    // Já leva para a tela de aguardando aprovação imediatamente — sem
+    // toasts e sem convidar a ativar push neste dispositivo.
     setError(null);
+    setPushApprovalId(null);
+    setPushSecondsLeft(180);
+    setMode("push");
     setLoading(true);
     try {
       const res = await requestApproval();
       setPushApprovalId(res.id);
       setPushSecondsLeft(res.ttlSec);
-      setMode("push");
-      toast.success("Enviamos uma notificação aos seus dispositivos.");
       const expiresAtMs = new Date(res.expiresAt).getTime();
       pushPollRef.current = window.setInterval(async () => {
         const left = Math.max(0, Math.round((expiresAtMs - Date.now()) / 1000));
@@ -190,18 +193,23 @@ function TwoFactorPage() {
           } else if (row.status === "denied") {
             stopPushPolling();
             setError("A tentativa foi bloqueada no outro dispositivo.");
-            setMode("totp");
           } else if (row.status === "expired" || left <= 0) {
             stopPushPolling();
             setError("Tempo esgotado. Tente novamente ou use o código do app.");
-            setMode("totp");
           }
         } catch {
           /* keep polling */
         }
       }, 2000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Falha ao iniciar aprovação.");
+      // Falha mais comum: não existe nenhum dispositivo confiável com push
+      // ativo. Mantemos o usuário na tela de aprovação, com mensagem
+      // explicando a situação — nunca pedimos para ativar push aqui.
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Não foi possível enviar a notificação agora.",
+      );
     } finally {
       setLoading(false);
     }

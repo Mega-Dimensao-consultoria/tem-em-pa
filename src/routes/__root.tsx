@@ -7,7 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { Suspense, useEffect, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -180,15 +180,7 @@ function RootComponent() {
         <AuthProvider>
           <PushBootstrap />
           <PushPermissionBanner />
-          <Suspense
-            fallback={
-              <div className="flex min-h-screen items-center justify-center bg-background px-4 text-sm text-muted-foreground">
-                Carregando…
-              </div>
-            }
-          >
-            <Outlet />
-          </Suspense>
+          <Outlet />
           <OnboardingDialog />
           <Toaster richColors position="top-center" />
           <AccessibilityBar />

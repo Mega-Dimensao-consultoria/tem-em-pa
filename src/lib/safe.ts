@@ -2,6 +2,8 @@
  * Guardas usadas em todo o app — todas tolerantes a falhas.
  * Nunca lançam exceção; sempre devolvem um fallback.
  */
+import { toast } from "sonner";
+
 
 /** Leitura/gravação de localStorage seguras (modo privado, SSR, quota excedida). */
 export const safeStorage = {

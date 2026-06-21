@@ -78,31 +78,50 @@ function TwoFactorPage() {
 
   async function verifyTotp(e: React.FormEvent) {
     e.preventDefault();
-    if (!factorId) return;
     if (!/^\d{6}$/.test(code)) {
       setError("Digite o código de 6 dígitos.");
       return;
     }
     setError(null);
     setLoading(true);
-    const { data: challenge, error: cErr } = await supabase.auth.mfa.challenge({ factorId });
-    if (cErr || !challenge) {
+    try {
+      // Resolve factorId lazily caso o boot effect ainda não tenha rodado
+      // ou tenha falhado silenciosamente.
+      let activeFactorId = factorId;
+      if (!activeFactorId) {
+        const { data: factors, error: fErr } = await supabase.auth.mfa.listFactors();
+        if (fErr) throw fErr;
+        const totp = (factors?.totp ?? []).find((f) => f.status === "verified");
+        if (!totp) {
+          setError("Nenhum método de verificação ativo foi encontrado nesta conta.");
+          return;
+        }
+        activeFactorId = totp.id;
+        setFactorId(totp.id);
+      }
+      const { data: challenge, error: cErr } = await supabase.auth.mfa.challenge({
+        factorId: activeFactorId,
+      });
+      if (cErr || !challenge) {
+        setError(cErr?.message ?? "Falha ao iniciar verificação.");
+        return;
+      }
+      const { error: vErr } = await supabase.auth.mfa.verify({
+        factorId: activeFactorId,
+        challengeId: challenge.id,
+        code,
+      });
+      if (vErr) {
+        setError("O código informado está incorreto. Verifique no seu aplicativo e tente novamente.");
+        return;
+      }
+      toast.success("Verificação concluída.");
+      navigate({ to: redirect ?? "/", replace: true });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Falha ao verificar.");
+    } finally {
       setLoading(false);
-      setError(cErr?.message ?? "Falha ao iniciar verificação.");
-      return;
     }
-    const { error: vErr } = await supabase.auth.mfa.verify({
-      factorId,
-      challengeId: challenge.id,
-      code,
-    });
-    setLoading(false);
-    if (vErr) {
-      setError("O código informado está incorreto. Verifique no seu aplicativo e tente novamente.");
-      return;
-    }
-    toast.success("Verificação concluída.");
-    navigate({ to: redirect ?? "/", replace: true });
   }
 
   async function sendEmailOtp() {
@@ -149,14 +168,17 @@ function TwoFactorPage() {
   useEffect(() => () => stopPushPolling(), []);
 
   async function startPushApproval() {
+    // Já leva para a tela de aguardando aprovação imediatamente — sem
+    // toasts e sem convidar a ativar push neste dispositivo.
     setError(null);
+    setPushApprovalId(null);
+    setPushSecondsLeft(180);
+    setMode("push");
     setLoading(true);
     try {
       const res = await requestApproval();
       setPushApprovalId(res.id);
       setPushSecondsLeft(res.ttlSec);
-      setMode("push");
-      toast.success("Enviamos uma notificação aos seus dispositivos.");
       const expiresAtMs = new Date(res.expiresAt).getTime();
       pushPollRef.current = window.setInterval(async () => {
         const left = Math.max(0, Math.round((expiresAtMs - Date.now()) / 1000));
@@ -171,18 +193,23 @@ function TwoFactorPage() {
           } else if (row.status === "denied") {
             stopPushPolling();
             setError("A tentativa foi bloqueada no outro dispositivo.");
-            setMode("totp");
           } else if (row.status === "expired" || left <= 0) {
             stopPushPolling();
             setError("Tempo esgotado. Tente novamente ou use o código do app.");
-            setMode("totp");
           }
         } catch {
           /* keep polling */
         }
       }, 2000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Falha ao iniciar aprovação.");
+      // Falha mais comum: não existe nenhum dispositivo confiável com push
+      // ativo. Mantemos o usuário na tela de aprovação, com mensagem
+      // explicando a situação — nunca pedimos para ativar push aqui.
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Não foi possível enviar a notificação agora.",
+      );
     } finally {
       setLoading(false);
     }
@@ -230,7 +257,7 @@ function TwoFactorPage() {
                   </p>
                 ) : null}
               </div>
-              <Button type="submit" className="w-full" disabled={loading || !factorId}>
+              <Button type="submit" className="w-full" disabled={loading || code.length !== 6}>
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Verificar"}
               </Button>
               <button

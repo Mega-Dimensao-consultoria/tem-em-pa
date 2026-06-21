@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/features/auth/use-auth";
+import { adminResetUserMfa } from "@/lib/twofa.functions";
 import { adminKeys } from "./keys";
 import { useAdminMutation } from "./_mutation";
 
@@ -94,5 +95,21 @@ export function useDemoteAdmin() {
       details: { name },
     }),
     successMessage: "Acesso admin removido",
+  });
+}
+
+export function useAdminResetUserMfa() {
+  return useAdminMutation<{ id: string; name: string | null }, { removed: number }>({
+    mutationFn: async ({ id }) => adminResetUserMfa({ data: { userId: id } }),
+    audit: ({ id, name }, data) => ({
+      action: "user.reset_mfa",
+      entityType: "user",
+      entityId: id,
+      details: { name, factors_removed: data.removed },
+    }),
+    successMessage: (_v, data) =>
+      data.removed > 0
+        ? `2FA removido (${data.removed} fator(es)).`
+        : "Esse usuário não tinha 2FA configurado.",
   });
 }

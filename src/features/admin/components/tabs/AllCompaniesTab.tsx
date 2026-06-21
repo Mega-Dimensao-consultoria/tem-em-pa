@@ -29,6 +29,9 @@ const STATUS_STYLE: Record<string, string> = {
 export function AllCompaniesTab() {
   const { data = [], isLoading } = useAllCompanies();
   const decide = useDecideCompany();
+  const suspend = useSuspendCompany();
+  const republish = useRepublishCompany();
+  const remove = useDeleteCompany();
   const [filter, setFilter] = useState("");
   const [status, setStatus] = useState<string>("all");
 

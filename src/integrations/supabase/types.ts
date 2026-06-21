@@ -406,6 +406,39 @@ export type Database = {
           },
         ]
       }
+      login_approval_requests: {
+        Row: {
+          approved_at: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          requester_ip: string | null
+          requester_user_agent: string | null
+          status: Database["public"]["Enums"]["login_approval_status"]
+          user_id: string
+        }
+        Insert: {
+          approved_at?: string | null
+          created_at?: string
+          expires_at: string
+          id?: string
+          requester_ip?: string | null
+          requester_user_agent?: string | null
+          status?: Database["public"]["Enums"]["login_approval_status"]
+          user_id: string
+        }
+        Update: {
+          approved_at?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          requester_ip?: string | null
+          requester_user_agent?: string | null
+          status?: Database["public"]["Enums"]["login_approval_status"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
@@ -836,6 +869,7 @@ export type Database = {
       app_role: "admin" | "owner" | "user"
       claim_status: "pending" | "approved" | "rejected"
       company_status: "pending" | "approved" | "rejected" | "claimed_pending"
+      login_approval_status: "pending" | "approved" | "denied" | "expired"
       review_status: "pending_moderation" | "approved" | "flagged" | "rejected"
     }
     CompositeTypes: {
@@ -967,6 +1001,7 @@ export const Constants = {
       app_role: ["admin", "owner", "user"],
       claim_status: ["pending", "approved", "rejected"],
       company_status: ["pending", "approved", "rejected", "claimed_pending"],
+      login_approval_status: ["pending", "approved", "denied", "expired"],
       review_status: ["pending_moderation", "approved", "flagged", "rejected"],
     },
   },

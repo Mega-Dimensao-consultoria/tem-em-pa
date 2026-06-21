@@ -84,8 +84,8 @@ function CompanyPage() {
     if (!publicCompany && (authLoading || (user && privateLoading))) {
       return (
         <PageShell>
-          <div className="mx-auto max-w-xl px-4 py-20 text-center text-sm text-muted-foreground">
-            Carregando…
+          <div className="mx-auto max-w-5xl px-4 py-8">
+            <CompanyDetailSkeleton />
           </div>
         </PageShell>
       );

@@ -23,9 +23,6 @@ export const Route = createFileRoute("/contato")({
             <Mail className="h-5 w-5 text-primary" />
             <a href="mailto:contato@tememp.a" className="font-semibold hover:underline">contato@tememp.a</a>
           </li>
-          <li className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-soft">
-            <MessageCircle className="h-5 w-5 text-primary" /> WhatsApp em breve
-          </li>
         </ul>
       </section>
     </PageShell>

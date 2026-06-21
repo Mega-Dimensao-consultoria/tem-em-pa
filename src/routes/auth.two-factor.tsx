@@ -235,6 +235,14 @@ function TwoFactorPage() {
               </Button>
               <button
                 type="button"
+                onClick={startPushApproval}
+                disabled={loading}
+                className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-md border border-border bg-muted/40 px-3 py-2 text-xs font-medium text-foreground hover:bg-muted disabled:opacity-50"
+              >
+                <Smartphone className="h-3.5 w-3.5" /> Aprovar em outro dispositivo
+              </button>
+              <button
+                type="button"
                 onClick={() => {
                   setError(null);
                   setMode("email-request");
@@ -244,6 +252,35 @@ function TwoFactorPage() {
                 Estou sem meu dispositivo
               </button>
             </form>
+          ) : mode === "push" ? (
+            <div className="space-y-3 text-center">
+              <div className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <Smartphone className="h-6 w-6" />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Enviamos uma notificação aos seus dispositivos com login ativo. Abra a
+                notificação e toque em <strong>Sim, sou eu</strong> para liberar o
+                acesso.
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Aguardando aprovação… {pushSecondsLeft}s
+              </p>
+              {error ? (
+                <p className="text-sm text-destructive" role="alert">{error}</p>
+              ) : null}
+              <button
+                type="button"
+                onClick={() => {
+                  stopPushPolling();
+                  setError(null);
+                  setPushApprovalId(null);
+                  setMode("totp");
+                }}
+                className="block w-full text-center text-xs text-muted-foreground underline hover:text-foreground"
+              >
+                Cancelar e usar o código do app
+              </button>
+            </div>
           ) : mode === "email-request" ? (
             <div className="space-y-3">
               <p className="text-sm text-muted-foreground">

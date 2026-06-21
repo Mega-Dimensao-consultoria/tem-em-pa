@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
 import { CompanyForm, emptyCompanyForm, type CompanyFormValues } from "@/features/companies/components/CompanyForm";
 import { defaultHours, type HourRow } from "@/features/companies/components/HoursEditor";
+import { CompanyDetailSkeleton } from "@/components/feedback/Skeletons";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/editar")({
   head: () => ({ meta: [{ title: "Editar empresa — Tem em P.A" }] }),
@@ -139,8 +140,8 @@ function EditarEmpresa() {
   if (isLoading) {
     return (
       <PageShell>
-        <div className="mx-auto max-w-2xl px-4 py-16 text-center text-muted-foreground">
-          Carregando…
+        <div className="mx-auto max-w-2xl px-4 py-8">
+          <CompanyDetailSkeleton />
         </div>
       </PageShell>
     );

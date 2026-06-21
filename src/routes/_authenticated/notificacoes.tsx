@@ -2,10 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { CheckCheck, Inbox, Trash2 } from "lucide-react";
+import { CheckCheck, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useNotifications } from "@/features/notifications/hooks/useNotifications";
+import { NotificationListSkeleton } from "@/components/feedback/Skeletons";
+import { NoNotifications } from "@/components/feedback/EmptyState";
 
 export const Route = createFileRoute("/_authenticated/notificacoes")({
   component: NotificacoesPage,
@@ -38,16 +40,9 @@ function NotificacoesPage() {
         </div>
 
         {isLoading ? (
-          <div className="py-12 text-center text-sm text-muted-foreground">
-            Carregando...
-          </div>
+          <NotificationListSkeleton count={5} />
         ) : items.length === 0 ? (
-          <Card className="flex flex-col items-center gap-3 py-16 text-center">
-            <Inbox className="h-10 w-10 text-muted-foreground" />
-            <div className="text-sm text-muted-foreground">
-              Nenhuma notificação por aqui ainda.
-            </div>
-          </Card>
+          <NoNotifications />
         ) : (
           <ul className="space-y-2">
             {items.map((n) => (

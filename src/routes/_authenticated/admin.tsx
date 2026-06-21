@@ -13,6 +13,7 @@ import { BannedWordsTab } from "@/features/admin/components/tabs/BannedWordsTab"
 import { UsersTab } from "@/features/admin/components/tabs/UsersTab";
 import { AuditLogTab } from "@/features/admin/components/tabs/AuditLogTab";
 import { TwoFaResetRequestsTab } from "@/features/admin/components/tabs/TwoFaResetRequestsTab";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Admin — Tem em P.A" }] }),
@@ -25,8 +26,10 @@ function AdminPage() {
   if (loading) {
     return (
       <PageShell>
-        <div className="mx-auto max-w-5xl px-4 py-16 text-sm text-muted-foreground">
-          Carregando permissões…
+        <div className="mx-auto max-w-5xl space-y-3 px-4 py-10">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-4 w-64" />
+          <Skeleton className="h-40 w-full" />
         </div>
       </PageShell>
     );

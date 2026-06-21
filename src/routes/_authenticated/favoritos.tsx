@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Heart } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CompanyCard } from "@/features/companies/components/CompanyCard";
 import { useMyFavorites } from "@/features/favorites/hooks/useMyFavorites";
+import { CompanyListSkeleton } from "@/components/feedback/Skeletons";
+import { NoFavorites } from "@/components/feedback/EmptyState";
+import { ErrorState } from "@/components/feedback/ErrorState";
 
 export const Route = createFileRoute("/_authenticated/favoritos")({
   component: FavoritosPage,
@@ -12,7 +13,7 @@ export const Route = createFileRoute("/_authenticated/favoritos")({
 });
 
 function FavoritosPage() {
-  const { data: items = [], isLoading } = useMyFavorites();
+  const { data: items = [], isLoading, isError, error } = useMyFavorites();
 
   return (
     <PageShell>
@@ -27,19 +28,17 @@ function FavoritosPage() {
         </div>
 
         {isLoading ? (
-          <div className="py-12 text-center text-sm text-muted-foreground">
-            Carregando…
-          </div>
+          <CompanyListSkeleton count={6} />
+        ) : isError ? (
+          <ErrorState error={error} />
         ) : items.length === 0 ? (
-          <Card className="flex flex-col items-center gap-3 py-16 text-center">
-            <Heart className="h-10 w-10 text-muted-foreground" />
-            <div className="text-sm text-muted-foreground">
-              Você ainda não favoritou nenhuma empresa.
-            </div>
-            <Button asChild size="sm" className="rounded-full">
-              <Link to="/buscar">Explorar empresas</Link>
-            </Button>
-          </Card>
+          <NoFavorites
+            action={
+              <Button asChild size="sm" className="rounded-full">
+                <Link to="/buscar">Explorar empresas</Link>
+              </Button>
+            }
+          />
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((c) => (

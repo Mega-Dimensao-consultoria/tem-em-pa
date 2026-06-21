@@ -151,6 +151,10 @@ function RootComponent() {
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange(async (event) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
+      if (event === "SIGNED_OUT") {
+        const { clearPushApproved } = await import("@/lib/push-2fa-session");
+        clearPushApproved();
+      }
       router.invalidate();
       if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
       if (event === "SIGNED_IN") {

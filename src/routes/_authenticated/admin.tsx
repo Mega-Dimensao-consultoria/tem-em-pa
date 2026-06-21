@@ -13,6 +13,7 @@ import { BannedWordsTab } from "@/features/admin/components/tabs/BannedWordsTab"
 import { UsersTab } from "@/features/admin/components/tabs/UsersTab";
 import { AuditLogTab } from "@/features/admin/components/tabs/AuditLogTab";
 import { TwoFaResetRequestsTab } from "@/features/admin/components/tabs/TwoFaResetRequestsTab";
+import { PendingRemovalsTab } from "@/features/admin/components/tabs/PendingRemovalsTab";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -62,6 +63,7 @@ function AdminPage() {
           <TabsList className="flex w-full flex-wrap">
             <TabsTrigger value="empresas">Empresas</TabsTrigger>
             <TabsTrigger value="reivindicacoes">Reivindicações</TabsTrigger>
+            <TabsTrigger value="remocoes">Remoções</TabsTrigger>
             <TabsTrigger value="comentarios">Comentários</TabsTrigger>
             <TabsTrigger value="denuncias">Denúncias</TabsTrigger>
             <TabsTrigger value="categorias">Categorias</TabsTrigger>
@@ -73,6 +75,7 @@ function AdminPage() {
 
           <TabsContent value="empresas"><CompaniesAdminSection /></TabsContent>
           <TabsContent value="reivindicacoes"><PendingClaimsTab /></TabsContent>
+          <TabsContent value="remocoes"><PendingRemovalsTab /></TabsContent>
           <TabsContent value="comentarios"><PendingReviewsTab /></TabsContent>
           <TabsContent value="denuncias"><ReportsTab /></TabsContent>
           <TabsContent value="categorias"><CategoriesTab /></TabsContent>

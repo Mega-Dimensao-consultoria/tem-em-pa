@@ -5,6 +5,7 @@ import { RatingStars } from "@/features/reviews/components/RatingStars";
 import { FavoriteButton } from "@/features/companies/components/FavoriteButton";
 import { ShareButton } from "@/components/ShareButton";
 import { ClaimDialog } from "@/features/claims/components/ClaimDialog";
+import { RemovalRequestDialog } from "@/features/companies/components/RemovalRequestDialog";
 
 type Company = {
   id: string;
@@ -71,6 +72,9 @@ export function CompanyHeader({
           <Button asChild variant="outline" className="rounded-full">
             <Link to="/auth">Entrar para reivindicar</Link>
           </Button>
+        ) : null}
+        {!isPending ? (
+          <RemovalRequestDialog companyId={company.id} userId={user?.id ?? null} />
         ) : null}
       </div>
     </div>

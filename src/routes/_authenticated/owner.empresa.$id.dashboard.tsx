@@ -12,6 +12,7 @@ import {
   Star,
 } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
+import { RemovalRequestDialog } from "@/features/companies/components/RemovalRequestDialog";
 import { CompanyDetailSkeleton } from "@/components/feedback/Skeletons";
 import { Button } from "@/components/ui/button";
 import { ShareButton } from "@/components/ShareButton";
@@ -173,6 +174,7 @@ function DashboardPage() {
                 Produtos
               </Link>
             </Button>
+            <RemovalRequestDialog companyId={id} userId={user?.id ?? null} ownerMode />
           </div>
         </div>
 

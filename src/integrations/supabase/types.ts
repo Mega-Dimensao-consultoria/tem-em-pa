@@ -565,6 +565,66 @@ export type Database = {
           },
         ]
       }
+      two_fa_email_otp: {
+        Row: {
+          attempts: number
+          code_hash: string
+          created_at: string
+          expires_at: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          code_hash: string
+          created_at?: string
+          expires_at: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          code_hash?: string
+          created_at?: string
+          expires_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      two_fa_reset_requests: {
+        Row: {
+          contact_email: string
+          created_at: string
+          full_name: string
+          id: string
+          message: string
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          contact_email: string
+          created_at?: string
+          full_name: string
+          id?: string
+          message: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          contact_email?: string
+          created_at?: string
+          full_name?: string
+          id?: string
+          message?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

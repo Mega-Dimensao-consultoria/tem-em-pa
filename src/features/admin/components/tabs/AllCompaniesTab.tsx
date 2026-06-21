@@ -22,6 +22,7 @@ const STATUS_STYLE: Record<string, string> = {
 
 export function AllCompaniesTab() {
   const { data = [], isLoading } = useAllCompanies();
+  const decide = useDecideCompany();
   const [filter, setFilter] = useState("");
   const [status, setStatus] = useState<string>("all");
 

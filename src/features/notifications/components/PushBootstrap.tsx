@@ -23,7 +23,7 @@ export function PushBootstrap() {
         // Se 2FA está pendente, não toca em push neste aparelho.
         if (aal?.nextLevel === "aal2" && aal.currentLevel !== "aal2") return;
       } catch {
-        /* ignore — segue o fluxo padrão */
+        return;
       }
       if (cancelled) return;
       ensureSubscriptionIfPermitted();

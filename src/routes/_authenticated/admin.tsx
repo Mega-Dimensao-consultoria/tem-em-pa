@@ -12,6 +12,7 @@ import { CategoriesTab } from "@/features/admin/components/tabs/CategoriesTab";
 import { BannedWordsTab } from "@/features/admin/components/tabs/BannedWordsTab";
 import { UsersTab } from "@/features/admin/components/tabs/UsersTab";
 import { AuditLogTab } from "@/features/admin/components/tabs/AuditLogTab";
+import { TwoFaResetRequestsTab } from "@/features/admin/components/tabs/TwoFaResetRequestsTab";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Admin — Tem em P.A" }] }),
@@ -63,6 +64,7 @@ function AdminPage() {
             <TabsTrigger value="categorias">Categorias</TabsTrigger>
             <TabsTrigger value="palavras">Palavras proibidas</TabsTrigger>
             <TabsTrigger value="usuarios">Usuários</TabsTrigger>
+            <TabsTrigger value="reset2fa">Reset 2FA</TabsTrigger>
             <TabsTrigger value="auditoria">Auditoria</TabsTrigger>
           </TabsList>
 
@@ -73,6 +75,7 @@ function AdminPage() {
           <TabsContent value="categorias"><CategoriesTab /></TabsContent>
           <TabsContent value="palavras"><BannedWordsTab /></TabsContent>
           <TabsContent value="usuarios"><UsersTab /></TabsContent>
+          <TabsContent value="reset2fa"><TwoFaResetRequestsTab /></TabsContent>
           <TabsContent value="auditoria"><AuditLogTab /></TabsContent>
         </Tabs>
       </section>

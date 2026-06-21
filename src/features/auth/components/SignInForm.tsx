@@ -24,9 +24,16 @@ export function SignInForm({ onSuccess }: { onSuccess: () => void }) {
     }
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword(parsed.data);
-    setLoading(false);
     if (error) {
+      setLoading(false);
       toast.error(error.message);
+      return;
+    }
+    // If MFA is enrolled, Supabase returns AAL1 and expects an AAL2 challenge.
+    const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    setLoading(false);
+    if (aal?.nextLevel === "aal2" && aal.currentLevel === "aal1") {
+      window.location.assign("/auth/two-factor");
       return;
     }
     toast.success("Bem-vindo!");

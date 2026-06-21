@@ -149,10 +149,28 @@ function RootComponent() {
   const router = useRouter();
 
   useEffect(() => {
-    const { data } = supabase.auth.onAuthStateChange((event) => {
+    const { data } = supabase.auth.onAuthStateChange(async (event) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
       router.invalidate();
       if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
+      if (event === "SIGNED_IN") {
+        // If MFA is required and the user isn't on the challenge page yet,
+        // send them there. Covers OAuth callbacks where the form-level guard
+        // can't intercept.
+        try {
+          const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+          if (
+            aal?.nextLevel === "aal2" &&
+            aal.currentLevel === "aal1" &&
+            typeof window !== "undefined" &&
+            !window.location.pathname.startsWith("/auth/two-factor")
+          ) {
+            window.location.assign("/auth/two-factor");
+          }
+        } catch {
+          /* ignore */
+        }
+      }
     });
     return () => data.subscription.unsubscribe();
   }, [router, queryClient]);

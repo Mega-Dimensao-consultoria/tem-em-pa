@@ -17,8 +17,10 @@ import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SuporteRedefinir2faRouteImport } from './routes/suporte.redefinir-2fa'
 import { Route as EmpresaIdRouteImport } from './routes/empresa.$id'
 import { Route as CategoriaSlugRouteImport } from './routes/categoria.$slug'
+import { Route as AuthTwoFactorRouteImport } from './routes/auth.two-factor'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedNotificacoesRouteImport } from './routes/_authenticated/notificacoes'
 import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
@@ -72,6 +74,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SuporteRedefinir2faRoute = SuporteRedefinir2faRouteImport.update({
+  id: '/suporte/redefinir-2fa',
+  path: '/suporte/redefinir-2fa',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EmpresaIdRoute = EmpresaIdRouteImport.update({
   id: '/empresa/$id',
   path: '/empresa/$id',
@@ -81,6 +88,11 @@ const CategoriaSlugRoute = CategoriaSlugRouteImport.update({
   id: '/categoria/$slug',
   path: '/categoria/$slug',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthTwoFactorRoute = AuthTwoFactorRouteImport.update({
+  id: '/two-factor',
+  path: '/two-factor',
+  getParentRoute: () => AuthRoute,
 } as any)
 const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
   id: '/painel',
@@ -158,7 +170,7 @@ const AuthenticatedOwnerEmpresaIdDashboardRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -169,8 +181,10 @@ export interface FileRoutesByFullPath {
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/painel': typeof AuthenticatedPainelRouteWithChildren
+  '/auth/two-factor': typeof AuthTwoFactorRoute
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/empresa/$id': typeof EmpresaIdRoute
+  '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/owner/': typeof AuthenticatedOwnerIndexRoute
@@ -182,7 +196,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -192,8 +206,10 @@ export interface FileRoutesByTo {
   '/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/notificacoes': typeof AuthenticatedNotificacoesRoute
+  '/auth/two-factor': typeof AuthTwoFactorRoute
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/empresa/$id': typeof EmpresaIdRoute
+  '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/owner': typeof AuthenticatedOwnerIndexRoute
@@ -207,7 +223,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -218,8 +234,10 @@ export interface FileRoutesById {
   '/_authenticated/favoritos': typeof AuthenticatedFavoritosRoute
   '/_authenticated/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/_authenticated/painel': typeof AuthenticatedPainelRouteWithChildren
+  '/auth/two-factor': typeof AuthTwoFactorRoute
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/empresa/$id': typeof EmpresaIdRoute
+  '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/_authenticated/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/_authenticated/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/_authenticated/owner/': typeof AuthenticatedOwnerIndexRoute
@@ -244,8 +262,10 @@ export interface FileRouteTypes {
     | '/favoritos'
     | '/notificacoes'
     | '/painel'
+    | '/auth/two-factor'
     | '/categoria/$slug'
     | '/empresa/$id'
+    | '/suporte/redefinir-2fa'
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
     | '/owner/'
@@ -267,8 +287,10 @@ export interface FileRouteTypes {
     | '/cadastrar-empresa'
     | '/favoritos'
     | '/notificacoes'
+    | '/auth/two-factor'
     | '/categoria/$slug'
     | '/empresa/$id'
+    | '/suporte/redefinir-2fa'
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
     | '/owner'
@@ -292,8 +314,10 @@ export interface FileRouteTypes {
     | '/_authenticated/favoritos'
     | '/_authenticated/notificacoes'
     | '/_authenticated/painel'
+    | '/auth/two-factor'
     | '/categoria/$slug'
     | '/empresa/$id'
+    | '/suporte/redefinir-2fa'
     | '/_authenticated/painel/avaliacoes'
     | '/_authenticated/painel/configuracoes'
     | '/_authenticated/owner/'
@@ -307,7 +331,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
   BuscarRoute: typeof BuscarRoute
   ContatoRoute: typeof ContatoRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -315,6 +339,7 @@ export interface RootRouteChildren {
   SobreRoute: typeof SobreRoute
   CategoriaSlugRoute: typeof CategoriaSlugRoute
   EmpresaIdRoute: typeof EmpresaIdRoute
+  SuporteRedefinir2faRoute: typeof SuporteRedefinir2faRoute
   ApiPublicPushDispatchRoute: typeof ApiPublicPushDispatchRoute
 }
 
@@ -376,6 +401,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/suporte/redefinir-2fa': {
+      id: '/suporte/redefinir-2fa'
+      path: '/suporte/redefinir-2fa'
+      fullPath: '/suporte/redefinir-2fa'
+      preLoaderRoute: typeof SuporteRedefinir2faRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/empresa/$id': {
       id: '/empresa/$id'
       path: '/empresa/$id'
@@ -389,6 +421,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/categoria/$slug'
       preLoaderRoute: typeof CategoriaSlugRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/auth/two-factor': {
+      id: '/auth/two-factor'
+      path: '/two-factor'
+      fullPath: '/auth/two-factor'
+      preLoaderRoute: typeof AuthTwoFactorRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/_authenticated/painel': {
       id: '/_authenticated/painel'
@@ -529,10 +568,20 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface AuthRouteChildren {
+  AuthTwoFactorRoute: typeof AuthTwoFactorRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthTwoFactorRoute: AuthTwoFactorRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
   BuscarRoute: BuscarRoute,
   ContatoRoute: ContatoRoute,
   ResetPasswordRoute: ResetPasswordRoute,
@@ -540,18 +589,9 @@ const rootRouteChildren: RootRouteChildren = {
   SobreRoute: SobreRoute,
   CategoriaSlugRoute: CategoriaSlugRoute,
   EmpresaIdRoute: EmpresaIdRoute,
+  SuporteRedefinir2faRoute: SuporteRedefinir2faRoute,
   ApiPublicPushDispatchRoute: ApiPublicPushDispatchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

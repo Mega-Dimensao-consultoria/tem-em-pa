@@ -10,6 +10,7 @@ import {
   DangerZoneSection,
 } from "@/features/account/components/DangerSections";
 import { PushSettingsCard } from "@/features/notifications/components/PushSettingsCard";
+import { SecuritySection } from "@/features/security/components/SecuritySection";
 
 export const Route = createFileRoute("/_authenticated/painel/configuracoes")({
   head: () => ({ meta: [{ title: "Configurações — Tem em P.A" }] }),
@@ -34,6 +35,7 @@ function Configuracoes() {
         <ProfileSection />
         <EmailSection />
         <PasswordSection />
+        <SecuritySection />
         <PushSettingsCard />
         <SessionsSection />
 

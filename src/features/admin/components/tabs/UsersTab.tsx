@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Pencil, Shield, ShieldOff } from "lucide-react";
+import { Pencil, Shield, ShieldOff, KeyRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
 import {
+  useAdminResetUserMfa,
   useAdminUsers,
   useDemoteAdmin,
   usePromoteAdmin,
@@ -17,6 +18,7 @@ export function UsersTab() {
   const toggleBan = useToggleBan();
   const promote = usePromoteAdmin();
   const demote = useDemoteAdmin();
+  const resetMfa = useAdminResetUserMfa();
   const [filter, setFilter] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -153,6 +155,27 @@ export function UsersTab() {
                             onConfirm={() => promote.mutate({ id: u.id, name: u.full_name })}
                           />
                         )}
+                        <ConfirmDestructive
+                          trigger={
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              aria-label={`Remover 2FA de ${displayName}`}
+                            >
+                              <KeyRound className="mr-1 h-4 w-4" aria-hidden="true" />
+                              Remover 2FA
+                            </Button>
+                          }
+                          title="Remover autenticação em duas etapas?"
+                          description={
+                            <p>
+                              Todos os fatores de 2FA do usuário <strong>{displayName}</strong> serão removidos. Faça isso apenas após confirmar a identidade da pessoa (ex.: pedido de suporte aberto na aba <em>Reset 2FA</em>).
+                            </p>
+                          }
+                          requirePhrase="REMOVER 2FA"
+                          confirmText="Remover 2FA"
+                          onConfirm={() => resetMfa.mutate({ id: u.id, name: u.full_name })}
+                        />
                         <ConfirmDestructive
                           trigger={
                             <Button

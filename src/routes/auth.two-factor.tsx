@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, Link, useNavigate, useServerFn } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { Loader2, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";

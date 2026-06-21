@@ -121,7 +121,7 @@ function TwoFactorPage() {
         return;
       }
       toast.success("Verificação concluída.");
-      navigate({ to: redirect ?? "/", replace: true });
+      window.location.replace(redirectTo);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Falha ao verificar.");
     } finally {
@@ -155,7 +155,7 @@ function TwoFactorPage() {
     try {
       await verifyOtp({ data: { code } });
       toast.success("Acesso restaurado. Configure novamente o 2FA quando puder.");
-      navigate({ to: redirect ?? "/", replace: true });
+      window.location.replace(redirectTo);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Código incorreto ou expirado.");
     } finally {
@@ -194,7 +194,7 @@ function TwoFactorPage() {
             stopPushPolling();
             setPushApproved();
             toast.success("Acesso aprovado.");
-            navigate({ to: redirect ?? "/", replace: true });
+            window.location.replace(redirectTo);
           } else if (row.status === "denied") {
             stopPushPolling();
             setError("A tentativa foi bloqueada no outro dispositivo.");

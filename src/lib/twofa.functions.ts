@@ -124,7 +124,7 @@ export const requestTwoFaEmailOtp = createServerFn({ method: "POST" })
       status: "pending",
     });
 
-    const { error: enqErr } = await supabaseAdmin.rpc("enqueue_email", {
+    const { error: enqErr } = await (supabaseAdmin.rpc as any)("enqueue_email", {
       queue_name: "transactional_emails",
       payload: {
         message_id: messageId,

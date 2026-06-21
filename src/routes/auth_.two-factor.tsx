@@ -78,31 +78,50 @@ function TwoFactorPage() {
 
   async function verifyTotp(e: React.FormEvent) {
     e.preventDefault();
-    if (!factorId) return;
     if (!/^\d{6}$/.test(code)) {
       setError("Digite o código de 6 dígitos.");
       return;
     }
     setError(null);
     setLoading(true);
-    const { data: challenge, error: cErr } = await supabase.auth.mfa.challenge({ factorId });
-    if (cErr || !challenge) {
+    try {
+      // Resolve factorId lazily caso o boot effect ainda não tenha rodado
+      // ou tenha falhado silenciosamente.
+      let activeFactorId = factorId;
+      if (!activeFactorId) {
+        const { data: factors, error: fErr } = await supabase.auth.mfa.listFactors();
+        if (fErr) throw fErr;
+        const totp = (factors?.totp ?? []).find((f) => f.status === "verified");
+        if (!totp) {
+          setError("Nenhum método de verificação ativo foi encontrado nesta conta.");
+          return;
+        }
+        activeFactorId = totp.id;
+        setFactorId(totp.id);
+      }
+      const { data: challenge, error: cErr } = await supabase.auth.mfa.challenge({
+        factorId: activeFactorId,
+      });
+      if (cErr || !challenge) {
+        setError(cErr?.message ?? "Falha ao iniciar verificação.");
+        return;
+      }
+      const { error: vErr } = await supabase.auth.mfa.verify({
+        factorId: activeFactorId,
+        challengeId: challenge.id,
+        code,
+      });
+      if (vErr) {
+        setError("O código informado está incorreto. Verifique no seu aplicativo e tente novamente.");
+        return;
+      }
+      toast.success("Verificação concluída.");
+      navigate({ to: redirect ?? "/", replace: true });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Falha ao verificar.");
+    } finally {
       setLoading(false);
-      setError(cErr?.message ?? "Falha ao iniciar verificação.");
-      return;
     }
-    const { error: vErr } = await supabase.auth.mfa.verify({
-      factorId,
-      challengeId: challenge.id,
-      code,
-    });
-    setLoading(false);
-    if (vErr) {
-      setError("O código informado está incorreto. Verifique no seu aplicativo e tente novamente.");
-      return;
-    }
-    toast.success("Verificação concluída.");
-    navigate({ to: redirect ?? "/", replace: true });
   }
 
   async function sendEmailOtp() {

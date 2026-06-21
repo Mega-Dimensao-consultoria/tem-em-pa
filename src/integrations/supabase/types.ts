@@ -290,6 +290,53 @@ export type Database = {
           },
         ]
       }
+      company_removal_requests: {
+        Row: {
+          company_id: string
+          created_at: string
+          details: string | null
+          id: string
+          reason: Database["public"]["Enums"]["removal_reason"]
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["removal_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason: Database["public"]["Enums"]["removal_reason"]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["removal_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason?: Database["public"]["Enums"]["removal_reason"]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["removal_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_removal_requests_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_send_log: {
         Row: {
           created_at: string
@@ -836,6 +883,13 @@ export type Database = {
       app_role: "admin" | "owner" | "user"
       claim_status: "pending" | "approved" | "rejected"
       company_status: "pending" | "approved" | "rejected" | "claimed_pending"
+      removal_reason:
+        | "closed"
+        | "incorrect"
+        | "duplicate"
+        | "owner_request"
+        | "other"
+      removal_status: "pending" | "approved" | "rejected"
       review_status: "pending_moderation" | "approved" | "flagged" | "rejected"
     }
     CompositeTypes: {
@@ -967,6 +1021,14 @@ export const Constants = {
       app_role: ["admin", "owner", "user"],
       claim_status: ["pending", "approved", "rejected"],
       company_status: ["pending", "approved", "rejected", "claimed_pending"],
+      removal_reason: [
+        "closed",
+        "incorrect",
+        "duplicate",
+        "owner_request",
+        "other",
+      ],
+      removal_status: ["pending", "approved", "rejected"],
       review_status: ["pending_moderation", "approved", "flagged", "rejected"],
     },
   },

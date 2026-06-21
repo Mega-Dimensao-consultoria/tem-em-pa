@@ -26,9 +26,15 @@ export const Route = createFileRoute("/auth_/two-factor")({
 
 type Mode = "totp" | "email-request" | "email-verify" | "push";
 
+function safeRedirectPath(path?: string) {
+  if (!path || !path.startsWith("/") || path.startsWith("//")) return "/";
+  return path;
+}
+
 function TwoFactorPage() {
   const navigate = useNavigate();
   const { redirect } = Route.useSearch();
+  const redirectTo = safeRedirectPath(redirect);
   const requestOtp = useServerFn(requestTwoFaEmailOtp);
   const verifyOtp = useServerFn(verifyTwoFaEmailOtp);
   const requestApproval = useServerFn(requestLoginApproval);
@@ -52,7 +58,7 @@ function TwoFactorPage() {
       if (cancelled) return;
       // Already at AAL2 — nothing to verify.
       if (aal?.currentLevel === "aal2") {
-        navigate({ to: redirect ?? "/", replace: true });
+        window.location.replace(redirectTo);
         return;
       }
       const { data: factors, error: fErr } = await supabase.auth.mfa.listFactors();
@@ -63,8 +69,7 @@ function TwoFactorPage() {
       }
       const totp = (factors?.totp ?? []).find((f) => f.status === "verified");
       if (!totp) {
-        // No verified factor — no need to challenge.
-        navigate({ to: redirect ?? "/", replace: true });
+        setBootError("Nenhum método de verificação ativo foi encontrado nesta conta.");
         return;
       }
       setFactorId(totp.id);
@@ -74,7 +79,7 @@ function TwoFactorPage() {
     return () => {
       cancelled = true;
     };
-  }, [navigate, redirect]);
+  }, [redirectTo]);
 
   async function verifyTotp(e: React.FormEvent) {
     e.preventDefault();
@@ -116,7 +121,7 @@ function TwoFactorPage() {
         return;
       }
       toast.success("Verificação concluída.");
-      navigate({ to: redirect ?? "/", replace: true });
+      window.location.replace(redirectTo);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Falha ao verificar.");
     } finally {
@@ -150,7 +155,7 @@ function TwoFactorPage() {
     try {
       await verifyOtp({ data: { code } });
       toast.success("Acesso restaurado. Configure novamente o 2FA quando puder.");
-      navigate({ to: redirect ?? "/", replace: true });
+      window.location.replace(redirectTo);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Código incorreto ou expirado.");
     } finally {
@@ -189,7 +194,7 @@ function TwoFactorPage() {
             stopPushPolling();
             setPushApproved();
             toast.success("Acesso aprovado.");
-            navigate({ to: redirect ?? "/", replace: true });
+            window.location.replace(redirectTo);
           } else if (row.status === "denied") {
             stopPushPolling();
             setError("A tentativa foi bloqueada no outro dispositivo.");

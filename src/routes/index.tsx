@@ -11,10 +11,12 @@ import { Sparkles, Store, ShieldCheck } from "lucide-react";
 const categoriesQO = queryOptions({
   queryKey: ["categories"],
   queryFn: () => listCategories(),
+  staleTime: 60_000,
 });
 const featuredQO = queryOptions({
   queryKey: ["companies", "featured"],
   queryFn: () => listFeaturedCompanies(),
+  staleTime: 60_000,
 });
 
 export const Route = createFileRoute("/")({

@@ -90,7 +90,8 @@ export const Route = createFileRoute('/api/public/hooks/notification-email')({
           appUrl: APP_URL,
         }
 
-        // Enrich with company name when available
+        // Enrich with company name when available (falls back to metadata snapshot
+        // for events where the company row may already be gone — e.g. company_deleted)
         if (meta.company_id) {
           const { data: company } = await supabase
             .from('companies')
@@ -98,7 +99,10 @@ export const Route = createFileRoute('/api/public/hooks/notification-email')({
             .eq('id', meta.company_id)
             .maybeSingle()
           if (company?.name) templateData.companyName = company.name
+          else if (meta.company_name) templateData.companyName = meta.company_name
           templateData.companyId = meta.company_id
+        } else if (meta.company_name) {
+          templateData.companyName = meta.company_name
         }
 
         // Enrich review-specific fields

@@ -114,8 +114,8 @@ export const requestTwoFaEmailOtp = createServerFn({ method: "POST" })
     const messageId = `two-fa-recovery-${context.userId}-${Date.now()}`;
     const subject =
       typeof template.subject === "function"
-        ? template.subject({ code, minutes: OTP_TTL_MIN })
-        : template.subject;
+        ? (template.subject as (d: Record<string, any>) => string)({ code, minutes: OTP_TTL_MIN })
+        : (template.subject as string);
 
     await supabaseAdmin.from("email_send_log").insert({
       message_id: messageId,

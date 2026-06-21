@@ -139,6 +139,56 @@ function TwoFactorPage() {
     }
   }
 
+  function stopPushPolling() {
+    if (pushPollRef.current !== null) {
+      window.clearInterval(pushPollRef.current);
+      pushPollRef.current = null;
+    }
+  }
+
+  useEffect(() => () => stopPushPolling(), []);
+
+  async function startPushApproval() {
+    setError(null);
+    setLoading(true);
+    try {
+      const res = await requestApproval();
+      setPushApprovalId(res.id);
+      setPushSecondsLeft(res.ttlSec);
+      setMode("push");
+      toast.success("Enviamos uma notificação aos seus dispositivos.");
+      const expiresAtMs = new Date(res.expiresAt).getTime();
+      pushPollRef.current = window.setInterval(async () => {
+        const left = Math.max(0, Math.round((expiresAtMs - Date.now()) / 1000));
+        setPushSecondsLeft(left);
+        try {
+          const row = await getApprovalStatus({ data: { id: res.id } });
+          if (row.status === "approved") {
+            stopPushPolling();
+            setPushApproved();
+            toast.success("Acesso aprovado.");
+            navigate({ to: redirect ?? "/", replace: true });
+          } else if (row.status === "denied") {
+            stopPushPolling();
+            setError("A tentativa foi bloqueada no outro dispositivo.");
+            setMode("totp");
+          } else if (row.status === "expired" || left <= 0) {
+            stopPushPolling();
+            setError("Tempo esgotado. Tente novamente ou use o código do app.");
+            setMode("totp");
+          }
+        } catch {
+          /* keep polling */
+        }
+      }, 2000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Falha ao iniciar aprovação.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+
   const maskedEmail = email
     ? email.replace(/^(.).+(.@.+)$/, "$1•••$2")
     : "—";

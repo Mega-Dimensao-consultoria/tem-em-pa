@@ -257,7 +257,7 @@ function TwoFactorPage() {
                   </p>
                 ) : null}
               </div>
-              <Button type="submit" className="w-full" disabled={loading || !factorId}>
+              <Button type="submit" className="w-full" disabled={loading || code.length !== 6}>
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Verificar"}
               </Button>
               <button

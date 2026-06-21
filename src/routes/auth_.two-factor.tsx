@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { Loader2, Smartphone, ShieldCheck } from "lucide-react";
+import { Loader2, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -10,11 +10,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/Logo";
 import { requestTwoFaEmailOtp, verifyTwoFaEmailOtp } from "@/lib/twofa.functions";
-import {
-  requestLoginApproval,
-  getLoginApprovalStatus,
-} from "@/lib/login-approval.functions";
-import { setPushApproved } from "@/lib/push-2fa-session";
 
 const searchSchema = z.object({ redirect: z.string().optional() });
 
@@ -24,7 +19,7 @@ export const Route = createFileRoute("/auth_/two-factor")({
   component: TwoFactorPage,
 });
 
-type Mode = "totp" | "email-request" | "email-verify" | "push";
+type Mode = "totp" | "email-request" | "email-verify";
 
 function safeRedirectPath(path?: string) {
   if (!path || !path.startsWith("/") || path.startsWith("//")) return "/";
@@ -37,8 +32,6 @@ function TwoFactorPage() {
   const redirectTo = safeRedirectPath(redirect);
   const requestOtp = useServerFn(requestTwoFaEmailOtp);
   const verifyOtp = useServerFn(verifyTwoFaEmailOtp);
-  const requestApproval = useServerFn(requestLoginApproval);
-  const getApprovalStatus = useServerFn(getLoginApprovalStatus);
 
   const [mode, setMode] = useState<Mode>("totp");
   const [factorId, setFactorId] = useState<string | null>(null);
@@ -47,16 +40,12 @@ function TwoFactorPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [bootError, setBootError] = useState<string | null>(null);
-  const [pushApprovalId, setPushApprovalId] = useState<string | null>(null);
-  const [pushSecondsLeft, setPushSecondsLeft] = useState(0);
-  const pushPollRef = useRef<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
       if (cancelled) return;
-      // Already at AAL2 — nothing to verify.
       if (aal?.currentLevel === "aal2") {
         window.location.replace(redirectTo);
         return;
@@ -90,8 +79,6 @@ function TwoFactorPage() {
     setError(null);
     setLoading(true);
     try {
-      // Resolve factorId lazily caso o boot effect ainda não tenha rodado
-      // ou tenha falhado silenciosamente.
       let activeFactorId = factorId;
       if (!activeFactorId) {
         const { data: factors, error: fErr } = await supabase.auth.mfa.listFactors();
@@ -163,64 +150,6 @@ function TwoFactorPage() {
     }
   }
 
-  function stopPushPolling() {
-    if (pushPollRef.current !== null) {
-      window.clearInterval(pushPollRef.current);
-      pushPollRef.current = null;
-    }
-  }
-
-  useEffect(() => () => stopPushPolling(), []);
-
-  async function startPushApproval() {
-    // Já leva para a tela de aguardando aprovação imediatamente — sem
-    // toasts e sem convidar a ativar push neste dispositivo.
-    setError(null);
-    setPushApprovalId(null);
-    setPushSecondsLeft(180);
-    setMode("push");
-    setLoading(true);
-    try {
-      const res = await requestApproval();
-      setPushApprovalId(res.id);
-      setPushSecondsLeft(res.ttlSec);
-      const expiresAtMs = new Date(res.expiresAt).getTime();
-      pushPollRef.current = window.setInterval(async () => {
-        const left = Math.max(0, Math.round((expiresAtMs - Date.now()) / 1000));
-        setPushSecondsLeft(left);
-        try {
-          const row = await getApprovalStatus({ data: { id: res.id } });
-          if (row.status === "approved") {
-            stopPushPolling();
-            setPushApproved();
-            toast.success("Acesso aprovado.");
-            window.location.replace(redirectTo);
-          } else if (row.status === "denied") {
-            stopPushPolling();
-            setError("A tentativa foi bloqueada no outro dispositivo.");
-          } else if (row.status === "expired" || left <= 0) {
-            stopPushPolling();
-            setError("Tempo esgotado. Tente novamente ou use o código do app.");
-          }
-        } catch {
-          /* keep polling */
-        }
-      }, 2000);
-    } catch (err) {
-      // Falha mais comum: não existe nenhum dispositivo confiável com push
-      // ativo. Mantemos o usuário na tela de aprovação, com mensagem
-      // explicando a situação — nunca pedimos para ativar push aqui.
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Não foi possível enviar a notificação agora.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  }
-
-
   const maskedEmail = email
     ? email.replace(/^(.).+(.@.+)$/, "$1•••$2")
     : "—";
@@ -267,14 +196,6 @@ function TwoFactorPage() {
               </Button>
               <button
                 type="button"
-                onClick={startPushApproval}
-                disabled={loading}
-                className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-md border border-border bg-muted/40 px-3 py-2 text-xs font-medium text-foreground hover:bg-muted disabled:opacity-50"
-              >
-                <Smartphone className="h-3.5 w-3.5" /> Aprovar em outro dispositivo
-              </button>
-              <button
-                type="button"
                 onClick={() => {
                   setError(null);
                   setMode("email-request");
@@ -284,35 +205,6 @@ function TwoFactorPage() {
                 Estou sem meu dispositivo
               </button>
             </form>
-          ) : mode === "push" ? (
-            <div className="space-y-3 text-center">
-              <div className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <Smartphone className="h-6 w-6" />
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Enviamos uma notificação aos seus dispositivos com login ativo. Abra a
-                notificação e toque em <strong>Sim, sou eu</strong> para liberar o
-                acesso.
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Aguardando aprovação… {pushSecondsLeft}s
-              </p>
-              {error ? (
-                <p className="text-sm text-destructive" role="alert">{error}</p>
-              ) : null}
-              <button
-                type="button"
-                onClick={() => {
-                  stopPushPolling();
-                  setError(null);
-                  setPushApprovalId(null);
-                  setMode("totp");
-                }}
-                className="block w-full text-center text-xs text-muted-foreground underline hover:text-foreground"
-              >
-                Cancelar e usar o código do app
-              </button>
-            </div>
           ) : mode === "email-request" ? (
             <div className="space-y-3">
               <p className="text-sm text-muted-foreground">

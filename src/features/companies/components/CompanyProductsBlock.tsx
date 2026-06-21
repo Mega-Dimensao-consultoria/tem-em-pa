@@ -1,4 +1,6 @@
 import { NoProducts } from "@/components/feedback/EmptyState";
+
+type Product = {
   id: string;
   name: string;
   description: string | null;

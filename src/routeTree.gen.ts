@@ -26,7 +26,6 @@ import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedNotificacoesRouteImport } from './routes/_authenticated/notificacoes'
 import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
 import { Route as AuthenticatedCadastrarEmpresaRouteImport } from './routes/_authenticated/cadastrar-empresa'
-import { Route as AuthenticatedAprovarLoginRouteImport } from './routes/_authenticated/aprovar-login'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedPainelIndexRouteImport } from './routes/_authenticated/painel.index'
 import { Route as AuthenticatedOwnerIndexRouteImport } from './routes/_authenticated/owner.index'
@@ -129,12 +128,6 @@ const AuthenticatedCadastrarEmpresaRoute =
     path: '/cadastrar-empresa',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedAprovarLoginRoute =
-  AuthenticatedAprovarLoginRouteImport.update({
-    id: '/aprovar-login',
-    path: '/aprovar-login',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -231,7 +224,6 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/admin': typeof AuthenticatedAdminRoute
-  '/aprovar-login': typeof AuthenticatedAprovarLoginRoute
   '/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/notificacoes': typeof AuthenticatedNotificacoesRoute
@@ -265,7 +257,6 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/admin': typeof AuthenticatedAdminRoute
-  '/aprovar-login': typeof AuthenticatedAprovarLoginRoute
   '/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/notificacoes': typeof AuthenticatedNotificacoesRoute
@@ -300,7 +291,6 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
-  '/_authenticated/aprovar-login': typeof AuthenticatedAprovarLoginRoute
   '/_authenticated/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
   '/_authenticated/favoritos': typeof AuthenticatedFavoritosRoute
   '/_authenticated/notificacoes': typeof AuthenticatedNotificacoesRoute
@@ -336,7 +326,6 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sobre'
     | '/admin'
-    | '/aprovar-login'
     | '/cadastrar-empresa'
     | '/favoritos'
     | '/notificacoes'
@@ -370,7 +359,6 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sobre'
     | '/admin'
-    | '/aprovar-login'
     | '/cadastrar-empresa'
     | '/favoritos'
     | '/notificacoes'
@@ -404,7 +392,6 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sobre'
     | '/_authenticated/admin'
-    | '/_authenticated/aprovar-login'
     | '/_authenticated/cadastrar-empresa'
     | '/_authenticated/favoritos'
     | '/_authenticated/notificacoes'
@@ -573,13 +560,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCadastrarEmpresaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/aprovar-login': {
-      id: '/_authenticated/aprovar-login'
-      path: '/aprovar-login'
-      fullPath: '/aprovar-login'
-      preLoaderRoute: typeof AuthenticatedAprovarLoginRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -707,7 +687,6 @@ const AuthenticatedPainelRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
-  AuthenticatedAprovarLoginRoute: typeof AuthenticatedAprovarLoginRoute
   AuthenticatedCadastrarEmpresaRoute: typeof AuthenticatedCadastrarEmpresaRoute
   AuthenticatedFavoritosRoute: typeof AuthenticatedFavoritosRoute
   AuthenticatedNotificacoesRoute: typeof AuthenticatedNotificacoesRoute
@@ -720,7 +699,6 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
-  AuthenticatedAprovarLoginRoute: AuthenticatedAprovarLoginRoute,
   AuthenticatedCadastrarEmpresaRoute: AuthenticatedCadastrarEmpresaRoute,
   AuthenticatedFavoritosRoute: AuthenticatedFavoritosRoute,
   AuthenticatedNotificacoesRoute: AuthenticatedNotificacoesRoute,

@@ -122,6 +122,13 @@ function PainelIndex() {
             cta="Abrir"
           />
           <DashboardCard
+            icon={<ShieldCheck className="h-5 w-5" />}
+            title="Segurança"
+            desc="Ative a verificação em duas etapas (2FA) com Google Authenticator."
+            to="/painel/seguranca"
+            cta="Gerenciar"
+          />
+          <DashboardCard
             icon={<Settings className="h-5 w-5" />}
             title="Configurações"
             desc="Atualize seus dados, e-mail e senha."
@@ -142,6 +149,7 @@ type DashboardCardProps = {
     | "/cadastrar-empresa"
     | "/painel/avaliacoes"
     | "/painel/configuracoes"
+    | "/painel/seguranca"
     | "/favoritos"
     | "/notificacoes"
     | "/owner";

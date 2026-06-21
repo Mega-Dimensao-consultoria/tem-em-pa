@@ -161,6 +161,17 @@ function RootComponent() {
         queryClient.invalidateQueries();
       }
       if (!isAuthRoute) router.invalidate();
+      if (event === "SIGNED_IN" && !isAuthRoute) {
+        try {
+          const { isPushApproved } = await import("@/lib/push-2fa-session");
+          const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+          if (aal?.nextLevel === "aal2" && aal.currentLevel === "aal1" && !isPushApproved()) {
+            window.location.replace("/auth/two-factor");
+          }
+        } catch {
+          /* ignore */
+        }
+      }
     });
     return () => data.subscription.unsubscribe();
   }, [router, queryClient]);

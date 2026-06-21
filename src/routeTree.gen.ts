@@ -28,6 +28,7 @@ import { Route as AuthenticatedCadastrarEmpresaRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedPainelIndexRouteImport } from './routes/_authenticated/painel.index'
 import { Route as AuthenticatedOwnerIndexRouteImport } from './routes/_authenticated/owner.index'
+import { Route as AuthenticatedPainelSegurancaRouteImport } from './routes/_authenticated/painel.seguranca'
 import { Route as AuthenticatedPainelConfiguracoesRouteImport } from './routes/_authenticated/painel.configuracoes'
 import { Route as AuthenticatedPainelAvaliacoesRouteImport } from './routes/_authenticated/painel.avaliacoes'
 import { Route as ApiPublicPushDispatchRouteImport } from './routes/api/public/push.dispatch'
@@ -132,6 +133,12 @@ const AuthenticatedOwnerIndexRoute = AuthenticatedOwnerIndexRouteImport.update({
   path: '/owner/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPainelSegurancaRoute =
+  AuthenticatedPainelSegurancaRouteImport.update({
+    id: '/seguranca',
+    path: '/seguranca',
+    getParentRoute: () => AuthenticatedPainelRoute,
+  } as any)
 const AuthenticatedPainelConfiguracoesRoute =
   AuthenticatedPainelConfiguracoesRouteImport.update({
     id: '/configuracoes',
@@ -187,6 +194,7 @@ export interface FileRoutesByFullPath {
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
+  '/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
   '/owner/': typeof AuthenticatedOwnerIndexRoute
   '/painel/': typeof AuthenticatedPainelIndexRoute
   '/api/public/push/dispatch': typeof ApiPublicPushDispatchRoute
@@ -212,6 +220,7 @@ export interface FileRoutesByTo {
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
+  '/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
   '/owner': typeof AuthenticatedOwnerIndexRoute
   '/painel': typeof AuthenticatedPainelIndexRoute
   '/api/public/push/dispatch': typeof ApiPublicPushDispatchRoute
@@ -240,6 +249,7 @@ export interface FileRoutesById {
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/_authenticated/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/_authenticated/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
+  '/_authenticated/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
   '/_authenticated/owner/': typeof AuthenticatedOwnerIndexRoute
   '/_authenticated/painel/': typeof AuthenticatedPainelIndexRoute
   '/api/public/push/dispatch': typeof ApiPublicPushDispatchRoute
@@ -268,6 +278,7 @@ export interface FileRouteTypes {
     | '/suporte/redefinir-2fa'
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
+    | '/painel/seguranca'
     | '/owner/'
     | '/painel/'
     | '/api/public/push/dispatch'
@@ -293,6 +304,7 @@ export interface FileRouteTypes {
     | '/suporte/redefinir-2fa'
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
+    | '/painel/seguranca'
     | '/owner'
     | '/painel'
     | '/api/public/push/dispatch'
@@ -320,6 +332,7 @@ export interface FileRouteTypes {
     | '/suporte/redefinir-2fa'
     | '/_authenticated/painel/avaliacoes'
     | '/_authenticated/painel/configuracoes'
+    | '/_authenticated/painel/seguranca'
     | '/_authenticated/owner/'
     | '/_authenticated/painel/'
     | '/api/public/push/dispatch'
@@ -478,6 +491,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOwnerIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/painel/seguranca': {
+      id: '/_authenticated/painel/seguranca'
+      path: '/seguranca'
+      fullPath: '/painel/seguranca'
+      preLoaderRoute: typeof AuthenticatedPainelSegurancaRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
     '/_authenticated/painel/configuracoes': {
       id: '/_authenticated/painel/configuracoes'
       path: '/configuracoes'
@@ -526,12 +546,14 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedPainelRouteChildren {
   AuthenticatedPainelAvaliacoesRoute: typeof AuthenticatedPainelAvaliacoesRoute
   AuthenticatedPainelConfiguracoesRoute: typeof AuthenticatedPainelConfiguracoesRoute
+  AuthenticatedPainelSegurancaRoute: typeof AuthenticatedPainelSegurancaRoute
   AuthenticatedPainelIndexRoute: typeof AuthenticatedPainelIndexRoute
 }
 
 const AuthenticatedPainelRouteChildren: AuthenticatedPainelRouteChildren = {
   AuthenticatedPainelAvaliacoesRoute: AuthenticatedPainelAvaliacoesRoute,
   AuthenticatedPainelConfiguracoesRoute: AuthenticatedPainelConfiguracoesRoute,
+  AuthenticatedPainelSegurancaRoute: AuthenticatedPainelSegurancaRoute,
   AuthenticatedPainelIndexRoute: AuthenticatedPainelIndexRoute,
 }
 
@@ -595,13 +617,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

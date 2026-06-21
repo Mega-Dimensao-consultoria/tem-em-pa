@@ -6,6 +6,7 @@ import {
   Heart,
   Bell,
   Building2,
+  ShieldCheck,
 } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";

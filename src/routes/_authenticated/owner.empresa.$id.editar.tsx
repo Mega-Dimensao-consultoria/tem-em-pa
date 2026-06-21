@@ -11,7 +11,6 @@ import { ArrowLeft } from "lucide-react";
 import { CompanyForm, emptyCompanyForm, type CompanyFormValues } from "@/features/companies/components/CompanyForm";
 import { defaultHours, type HourRow } from "@/features/companies/components/HoursEditor";
 import { CompanyDetailSkeleton } from "@/components/feedback/Skeletons";
-import { NotFoundState } from "@/components/feedback/NotFoundState";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/editar")({
   head: () => ({ meta: [{ title: "Editar empresa — Tem em P.A" }] }),

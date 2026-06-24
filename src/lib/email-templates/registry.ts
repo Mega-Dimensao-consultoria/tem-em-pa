@@ -23,6 +23,8 @@ import { template as claimReceivedTemplate } from './claim-received'
 import { template as removalRequestReceivedTemplate } from './removal-request-received'
 import { template as companyRemovalApprovedTemplate } from './company-removal-approved'
 import { template as companyRemovalRejectedTemplate } from './company-removal-rejected'
+import { template as contactAdminNotificationTemplate } from './contact-admin-notification'
+import { template as contactReplyTemplate } from './contact-reply'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'two-fa-recovery': twoFaRecoveryTemplate,
@@ -39,6 +41,8 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'removal-request-received': removalRequestReceivedTemplate,
   'company-removal-approved': companyRemovalApprovedTemplate,
   'company-removal-rejected': companyRemovalRejectedTemplate,
+  'contact-admin-notification': contactAdminNotificationTemplate,
+  'contact-reply': contactReplyTemplate,
 }
 
 /**

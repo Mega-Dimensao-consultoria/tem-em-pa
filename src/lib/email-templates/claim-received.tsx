@@ -1,5 +1,6 @@
 import React from 'react'
-import { EmailLayout } from './_layout'
+import { Text } from '@react-email/components'
+import { EmailLayout, text } from './_layout'
 import type { TemplateEntry } from './registry'
 
 interface Props {
@@ -12,22 +13,47 @@ const Email = ({
   appUrl = 'https://tem-em-pa.lovable.app',
 }: Props) => (
   <EmailLayout
-    previewText={`Pedido de reivindicação para ${companyName}`}
+    previewText={`Recebemos um pedido para reivindicar a empresa ${companyName} no Tem em P.A.`}
     title="Pedido de reivindicação recebido"
     intro={
       <>
-        Um usuário solicitou reivindicar a empresa <strong>{companyName}</strong>.
+        Olá! Um usuário do Tem em P.A. acaba de enviar um pedido formal para reivindicar
+        a empresa <strong>{companyName}</strong>. Como você consta no nosso sistema
+        como contato relacionado a esse cadastro, estamos te avisando para que tudo
+        seja resolvido com transparência.
       </>
     }
     body={
       <>
-        Nossa equipe vai analisar os documentos enviados e você será notificado sobre a
-        decisão. Caso você seja o real responsável e ainda não tenha confirmado seu
-        vínculo, verifique seu cadastro no painel.
+        <Text style={text}>
+          Reivindicar uma empresa significa pedir para assumir oficialmente a
+          administração do cadastro — passando a poder editar dados, responder
+          avaliações e gerenciar fotos. Por isso, antes de qualquer alteração, nossa
+          equipe vai analisar os documentos enviados pelo solicitante para confirmar
+          o vínculo real com o negócio (como contrato social, comprovantes de endereço
+          comercial ou registros equivalentes).
+        </Text>
+        <Text style={text}>
+          Esse processo costuma levar até alguns dias úteis. Assim que houver uma
+          decisão — aprovada ou recusada — você receberá um novo e-mail explicando o
+          resultado. Enquanto isso, nenhuma informação pública da empresa é alterada.
+        </Text>
+        <Text style={text}>
+          <strong>Se você é o verdadeiro responsável</strong> pela empresa e ainda não
+          confirmou o seu vínculo no painel, recomendamos que faça isso agora.
+          Cadastros confirmados têm prioridade na análise e ajudam a evitar
+          reivindicações indevidas por terceiros. Você também pode anexar documentos
+          adicionais que comprovem a sua relação com o negócio.
+        </Text>
+        <Text style={text}>
+          Caso não reconheça esse pedido ou queira contestá-lo, entre em contato com
+          nossa equipe de suporte o quanto antes para registrar a sua manifestação.
+        </Text>
       </>
     }
     ctaLabel="Abrir painel do dono"
     ctaUrl={`${appUrl}/owner`}
+    footnote="Você está recebendo este e-mail porque consta como contato vinculado a este cadastro no Tem em P.A."
   />
 )
 

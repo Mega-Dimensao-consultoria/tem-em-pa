@@ -24,25 +24,52 @@ const Email = ({
     : `${appUrl}/owner`
   return (
     <EmailLayout
-      previewText={`Nova avaliação de ${rating} estrela(s) em ${companyName}`}
-      title="Nova avaliação recebida"
+      previewText={`Sua empresa ${companyName} recebeu uma nova avaliação de ${rating} estrela(s).`}
+      title="Nova avaliação recebida ⭐"
       intro={
         <>
-          Sua empresa <strong>{companyName}</strong> recebeu uma nova avaliação de{' '}
-          <strong>{rating} estrela(s)</strong>.
+          Uma boa notícia: a sua empresa <strong>{companyName}</strong> acaba de
+          receber uma nova avaliação de <strong>{rating} estrela(s)</strong> no Tem em
+          P.A. Cada avaliação ajuda outros visitantes da plataforma a decidirem onde
+          comprar, comer ou contratar — e é também uma chance valiosa de você se
+          conectar com o cliente.
         </>
       }
       body={
         <>
-          <Text style={{ ...text, fontSize: '20px', letterSpacing: '4px', color: '#f59e0b', margin: '0 0 12px' }}>
+          <Text style={{ ...text, fontSize: '24px', letterSpacing: '4px', color: '#f59e0b', margin: '0 0 16px' }}>
             {stars}
           </Text>
-          {comment ? <Text style={quote}>“{comment}”</Text> : null}
+          {comment ? <Text style={quote}>“{comment}”</Text> : (
+            <Text style={text}>
+              O cliente não deixou um comentário escrito — apenas a nota em estrelas.
+            </Text>
+          )}
+          <Text style={text}>
+            Recomendamos fortemente <strong>responder publicamente</strong> a essa
+            avaliação direto pelo painel do dono. Avaliações com resposta passam uma
+            imagem muito melhor para quem está pesquisando o seu negócio pela
+            primeira vez: mostram que existe alguém atento por trás do balcão e
+            preocupado com a experiência de cada cliente.
+          </Text>
+          <Text style={text}>
+            Algumas boas práticas para a resposta: agradeça pelo tempo do cliente,
+            chame-o pelo nome quando possível, mencione algum detalhe específico do
+            comentário e — se for o caso — convide-o para voltar. Se a avaliação for
+            crítica, mantenha a cordialidade, evite ficar na defensiva, reconheça o
+            que pode ser melhorado e ofereça uma forma direta de continuar a
+            conversa fora da plataforma.
+          </Text>
+          <Text style={text}>
+            Responder logo, com tom humano e sem respostas automáticas prontas, é um
+            dos hábitos que mais transformam um perfil comum em uma referência local
+            de confiança.
+          </Text>
         </>
       }
       ctaLabel="Responder no painel"
       ctaUrl={ctaUrl}
-      footnote="Responder rapidamente a avaliações ajuda a fortalecer a reputação do seu negócio."
+      footnote="Você está recebendo este e-mail porque é o responsável cadastrado por esta empresa no Tem em P.A."
     />
   )
 }

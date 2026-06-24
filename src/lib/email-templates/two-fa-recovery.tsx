@@ -19,24 +19,40 @@ interface Props {
 const Email = ({ code = '000000', minutes = 10 }: Props) => (
   <Html lang="pt-BR" dir="ltr">
     <Head />
-    <Preview>Seu código de recuperação: {code}</Preview>
+    <Preview>Seu código de recuperação 2FA do Tem em P.A.: {code}</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Código de recuperação 2FA</Heading>
+        <Heading style={h1}>Código de recuperação 2FA 🔐</Heading>
         <Text style={text}>
-          Você solicitou desativar a verificação em duas etapas porque está sem o seu
-          dispositivo. Use o código abaixo para confirmar:
+          Você (ou alguém usando sua conta) solicitou a desativação da verificação em
+          duas etapas no Tem em P.A. — provavelmente porque está sem acesso ao
+          aplicativo autenticador ou ao dispositivo cadastrado. Para concluir esse
+          processo com segurança, use o código abaixo na tela de confirmação:
         </Text>
         <Section style={codeBox}>
           <Text style={codeText}>{code}</Text>
         </Section>
         <Text style={text}>
-          Esse código expira em <strong>{minutes} minutos</strong>. Após inseri-lo, a 2FA
-          será removida da sua conta e você poderá configurá-la novamente depois.
+          Esse código é único, pessoal e expira em <strong>{minutes} minutos</strong>.
+          Assim que você inseri-lo, a verificação em duas etapas será removida da sua
+          conta. <strong>Recomendamos fortemente que você reative a 2FA</strong>{' '}
+          logo em seguida, configurando um novo aplicativo autenticador (como
+          Google Authenticator, Authy ou 1Password) — a 2FA é a melhor proteção
+          contra invasões mesmo que sua senha seja descoberta.
+        </Text>
+        <Text style={text}>
+          <strong>Importante:</strong> nunca compartilhe este código com ninguém,
+          mesmo que a pessoa diga ser do nosso suporte. A equipe do Tem em P.A.
+          jamais vai te pedir códigos de verificação por telefone, WhatsApp, redes
+          sociais ou qualquer outro canal. Se alguém pedir, é tentativa de golpe —
+          ignore e nos avise.
         </Text>
         <Text style={muted}>
-          Se você não fez essa solicitação, ignore este e-mail e considere alterar sua
-          senha.
+          Se você <strong>não solicitou</strong> a desativação da 2FA, ignore este
+          e-mail e o código não será usado. Mesmo assim, recomendamos{' '}
+          <strong>trocar a sua senha</strong> o quanto antes e verificar atividades
+          recentes na sua conta, já que o pedido pode indicar uma tentativa de
+          acesso indevido.
         </Text>
         <Text style={footer}>Tem em P.A — Megadimensão</Text>
       </Container>
@@ -52,7 +68,7 @@ export const template = {
 } satisfies TemplateEntry
 
 const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '32px 24px', maxWidth: '480px', margin: '0 auto' }
+const container = { padding: '32px 24px', maxWidth: '520px', margin: '0 auto' }
 const h1 = { fontSize: '22px', color: '#0f172a', margin: '0 0 16px' }
 const text = { fontSize: '15px', color: '#1f2937', lineHeight: '1.6', margin: '0 0 16px' }
 const codeBox = {

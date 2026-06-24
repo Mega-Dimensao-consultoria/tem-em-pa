@@ -76,6 +76,36 @@ export const Route = createFileRoute('/api/public/contact-submit')({
           // do not fail the user-facing submission if email enqueue fails
         }
 
+        // Push notification to all admins (notifications insert triggers push dispatch)
+        try {
+          const { data: admins } = await supabase
+            .from('user_roles')
+            .select('user_id')
+            .eq('role', 'admin')
+
+          if (admins && admins.length > 0) {
+            const preview =
+              parsed.data.message.length > 140
+                ? parsed.data.message.slice(0, 140) + '…'
+                : parsed.data.message
+            const rows = admins.map((a: { user_id: string }) => ({
+              user_id: a.user_id,
+              type: 'contact_received',
+              title: `Nova mensagem de ${parsed.data.full_name}`,
+              message: `${parsed.data.subject} — ${preview}`,
+              link: '/admin',
+              metadata: {
+                contact_message_id: inserted.id,
+                from_email: parsed.data.email,
+                subject: parsed.data.subject,
+              },
+            }))
+            await supabase.from('notifications').insert(rows)
+          }
+        } catch {
+          // do not fail the user-facing submission if push notification fails
+        }
+
         return Response.json({ ok: true, id: inserted.id })
       },
     },

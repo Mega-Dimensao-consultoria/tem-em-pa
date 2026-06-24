@@ -123,15 +123,16 @@ function ContactRow({
             {open ? "Ocultar" : "Ver"}
           </Button>
           <ConfirmDestructive
+            trigger={
+              <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive">
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            }
             title="Excluir mensagem"
             description="Esta ação não pode ser desfeita. A mensagem será removida do painel."
-            confirmLabel="Excluir"
+            confirmText="Excluir"
             onConfirm={onDelete}
-          >
-            <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive">
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </ConfirmDestructive>
+          />
         </div>
       </div>
 

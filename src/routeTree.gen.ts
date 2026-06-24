@@ -31,6 +31,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedPainelIndexRouteImport } from './routes/_authenticated/painel.index'
 import { Route as AuthenticatedOwnerIndexRouteImport } from './routes/_authenticated/owner.index'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
+import { Route as ApiPublicContactSubmitRouteImport } from './routes/api/public/contact-submit'
 import { Route as AuthenticatedPainelSegurancaRouteImport } from './routes/_authenticated/painel.seguranca'
 import { Route as AuthenticatedPainelConfiguracoesRouteImport } from './routes/_authenticated/painel.configuracoes'
 import { Route as AuthenticatedPainelAvaliacoesRouteImport } from './routes/_authenticated/painel.avaliacoes'
@@ -155,6 +156,11 @@ const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
   path: '/lovable/email/suppression',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicContactSubmitRoute = ApiPublicContactSubmitRouteImport.update({
+  id: '/api/public/contact-submit',
+  path: '/api/public/contact-submit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedPainelSegurancaRoute =
   AuthenticatedPainelSegurancaRouteImport.update({
     id: '/seguranca',
@@ -243,6 +249,7 @@ export interface FileRoutesByFullPath {
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
+  '/api/public/contact-submit': typeof ApiPublicContactSubmitRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/owner/': typeof AuthenticatedOwnerIndexRoute
   '/painel/': typeof AuthenticatedPainelIndexRoute
@@ -276,6 +283,7 @@ export interface FileRoutesByTo {
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
+  '/api/public/contact-submit': typeof ApiPublicContactSubmitRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/owner': typeof AuthenticatedOwnerIndexRoute
   '/painel': typeof AuthenticatedPainelIndexRoute
@@ -312,6 +320,7 @@ export interface FileRoutesById {
   '/_authenticated/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/_authenticated/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/_authenticated/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
+  '/api/public/contact-submit': typeof ApiPublicContactSubmitRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/_authenticated/owner/': typeof AuthenticatedOwnerIndexRoute
   '/_authenticated/painel/': typeof AuthenticatedPainelIndexRoute
@@ -348,6 +357,7 @@ export interface FileRouteTypes {
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
     | '/painel/seguranca'
+    | '/api/public/contact-submit'
     | '/lovable/email/suppression'
     | '/owner/'
     | '/painel/'
@@ -381,6 +391,7 @@ export interface FileRouteTypes {
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
     | '/painel/seguranca'
+    | '/api/public/contact-submit'
     | '/lovable/email/suppression'
     | '/owner'
     | '/painel'
@@ -416,6 +427,7 @@ export interface FileRouteTypes {
     | '/_authenticated/painel/avaliacoes'
     | '/_authenticated/painel/configuracoes'
     | '/_authenticated/painel/seguranca'
+    | '/api/public/contact-submit'
     | '/lovable/email/suppression'
     | '/_authenticated/owner/'
     | '/_authenticated/painel/'
@@ -444,6 +456,7 @@ export interface RootRouteChildren {
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   EmpresaIdRoute: typeof EmpresaIdRoute
   SuporteRedefinir2faRoute: typeof SuporteRedefinir2faRoute
+  ApiPublicContactSubmitRoute: typeof ApiPublicContactSubmitRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiPublicHooksNotificationEmailRoute: typeof ApiPublicHooksNotificationEmailRoute
   ApiPublicPushDispatchRoute: typeof ApiPublicPushDispatchRoute
@@ -608,6 +621,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LovableEmailSuppressionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/contact-submit': {
+      id: '/api/public/contact-submit'
+      path: '/api/public/contact-submit'
+      fullPath: '/api/public/contact-submit'
+      preLoaderRoute: typeof ApiPublicContactSubmitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/painel/seguranca': {
       id: '/_authenticated/painel/seguranca'
       path: '/seguranca'
@@ -750,6 +770,7 @@ const rootRouteChildren: RootRouteChildren = {
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   EmpresaIdRoute: EmpresaIdRoute,
   SuporteRedefinir2faRoute: SuporteRedefinir2faRoute,
+  ApiPublicContactSubmitRoute: ApiPublicContactSubmitRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiPublicHooksNotificationEmailRoute: ApiPublicHooksNotificationEmailRoute,
   ApiPublicPushDispatchRoute: ApiPublicPushDispatchRoute,

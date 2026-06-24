@@ -14,6 +14,7 @@ import { UsersTab } from "@/features/admin/components/tabs/UsersTab";
 import { AuditLogTab } from "@/features/admin/components/tabs/AuditLogTab";
 import { TwoFaResetRequestsTab } from "@/features/admin/components/tabs/TwoFaResetRequestsTab";
 import { PendingRemovalsTab } from "@/features/admin/components/tabs/PendingRemovalsTab";
+import { ContactMessagesTab } from "@/features/admin/components/tabs/ContactMessagesTab";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -66,6 +67,7 @@ function AdminPage() {
             <TabsTrigger value="remocoes">Remoções</TabsTrigger>
             <TabsTrigger value="comentarios">Comentários</TabsTrigger>
             <TabsTrigger value="denuncias">Denúncias</TabsTrigger>
+            <TabsTrigger value="contato">Contato</TabsTrigger>
             <TabsTrigger value="categorias">Categorias</TabsTrigger>
             <TabsTrigger value="palavras">Palavras proibidas</TabsTrigger>
             <TabsTrigger value="usuarios">Usuários</TabsTrigger>
@@ -78,6 +80,7 @@ function AdminPage() {
           <TabsContent value="remocoes"><PendingRemovalsTab /></TabsContent>
           <TabsContent value="comentarios"><PendingReviewsTab /></TabsContent>
           <TabsContent value="denuncias"><ReportsTab /></TabsContent>
+          <TabsContent value="contato"><ContactMessagesTab /></TabsContent>
           <TabsContent value="categorias"><CategoriesTab /></TabsContent>
           <TabsContent value="palavras"><BannedWordsTab /></TabsContent>
           <TabsContent value="usuarios"><UsersTab /></TabsContent>

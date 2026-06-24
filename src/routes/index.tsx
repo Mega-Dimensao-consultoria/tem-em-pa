@@ -6,8 +6,9 @@ import { CategoryCard } from "@/features/companies/components/CategoryCard";
 import { CompanyCard } from "@/features/companies/components/CompanyCard";
 import { listCategories } from "@/features/companies/functions/categories";
 import { listFeaturedCompanies } from "@/features/companies/functions";
-import { Sparkles, Store, ShieldCheck } from "lucide-react";
+import { Sparkles, Store, ShieldCheck, Mail as MailIcon } from "lucide-react";
 import { NoCompanies } from "@/components/feedback/EmptyState";
+import { ContactDialog } from "@/features/contact/ContactDialog";
 
 const categoriesQO = queryOptions({
   queryKey: ["categories"],
@@ -139,6 +140,25 @@ function Home() {
           >
             Cadastrar minha empresa
           </Link>
+        </div>
+      </section>
+
+      {/* Contato */}
+      <section className="mx-auto max-w-3xl px-4 pb-20">
+        <div className="rounded-3xl border border-border bg-card p-8 text-center shadow-soft md:p-10">
+          <h2 className="font-display text-2xl font-bold md:text-3xl">Fale com a gente</h2>
+          <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground md:text-base">
+            Dúvidas, sugestões ou parcerias? Envie uma mensagem para nossa equipe e responderemos por e-mail.
+          </p>
+          <div className="mt-6 flex justify-center">
+            <ContactDialog
+              trigger={
+                <button className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">
+                  <MailIcon className="h-4 w-4" /> Enviar mensagem
+                </button>
+              }
+            />
+          </div>
         </div>
       </section>
     </PageShell>

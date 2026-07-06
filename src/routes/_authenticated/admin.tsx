@@ -72,6 +72,7 @@ function AdminPage() {
             <TabsTrigger value="categorias">Categorias</TabsTrigger>
             <TabsTrigger value="palavras">Palavras proibidas</TabsTrigger>
             <TabsTrigger value="usuarios">Usuários</TabsTrigger>
+            <TabsTrigger value="paginas">Páginas</TabsTrigger>
             <TabsTrigger value="reset2fa">Reset 2FA</TabsTrigger>
             <TabsTrigger value="auditoria">Auditoria</TabsTrigger>
           </TabsList>
@@ -85,6 +86,7 @@ function AdminPage() {
           <TabsContent value="categorias"><CategoriesTab /></TabsContent>
           <TabsContent value="palavras"><BannedWordsTab /></TabsContent>
           <TabsContent value="usuarios"><UsersTab /></TabsContent>
+          <TabsContent value="paginas"><SitePagesTab /></TabsContent>
           <TabsContent value="reset2fa"><TwoFaResetRequestsTab /></TabsContent>
           <TabsContent value="auditoria"><AuditLogTab /></TabsContent>
         </Tabs>

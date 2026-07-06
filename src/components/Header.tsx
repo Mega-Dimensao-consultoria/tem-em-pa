@@ -32,13 +32,20 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur-md">
+    <header
+      role="banner"
+      aria-label="Cabeçalho do site"
+      className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur-md"
+    >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
-        <Link to="/" className="shrink-0">
+        <Link to="/" className="shrink-0" aria-label="Página inicial do Tem em Pouso Alegre">
           <Logo />
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav
+          aria-label="Navegação principal"
+          className="hidden items-center gap-1 md:flex"
+        >
           <Link
             to="/buscar"
             className="rounded-full px-4 py-2 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground"

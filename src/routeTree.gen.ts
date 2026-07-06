@@ -14,6 +14,7 @@ import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as EventosRouteImport } from './routes/eventos'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -44,6 +45,7 @@ import { Route as ApiPublicPushDispatchRouteImport } from './routes/api/public/p
 import { Route as ApiPublicHooksRetryEmailDlqRouteImport } from './routes/api/public/hooks/retry-email-dlq'
 import { Route as ApiPublicHooksNotificationEmailRouteImport } from './routes/api/public/hooks/notification-email'
 import { Route as AuthenticatedOwnerEmpresaIdProdutosRouteImport } from './routes/_authenticated/owner.empresa.$id.produtos'
+import { Route as AuthenticatedOwnerEmpresaIdEventosRouteImport } from './routes/_authenticated/owner.empresa.$id.eventos'
 import { Route as AuthenticatedOwnerEmpresaIdEditarRouteImport } from './routes/_authenticated/owner.empresa.$id.editar'
 import { Route as AuthenticatedOwnerEmpresaIdDashboardRouteImport } from './routes/_authenticated/owner.empresa.$id.dashboard'
 
@@ -70,6 +72,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const PrivacidadeRoute = PrivacidadeRouteImport.update({
   id: '/privacidade',
   path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventosRoute = EventosRouteImport.update({
+  id: '/eventos',
+  path: '/eventos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContatoRoute = ContatoRouteImport.update({
@@ -233,6 +240,12 @@ const AuthenticatedOwnerEmpresaIdProdutosRoute =
     path: '/owner/empresa/$id/produtos',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedOwnerEmpresaIdEventosRoute =
+  AuthenticatedOwnerEmpresaIdEventosRouteImport.update({
+    id: '/owner/empresa/$id/eventos',
+    path: '/owner/empresa/$id/eventos',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedOwnerEmpresaIdEditarRoute =
   AuthenticatedOwnerEmpresaIdEditarRouteImport.update({
     id: '/owner/empresa/$id/editar',
@@ -251,6 +264,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
+  '/eventos': typeof EventosRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -282,6 +296,7 @@ export interface FileRoutesByFullPath {
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
   '/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   '/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
+  '/owner/empresa/$id/eventos': typeof AuthenticatedOwnerEmpresaIdEventosRoute
   '/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
 }
 export interface FileRoutesByTo {
@@ -289,6 +304,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
+  '/eventos': typeof EventosRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -319,6 +335,7 @@ export interface FileRoutesByTo {
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
   '/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   '/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
+  '/owner/empresa/$id/eventos': typeof AuthenticatedOwnerEmpresaIdEventosRoute
   '/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
 }
 export interface FileRoutesById {
@@ -328,6 +345,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
+  '/eventos': typeof EventosRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -359,6 +377,7 @@ export interface FileRoutesById {
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
   '/_authenticated/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   '/_authenticated/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
+  '/_authenticated/owner/empresa/$id/eventos': typeof AuthenticatedOwnerEmpresaIdEventosRoute
   '/_authenticated/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
 }
 export interface FileRouteTypes {
@@ -368,6 +387,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/buscar'
     | '/contato'
+    | '/eventos'
     | '/privacidade'
     | '/reset-password'
     | '/sitemap.xml'
@@ -399,6 +419,7 @@ export interface FileRouteTypes {
     | '/lovable/email/transactional/send'
     | '/owner/empresa/$id/dashboard'
     | '/owner/empresa/$id/editar'
+    | '/owner/empresa/$id/eventos'
     | '/owner/empresa/$id/produtos'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -406,6 +427,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/buscar'
     | '/contato'
+    | '/eventos'
     | '/privacidade'
     | '/reset-password'
     | '/sitemap.xml'
@@ -436,6 +458,7 @@ export interface FileRouteTypes {
     | '/lovable/email/transactional/send'
     | '/owner/empresa/$id/dashboard'
     | '/owner/empresa/$id/editar'
+    | '/owner/empresa/$id/eventos'
     | '/owner/empresa/$id/produtos'
   id:
     | '__root__'
@@ -444,6 +467,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/buscar'
     | '/contato'
+    | '/eventos'
     | '/privacidade'
     | '/reset-password'
     | '/sitemap.xml'
@@ -475,6 +499,7 @@ export interface FileRouteTypes {
     | '/lovable/email/transactional/send'
     | '/_authenticated/owner/empresa/$id/dashboard'
     | '/_authenticated/owner/empresa/$id/editar'
+    | '/_authenticated/owner/empresa/$id/eventos'
     | '/_authenticated/owner/empresa/$id/produtos'
   fileRoutesById: FileRoutesById
 }
@@ -484,6 +509,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BuscarRoute: typeof BuscarRoute
   ContatoRoute: typeof ContatoRoute
+  EventosRoute: typeof EventosRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -540,6 +566,13 @@ declare module '@tanstack/react-router' {
       path: '/privacidade'
       fullPath: '/privacidade'
       preLoaderRoute: typeof PrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/eventos': {
+      id: '/eventos'
+      path: '/eventos'
+      fullPath: '/eventos'
+      preLoaderRoute: typeof EventosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contato': {
@@ -752,6 +785,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdProdutosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/owner/empresa/$id/eventos': {
+      id: '/_authenticated/owner/empresa/$id/eventos'
+      path: '/owner/empresa/$id/eventos'
+      fullPath: '/owner/empresa/$id/eventos'
+      preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdEventosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/owner/empresa/$id/editar': {
       id: '/_authenticated/owner/empresa/$id/editar'
       path: '/owner/empresa/$id/editar'
@@ -795,6 +835,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedOwnerIndexRoute: typeof AuthenticatedOwnerIndexRoute
   AuthenticatedOwnerEmpresaIdDashboardRoute: typeof AuthenticatedOwnerEmpresaIdDashboardRoute
   AuthenticatedOwnerEmpresaIdEditarRoute: typeof AuthenticatedOwnerEmpresaIdEditarRoute
+  AuthenticatedOwnerEmpresaIdEventosRoute: typeof AuthenticatedOwnerEmpresaIdEventosRoute
   AuthenticatedOwnerEmpresaIdProdutosRoute: typeof AuthenticatedOwnerEmpresaIdProdutosRoute
 }
 
@@ -809,6 +850,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedOwnerEmpresaIdDashboardRoute,
   AuthenticatedOwnerEmpresaIdEditarRoute:
     AuthenticatedOwnerEmpresaIdEditarRoute,
+  AuthenticatedOwnerEmpresaIdEventosRoute:
+    AuthenticatedOwnerEmpresaIdEventosRoute,
   AuthenticatedOwnerEmpresaIdProdutosRoute:
     AuthenticatedOwnerEmpresaIdProdutosRoute,
 }
@@ -822,6 +865,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BuscarRoute: BuscarRoute,
   ContatoRoute: ContatoRoute,
+  EventosRoute: EventosRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,

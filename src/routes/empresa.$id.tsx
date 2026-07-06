@@ -13,6 +13,7 @@ import { CompanyHeader } from "@/features/companies/components/CompanyHeader";
 import { CompanyGalleryBlock } from "@/features/companies/components/CompanyGalleryBlock";
 import { CompanyProductsBlock } from "@/features/companies/components/CompanyProductsBlock";
 import { CompanyMapCard } from "@/features/companies/components/CompanyMapCard";
+import { CompanyEventsBlock } from "@/features/events/components/CompanyEventsBlock";
 import { buildCompanyHead } from "@/features/companies/components/buildCompanyHead";
 import { useAuth } from "@/features/auth/use-auth";
 import { trackEvent } from "@/lib/track";
@@ -183,6 +184,7 @@ function CompanyPage() {
             ) : null}
 
             <CompanyGalleryBlock urls={gallery} />
+            <CompanyEventsBlock companyId={company.id} />
             <CompanyProductsBlock products={company.products} />
 
             {!isPending ? (

@@ -174,6 +174,11 @@ function DashboardPage() {
                 Produtos
               </Link>
             </Button>
+            <Button asChild size="sm" variant="secondary">
+              <Link to="/owner/empresa/$id/eventos" params={{ id }}>
+                Eventos
+              </Link>
+            </Button>
             <RemovalRequestDialog companyId={id} userId={user?.id ?? null} ownerMode />
           </div>
         </div>

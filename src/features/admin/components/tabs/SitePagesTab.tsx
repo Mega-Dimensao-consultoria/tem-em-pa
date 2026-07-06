@@ -1,0 +1,141 @@
+import { useState, useEffect } from 'react'
+import { Save, Eye, PencilLine, Loader2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import {
+  useAdminSitePages,
+  useUpdateSitePage,
+  type AdminSitePage,
+} from '@/features/content/functions/adminSitePages'
+import { MarkdownRenderer } from '@/features/content/components/MarkdownRenderer'
+import { Empty, Loading } from '../admin-ui'
+
+const SLUG_LABELS: Record<string, string> = {
+  sobre: 'Sobre',
+  contato: 'Contato',
+  termos: 'Termos de Uso',
+  privacidade: 'Política de Privacidade',
+}
+
+export function SitePagesTab() {
+  const { data = [], isLoading } = useAdminSitePages()
+  const [activeSlug, setActiveSlug] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!activeSlug && data.length > 0) setActiveSlug(data[0].slug)
+  }, [data, activeSlug])
+
+  if (isLoading) return <Loading />
+  if (data.length === 0) return <Empty>Nenhuma página cadastrada.</Empty>
+
+  const active = data.find((p) => p.slug === activeSlug) ?? data[0]
+
+  return (
+    <div className="mt-4 grid gap-4 lg:grid-cols-[220px_1fr]">
+      <aside className="space-y-1">
+        {data.map((p) => (
+          <button
+            key={p.slug}
+            onClick={() => setActiveSlug(p.slug)}
+            className={`w-full rounded-lg px-3 py-2 text-left text-sm transition ${
+              p.slug === active.slug
+                ? 'bg-primary text-primary-foreground'
+                : 'hover:bg-muted'
+            }`}
+          >
+            <div className="font-medium">{SLUG_LABELS[p.slug] ?? p.title}</div>
+            <div
+              className={`text-xs ${
+                p.slug === active.slug ? 'text-primary-foreground/70' : 'text-muted-foreground'
+              }`}
+            >
+              /{p.slug}
+            </div>
+          </button>
+        ))}
+      </aside>
+
+      <PageEditor key={active.slug} page={active} />
+    </div>
+  )
+}
+
+function PageEditor({ page }: { page: AdminSitePage }) {
+  const [title, setTitle] = useState(page.title)
+  const [content, setContent] = useState(page.content_md)
+  const update = useUpdateSitePage()
+
+  const dirty = title !== page.title || content !== page.content_md
+
+  return (
+    <section className="rounded-2xl border border-border bg-card p-4 shadow-soft">
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <div>
+          <h3 className="font-display text-lg font-semibold">
+            {SLUG_LABELS[page.slug] ?? page.title}
+          </h3>
+          <p className="text-xs text-muted-foreground">
+            Última atualização:{' '}
+            {new Date(page.updated_at).toLocaleString('pt-BR')}
+          </p>
+        </div>
+        <Button
+          onClick={() => update.mutate({ slug: page.slug, title, content_md: content })}
+          disabled={!dirty || update.isPending}
+        >
+          {update.isPending ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Save className="mr-2 h-4 w-4" />
+          )}
+          Salvar
+        </Button>
+      </div>
+
+      <label className="mb-1 block text-xs font-medium text-muted-foreground">
+        Título
+      </label>
+      <Input
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        maxLength={140}
+        className="mb-4"
+      />
+
+      <Tabs defaultValue="edit">
+        <TabsList>
+          <TabsTrigger value="edit">
+            <PencilLine className="mr-1 h-4 w-4" /> Editar
+          </TabsTrigger>
+          <TabsTrigger value="preview">
+            <Eye className="mr-1 h-4 w-4" /> Visualizar
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="edit" className="mt-3">
+          <Textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            rows={22}
+            className="font-mono text-sm"
+            placeholder="Escreva em Markdown..."
+          />
+          <p className="mt-2 text-xs text-muted-foreground">
+            Suporta Markdown: <code>## Título</code>, <code>**negrito**</code>,{' '}
+            <code>[link](url)</code>, <code>- lista</code>. HTML é bloqueado por
+            segurança.
+          </p>
+        </TabsContent>
+
+        <TabsContent value="preview" className="mt-3">
+          <div className="rounded-xl border border-border bg-background p-6">
+            <h1 className="mb-4 font-display text-3xl font-bold">{title}</h1>
+            <MarkdownRenderer content={content} />
+          </div>
+        </TabsContent>
+      </Tabs>
+    </section>
+  )
+}

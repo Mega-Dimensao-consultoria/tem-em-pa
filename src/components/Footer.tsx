@@ -3,7 +3,11 @@ import { Logo } from "./Logo";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border/60 bg-muted/30">
+    <footer
+      role="contentinfo"
+      aria-label="Rodapé do site"
+      className="border-t border-border/60 bg-muted/30"
+    >
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-3">
         <div>
           <Logo />

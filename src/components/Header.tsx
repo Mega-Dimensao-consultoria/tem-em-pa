@@ -73,7 +73,11 @@ export function Header() {
               <NotificationsBell />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="rounded-full outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                <button
+                  type="button"
+                  aria-label={`Menu da conta (${user.email ?? "usuário"})`}
+                  className="rounded-full outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
                   <Avatar className="h-9 w-9 border border-border">
                     <AvatarFallback className="bg-secondary text-secondary-foreground text-xs font-semibold">
                       {initials}

@@ -15,6 +15,7 @@ import { AuditLogTab } from "@/features/admin/components/tabs/AuditLogTab";
 import { TwoFaResetRequestsTab } from "@/features/admin/components/tabs/TwoFaResetRequestsTab";
 import { PendingRemovalsTab } from "@/features/admin/components/tabs/PendingRemovalsTab";
 import { ContactMessagesTab } from "@/features/admin/components/tabs/ContactMessagesTab";
+import { SitePagesTab } from "@/features/admin/components/tabs/SitePagesTab";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/_authenticated/admin")({

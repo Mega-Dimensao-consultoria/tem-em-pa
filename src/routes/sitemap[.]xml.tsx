@@ -25,8 +25,11 @@ export const Route = createFileRoute("/sitemap.xml")({
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "daily", priority: "1.0" },
           { path: "/buscar", changefreq: "daily", priority: "0.9" },
+          { path: "/eventos", changefreq: "daily", priority: "0.8" },
           { path: "/sobre", changefreq: "monthly", priority: "0.5" },
           { path: "/contato", changefreq: "monthly", priority: "0.5" },
+          { path: "/termos", changefreq: "yearly", priority: "0.3" },
+          { path: "/privacidade", changefreq: "yearly", priority: "0.3" },
         ];
 
         const [cats, companies] = await Promise.all([

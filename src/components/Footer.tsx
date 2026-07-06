@@ -21,9 +21,13 @@ export function Footer() {
           </ul>
         </div>
         <div>
-          <h4 className="mb-3 text-sm font-semibold">Pouso Alegre / MG</h4>
-          <p className="text-sm text-muted-foreground">
-            Conectando moradores e comércio local com inteligência e cuidado.
+          <h4 className="mb-3 text-sm font-semibold">Legal</h4>
+          <ul className="space-y-2 text-sm text-muted-foreground">
+            <li><Link to="/termos" className="hover:text-foreground">Termos de Uso</Link></li>
+            <li><Link to="/privacidade" className="hover:text-foreground">Política de Privacidade</Link></li>
+          </ul>
+          <p className="mt-4 text-sm text-muted-foreground">
+            Pouso Alegre / MG — conectando moradores e comércio local.
           </p>
         </div>
       </div>

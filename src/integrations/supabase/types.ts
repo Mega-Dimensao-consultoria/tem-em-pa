@@ -870,6 +870,21 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      get_company_reviews_for_owner: {
+        Args: { _company_id: string }
+        Returns: {
+          comment: string
+          company_id: string
+          created_at: string
+          id: string
+          is_anonymous: boolean
+          owner_reply: string
+          owner_reply_at: string
+          rating: number
+          status: string
+          user_id: string
+        }[]
+      }
       get_my_reviews: {
         Args: never
         Returns: {

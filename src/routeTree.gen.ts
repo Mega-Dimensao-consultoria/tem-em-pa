@@ -9,9 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermosRouteImport } from './routes/termos'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -39,11 +41,17 @@ import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lova
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as ApiPublicPushDispatchRouteImport } from './routes/api/public/push.dispatch'
+import { Route as ApiPublicHooksRetryEmailDlqRouteImport } from './routes/api/public/hooks/retry-email-dlq'
 import { Route as ApiPublicHooksNotificationEmailRouteImport } from './routes/api/public/hooks/notification-email'
 import { Route as AuthenticatedOwnerEmpresaIdProdutosRouteImport } from './routes/_authenticated/owner.empresa.$id.produtos'
 import { Route as AuthenticatedOwnerEmpresaIdEditarRouteImport } from './routes/_authenticated/owner.empresa.$id.editar'
 import { Route as AuthenticatedOwnerEmpresaIdDashboardRouteImport } from './routes/_authenticated/owner.empresa.$id.dashboard'
 
+const TermosRoute = TermosRouteImport.update({
+  id: '/termos',
+  path: '/termos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SobreRoute = SobreRouteImport.update({
   id: '/sobre',
   path: '/sobre',
@@ -57,6 +65,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContatoRoute = ContatoRouteImport.update({
@@ -202,6 +215,12 @@ const ApiPublicPushDispatchRoute = ApiPublicPushDispatchRouteImport.update({
   path: '/api/public/push/dispatch',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksRetryEmailDlqRoute =
+  ApiPublicHooksRetryEmailDlqRouteImport.update({
+    id: '/api/public/hooks/retry-email-dlq',
+    path: '/api/public/hooks/retry-email-dlq',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksNotificationEmailRoute =
   ApiPublicHooksNotificationEmailRouteImport.update({
     id: '/api/public/hooks/notification-email',
@@ -232,9 +251,11 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
+  '/termos': typeof TermosRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
@@ -254,6 +275,7 @@ export interface FileRoutesByFullPath {
   '/owner/': typeof AuthenticatedOwnerIndexRoute
   '/painel/': typeof AuthenticatedPainelIndexRoute
   '/api/public/hooks/notification-email': typeof ApiPublicHooksNotificationEmailRoute
+  '/api/public/hooks/retry-email-dlq': typeof ApiPublicHooksRetryEmailDlqRoute
   '/api/public/push/dispatch': typeof ApiPublicPushDispatchRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -267,9 +289,11 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
+  '/termos': typeof TermosRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
@@ -288,6 +312,7 @@ export interface FileRoutesByTo {
   '/owner': typeof AuthenticatedOwnerIndexRoute
   '/painel': typeof AuthenticatedPainelIndexRoute
   '/api/public/hooks/notification-email': typeof ApiPublicHooksNotificationEmailRoute
+  '/api/public/hooks/retry-email-dlq': typeof ApiPublicHooksRetryEmailDlqRoute
   '/api/public/push/dispatch': typeof ApiPublicPushDispatchRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -303,9 +328,11 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
+  '/termos': typeof TermosRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
   '/_authenticated/favoritos': typeof AuthenticatedFavoritosRoute
@@ -325,6 +352,7 @@ export interface FileRoutesById {
   '/_authenticated/owner/': typeof AuthenticatedOwnerIndexRoute
   '/_authenticated/painel/': typeof AuthenticatedPainelIndexRoute
   '/api/public/hooks/notification-email': typeof ApiPublicHooksNotificationEmailRoute
+  '/api/public/hooks/retry-email-dlq': typeof ApiPublicHooksRetryEmailDlqRoute
   '/api/public/push/dispatch': typeof ApiPublicPushDispatchRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -340,9 +368,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/buscar'
     | '/contato'
+    | '/privacidade'
     | '/reset-password'
     | '/sitemap.xml'
     | '/sobre'
+    | '/termos'
     | '/admin'
     | '/cadastrar-empresa'
     | '/favoritos'
@@ -362,6 +392,7 @@ export interface FileRouteTypes {
     | '/owner/'
     | '/painel/'
     | '/api/public/hooks/notification-email'
+    | '/api/public/hooks/retry-email-dlq'
     | '/api/public/push/dispatch'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
@@ -375,9 +406,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/buscar'
     | '/contato'
+    | '/privacidade'
     | '/reset-password'
     | '/sitemap.xml'
     | '/sobre'
+    | '/termos'
     | '/admin'
     | '/cadastrar-empresa'
     | '/favoritos'
@@ -396,6 +429,7 @@ export interface FileRouteTypes {
     | '/owner'
     | '/painel'
     | '/api/public/hooks/notification-email'
+    | '/api/public/hooks/retry-email-dlq'
     | '/api/public/push/dispatch'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
@@ -410,9 +444,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/buscar'
     | '/contato'
+    | '/privacidade'
     | '/reset-password'
     | '/sitemap.xml'
     | '/sobre'
+    | '/termos'
     | '/_authenticated/admin'
     | '/_authenticated/cadastrar-empresa'
     | '/_authenticated/favoritos'
@@ -432,6 +468,7 @@ export interface FileRouteTypes {
     | '/_authenticated/owner/'
     | '/_authenticated/painel/'
     | '/api/public/hooks/notification-email'
+    | '/api/public/hooks/retry-email-dlq'
     | '/api/public/push/dispatch'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
@@ -447,9 +484,11 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BuscarRoute: typeof BuscarRoute
   ContatoRoute: typeof ContatoRoute
+  PrivacidadeRoute: typeof PrivacidadeRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SobreRoute: typeof SobreRoute
+  TermosRoute: typeof TermosRoute
   AuthTwoFactorRoute: typeof AuthTwoFactorRoute
   BairroSlugRoute: typeof BairroSlugRoute
   CategoriaSlugRoute: typeof CategoriaSlugRoute
@@ -459,6 +498,7 @@ export interface RootRouteChildren {
   ApiPublicContactSubmitRoute: typeof ApiPublicContactSubmitRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiPublicHooksNotificationEmailRoute: typeof ApiPublicHooksNotificationEmailRoute
+  ApiPublicHooksRetryEmailDlqRoute: typeof ApiPublicHooksRetryEmailDlqRoute
   ApiPublicPushDispatchRoute: typeof ApiPublicPushDispatchRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
@@ -467,6 +507,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/termos': {
+      id: '/termos'
+      path: '/termos'
+      fullPath: '/termos'
+      preLoaderRoute: typeof TermosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sobre': {
       id: '/sobre'
       path: '/sobre'
@@ -486,6 +533,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contato': {
@@ -677,6 +731,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPushDispatchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/retry-email-dlq': {
+      id: '/api/public/hooks/retry-email-dlq'
+      path: '/api/public/hooks/retry-email-dlq'
+      fullPath: '/api/public/hooks/retry-email-dlq'
+      preLoaderRoute: typeof ApiPublicHooksRetryEmailDlqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/notification-email': {
       id: '/api/public/hooks/notification-email'
       path: '/api/public/hooks/notification-email'
@@ -761,9 +822,11 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BuscarRoute: BuscarRoute,
   ContatoRoute: ContatoRoute,
+  PrivacidadeRoute: PrivacidadeRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SobreRoute: SobreRoute,
+  TermosRoute: TermosRoute,
   AuthTwoFactorRoute: AuthTwoFactorRoute,
   BairroSlugRoute: BairroSlugRoute,
   CategoriaSlugRoute: CategoriaSlugRoute,
@@ -773,6 +836,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicContactSubmitRoute: ApiPublicContactSubmitRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiPublicHooksNotificationEmailRoute: ApiPublicHooksNotificationEmailRoute,
+  ApiPublicHooksRetryEmailDlqRoute: ApiPublicHooksRetryEmailDlqRoute,
   ApiPublicPushDispatchRoute: ApiPublicPushDispatchRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,

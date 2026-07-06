@@ -34,7 +34,7 @@ export function Footer() {
           <p className="mt-4 text-sm text-muted-foreground">
             Pouso Alegre / MG — conectando moradores e comércio local.
           </p>
-        </div>
+      </nav>
       </div>
       <div className="border-t border-border/60 py-4 text-center text-xs text-muted-foreground">
         © {new Date().getFullYear()} Tem em P.A — Todos os direitos reservados.

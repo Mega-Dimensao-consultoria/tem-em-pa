@@ -3,7 +3,8 @@ import { Calendar, MapPin } from 'lucide-react'
 import { PageShell } from '@/components/PageShell'
 import { usePublicCityEvents } from '@/features/events/hooks/useCityEvents'
 import { Skeleton } from '@/components/ui/skeleton'
-import { NoResults } from '@/components/feedback/EmptyState'
+import { EmptyState } from '@/components/feedback/EmptyState'
+import { CalendarDays } from 'lucide-react'
 
 const CANONICAL = 'https://pousoalegre.megadimensao.com.br/eventos'
 

@@ -739,6 +739,13 @@ export type Database = {
             referencedRelation: "reviews"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "review_reports_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "reviews_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       reviews: {
@@ -922,7 +929,53 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      reviews_public: {
+        Row: {
+          comment: string | null
+          company_id: string | null
+          created_at: string | null
+          id: string | null
+          is_anonymous: boolean | null
+          owner_reply: string | null
+          owner_reply_at: string | null
+          rating: number | null
+          status: Database["public"]["Enums"]["review_status"] | null
+          user_id: string | null
+        }
+        Insert: {
+          comment?: string | null
+          company_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_anonymous?: boolean | null
+          owner_reply?: string | null
+          owner_reply_at?: string | null
+          rating?: number | null
+          status?: Database["public"]["Enums"]["review_status"] | null
+          user_id?: never
+        }
+        Update: {
+          comment?: string | null
+          company_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_anonymous?: boolean | null
+          owner_reply?: string | null
+          owner_reply_at?: string | null
+          rating?: number | null
+          status?: Database["public"]["Enums"]["review_status"] | null
+          user_id?: never
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       create_notification: {

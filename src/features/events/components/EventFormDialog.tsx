@@ -158,10 +158,12 @@ export function EventFormDialog({
                 Se desativar, o evento fica apenas no seu painel.
               </p>
             </div>
-            <Switch
+            <input
               id="ev-active"
+              type="checkbox"
               checked={isActive}
-              onCheckedChange={setIsActive}
+              onChange={(e) => setIsActive(e.target.checked)}
+              className="h-5 w-5 cursor-pointer accent-primary"
             />
           </div>
 

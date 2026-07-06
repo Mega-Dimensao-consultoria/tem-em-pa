@@ -184,6 +184,7 @@ function CompanyPage() {
             ) : null}
 
             <CompanyGalleryBlock urls={gallery} />
+            <CompanyEventsBlock companyId={company.id} />
             <CompanyProductsBlock products={company.products} />
 
             {!isPending ? (

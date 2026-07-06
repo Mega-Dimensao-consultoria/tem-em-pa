@@ -68,7 +68,11 @@ export function useCompanyCityEvents(companyId: string) {
         .order('starts_at', { ascending: true })
         .limit(20)
       if (error) throw error
-      return (data ?? []) as CityEvent[]
+      // Defense in depth: even if the transport ever returns unrelated rows,
+      // never render events that do not belong to the requested company.
+      return ((data ?? []) as CityEvent[]).filter(
+        (ev) => ev.company_id === companyId,
+      )
     },
   })
 }

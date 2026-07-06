@@ -74,7 +74,8 @@ function EventosPage() {
             ))}
           </div>
         ) : data.length === 0 ? (
-          <NoResults
+          <EmptyState
+            icon={<CalendarDays className="h-8 w-8" />}
             title="Nenhum evento no momento"
             description="Volte em breve — as empresas cadastradas publicam eventos por aqui."
           />

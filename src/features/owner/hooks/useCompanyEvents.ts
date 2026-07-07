@@ -13,7 +13,7 @@ export function useCompanyEvents(id: string, periodDays: number, enabled: boolea
       ).toISOString();
       const { data, error } = await supabase
         .from("company_events")
-        .select("event_type, created_at")
+        .select("event_type, created_at, source")
         .eq("company_id", id)
         .gte("created_at", since)
         .order("created_at", { ascending: false })

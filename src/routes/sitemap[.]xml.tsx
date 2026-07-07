@@ -3,13 +3,22 @@ import type {} from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 
-const BASE_URL = "https://tem-em-pa.lovable.app";
+const BASE_URL = "https://pousoalegre.megadimensao.com.br";
 
 interface SitemapEntry {
   path: string;
   lastmod?: string;
   changefreq?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
   priority?: string;
+}
+
+function slugifyNeighborhood(name: string): string {
+  return name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
 }
 
 export const Route = createFileRoute("/sitemap.xml")({
@@ -32,9 +41,26 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/privacidade", changefreq: "yearly", priority: "0.3" },
         ];
 
-        const [cats, companies] = await Promise.all([
+        const nowIso = new Date().toISOString();
+        const [cats, companies, events, hoods] = await Promise.all([
           sb.from("categories").select("slug"),
-          sb.from("companies").select("id, updated_at").eq("status", "approved").limit(5000),
+          sb
+            .from("companies")
+            .select("id, updated_at, neighborhood")
+            .eq("status", "approved")
+            .limit(5000),
+          sb
+            .from("city_events")
+            .select("id, updated_at, starts_at")
+            .eq("is_active", true)
+            .gte("starts_at", nowIso)
+            .limit(2000),
+          sb
+            .from("companies")
+            .select("neighborhood")
+            .eq("status", "approved")
+            .not("neighborhood", "is", null)
+            .limit(5000),
         ]);
 
         for (const c of cats.data ?? []) {
@@ -47,6 +73,24 @@ export const Route = createFileRoute("/sitemap.xml")({
             changefreq: "weekly",
             priority: "0.7",
           });
+        }
+        for (const e of events.data ?? []) {
+          entries.push({
+            path: `/eventos/${e.id}`,
+            lastmod: e.updated_at ? new Date(e.updated_at).toISOString().slice(0, 10) : undefined,
+            changefreq: "daily",
+            priority: "0.6",
+          });
+        }
+        const slugs = new Set<string>();
+        for (const row of hoods.data ?? []) {
+          const n = (row.neighborhood ?? "").trim();
+          if (!n) continue;
+          const s = slugifyNeighborhood(n);
+          if (s) slugs.add(s);
+        }
+        for (const s of slugs) {
+          entries.push({ path: `/bairro/${s}`, changefreq: "weekly", priority: "0.6" });
         }
 
         const urls = entries.map((e) =>

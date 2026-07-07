@@ -20,6 +20,7 @@ import { PushBootstrap } from "@/features/notifications/components/PushBootstrap
 import { ThemeProvider, themeNoFlashScript } from "@/components/ThemeProvider";
 import { AccessibilityBar } from "@/components/AccessibilityBar";
 import { VLibrasWidget } from "@/components/VLibrasWidget";
+import { PWARegister } from "@/components/PWARegister";
 
 function NotFoundComponent() {
   return (
@@ -176,6 +177,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
+          <PWARegister />
           <PushBootstrap />
           <PushPermissionBanner />
           <Outlet />

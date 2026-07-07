@@ -4,3 +4,4 @@ export { searchCompanies } from "./search";
 export { listSimilarCompanies } from "./similar";
 export { getCategoryBySlug } from "./categoryBySlug";
 export { listCompaniesByNeighborhood } from "./listByNeighborhood";
+export { checkCompanyDuplicate, type DuplicateMatch } from "./checkDuplicate";

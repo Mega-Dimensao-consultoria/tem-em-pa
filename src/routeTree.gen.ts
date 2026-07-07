@@ -21,6 +21,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SuporteRedefinir2faRouteImport } from './routes/suporte.redefinir-2fa'
+import { Route as EventosIdRouteImport } from './routes/eventos.$id'
 import { Route as EmpresaIdRouteImport } from './routes/empresa.$id'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as CategoriaSlugRouteImport } from './routes/categoria.$slug'
@@ -44,6 +45,7 @@ import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/e
 import { Route as ApiPublicPushDispatchRouteImport } from './routes/api/public/push.dispatch'
 import { Route as ApiPublicHooksRetryEmailDlqRouteImport } from './routes/api/public/hooks/retry-email-dlq'
 import { Route as ApiPublicHooksNotificationEmailRouteImport } from './routes/api/public/hooks/notification-email'
+import { Route as ApiPublicOgEventIdRouteImport } from './routes/api/public/og.event.$id'
 import { Route as AuthenticatedOwnerEmpresaIdProdutosRouteImport } from './routes/_authenticated/owner.empresa.$id.produtos'
 import { Route as AuthenticatedOwnerEmpresaIdEventosRouteImport } from './routes/_authenticated/owner.empresa.$id.eventos'
 import { Route as AuthenticatedOwnerEmpresaIdEditarRouteImport } from './routes/_authenticated/owner.empresa.$id.editar'
@@ -107,6 +109,11 @@ const SuporteRedefinir2faRoute = SuporteRedefinir2faRouteImport.update({
   id: '/suporte/redefinir-2fa',
   path: '/suporte/redefinir-2fa',
   getParentRoute: () => rootRouteImport,
+} as any)
+const EventosIdRoute = EventosIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => EventosRoute,
 } as any)
 const EmpresaIdRoute = EmpresaIdRouteImport.update({
   id: '/empresa/$id',
@@ -234,6 +241,11 @@ const ApiPublicHooksNotificationEmailRoute =
     path: '/api/public/hooks/notification-email',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicOgEventIdRoute = ApiPublicOgEventIdRouteImport.update({
+  id: '/api/public/og/event/$id',
+  path: '/api/public/og/event/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedOwnerEmpresaIdProdutosRoute =
   AuthenticatedOwnerEmpresaIdProdutosRouteImport.update({
     id: '/owner/empresa/$id/produtos',
@@ -264,7 +276,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
-  '/eventos': typeof EventosRoute
+  '/eventos': typeof EventosRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -280,6 +292,7 @@ export interface FileRoutesByFullPath {
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
+  '/eventos/$id': typeof EventosIdRoute
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
@@ -298,13 +311,14 @@ export interface FileRoutesByFullPath {
   '/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/owner/empresa/$id/eventos': typeof AuthenticatedOwnerEmpresaIdEventosRoute
   '/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
+  '/api/public/og/event/$id': typeof ApiPublicOgEventIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
-  '/eventos': typeof EventosRoute
+  '/eventos': typeof EventosRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -319,6 +333,7 @@ export interface FileRoutesByTo {
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
+  '/eventos/$id': typeof EventosIdRoute
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
@@ -337,6 +352,7 @@ export interface FileRoutesByTo {
   '/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/owner/empresa/$id/eventos': typeof AuthenticatedOwnerEmpresaIdEventosRoute
   '/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
+  '/api/public/og/event/$id': typeof ApiPublicOgEventIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -345,7 +361,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
-  '/eventos': typeof EventosRoute
+  '/eventos': typeof EventosRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -361,6 +377,7 @@ export interface FileRoutesById {
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
+  '/eventos/$id': typeof EventosIdRoute
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/_authenticated/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/_authenticated/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
@@ -379,6 +396,7 @@ export interface FileRoutesById {
   '/_authenticated/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/_authenticated/owner/empresa/$id/eventos': typeof AuthenticatedOwnerEmpresaIdEventosRoute
   '/_authenticated/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
+  '/api/public/og/event/$id': typeof ApiPublicOgEventIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -403,6 +421,7 @@ export interface FileRouteTypes {
     | '/categoria/$slug'
     | '/email/unsubscribe'
     | '/empresa/$id'
+    | '/eventos/$id'
     | '/suporte/redefinir-2fa'
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
@@ -421,6 +440,7 @@ export interface FileRouteTypes {
     | '/owner/empresa/$id/editar'
     | '/owner/empresa/$id/eventos'
     | '/owner/empresa/$id/produtos'
+    | '/api/public/og/event/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -442,6 +462,7 @@ export interface FileRouteTypes {
     | '/categoria/$slug'
     | '/email/unsubscribe'
     | '/empresa/$id'
+    | '/eventos/$id'
     | '/suporte/redefinir-2fa'
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
@@ -460,6 +481,7 @@ export interface FileRouteTypes {
     | '/owner/empresa/$id/editar'
     | '/owner/empresa/$id/eventos'
     | '/owner/empresa/$id/produtos'
+    | '/api/public/og/event/$id'
   id:
     | '__root__'
     | '/'
@@ -483,6 +505,7 @@ export interface FileRouteTypes {
     | '/categoria/$slug'
     | '/email/unsubscribe'
     | '/empresa/$id'
+    | '/eventos/$id'
     | '/suporte/redefinir-2fa'
     | '/_authenticated/painel/avaliacoes'
     | '/_authenticated/painel/configuracoes'
@@ -501,6 +524,7 @@ export interface FileRouteTypes {
     | '/_authenticated/owner/empresa/$id/editar'
     | '/_authenticated/owner/empresa/$id/eventos'
     | '/_authenticated/owner/empresa/$id/produtos'
+    | '/api/public/og/event/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -509,7 +533,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BuscarRoute: typeof BuscarRoute
   ContatoRoute: typeof ContatoRoute
-  EventosRoute: typeof EventosRoute
+  EventosRoute: typeof EventosRouteWithChildren
   PrivacidadeRoute: typeof PrivacidadeRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -529,6 +553,7 @@ export interface RootRouteChildren {
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
   LovableEmailTransactionalSendRoute: typeof LovableEmailTransactionalSendRoute
+  ApiPublicOgEventIdRoute: typeof ApiPublicOgEventIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -616,6 +641,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/suporte/redefinir-2fa'
       preLoaderRoute: typeof SuporteRedefinir2faRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/eventos/$id': {
+      id: '/eventos/$id'
+      path: '/$id'
+      fullPath: '/eventos/$id'
+      preLoaderRoute: typeof EventosIdRouteImport
+      parentRoute: typeof EventosRoute
     }
     '/empresa/$id': {
       id: '/empresa/$id'
@@ -778,6 +810,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksNotificationEmailRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/og/event/$id': {
+      id: '/api/public/og/event/$id'
+      path: '/api/public/og/event/$id'
+      fullPath: '/api/public/og/event/$id'
+      preLoaderRoute: typeof ApiPublicOgEventIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/owner/empresa/$id/produtos': {
       id: '/_authenticated/owner/empresa/$id/produtos'
       path: '/owner/empresa/$id/produtos'
@@ -859,13 +898,24 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface EventosRouteChildren {
+  EventosIdRoute: typeof EventosIdRoute
+}
+
+const EventosRouteChildren: EventosRouteChildren = {
+  EventosIdRoute: EventosIdRoute,
+}
+
+const EventosRouteWithChildren =
+  EventosRoute._addFileChildren(EventosRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   BuscarRoute: BuscarRoute,
   ContatoRoute: ContatoRoute,
-  EventosRoute: EventosRoute,
+  EventosRoute: EventosRouteWithChildren,
   PrivacidadeRoute: PrivacidadeRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
@@ -885,6 +935,7 @@ const rootRouteChildren: RootRouteChildren = {
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
   LovableEmailTransactionalSendRoute: LovableEmailTransactionalSendRoute,
+  ApiPublicOgEventIdRoute: ApiPublicOgEventIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

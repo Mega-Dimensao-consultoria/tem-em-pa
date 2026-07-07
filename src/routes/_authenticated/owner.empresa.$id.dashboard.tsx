@@ -26,6 +26,7 @@ import {
 import { PeriodSelector } from "@/features/owner/components/PeriodSelector";
 import { DashboardReviewsList } from "@/features/owner/components/DashboardReviewsList";
 import { TrafficSourcesCard } from "@/features/owner/components/TrafficSourcesCard";
+import { AlertPrefsCard } from "@/features/owner/components/AlertPrefsCard";
 import { useAuth } from "@/features/auth/use-auth";
 import { useOwnerCompany } from "@/features/owner/hooks/useOwnerCompany";
 import { useCompanyEvents } from "@/features/owner/hooks/useCompanyEvents";
@@ -222,8 +223,9 @@ function DashboardPage() {
           </div>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 grid gap-6 md:grid-cols-2">
           <TrafficSourcesCard events={curr} />
+          {user ? <AlertPrefsCard companyId={id} userId={user.id} /> : null}
         </div>
 
 

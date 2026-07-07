@@ -6,5 +6,11 @@ Disallow: /reset-password
 Disallow: /owner
 Disallow: /admin
 Disallow: /cadastrar-empresa
+Disallow: /painel
+Disallow: /favoritos
+Disallow: /notificacoes
+Disallow: /suporte/
+Disallow: /api/
+Disallow: /lovable/
 
-Sitemap: https://tem-em-pa.lovable.app/sitemap.xml
+Sitemap: https://pousoalegre.megadimensao.com.br/sitemap.xml

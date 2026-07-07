@@ -223,8 +223,9 @@ function DashboardPage() {
           </div>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 grid gap-6 md:grid-cols-2">
           <TrafficSourcesCard events={curr} />
+          {user ? <AlertPrefsCard companyId={id} userId={user.id} /> : null}
         </div>
 
 

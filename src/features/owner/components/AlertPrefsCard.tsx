@@ -120,10 +120,10 @@ export function AlertPrefsCard({
             <Label htmlFor="pref-review" className="text-sm">
               Avisar sobre novas avaliações
             </Label>
-            <Switch
+            <Toggle
               id="pref-review"
               checked={prefs.notify_new_review}
-              onCheckedChange={(v) => setPrefs((p) => ({ ...p, notify_new_review: v }))}
+              onChange={(v: boolean) => setPrefs((p) => ({ ...p, notify_new_review: v }))}
             />
           </div>
 
@@ -158,10 +158,10 @@ export function AlertPrefsCard({
             <Label htmlFor="pref-claim" className="text-sm">
               Avisar sobre pedidos de reivindicação
             </Label>
-            <Switch
+            <Toggle
               id="pref-claim"
               checked={prefs.notify_new_claim}
-              onCheckedChange={(v) => setPrefs((p) => ({ ...p, notify_new_claim: v }))}
+              onChange={(v: boolean) => setPrefs((p) => ({ ...p, notify_new_claim: v }))}
             />
           </div>
 

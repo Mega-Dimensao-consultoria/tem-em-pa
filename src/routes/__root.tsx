@@ -177,6 +177,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
+          <PWARegister />
           <PushBootstrap />
           <PushPermissionBanner />
           <Outlet />

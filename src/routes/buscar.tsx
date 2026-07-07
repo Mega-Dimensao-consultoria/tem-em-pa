@@ -17,7 +17,7 @@ import { isOpenNow } from "@/lib/hours";
 const searchSchema = z.object({
   q: z.string().trim().max(120).optional(),
   cat: z.string().trim().max(60).optional(),
-  sort: z.enum(["recent", "name", "distance"]).optional(),
+  sort: z.enum(["relevance", "recent", "name", "distance"]).optional(),
   open: z.coerce.boolean().optional(),
 });
 

@@ -317,18 +317,21 @@ export type Database = {
           created_at: string
           event_type: string
           id: string
+          source: string | null
         }
         Insert: {
           company_id: string
           created_at?: string
           event_type: string
           id?: string
+          source?: string | null
         }
         Update: {
           company_id?: string
           created_at?: string
           event_type?: string
           id?: string
+          source?: string | null
         }
         Relationships: [
           {

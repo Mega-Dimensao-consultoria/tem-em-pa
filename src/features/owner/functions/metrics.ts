@@ -1,4 +1,4 @@
-export type EventRow = { event_type: string; created_at: string };
+export type EventRow = { event_type: string; created_at: string; source?: string | null };
 
 export const CLICK_TYPES = ["whatsapp_click", "phone_click", "website_click", "maps_click"];
 

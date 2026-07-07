@@ -16,6 +16,7 @@ import { TwoFaResetRequestsTab } from "@/features/admin/components/tabs/TwoFaRes
 import { PendingRemovalsTab } from "@/features/admin/components/tabs/PendingRemovalsTab";
 import { ContactMessagesTab } from "@/features/admin/components/tabs/ContactMessagesTab";
 import { SitePagesTab } from "@/features/admin/components/tabs/SitePagesTab";
+import { AdminOverviewTab } from "@/features/admin/components/tabs/AdminOverviewTab";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -61,8 +62,9 @@ function AdminPage() {
 
         <AdminStats />
 
-        <Tabs defaultValue="empresas" className="mt-8">
+        <Tabs defaultValue="visao" className="mt-8">
           <TabsList className="flex w-full flex-wrap">
+            <TabsTrigger value="visao">Visão geral</TabsTrigger>
             <TabsTrigger value="empresas">Empresas</TabsTrigger>
             <TabsTrigger value="reivindicacoes">Reivindicações</TabsTrigger>
             <TabsTrigger value="remocoes">Remoções</TabsTrigger>
@@ -77,6 +79,7 @@ function AdminPage() {
             <TabsTrigger value="auditoria">Auditoria</TabsTrigger>
           </TabsList>
 
+          <TabsContent value="visao"><AdminOverviewTab /></TabsContent>
           <TabsContent value="empresas"><CompaniesAdminSection /></TabsContent>
           <TabsContent value="reivindicacoes"><PendingClaimsTab /></TabsContent>
           <TabsContent value="remocoes"><PendingRemovalsTab /></TabsContent>

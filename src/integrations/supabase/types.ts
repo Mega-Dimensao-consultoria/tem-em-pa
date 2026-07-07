@@ -825,6 +825,41 @@ export type Database = {
         }
         Relationships: []
       }
+      site_pages_versions: {
+        Row: {
+          content_md: string
+          created_at: string
+          id: string
+          saved_by: string | null
+          slug: string
+          title: string
+        }
+        Insert: {
+          content_md: string
+          created_at?: string
+          id?: string
+          saved_by?: string | null
+          slug: string
+          title: string
+        }
+        Update: {
+          content_md?: string
+          created_at?: string
+          id?: string
+          saved_by?: string | null
+          slug?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "site_pages_versions_slug_fkey"
+            columns: ["slug"]
+            isOneToOne: false
+            referencedRelation: "site_pages"
+            referencedColumns: ["slug"]
+          },
+        ]
+      }
       suppressed_emails: {
         Row: {
           created_at: string

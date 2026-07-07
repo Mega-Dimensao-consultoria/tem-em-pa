@@ -273,7 +273,13 @@ function EventosPage() {
                     </Link>
                   ) : null}
                   <h2 className="mt-1 font-display text-base font-semibold">
-                    {ev.title}
+                    <Link
+                      to="/eventos/$id"
+                      params={{ id: ev.id }}
+                      className="hover:underline"
+                    >
+                      {ev.title}
+                    </Link>
                   </h2>
                   <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                     <span className="inline-flex items-center gap-1">

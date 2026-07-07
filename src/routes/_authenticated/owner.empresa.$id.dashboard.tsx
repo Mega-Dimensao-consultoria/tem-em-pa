@@ -25,6 +25,7 @@ import {
 } from "@/features/owner/components/MetricCards";
 import { PeriodSelector } from "@/features/owner/components/PeriodSelector";
 import { DashboardReviewsList } from "@/features/owner/components/DashboardReviewsList";
+import { TrafficSourcesCard } from "@/features/owner/components/TrafficSourcesCard";
 import { useAuth } from "@/features/auth/use-auth";
 import { useOwnerCompany } from "@/features/owner/hooks/useOwnerCompany";
 import { useCompanyEvents } from "@/features/owner/hooks/useCompanyEvents";
@@ -220,6 +221,11 @@ function DashboardPage() {
             />
           </div>
         </div>
+
+        <div className="mt-6">
+          <TrafficSourcesCard events={curr} />
+        </div>
+
 
         <div className="mt-6 grid gap-6 md:grid-cols-[1fr_auto] md:items-start">
           <ProfileCompleteness company={company} />

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { queryKeys } from "@/lib/queryKeys";
 
-export type SearchSort = "recent" | "name" | "distance";
+export type SearchSort = "relevance" | "recent" | "name" | "distance";
 
 export type SearchParams = {
   q?: string;
@@ -29,7 +29,7 @@ export function useSearchCompanies({ q, cat, sort, userId, enabled }: SearchPara
       let query = supabase
         .from("companies")
         .select(
-          "id, name, slug, description, neighborhood, city, state, lat, lng, hours, logo_url, cover_url, is_featured, status, owner_id, category_id, categories:category_id(name, slug, icon)",
+          "id, name, slug, description, neighborhood, city, state, lat, lng, hours, logo_url, cover_url, is_featured, status, owner_id, category_id, created_at, categories:category_id(name, slug, icon)",
         )
         .limit(120);
       if (sort === "name") query = query.order("name", { ascending: true });
@@ -41,4 +41,38 @@ export function useSearchCompanies({ q, cat, sort, userId, enabled }: SearchPara
       return data ?? [];
     },
   });
+}
+
+/**
+ * Client-side relevance score. Higher is better.
+ * - exact/prefix/substring name match against the query
+ * - featured boost, description/logo completeness, mild recency
+ */
+export function scoreCompanyRelevance(
+  c: {
+    name: string;
+    description?: string | null;
+    logo_url?: string | null;
+    is_featured?: boolean | null;
+    created_at?: string | null;
+  },
+  q: string | undefined,
+): number {
+  let score = 0;
+  const name = (c.name ?? "").toLowerCase();
+  const query = (q ?? "").trim().toLowerCase();
+  if (query) {
+    if (name === query) score += 100;
+    else if (name.startsWith(query)) score += 60;
+    else if (name.includes(query)) score += 25;
+  }
+  if (c.is_featured) score += 15;
+  if (c.description && c.description.trim().length > 40) score += 5;
+  if (c.logo_url) score += 3;
+  if (c.created_at) {
+    const days = (Date.now() - new Date(c.created_at).getTime()) / 86_400_000;
+    // slight boost for newer listings, capped at ~5 points
+    score += Math.max(0, 5 - days / 30);
+  }
+  return score;
 }

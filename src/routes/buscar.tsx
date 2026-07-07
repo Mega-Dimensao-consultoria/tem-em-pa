@@ -10,6 +10,7 @@ import { useCategories } from "@/features/companies/hooks/useCategories";
 import { useGeolocation, haversineKm } from "@/hooks/useGeolocation";
 import {
   useSearchCompanies,
+  scoreCompanyRelevance,
   type SearchSort,
 } from "@/features/companies/hooks/useSearchCompanies";
 import { isOpenNow } from "@/lib/hours";

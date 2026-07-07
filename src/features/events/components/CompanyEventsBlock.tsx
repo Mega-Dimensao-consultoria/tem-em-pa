@@ -1,5 +1,6 @@
 import { Calendar, MapPin } from 'lucide-react'
 import { useCompanyCityEvents } from '@/features/events/hooks/useCityEvents'
+import { EventCalendarButtons } from '@/features/events/components/EventCalendarButtons'
 
 function formatRange(startsAt: string, endsAt: string | null) {
   const start = new Date(startsAt)
@@ -28,8 +29,8 @@ export function CompanyEventsBlock({ companyId }: { companyId: string }) {
   if (isLoading || data.length === 0) return null
 
   return (
-    <section>
-      <h2 className="mb-3 font-display text-lg font-semibold">
+    <section aria-labelledby="company-events-heading">
+      <h2 id="company-events-heading" className="mb-3 font-display text-lg font-semibold">
         Eventos e novidades
       </h2>
       <div className="space-y-3">
@@ -50,12 +51,12 @@ export function CompanyEventsBlock({ companyId }: { companyId: string }) {
               <h3 className="font-display text-base font-semibold">{ev.title}</h3>
               <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                 <span className="inline-flex items-center gap-1">
-                  <Calendar className="h-3.5 w-3.5" />
+                  <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
                   {formatRange(ev.starts_at, ev.ends_at)}
                 </span>
                 {ev.location ? (
                   <span className="inline-flex items-center gap-1">
-                    <MapPin className="h-3.5 w-3.5" />
+                    <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
                     {ev.location}
                   </span>
                 ) : null}
@@ -65,6 +66,18 @@ export function CompanyEventsBlock({ companyId }: { companyId: string }) {
                   {ev.description}
                 </p>
               ) : null}
+              <div className="mt-3">
+                <EventCalendarButtons
+                  event={{
+                    uid: ev.id,
+                    title: ev.title,
+                    description: ev.description,
+                    location: ev.location,
+                    startsAt: ev.starts_at,
+                    endsAt: ev.ends_at,
+                  }}
+                />
+              </div>
             </div>
           </article>
         ))}

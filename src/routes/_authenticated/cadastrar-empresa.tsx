@@ -1,5 +1,5 @@
 import { toastError } from "@/lib/safe";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
 import { PageShell } from "@/components/PageShell";
@@ -8,6 +8,19 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { geocodeAddress } from "@/lib/geocode.functions";
 import { CompanyForm, type CompanyFormValues } from "@/features/companies/components/CompanyForm";
+import {
+  checkCompanyDuplicate,
+  type DuplicateMatch,
+} from "@/features/companies/functions";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/cadastrar-empresa")({
   head: () => ({ meta: [{ title: "Cadastrar empresa — Tem em P.A" }] }),
@@ -39,14 +52,11 @@ function CadastrarPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [submitting, setSubmitting] = useState(false);
+  const [duplicates, setDuplicates] = useState<DuplicateMatch[] | null>(null);
+  const [pendingValues, setPendingValues] = useState<CompanyFormValues | null>(null);
 
-  async function handleSubmit(v: CompanyFormValues) {
+  async function proceedInsert(v: CompanyFormValues) {
     if (!user) return;
-    const parsed = schema.safeParse(v);
-    if (!parsed.success) {
-      toast.error(parsed.error.issues[0].message);
-      return;
-    }
     setSubmitting(true);
 
     let lat: number | null = null;
@@ -99,6 +109,31 @@ function CadastrarPage() {
     navigate({ to: "/empresa/$id", params: { id: data.id } });
   }
 
+  async function handleSubmit(v: CompanyFormValues) {
+    if (!user) return;
+    const parsed = schema.safeParse(v);
+    if (!parsed.success) {
+      toast.error(parsed.error.issues[0].message);
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const matches = await checkCompanyDuplicate({
+        data: { name: v.name, phone: v.phone || "", whatsapp: v.whatsapp || "" },
+      });
+      setSubmitting(false);
+      if (matches.length > 0) {
+        setPendingValues(v);
+        setDuplicates(matches);
+        return;
+      }
+    } catch {
+      setSubmitting(false);
+      // fall through — never block registration on the duplicate check
+    }
+    await proceedInsert(v);
+  }
+
   return (
     <PageShell>
       <section className="mx-auto max-w-3xl px-4 py-12">
@@ -115,6 +150,75 @@ function CadastrarPage() {
           />
         </div>
       </section>
+
+      <Dialog
+        open={!!duplicates}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDuplicates(null);
+            setPendingValues(null);
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Empresa parecida já cadastrada</DialogTitle>
+            <DialogDescription>
+              Encontramos {duplicates?.length ?? 0} cadastro(s) semelhante(s). Verifique
+              se sua empresa já está listada antes de continuar.
+            </DialogDescription>
+          </DialogHeader>
+          <ul className="max-h-72 space-y-2 overflow-auto">
+            {(duplicates ?? []).map((m) => (
+              <li
+                key={m.id}
+                className="rounded-xl border border-border bg-muted/40 p-3 text-sm"
+              >
+                <Link
+                  to="/empresa/$id"
+                  params={{ id: m.id }}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-primary hover:underline"
+                >
+                  {m.name}
+                </Link>
+                <p className="text-xs text-muted-foreground">
+                  {[m.neighborhood, m.city].filter(Boolean).join(" · ") || "—"}
+                  {m.phone ? ` · Tel: ${m.phone}` : ""}
+                  {" · "}
+                  <span className="italic">
+                    {m.reason === "phone" ? "mesmo telefone" : "nome parecido"}
+                  </span>
+                </p>
+              </li>
+            ))}
+          </ul>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setDuplicates(null);
+                setPendingValues(null);
+              }}
+            >
+              Cancelar cadastro
+            </Button>
+            <Button
+              type="button"
+              onClick={async () => {
+                const v = pendingValues;
+                setDuplicates(null);
+                setPendingValues(null);
+                if (v) await proceedInsert(v);
+              }}
+            >
+              Cadastrar mesmo assim
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </PageShell>
   );
 }

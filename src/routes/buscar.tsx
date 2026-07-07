@@ -10,6 +10,7 @@ import { useCategories } from "@/features/companies/hooks/useCategories";
 import { useGeolocation, haversineKm } from "@/hooks/useGeolocation";
 import {
   useSearchCompanies,
+  scoreCompanyRelevance,
   type SearchSort,
 } from "@/features/companies/hooks/useSearchCompanies";
 import { isOpenNow } from "@/lib/hours";
@@ -17,7 +18,7 @@ import { isOpenNow } from "@/lib/hours";
 const searchSchema = z.object({
   q: z.string().trim().max(120).optional(),
   cat: z.string().trim().max(60).optional(),
-  sort: z.enum(["recent", "name", "distance"]).optional(),
+  sort: z.enum(["relevance", "recent", "name", "distance"]).optional(),
   open: z.coerce.boolean().optional(),
 });
 
@@ -47,7 +48,7 @@ export const Route = createFileRoute("/buscar")({
 });
 
 function SearchPage() {
-  const { q, cat, sort = "recent", open } = Route.useSearch();
+  const { q, cat, sort = "relevance", open } = Route.useSearch();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const { coords, loading: geoLoading, request: requestGeo } = useGeolocation();
@@ -71,16 +72,23 @@ function SearchPage() {
   const data = (() => {
     let rows = rawData ?? [];
     if (open) rows = rows.filter((c) => isOpenNow(c.hours));
-    if (sort !== "distance" || !coords) return rows;
-    return [...rows]
-      .map((c) => {
-        const dist =
-          c.lat != null && c.lng != null
-            ? haversineKm(coords.lat, coords.lng, c.lat, c.lng)
-            : Infinity;
-        return { ...c, _dist: dist };
-      })
-      .sort((a, b) => a._dist - b._dist);
+    if (sort === "distance" && coords) {
+      return [...rows]
+        .map((c) => {
+          const dist =
+            c.lat != null && c.lng != null
+              ? haversineKm(coords.lat, coords.lng, c.lat, c.lng)
+              : Infinity;
+          return { ...c, _dist: dist };
+        })
+        .sort((a, b) => a._dist - b._dist);
+    }
+    if (sort === "relevance") {
+      return [...rows].sort(
+        (a, b) => scoreCompanyRelevance(b, q) - scoreCompanyRelevance(a, q),
+      );
+    }
+    return rows;
   })();
 
   const ownPending = user

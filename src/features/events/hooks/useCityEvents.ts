@@ -18,7 +18,17 @@ export type CityEvent = {
 }
 
 export type CityEventWithCompany = CityEvent & {
-  companies: { id: string; name: string; logo_url: string | null; slug?: string | null } | null
+  companies:
+    | {
+        id: string
+        name: string
+        logo_url: string | null
+        slug?: string | null
+        neighborhood?: string | null
+        category_id?: string | null
+        categories?: { name: string; slug: string } | null
+      }
+    | null
 }
 
 export const cityEventsKeys = {
@@ -38,7 +48,7 @@ export function usePublicCityEvents() {
       const { data, error } = await supabase
         .from('city_events')
         .select(
-          'id, company_id, title, description, starts_at, ends_at, location, image_url, is_active, created_at, updated_at, companies:company_id(id, name, logo_url)',
+          'id, company_id, title, description, starts_at, ends_at, location, image_url, is_active, created_at, updated_at, companies:company_id(id, name, logo_url, neighborhood, category_id, categories:category_id(name, slug))',
         )
         .eq('is_active', true)
         .or(`ends_at.is.null,ends_at.gte.${nowIso}`)

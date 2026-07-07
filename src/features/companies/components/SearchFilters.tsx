@@ -72,6 +72,7 @@ export function SearchFilters({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="relevance">Relevância</SelectItem>
             <SelectItem value="recent">Mais recentes</SelectItem>
             <SelectItem value="name">Nome (A→Z)</SelectItem>
             <SelectItem value="distance">Mais próximas</SelectItem>

@@ -587,6 +587,47 @@ export type Database = {
         }
         Relationships: []
       }
+      owner_alert_prefs: {
+        Row: {
+          company_id: string
+          created_at: string
+          id: string
+          min_review_rating: number
+          notify_new_claim: boolean
+          notify_new_review: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          id?: string
+          min_review_rating?: number
+          notify_new_claim?: boolean
+          notify_new_review?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          id?: string
+          min_review_rating?: number
+          notify_new_claim?: boolean
+          notify_new_review?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "owner_alert_prefs_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           company_id: string

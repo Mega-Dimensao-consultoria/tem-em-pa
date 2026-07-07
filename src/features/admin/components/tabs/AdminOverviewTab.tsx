@@ -137,7 +137,7 @@ async function exportContacts() {
   try {
     const { data, error } = await supabase
       .from("contact_messages")
-      .select("id, name, email, subject, message, status, created_at")
+      .select("id, full_name, email, subject, message, status, created_at")
       .order("created_at", { ascending: false })
       .limit(5000);
     if (error) throw error;

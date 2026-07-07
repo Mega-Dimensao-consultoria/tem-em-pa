@@ -123,7 +123,8 @@ export function AlertPrefsCard({
             <Toggle
               id="pref-review"
               checked={prefs.notify_new_review}
-              onChange={(v: boolean) => setPrefs((p) => ({ ...p, notify_new_review: v }))}
+              onChange={(v) => setPrefs((p) => ({ ...p, notify_new_review: v }))}
+              label="Avisar sobre novas avaliações"
             />
           </div>
 
@@ -161,7 +162,8 @@ export function AlertPrefsCard({
             <Toggle
               id="pref-claim"
               checked={prefs.notify_new_claim}
-              onChange={(v: boolean) => setPrefs((p) => ({ ...p, notify_new_claim: v }))}
+              onChange={(v) => setPrefs((p) => ({ ...p, notify_new_claim: v }))}
+              label="Avisar sobre pedidos de reivindicação"
             />
           </div>
 

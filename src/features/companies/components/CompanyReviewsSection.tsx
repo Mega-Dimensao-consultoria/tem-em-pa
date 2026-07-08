@@ -84,6 +84,10 @@ export function CompanyReviewsSection({
           title="Seja o primeiro a avaliar"
           description="Esta empresa ainda não recebeu avaliações."
         />
+      ) : filtered.length === 0 ? (
+        <div className="rounded-2xl border border-border bg-card p-6 text-center text-sm text-muted-foreground shadow-soft">
+          Nenhuma avaliação com {rating} estrela(s). Ajuste o filtro para ver outras notas.
+        </div>
       ) : (
         <>
           <ol className="space-y-3" aria-label="Lista de avaliações">

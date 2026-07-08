@@ -50,7 +50,7 @@ function buildSvg(title: string, subtitle: string, company: string): string {
   <rect width="1200" height="630" fill="url(#g)"/>
   <rect x="72" y="72" width="140" height="6" fill="#fbbf24"/>
   <text x="72" y="140" font-family="system-ui,Segoe UI,Roboto,sans-serif" font-size="28" fill="#e2e8f0" font-weight="600">
-    Tem em Pouso Alegre · Eventos
+    Tem na cidade · Eventos
   </text>
   <text font-family="system-ui,Segoe UI,Roboto,sans-serif" font-size="64" fill="#ffffff" font-weight="800">
     ${tspans}
@@ -107,7 +107,7 @@ export const Route = createFileRoute('/api/public/og/event/$id')({
           const subtitle = visible
             ? [when, event!.location].filter(Boolean).join(' · ')
             : 'Descubra o que está acontecendo na cidade'
-          const company = visible ? event!.companies!.name : 'Tem em Pouso Alegre'
+          const company = visible ? event!.companies!.name : 'Tem na cidade'
 
           const svg = buildSvg(title, subtitle, company)
           return new Response(svg, {
@@ -119,7 +119,7 @@ export const Route = createFileRoute('/api/public/og/event/$id')({
         } catch {
           const svg = buildSvg(
             'Evento em Pouso Alegre',
-            'Tem em Pouso Alegre',
+            'Tem na cidade',
             'temempousoalegre.com.br',
           )
           return new Response(svg, {

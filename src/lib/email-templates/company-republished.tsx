@@ -13,12 +13,12 @@ const Email = ({
   appUrl = 'https://tem-em-pa.lovable.app',
 }: Props) => (
   <EmailLayout
-    previewText={`A empresa ${companyName} voltou a ser exibida no Tem em P.A.`}
+    previewText={`A empresa ${companyName} voltou a ser exibida no Tem na cidade.`}
     title="Empresa republicada 🎉"
     intro={
       <>
         Boas notícias! Após revisão, a empresa <strong>{companyName}</strong> voltou
-        a ser publicada no diretório Tem em P.A. e já está visível novamente para
+        a ser publicada no diretório Tem na cidade. e já está visível novamente para
         todos os visitantes da plataforma.
       </>
     }
@@ -52,7 +52,7 @@ const Email = ({
     }
     ctaLabel="Abrir painel do dono"
     ctaUrl={`${appUrl}/owner`}
-    footnote="Você está recebendo este e-mail porque é o responsável cadastrado por esta empresa no Tem em P.A."
+    footnote="Você está recebendo este e-mail porque é o responsável cadastrado por esta empresa no Tem na cidade."
   />
 )
 

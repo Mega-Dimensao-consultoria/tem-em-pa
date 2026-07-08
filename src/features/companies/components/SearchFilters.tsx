@@ -119,8 +119,7 @@ export function SearchFilters({
             </Link>
           ) : (
             <Link
-              to="/buscar"
-              search={{}}
+              to="/"
               className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
             >
               <X className="h-3 w-3" /> Limpar filtros

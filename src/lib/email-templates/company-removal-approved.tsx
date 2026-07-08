@@ -19,7 +19,7 @@ const Email = ({
       <>
         Olá! O seu pedido de remoção da empresa <strong>{companyName}</strong> foi
         analisado pela nossa equipe de moderação e aprovado. A partir de agora, esse
-        cadastro deixa de aparecer no diretório Tem em P.A. e em todas as listagens
+        cadastro deixa de aparecer no diretório Tem na cidade. e em todas as listagens
         públicas da plataforma.
       </>
     }
@@ -33,7 +33,7 @@ const Email = ({
           porque o responsável legal solicitou a retirada de forma legítima.
         </Text>
         <Text style={text}>
-          Em nome de toda a comunidade do Tem em P.A., <strong>muito obrigado</strong>{' '}
+          Em nome de toda a comunidade do Tem na cidade., <strong>muito obrigado</strong>{' '}
           por colaborar para que o diretório se mantenha confiável e atualizado.
           Cada denúncia bem fundamentada ajuda outros moradores e visitantes da
           região de Pouso Alegre a tomarem decisões melhores no dia a dia.
@@ -50,9 +50,9 @@ const Email = ({
         </Text>
       </>
     }
-    ctaLabel="Voltar ao Tem em P.A."
+    ctaLabel="Voltar ao Tem na cidade."
     ctaUrl={appUrl}
-    footnote="Você está recebendo este e-mail porque solicitou a remoção dessa empresa no Tem em P.A."
+    footnote="Você está recebendo este e-mail porque solicitou a remoção dessa empresa no Tem na cidade."
   />
 )
 

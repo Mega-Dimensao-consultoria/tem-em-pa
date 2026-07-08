@@ -20,7 +20,7 @@ import { AdminOverviewTab } from "@/features/admin/components/tabs/AdminOverview
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  head: () => ({ meta: [{ title: "Admin — Tem em P.A" }] }),
+  head: () => ({ meta: [{ title: "Admin — Tem na cidade" }] }),
   component: AdminPage,
 });
 

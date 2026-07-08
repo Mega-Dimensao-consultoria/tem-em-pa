@@ -13,7 +13,7 @@ import { PushSettingsCard } from "@/features/notifications/components/PushSettin
 import { SecuritySection } from "@/features/security/components/SecuritySection";
 
 export const Route = createFileRoute("/_authenticated/painel/configuracoes")({
-  head: () => ({ meta: [{ title: "Configurações — Tem em P.A" }] }),
+  head: () => ({ meta: [{ title: "Configurações — Tem na cidade" }] }),
   component: Configuracoes,
 });
 

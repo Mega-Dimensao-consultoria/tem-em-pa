@@ -35,7 +35,7 @@ function FavoritosPage() {
           <NoFavorites
             action={
               <Button asChild size="sm" className="rounded-full">
-                <Link to="/buscar">Explorar empresas</Link>
+                <Link to="/">Explorar empresas</Link>
               </Button>
             }
           />

@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useMyCompanies } from "@/features/owner/hooks/useMyCompanies";
 
 export const Route = createFileRoute("/_authenticated/owner/")({
-  head: () => ({ meta: [{ title: "Painel do proprietário — Tem em P.A" }] }),
+  head: () => ({ meta: [{ title: "Painel do proprietário — Tem na cidade" }] }),
   component: OwnerPage,
 });
 

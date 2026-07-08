@@ -9,13 +9,13 @@ export const Route = createFileRoute('/sobre')({
   loader: () => getSitePage({ data: { slug: 'sobre' } }),
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData?.title ?? 'Sobre'} — Tem em Pouso Alegre` },
+      { title: `${loaderData?.title ?? 'Sobre'} — Tem na cidade` },
       {
         name: 'description',
         content:
-          'Conheça o Tem em Pouso Alegre, o catálogo digital de empresas, comércios e profissionais liberais de Pouso Alegre/MG.',
+          'Conheça o Tem na cidade, o catálogo digital de empresas, comércios e profissionais liberais de Pouso Alegre/MG.',
       },
-      { property: 'og:title', content: `${loaderData?.title ?? 'Sobre'} — Tem em Pouso Alegre` },
+      { property: 'og:title', content: `${loaderData?.title ?? 'Sobre'} — Tem na cidade` },
       {
         property: 'og:description',
         content: 'Catálogo digital de Pouso Alegre/MG.',

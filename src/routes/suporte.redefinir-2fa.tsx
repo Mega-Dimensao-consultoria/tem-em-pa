@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 export const Route = createFileRoute("/suporte/redefinir-2fa")({
   head: () => ({
     meta: [
-      { title: "Redefinir 2FA — Tem em P.A" },
+      { title: "Redefinir 2FA — Tem na cidade" },
       {
         name: "description",
         content:

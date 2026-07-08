@@ -47,7 +47,7 @@ export function EmailLayout({
             </Section>
           ) : null}
           {footnote ? <Text style={muted}>{footnote}</Text> : null}
-          <Text style={footer}>Tem em P.A — Megadimensão</Text>
+          <Text style={footer}>Tem na cidade — Megadimensão</Text>
         </Container>
       </Body>
     </Html>

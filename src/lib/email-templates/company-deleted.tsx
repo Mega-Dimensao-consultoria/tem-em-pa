@@ -13,12 +13,12 @@ const Email = ({
   appUrl = 'https://tem-em-pa.lovable.app',
 }: Props) => (
   <EmailLayout
-    previewText={`A empresa ${companyName} foi removida do diretório Tem em P.A.`}
+    previewText={`A empresa ${companyName} foi removida do diretório Tem na cidade.`}
     title="Empresa removida do diretório"
     intro={
       <>
         Olá. Estamos te avisando que a empresa <strong>{companyName}</strong> foi
-        removida do diretório Tem em P.A. A partir deste momento ela deixa de
+        removida do diretório Tem na cidade. A partir deste momento ela deixa de
         aparecer nas buscas, nas listagens por categoria e nos resultados públicos do
         site.
       </>
@@ -56,7 +56,7 @@ const Email = ({
     }
     ctaLabel="Falar com o suporte"
     ctaUrl={`${appUrl}/contato`}
-    footnote="Você está recebendo este e-mail porque era o responsável cadastrado por esta empresa no Tem em P.A."
+    footnote="Você está recebendo este e-mail porque era o responsável cadastrado por esta empresa no Tem na cidade."
   />
 )
 

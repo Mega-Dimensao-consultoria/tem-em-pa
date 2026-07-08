@@ -16,7 +16,6 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as EventosRouteImport } from './routes/eventos'
 import { Route as ContatoRouteImport } from './routes/contato'
-import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CitySlugRouteImport } from './routes/$citySlug'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -28,7 +27,6 @@ import { Route as PreviewTokenRouteImport } from './routes/preview.$token'
 import { Route as EventosIdRouteImport } from './routes/eventos.$id'
 import { Route as EmpresaIdRouteImport } from './routes/empresa.$id'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
-import { Route as CategoriaSlugRouteImport } from './routes/categoria.$slug'
 import { Route as AuthTwoFactorRouteImport } from './routes/auth_.two-factor'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedNotificacoesRouteImport } from './routes/_authenticated/notificacoes'
@@ -94,11 +92,6 @@ const ContatoRoute = ContatoRouteImport.update({
   path: '/contato',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BuscarRoute = BuscarRouteImport.update({
-  id: '/buscar',
-  path: '/buscar',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -151,11 +144,6 @@ const EmpresaIdRoute = EmpresaIdRouteImport.update({
 const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
   id: '/email/unsubscribe',
   path: '/email/unsubscribe',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CategoriaSlugRoute = CategoriaSlugRouteImport.update({
-  id: '/categoria/$slug',
-  path: '/categoria/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthTwoFactorRoute = AuthTwoFactorRouteImport.update({
@@ -325,7 +313,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$citySlug': typeof CitySlugRouteWithChildren
   '/auth': typeof AuthRoute
-  '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
   '/eventos': typeof EventosRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
@@ -341,7 +328,6 @@ export interface FileRoutesByFullPath {
   '/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/painel': typeof AuthenticatedPainelRouteWithChildren
   '/auth/two-factor': typeof AuthTwoFactorRoute
-  '/categoria/$slug': typeof CategoriaSlugRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
@@ -374,7 +360,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
   '/eventos': typeof EventosRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
@@ -389,7 +374,6 @@ export interface FileRoutesByTo {
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/auth/two-factor': typeof AuthTwoFactorRoute
-  '/categoria/$slug': typeof CategoriaSlugRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
@@ -425,7 +409,6 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/$citySlug': typeof CitySlugRouteWithChildren
   '/auth': typeof AuthRoute
-  '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
   '/eventos': typeof EventosRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
@@ -441,7 +424,6 @@ export interface FileRoutesById {
   '/_authenticated/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/_authenticated/painel': typeof AuthenticatedPainelRouteWithChildren
   '/auth_/two-factor': typeof AuthTwoFactorRoute
-  '/categoria/$slug': typeof CategoriaSlugRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
@@ -477,7 +459,6 @@ export interface FileRouteTypes {
     | '/'
     | '/$citySlug'
     | '/auth'
-    | '/buscar'
     | '/contato'
     | '/eventos'
     | '/privacidade'
@@ -493,7 +474,6 @@ export interface FileRouteTypes {
     | '/notificacoes'
     | '/painel'
     | '/auth/two-factor'
-    | '/categoria/$slug'
     | '/email/unsubscribe'
     | '/empresa/$id'
     | '/eventos/$id'
@@ -526,7 +506,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
-    | '/buscar'
     | '/contato'
     | '/eventos'
     | '/privacidade'
@@ -541,7 +520,6 @@ export interface FileRouteTypes {
     | '/favoritos'
     | '/notificacoes'
     | '/auth/two-factor'
-    | '/categoria/$slug'
     | '/email/unsubscribe'
     | '/empresa/$id'
     | '/eventos/$id'
@@ -576,7 +554,6 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/$citySlug'
     | '/auth'
-    | '/buscar'
     | '/contato'
     | '/eventos'
     | '/privacidade'
@@ -592,7 +569,6 @@ export interface FileRouteTypes {
     | '/_authenticated/notificacoes'
     | '/_authenticated/painel'
     | '/auth_/two-factor'
-    | '/categoria/$slug'
     | '/email/unsubscribe'
     | '/empresa/$id'
     | '/eventos/$id'
@@ -628,7 +604,6 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   CitySlugRoute: typeof CitySlugRouteWithChildren
   AuthRoute: typeof AuthRoute
-  BuscarRoute: typeof BuscarRoute
   ContatoRoute: typeof ContatoRoute
   EventosRoute: typeof EventosRouteWithChildren
   PrivacidadeRoute: typeof PrivacidadeRoute
@@ -637,7 +612,6 @@ export interface RootRouteChildren {
   SobreRoute: typeof SobreRoute
   TermosRoute: typeof TermosRoute
   AuthTwoFactorRoute: typeof AuthTwoFactorRoute
-  CategoriaSlugRoute: typeof CategoriaSlugRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   EmpresaIdRoute: typeof EmpresaIdRoute
   PreviewTokenRoute: typeof PreviewTokenRoute
@@ -703,13 +677,6 @@ declare module '@tanstack/react-router' {
       path: '/contato'
       fullPath: '/contato'
       preLoaderRoute: typeof ContatoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/buscar': {
-      id: '/buscar'
-      path: '/buscar'
-      fullPath: '/buscar'
-      preLoaderRoute: typeof BuscarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -787,13 +754,6 @@ declare module '@tanstack/react-router' {
       path: '/email/unsubscribe'
       fullPath: '/email/unsubscribe'
       preLoaderRoute: typeof EmailUnsubscribeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/categoria/$slug': {
-      id: '/categoria/$slug'
-      path: '/categoria/$slug'
-      fullPath: '/categoria/$slug'
-      preLoaderRoute: typeof CategoriaSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth_/two-factor': {
@@ -1090,7 +1050,6 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   CitySlugRoute: CitySlugRouteWithChildren,
   AuthRoute: AuthRoute,
-  BuscarRoute: BuscarRoute,
   ContatoRoute: ContatoRoute,
   EventosRoute: EventosRouteWithChildren,
   PrivacidadeRoute: PrivacidadeRoute,
@@ -1099,7 +1058,6 @@ const rootRouteChildren: RootRouteChildren = {
   SobreRoute: SobreRoute,
   TermosRoute: TermosRoute,
   AuthTwoFactorRoute: AuthTwoFactorRoute,
-  CategoriaSlugRoute: CategoriaSlugRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   EmpresaIdRoute: EmpresaIdRoute,
   PreviewTokenRoute: PreviewTokenRoute,

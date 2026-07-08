@@ -1,5 +1,4 @@
-import { Link } from "@tanstack/react-router";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
 import type { AdminCategory } from "@/features/admin/functions/categories";
@@ -48,22 +47,6 @@ export function CategoryRow({
       </td>
       <td className="px-4 py-3">
         <div className="flex flex-wrap justify-end gap-2">
-          <Button
-            size="sm"
-            variant="outline"
-            asChild
-            aria-label={`Visualizar categoria ${category.name}`}
-          >
-            <Link
-              to="/categoria/$slug"
-              params={{ slug: category.slug }}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Eye className="mr-1 h-4 w-4" aria-hidden="true" />
-              Visualizar
-            </Link>
-          </Button>
           <Button
             size="sm"
             variant="outline"

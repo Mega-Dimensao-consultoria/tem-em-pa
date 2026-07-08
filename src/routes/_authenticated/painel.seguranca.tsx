@@ -4,7 +4,7 @@ import { PageShell } from "@/components/PageShell";
 import { SecuritySection } from "@/features/security/components/SecuritySection";
 
 export const Route = createFileRoute("/_authenticated/painel/seguranca")({
-  head: () => ({ meta: [{ title: "Segurança — Tem em P.A" }] }),
+  head: () => ({ meta: [{ title: "Segurança — Tem na cidade" }] }),
   component: PainelSeguranca,
 });
 

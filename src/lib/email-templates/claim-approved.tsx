@@ -29,7 +29,7 @@ const Email = ({
           Isso significa que você passa a ter controle total sobre as informações
           exibidas publicamente: pode atualizar endereço, telefone, horário de
           funcionamento, descrição, formas de pagamento, redes sociais e qualquer outro
-          detalhe que ajude os clientes da região de Pouso Alegre a encontrarem o seu
+          detalhe que ajude os clientes da sua região a encontrarem o seu
           negócio com mais facilidade.
         </Text>
         <Text style={text}>

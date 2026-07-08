@@ -1297,6 +1297,10 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      get_or_create_neighborhood: {
+        Args: { _city_id: string; _name: string }
+        Returns: string
+      }
       get_public_profile: {
         Args: { _handle: string }
         Returns: {

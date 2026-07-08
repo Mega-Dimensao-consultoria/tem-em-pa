@@ -23,7 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/cadastrar-empresa")({
-  head: () => ({ meta: [{ title: "Cadastrar empresa — Tem em P.A" }] }),
+  head: () => ({ meta: [{ title: "Cadastrar empresa — Tem na cidade" }] }),
   component: CadastrarPage,
 });
 

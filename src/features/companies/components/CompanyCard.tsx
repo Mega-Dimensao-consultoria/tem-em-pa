@@ -2,14 +2,16 @@ import { Link } from "@tanstack/react-router";
 import { MapPin, Star } from "lucide-react";
 import { FavoriteButton } from "./FavoriteButton";
 import { isOpenNow } from "@/lib/hours";
-import { slugify } from "@/lib/safe";
 
 type Company = {
   id: string;
+  slug?: string | null;
   name: string;
   description: string | null;
   neighborhood: string | null;
+  neighborhood_slug?: string | null;
   city: string | null;
+  city_slug?: string | null;
   logo_url: string | null;
   cover_url: string | null;
   is_featured: boolean | null;
@@ -19,14 +21,17 @@ type Company = {
 
 export function CompanyCard({ company }: { company: Company }) {
   const openNow = isOpenNow(company.hours);
-  const neighborhoodSlug = company.neighborhood ? slugify(company.neighborhood) : null;
+  const hasCanonical = !!company.city_slug && !!company.slug;
+  const linkProps = hasCanonical
+    ? ({
+        to: "/$citySlug/empresa/$compSlug",
+        params: { citySlug: company.city_slug!, compSlug: company.slug! },
+      } as const)
+    : ({ to: "/empresa/$id", params: { id: company.id } } as const);
+
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-elegant">
-      <Link
-        to="/empresa/$id"
-        params={{ id: company.id }}
-        className="flex flex-col"
-      >
+      <Link {...linkProps} className="flex flex-col">
         <div className="relative aspect-[16/9] overflow-hidden bg-muted">
           {company.cover_url ? (
             <img src={company.cover_url} alt={company.name} className="h-full w-full object-cover transition group-hover:scale-105" loading="lazy" />
@@ -57,14 +62,13 @@ export function CompanyCard({ company }: { company: Company }) {
         </div>
       </Link>
 
-      {/* Camada acima do <Link> com elementos clicáveis próprios */}
       <FavoriteButton companyId={company.id} className="absolute right-3 top-3" />
       {company.neighborhood || company.city ? (
         <div className="border-t border-border/60 px-4 py-2.5">
-          {neighborhoodSlug ? (
+          {company.city_slug && company.neighborhood_slug ? (
             <Link
-              to="/bairro/$slug"
-              params={{ slug: neighborhoodSlug }}
+              to="/$citySlug/bairro/$bairroSlug"
+              params={{ citySlug: company.city_slug, bairroSlug: company.neighborhood_slug }}
               className="inline-flex items-center gap-1 text-xs text-muted-foreground transition hover:text-primary"
             >
               <MapPin className="h-3 w-3" />

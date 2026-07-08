@@ -51,22 +51,6 @@ export function CategoryRow({
           <Button
             size="sm"
             variant="outline"
-            asChild
-            aria-label={`Visualizar categoria ${category.name}`}
-          >
-            <Link
-              to="/categoria/$slug"
-              params={{ slug: category.slug }}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Eye className="mr-1 h-4 w-4" aria-hidden="true" />
-              Visualizar
-            </Link>
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
             onClick={startEdit}
             aria-label={`Editar categoria ${category.name}`}
           >

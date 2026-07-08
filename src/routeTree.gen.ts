@@ -36,6 +36,7 @@ import { Route as AuthenticatedNotificacoesRouteImport } from './routes/_authent
 import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
 import { Route as AuthenticatedCadastrarEmpresaRouteImport } from './routes/_authenticated/cadastrar-empresa'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as CitySlugEventosRouteImport } from './routes/$citySlug.eventos'
 import { Route as CitySlugBuscarRouteImport } from './routes/$citySlug.buscar'
 import { Route as AuthenticatedPainelIndexRouteImport } from './routes/_authenticated/painel.index'
 import { Route as AuthenticatedOwnerIndexRouteImport } from './routes/_authenticated/owner.index'
@@ -194,6 +195,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const CitySlugEventosRoute = CitySlugEventosRouteImport.update({
+  id: '/eventos',
+  path: '/eventos',
+  getParentRoute: () => CitySlugRoute,
+} as any)
 const CitySlugBuscarRoute = CitySlugBuscarRouteImport.update({
   id: '/buscar',
   path: '/buscar',
@@ -328,6 +334,7 @@ export interface FileRoutesByFullPath {
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
   '/$citySlug/buscar': typeof CitySlugBuscarRoute
+  '/$citySlug/eventos': typeof CitySlugEventosRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
@@ -376,6 +383,7 @@ export interface FileRoutesByTo {
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
   '/$citySlug/buscar': typeof CitySlugBuscarRoute
+  '/$citySlug/eventos': typeof CitySlugEventosRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
@@ -426,6 +434,7 @@ export interface FileRoutesById {
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
   '/$citySlug/buscar': typeof CitySlugBuscarRoute
+  '/$citySlug/eventos': typeof CitySlugEventosRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
   '/_authenticated/favoritos': typeof AuthenticatedFavoritosRoute
@@ -477,6 +486,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/termos'
     | '/$citySlug/buscar'
+    | '/$citySlug/eventos'
     | '/admin'
     | '/cadastrar-empresa'
     | '/favoritos'
@@ -525,6 +535,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/termos'
     | '/$citySlug/buscar'
+    | '/$citySlug/eventos'
     | '/admin'
     | '/cadastrar-empresa'
     | '/favoritos'
@@ -574,6 +585,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/termos'
     | '/$citySlug/buscar'
+    | '/$citySlug/eventos'
     | '/_authenticated/admin'
     | '/_authenticated/cadastrar-empresa'
     | '/_authenticated/favoritos'
@@ -834,6 +846,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/$citySlug/eventos': {
+      id: '/$citySlug/eventos'
+      path: '/eventos'
+      fullPath: '/$citySlug/eventos'
+      preLoaderRoute: typeof CitySlugEventosRouteImport
+      parentRoute: typeof CitySlugRoute
+    }
     '/$citySlug/buscar': {
       id: '/$citySlug/buscar'
       path: '/buscar'
@@ -1036,6 +1055,7 @@ const AuthenticatedRouteRouteWithChildren =
 
 interface CitySlugRouteChildren {
   CitySlugBuscarRoute: typeof CitySlugBuscarRoute
+  CitySlugEventosRoute: typeof CitySlugEventosRoute
   CitySlugIndexRoute: typeof CitySlugIndexRoute
   CitySlugBairroBairroSlugRoute: typeof CitySlugBairroBairroSlugRoute
   CitySlugCategoriaCatSlugRoute: typeof CitySlugCategoriaCatSlugRoute
@@ -1043,6 +1063,7 @@ interface CitySlugRouteChildren {
 
 const CitySlugRouteChildren: CitySlugRouteChildren = {
   CitySlugBuscarRoute: CitySlugBuscarRoute,
+  CitySlugEventosRoute: CitySlugEventosRoute,
   CitySlugIndexRoute: CitySlugIndexRoute,
   CitySlugBairroBairroSlugRoute: CitySlugBairroBairroSlugRoute,
   CitySlugCategoriaCatSlugRoute: CitySlugCategoriaCatSlugRoute,

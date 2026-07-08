@@ -86,27 +86,73 @@ export function ImportCompaniesTab() {
     (cats ?? []).forEach((c) => {
       bySlug.set(c.slug.toLowerCase(), c.id);
       bySlug.set(
-        c.name
-          .toLowerCase()
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, ""),
+        c.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
         c.id,
       );
     });
+
+    // Preload city slug → id map
+    const { data: cities } = await supabase.from("cities").select("id, slug, name, is_default");
+    const cityBySlug = new Map<string, string>();
+    let defaultCityId: string | null = null;
+    (cities ?? []).forEach((c) => {
+      cityBySlug.set(c.slug.toLowerCase(), c.id);
+      cityBySlug.set(
+        c.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+        c.id,
+      );
+      if (c.is_default) defaultCityId = c.id;
+    });
+
+    function slugifyLocal(input: string) {
+      return input
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+    }
 
     for (const r of rows) {
       if (r.errors.length > 0) continue;
       const d = r.data;
       const catKey = (d.category ?? "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       const category_id = catKey ? bySlug.get(catKey) ?? null : null;
+      const cityKey = (d.city ?? "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const city_id = (cityKey && cityBySlug.get(cityKey)) || defaultCityId;
+      if (!city_id) {
+        fail += 1;
+        continue;
+      }
+      // Resolve/create neighborhood
+      let neighborhood_id: string | null = null;
+      if (d.neighborhood) {
+        const nbSlug = slugifyLocal(d.neighborhood);
+        const { data: existing } = await supabase
+          .from("neighborhoods")
+          .select("id")
+          .eq("city_id", city_id)
+          .eq("slug", nbSlug)
+          .maybeSingle();
+        if (existing?.id) {
+          neighborhood_id = existing.id;
+        } else {
+          const { data: created } = await supabase
+            .from("neighborhoods")
+            .insert({ city_id, name: d.neighborhood, slug: nbSlug, is_active: true })
+            .select("id")
+            .single();
+          neighborhood_id = created?.id ?? null;
+        }
+      }
       try {
         const { error } = await supabase.from("companies").insert({
           name: d.name!,
           description: d.description ?? null,
           category_id,
-          city: d.city ?? "Pouso Alegre",
+          city_id,
+          neighborhood_id,
           state: d.state ?? "MG",
-          neighborhood: d.neighborhood ?? null,
           address: d.address ?? null,
           number: d.number ?? null,
           complement: d.complement ?? null,

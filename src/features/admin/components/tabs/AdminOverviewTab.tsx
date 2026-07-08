@@ -107,11 +107,26 @@ async function exportCompanies() {
   try {
     const { data, error } = await supabase
       .from("companies")
-      .select("id, name, status, category_id, phone, email, address, neighborhood, city, created_at")
+      .select(
+        "id, name, status, category_id, phone, email, address, created_at, cities:city_id(name, slug), neighborhoods:neighborhood_id(name, slug)",
+      )
       .order("created_at", { ascending: false })
       .limit(5000);
     if (error) throw error;
-    downloadCsv(`empresas-${new Date().toISOString().slice(0, 10)}.csv`, toCsv(data ?? []));
+    const flat = (data ?? []).map((r) => {
+      const row = r as unknown as {
+        cities: { name: string | null; slug: string | null } | null;
+        neighborhoods: { name: string | null; slug: string | null } | null;
+      } & Record<string, unknown>;
+      return {
+        ...row,
+        city: row.cities?.name ?? null,
+        city_slug: row.cities?.slug ?? null,
+        neighborhood: row.neighborhoods?.name ?? null,
+        neighborhood_slug: row.neighborhoods?.slug ?? null,
+      };
+    });
+    downloadCsv(`empresas-${new Date().toISOString().slice(0, 10)}.csv`, toCsv(flat));
     toast.success("Exportação concluída");
   } catch (e) {
     toast.error((e as Error).message);

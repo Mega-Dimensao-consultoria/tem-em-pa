@@ -15,7 +15,7 @@ const BASE = "https://tem-em-pa.lovable.app";
 const neighborhoodQO = (slug: string) =>
   queryOptions({
     queryKey: ["neighborhood", slug],
-    queryFn: () => listCompaniesByNeighborhood({ data: { slug } }),
+    queryFn: () => listCompaniesByNeighborhood({ data: { citySlug: "pouso-alegre", slug } }),
     staleTime: 60_000,
   });
 

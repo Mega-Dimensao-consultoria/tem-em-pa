@@ -6,7 +6,7 @@ import { Breadcrumbs, breadcrumbJsonLd } from "@/components/Breadcrumbs";
 import { searchCompanies, getCategoryBySlug } from "@/features/companies/functions";
 import { NoCompanies } from "@/components/feedback/EmptyState";
 
-const BASE = "https://tem-em-pa.lovable.app";
+const BASE = "https://pousoalegre.megadimensao.com.br";
 
 const listQo = (slug: string) =>
   queryOptions({

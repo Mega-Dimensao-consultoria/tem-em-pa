@@ -6,6 +6,7 @@ import { RatingStars } from "@/features/reviews/components/RatingStars";
 import { ReviewForm } from "@/features/reviews/components/ReviewForm";
 import { ReportReviewDialog } from "@/features/reviews/components/ReportReviewDialog";
 import { RatingFilter, type RatingFilterValue } from "@/features/reviews/components/RatingFilter";
+import { ReviewPhotos } from "@/features/reviews/components/ReviewPhotos";
 import { NoReviews } from "@/components/feedback/EmptyState";
 
 type Review = {
@@ -15,6 +16,7 @@ type Review = {
   created_at: string;
   owner_reply?: string | null;
   owner_reply_at?: string | null;
+  photos?: string[] | null;
 };
 
 const PAGE_SIZE = 5;
@@ -101,6 +103,7 @@ export function CompanyReviewsSection({
                     </span>
                   </div>
                   {r.comment ? <p className="mt-2 text-sm">{r.comment}</p> : null}
+                  <ReviewPhotos photos={r.photos} />
                   <div className="mt-2 flex items-center justify-between gap-2">
                     <p className="text-xs text-muted-foreground">— Avaliação anônima</p>
                     <ReportReviewDialog reviewId={r.id} />

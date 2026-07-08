@@ -182,7 +182,7 @@ function RootComponent() {
           <PushPermissionBanner />
           <Outlet />
           <OnboardingDialog />
-          <Toaster richColors position="top-center" />
+          <Toaster richColors position="top-center" containerAriaLabel="Central de notificações" />
           <AccessibilityBar />
           <VLibrasWidget />
         </AuthProvider>

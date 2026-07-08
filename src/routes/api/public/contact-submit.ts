@@ -69,7 +69,7 @@ export const Route = createFileRoute('/api/public/contact-submit')({
               fromEmail: parsed.data.email,
               subjectLine: parsed.data.subject,
               message: parsed.data.message,
-              adminUrl: 'https://tem-em-pa.lovable.app/admin',
+              adminUrl: 'https://pousoalegre.megadimensao.com.br/admin',
             },
           })
         } catch {

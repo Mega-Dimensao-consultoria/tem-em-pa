@@ -13,7 +13,7 @@ interface Props {
 const Email = ({
   companyName = 'a empresa',
   reply,
-  appUrl = 'https://tem-em-pa.lovable.app',
+  appUrl = 'https://pousoalegre.megadimensao.com.br',
   companyId,
 }: Props) => {
   const ctaUrl = companyId ? `${appUrl}/empresa/${companyId}` : appUrl

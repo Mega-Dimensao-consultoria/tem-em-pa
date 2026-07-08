@@ -1,7 +1,7 @@
 {
-  "name": "Tem em P.A — Guia comercial de Pouso Alegre",
-  "short_name": "Tem em P.A",
-  "description": "Descubra empresas, produtos e serviços em Pouso Alegre/MG.",
+  "name": "Tem na cidade — Guia local por cidade",
+  "short_name": "Tem na cidade",
+  "description": "Descubra empresas, produtos e serviços na sua cidade.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

@@ -145,7 +145,7 @@ function DashboardPage() {
             <ShareButton
               title={company.name}
               text={`Confira ${company.name} no Tem na cidade`}
-              url={`https://tem-em-pa.lovable.app/empresa/${company.id}`}
+              url={`https://pousoalegre.megadimensao.com.br/empresa/${company.id}`}
               className="!px-3 !py-1.5 !text-xs"
             />
             <Button
@@ -242,7 +242,7 @@ function DashboardPage() {
         <div className="mt-6 grid gap-6 md:grid-cols-[1fr_auto] md:items-start">
           <ProfileCompleteness company={company} />
           <QrCodeCard
-            url={`https://tem-em-pa.lovable.app/empresa/${company.id}`}
+            url={`https://pousoalegre.megadimensao.com.br/empresa/${company.id}`}
             companyName={company.name}
           />
         </div>

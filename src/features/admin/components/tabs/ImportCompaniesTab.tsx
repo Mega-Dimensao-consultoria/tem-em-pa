@@ -92,16 +92,14 @@ export function ImportCompaniesTab() {
     });
 
     // Preload city slug → id map
-    const { data: cities } = await supabase.from("cities").select("id, slug, name, is_default");
+    const { data: cities } = await supabase.from("cities").select("id, slug, name");
     const cityBySlug = new Map<string, string>();
-    let defaultCityId: string | null = null;
     (cities ?? []).forEach((c) => {
       cityBySlug.set(c.slug.toLowerCase(), c.id);
       cityBySlug.set(
         c.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
         c.id,
       );
-      if (c.is_default) defaultCityId = c.id;
     });
 
     function slugifyLocal(input: string) {
@@ -119,7 +117,7 @@ export function ImportCompaniesTab() {
       const catKey = (d.category ?? "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       const category_id = catKey ? bySlug.get(catKey) ?? null : null;
       const cityKey = (d.city ?? "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      const city_id = (cityKey && cityBySlug.get(cityKey)) || defaultCityId;
+      const city_id = cityKey ? cityBySlug.get(cityKey) ?? null : null;
       if (!city_id) {
         fail += 1;
         continue;
@@ -152,7 +150,6 @@ export function ImportCompaniesTab() {
           category_id,
           city_id,
           neighborhood_id,
-          state: d.state ?? "MG",
           address: d.address ?? null,
           number: d.number ?? null,
           complement: d.complement ?? null,

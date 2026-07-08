@@ -12,11 +12,11 @@ export function publicClient() {
 
 /** Colunas para o card (lista/busca). Traz joins de city e neighborhood. */
 export const CARD_COLS =
-  "id, name, slug, description, city_id, neighborhood_id, state, logo_url, cover_url, is_featured, category_id, categories:category_id(name, slug, icon), cities:city_id(name, slug, state), neighborhoods:neighborhood_id(name, slug)" as const;
+  "id, name, slug, description, city_id, neighborhood_id, logo_url, cover_url, is_featured, category_id, categories:category_id(name, slug, icon), cities:city_id(name, slug, state), neighborhoods:neighborhood_id(name, slug)" as const;
 
 /** Colunas para a página de detalhe. */
 export const DETAIL_COLS =
-  "id, name, slug, description, cep, address, number, complement, city_id, neighborhood_id, state, lat, lng, phone, whatsapp, email, website, instagram_url, facebook_url, hours, gallery_urls, logo_url, cover_url, status, owner_id, is_featured, category_id, categories:category_id(name, slug, icon), cities:city_id(name, slug, state), neighborhoods:neighborhood_id(name, slug)" as const;
+  "id, name, slug, description, cep, address, number, complement, city_id, neighborhood_id, lat, lng, phone, whatsapp, email, website, instagram_url, facebook_url, hours, gallery_urls, logo_url, cover_url, status, owner_id, is_featured, category_id, categories:category_id(name, slug, icon), cities:city_id(name, slug, state), neighborhoods:neighborhood_id(name, slug)" as const;
 
 type JsonPrimitive = string | number | boolean | null;
 type Json = JsonPrimitive | Json[] | { [key: string]: Json };
@@ -61,7 +61,6 @@ export type NormalizedCompany = {
 type RawJoinRow = {
   cities?: { name: string | null; slug: string | null; state: string | null } | null;
   neighborhoods?: { name: string | null; slug: string | null } | null;
-  state?: string | null;
   [key: string]: unknown;
 };
 
@@ -76,7 +75,7 @@ export function normalizeCompany(row: unknown): NormalizedCompany {
     city_slug: r.cities?.slug ?? null,
     neighborhood: r.neighborhoods?.name ?? null,
     neighborhood_slug: r.neighborhoods?.slug ?? null,
-    state: r.state ?? r.cities?.state ?? null,
+    state: r.cities?.state ?? null,
     categories: (r as { categories?: NormalizedCompany["categories"] }).categories ?? null,
   };
 }

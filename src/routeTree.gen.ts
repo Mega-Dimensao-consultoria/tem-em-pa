@@ -45,6 +45,7 @@ import { Route as ApiPublicContactSubmitRouteImport } from './routes/api/public/
 import { Route as AuthenticatedPainelSegurancaRouteImport } from './routes/_authenticated/painel.seguranca'
 import { Route as AuthenticatedPainelConfiguracoesRouteImport } from './routes/_authenticated/painel.configuracoes'
 import { Route as AuthenticatedPainelAvaliacoesRouteImport } from './routes/_authenticated/painel.avaliacoes'
+import { Route as CitySlugEmpresaCompSlugRouteImport } from './routes/$citySlug.empresa.$compSlug'
 import { Route as CitySlugCategoriaCatSlugRouteImport } from './routes/$citySlug.categoria.$catSlug'
 import { Route as CitySlugBairroBairroSlugRouteImport } from './routes/$citySlug.bairro.$bairroSlug'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
@@ -244,6 +245,11 @@ const AuthenticatedPainelAvaliacoesRoute =
     path: '/avaliacoes',
     getParentRoute: () => AuthenticatedPainelRoute,
   } as any)
+const CitySlugEmpresaCompSlugRoute = CitySlugEmpresaCompSlugRouteImport.update({
+  id: '/empresa/$compSlug',
+  path: '/empresa/$compSlug',
+  getParentRoute: () => CitySlugRoute,
+} as any)
 const CitySlugCategoriaCatSlugRoute =
   CitySlugCategoriaCatSlugRouteImport.update({
     id: '/categoria/$catSlug',
@@ -352,6 +358,7 @@ export interface FileRoutesByFullPath {
   '/$citySlug/': typeof CitySlugIndexRoute
   '/$citySlug/bairro/$bairroSlug': typeof CitySlugBairroBairroSlugRoute
   '/$citySlug/categoria/$catSlug': typeof CitySlugCategoriaCatSlugRoute
+  '/$citySlug/empresa/$compSlug': typeof CitySlugEmpresaCompSlugRoute
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
@@ -400,6 +407,7 @@ export interface FileRoutesByTo {
   '/$citySlug': typeof CitySlugIndexRoute
   '/$citySlug/bairro/$bairroSlug': typeof CitySlugBairroBairroSlugRoute
   '/$citySlug/categoria/$catSlug': typeof CitySlugCategoriaCatSlugRoute
+  '/$citySlug/empresa/$compSlug': typeof CitySlugEmpresaCompSlugRoute
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
@@ -452,6 +460,7 @@ export interface FileRoutesById {
   '/$citySlug/': typeof CitySlugIndexRoute
   '/$citySlug/bairro/$bairroSlug': typeof CitySlugBairroBairroSlugRoute
   '/$citySlug/categoria/$catSlug': typeof CitySlugCategoriaCatSlugRoute
+  '/$citySlug/empresa/$compSlug': typeof CitySlugEmpresaCompSlugRoute
   '/_authenticated/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/_authenticated/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/_authenticated/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
@@ -504,6 +513,7 @@ export interface FileRouteTypes {
     | '/$citySlug/'
     | '/$citySlug/bairro/$bairroSlug'
     | '/$citySlug/categoria/$catSlug'
+    | '/$citySlug/empresa/$compSlug'
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
     | '/painel/seguranca'
@@ -552,6 +562,7 @@ export interface FileRouteTypes {
     | '/$citySlug'
     | '/$citySlug/bairro/$bairroSlug'
     | '/$citySlug/categoria/$catSlug'
+    | '/$citySlug/empresa/$compSlug'
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
     | '/painel/seguranca'
@@ -603,6 +614,7 @@ export interface FileRouteTypes {
     | '/$citySlug/'
     | '/$citySlug/bairro/$bairroSlug'
     | '/$citySlug/categoria/$catSlug'
+    | '/$citySlug/empresa/$compSlug'
     | '/_authenticated/painel/avaliacoes'
     | '/_authenticated/painel/configuracoes'
     | '/_authenticated/painel/seguranca'
@@ -909,6 +921,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPainelAvaliacoesRouteImport
       parentRoute: typeof AuthenticatedPainelRoute
     }
+    '/$citySlug/empresa/$compSlug': {
+      id: '/$citySlug/empresa/$compSlug'
+      path: '/empresa/$compSlug'
+      fullPath: '/$citySlug/empresa/$compSlug'
+      preLoaderRoute: typeof CitySlugEmpresaCompSlugRouteImport
+      parentRoute: typeof CitySlugRoute
+    }
     '/$citySlug/categoria/$catSlug': {
       id: '/$citySlug/categoria/$catSlug'
       path: '/categoria/$catSlug'
@@ -1059,6 +1078,7 @@ interface CitySlugRouteChildren {
   CitySlugIndexRoute: typeof CitySlugIndexRoute
   CitySlugBairroBairroSlugRoute: typeof CitySlugBairroBairroSlugRoute
   CitySlugCategoriaCatSlugRoute: typeof CitySlugCategoriaCatSlugRoute
+  CitySlugEmpresaCompSlugRoute: typeof CitySlugEmpresaCompSlugRoute
 }
 
 const CitySlugRouteChildren: CitySlugRouteChildren = {
@@ -1067,6 +1087,7 @@ const CitySlugRouteChildren: CitySlugRouteChildren = {
   CitySlugIndexRoute: CitySlugIndexRoute,
   CitySlugBairroBairroSlugRoute: CitySlugBairroBairroSlugRoute,
   CitySlugCategoriaCatSlugRoute: CitySlugCategoriaCatSlugRoute,
+  CitySlugEmpresaCompSlugRoute: CitySlugEmpresaCompSlugRoute,
 }
 
 const CitySlugRouteWithChildren = CitySlugRoute._addFileChildren(

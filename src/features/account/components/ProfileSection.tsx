@@ -73,7 +73,17 @@ export function ProfileSection() {
                 Quando ativo, qualquer pessoa pode ver seu handle, avatar, bio e avaliações públicas.
               </p>
             </div>
-            <Switch checked={isPublic} onCheckedChange={setIsPublic} aria-label="Tornar perfil público" />
+            <label className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center">
+              <input
+                type="checkbox"
+                checked={isPublic}
+                onChange={(e) => setIsPublic(e.target.checked)}
+                aria-label="Tornar perfil público"
+                className="peer sr-only"
+              />
+              <span className="absolute inset-0 rounded-full bg-muted transition peer-checked:bg-primary" />
+              <span className="absolute left-0.5 h-5 w-5 rounded-full bg-white shadow transition peer-checked:translate-x-5" />
+            </label>
           </div>
 
           <div className="mt-3 grid gap-3">

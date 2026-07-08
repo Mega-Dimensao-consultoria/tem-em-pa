@@ -1,16 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
-import { Sparkles, Store, ShieldCheck } from "lucide-react";
+import { useSuspenseQuery, useQuery, queryOptions } from "@tanstack/react-query";
+import { useState } from "react";
+import { Sparkles, Store, ShieldCheck, Loader2 } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { SearchBar } from "@/components/SearchBar";
 import { CategoryCard } from "@/features/companies/components/CategoryCard";
 import { CompanyCard } from "@/features/companies/components/CompanyCard";
 import { NoCompanies } from "@/components/feedback/EmptyState";
 import { listCategories } from "@/features/companies/functions/categories";
-import { listFeaturedCompanies } from "@/features/companies/functions";
+import { listFeaturedCompanies, listRecentCompaniesByCity } from "@/features/companies/functions";
 import { cityBySlugQO } from "./$citySlug";
 
 const BASE = "https://pousoalegre.megadimensao.com.br";
+const PAGE_SIZE = 15;
 
 const categoriesQO = queryOptions({
   queryKey: ["categories"],
@@ -22,6 +24,13 @@ const featuredByCityQO = (cityId: string) =>
   queryOptions({
     queryKey: ["companies", "featured", cityId],
     queryFn: () => listFeaturedCompanies({ data: { cityId } }),
+    staleTime: 60_000,
+  });
+
+const recentByCityQO = (cityId: string, limit: number) =>
+  queryOptions({
+    queryKey: ["companies", "recent", cityId, limit],
+    queryFn: () => listRecentCompaniesByCity({ data: { cityId, limit, offset: 0 } }),
     staleTime: 60_000,
   });
 

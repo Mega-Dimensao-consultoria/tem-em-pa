@@ -95,7 +95,7 @@ export const Route = createFileRoute('/api/public/og/event/$id')({
 
           const visible =
             event && event.is_active && event.companies?.status === 'approved'
-          const title = visible ? event!.title : 'Evento em Pouso Alegre'
+          const title = visible ? event!.title : 'Evento — Tem na cidade'
           const when = visible
             ? new Date(event!.starts_at).toLocaleString('pt-BR', {
                 day: '2-digit',
@@ -118,9 +118,9 @@ export const Route = createFileRoute('/api/public/og/event/$id')({
           })
         } catch {
           const svg = buildSvg(
-            'Evento em Pouso Alegre',
+            'Evento — Tem na cidade',
             'Tem na cidade',
-            'temempousoalegre.com.br',
+            'Tem na cidade',
           )
           return new Response(svg, {
             headers: { 'Content-Type': 'image/svg+xml; charset=utf-8' },

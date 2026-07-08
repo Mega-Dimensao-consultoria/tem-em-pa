@@ -17,7 +17,7 @@ type ParsedRow = {
 
 const TEMPLATE =
   "nome,descricao,categoria,cidade,bairro,endereco,numero,cep,telefone,whatsapp,email,site,instagram,facebook\n" +
-  "Exemplo Restaurante,Comida caseira e ambiente familiar,restaurantes,Pouso Alegre,Centro,Rua das Flores,100,37550-000,(35) 3421-0000,(35) 99999-0000,contato@exemplo.com,https://exemplo.com,https://instagram.com/exemplo,\n";
+  "Exemplo Restaurante,Comida caseira e ambiente familiar,restaurantes,São Paulo,Centro,Rua das Flores,100,37550-000,(35) 3421-0000,(35) 99999-0000,contato@exemplo.com,https://exemplo.com,https://instagram.com/exemplo,\n";
 
 function downloadTemplate() {
   const blob = new Blob(["\ufeff" + TEMPLATE], { type: "text/csv;charset=utf-8" });

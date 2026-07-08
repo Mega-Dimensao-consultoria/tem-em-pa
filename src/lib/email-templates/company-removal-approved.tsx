@@ -36,7 +36,7 @@ const Email = ({
           Em nome de toda a comunidade do Tem na cidade., <strong>muito obrigado</strong>{' '}
           por colaborar para que o diretório se mantenha confiável e atualizado.
           Cada denúncia bem fundamentada ajuda outros moradores e visitantes da
-          região de Pouso Alegre a tomarem decisões melhores no dia a dia.
+          sua região a tomarem decisões melhores no dia a dia.
         </Text>
         <Text style={text}>
           Se no futuro você identificar outras situações parecidas — empresas que

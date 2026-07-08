@@ -36,7 +36,7 @@ const Email = ({
             cadastro segue as nossas diretrizes de qualidade — endereço plausível,
             categoria correta, descrição adequada e sem conteúdo que viole regras da
             plataforma. Parabéns por dar esse primeiro passo: você acaba de aumentar
-            a visibilidade do seu negócio na região de Pouso Alegre.
+            a visibilidade do seu negócio na sua região.
           </Text>
           <Text style={text}>
             Para aproveitar ao máximo o cadastro, recomendamos completar agora alguns

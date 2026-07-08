@@ -13,12 +13,12 @@ export const Route = createFileRoute('/sobre')({
       {
         name: 'description',
         content:
-          'Conheça o Tem na cidade, o catálogo digital de empresas, comércios e profissionais liberais de Pouso Alegre/MG.',
+          'Conheça o Tem na cidade, o catálogo digital de empresas, comércios e profissionais liberais das cidades atendidas.',
       },
       { property: 'og:title', content: `${loaderData?.title ?? 'Sobre'} — Tem na cidade` },
       {
         property: 'og:description',
-        content: 'Catálogo digital de Pouso Alegre/MG.',
+        content: 'Catálogo digital multi-cidade.',
       },
       { property: 'og:url', content: CANONICAL },
     ],

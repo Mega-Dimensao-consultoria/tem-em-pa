@@ -59,7 +59,7 @@ export const emptyCompanyForm = (): CompanyFormValues => ({
   number: "",
   complement: "",
   neighborhood: "",
-  city: "Pouso Alegre",
+  city: "",
   state: "MG",
   logo_url: null,
   cover_url: null,

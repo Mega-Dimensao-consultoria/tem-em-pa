@@ -61,7 +61,7 @@ export const Route = createFileRoute('/eventos/$id')({
     const base = 'https://pousoalegre.megadimensao.com.br'
     const url = `${base}/eventos/${params.id}`
     const title = loaderData?.title
-      ? `${loaderData.title} — Eventos em Pouso Alegre`
+      ? `${loaderData.title} — Eventos — Tem na cidade`
       : 'Evento — Tem na cidade'
     const when = loaderData
       ? new Date(loaderData.starts_at).toLocaleString('pt-BR', {
@@ -76,7 +76,7 @@ export const Route = createFileRoute('/eventos/$id')({
           .filter(Boolean)
           .join(' · ')
           .slice(0, 160)
-      : 'Agenda de eventos em Pouso Alegre.'
+      : 'Agenda de eventos das cidades atendidas.'
     const ogImage =
       loaderData?.image_url ?? `${base}/api/public/og/event/${params.id}`
     return {

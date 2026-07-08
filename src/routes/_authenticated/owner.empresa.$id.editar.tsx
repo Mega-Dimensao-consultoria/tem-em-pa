@@ -74,7 +74,7 @@ function EditarEmpresa() {
       number: (company.number as string) ?? "",
       complement: (company.complement as string) ?? "",
       neighborhood: c.neighborhoods?.name ?? "",
-      city: c.cities?.name ?? "Pouso Alegre",
+      city: c.cities?.name ?? "",
       state: (company.state as string) ?? c.cities?.state ?? "MG",
       logo_url: (company.logo_url as string | null) ?? null,
       cover_url: (company.cover_url as string | null) ?? null,

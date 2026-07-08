@@ -9,21 +9,24 @@ import { getCompanySlugPathById } from "@/features/companies/functions";
  */
 export const Route = createFileRoute("/empresa/$id")({
   beforeLoad: async ({ params }) => {
-    // UUID guard — if someone hits a non-uuid, fall through to notFound.
+    // UUID guard — if someone hits a non-uuid, fall through to the not-found component.
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(params.id);
     if (!isUuid) return;
+    let path: { citySlug: string; compSlug: string } | null = null;
     try {
-      const path = await getCompanySlugPathById({ data: { id: params.id } });
-      if (path) {
-        throw redirect({
-          to: "/$citySlug/empresa/$compSlug",
-          params: { citySlug: path.citySlug, compSlug: path.compSlug },
-          replace: true,
-        });
-      }
-    } catch (err) {
-      // Re-throw redirects; swallow lookup errors and fall through to notFound.
-      if ((err as { isRedirect?: boolean })?.isRedirect) throw err;
+      path = await getCompanySlugPathById({ data: { id: params.id } });
+    } catch {
+      // Swallow only lookup/network errors; render the fallback component.
+      return;
+    }
+    if (path) {
+      // Throw the redirect OUTSIDE the try/catch — TanStack redirects are Response
+      // instances, not plain errors, and a try/catch here would swallow them.
+      throw redirect({
+        to: "/$citySlug/empresa/$compSlug",
+        params: { citySlug: path.citySlug, compSlug: path.compSlug },
+        replace: true,
+      });
     }
   },
   component: () => (

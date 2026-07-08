@@ -1,5 +1,4 @@
-import { Link } from "@tanstack/react-router";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
 import type { AdminCategory } from "@/features/admin/functions/categories";

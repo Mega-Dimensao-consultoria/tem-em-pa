@@ -16,49 +16,57 @@ export const CARD_COLS =
 
 /** Colunas para a página de detalhe. */
 export const DETAIL_COLS =
-  "id, name, slug, description, cep, address, number, complement, city_id, neighborhood_id, state, lat, lng, website, instagram_url, facebook_url, hours, gallery_urls, logo_url, cover_url, status, owner_id, is_featured, category_id, categories:category_id(name, slug, icon), cities:city_id(name, slug, state), neighborhoods:neighborhood_id(name, slug)" as const;
+  "id, name, slug, description, cep, address, number, complement, city_id, neighborhood_id, state, lat, lng, phone, whatsapp, email, website, instagram_url, facebook_url, hours, gallery_urls, logo_url, cover_url, status, owner_id, is_featured, category_id, categories:category_id(name, slug, icon), cities:city_id(name, slug, state), neighborhoods:neighborhood_id(name, slug)" as const;
 
-/**
- * Row de empresa retornado pelo Data API com joins.
- * `cities` e `neighborhoods` são objetos aninhados (ou null).
- */
-type RawCompanyRow = {
+/** Shape plano usado pelos componentes de card / detalhe. */
+export type NormalizedCompany = {
   id: string;
   name: string;
   slug: string | null;
   description: string | null;
   city_id: string | null;
   neighborhood_id: string | null;
-  state?: string | null;
+  state: string | null;
   logo_url: string | null;
   cover_url: string | null;
   is_featured: boolean | null;
   category_id: string | null;
   categories: { name: string | null; slug: string | null; icon: string | null } | null;
-  cities: { name: string | null; slug: string | null; state: string | null } | null;
-  neighborhoods: { name: string | null; slug: string | null } | null;
+  city: string | null;
+  city_slug: string | null;
+  neighborhood: string | null;
+  neighborhood_slug: string | null;
+  hours?: unknown;
+  // demais campos ficam disponíveis pelo detail select
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | null
+    | undefined
+    | Record<string, unknown>
+    | unknown[];
+};
+
+type RawJoinRow = {
+  cities?: { name: string | null; slug: string | null; state: string | null } | null;
+  neighborhoods?: { name: string | null; slug: string | null } | null;
+  state?: string | null;
   [key: string]: unknown;
 };
 
-/**
- * Normaliza um row de empresa retornado do Supabase (com joins) para o shape
- * plano que os componentes esperam: adiciona `city`, `neighborhood`,
- * `city_slug` e `neighborhood_slug` como campos derivados dos joins,
- * preservando os demais campos.
- */
-export function normalizeCompany<T extends Partial<RawCompanyRow>>(row: T) {
-  const cities = (row as RawCompanyRow).cities ?? null;
-  const neighborhoods = (row as RawCompanyRow).neighborhoods ?? null;
+export function normalizeCompany(row: unknown): NormalizedCompany {
+  const r = row as RawJoinRow;
   return {
-    ...(row as T),
-    city: cities?.name ?? null,
-    city_slug: cities?.slug ?? null,
-    neighborhood: neighborhoods?.name ?? null,
-    neighborhood_slug: neighborhoods?.slug ?? null,
-    state: (row as RawCompanyRow).state ?? cities?.state ?? null,
-  };
+    ...(r as unknown as Record<string, unknown>),
+    city: r.cities?.name ?? null,
+    city_slug: r.cities?.slug ?? null,
+    neighborhood: r.neighborhoods?.name ?? null,
+    neighborhood_slug: r.neighborhoods?.slug ?? null,
+    state: r.state ?? r.cities?.state ?? null,
+  } as unknown as NormalizedCompany;
 }
 
-export function normalizeCompanies<T extends Partial<RawCompanyRow>>(rows: T[] | null | undefined) {
-  return (rows ?? []).map((r) => normalizeCompany(r));
+export function normalizeCompanies(rows: unknown): NormalizedCompany[] {
+  return ((rows as unknown[]) ?? []).map((r) => normalizeCompany(r));
 }

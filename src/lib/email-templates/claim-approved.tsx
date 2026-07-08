@@ -13,14 +13,14 @@ const Email = ({
   appUrl = 'https://tem-em-pa.lovable.app',
 }: Props) => (
   <EmailLayout
-    previewText={`Sua reivindicação de ${companyName} foi aprovada — agora você é o dono oficial no Tem em P.A.`}
+    previewText={`Sua reivindicação de ${companyName} foi aprovada — agora você é o dono oficial no Tem na cidade.`}
     title="Reivindicação aprovada 🎉"
     intro={
       <>
         Parabéns! A sua solicitação para reivindicar a empresa{' '}
         <strong>{companyName}</strong> foi analisada pela nossa equipe de moderação e
         oficialmente aprovada. A partir de agora, você é reconhecido como o responsável
-        por esse cadastro dentro do diretório Tem em P.A.
+        por esse cadastro dentro do diretório Tem na cidade.
       </>
     }
     body={
@@ -51,13 +51,13 @@ const Email = ({
         <Text style={text}>
           Se precisar de ajuda, nossa equipe de suporte está à disposição pelo
           formulário de contato no rodapé do site. Seja bem-vindo(a) oficialmente ao
-          Tem em P.A.!
+          Tem na cidade.!
         </Text>
       </>
     }
     ctaLabel="Abrir painel do dono"
     ctaUrl={`${appUrl}/owner`}
-    footnote="Você está recebendo este e-mail porque é o responsável confirmado pelo cadastro desta empresa no Tem em P.A."
+    footnote="Você está recebendo este e-mail porque é o responsável confirmado pelo cadastro desta empresa no Tem na cidade."
   />
 )
 

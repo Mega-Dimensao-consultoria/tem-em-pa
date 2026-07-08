@@ -15,7 +15,7 @@ import { ProductList } from "@/features/products/components/ProductList";
 import { queryKeys } from "@/lib/queryKeys";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/produtos")({
-  head: () => ({ meta: [{ title: "Produtos — Tem em P.A" }] }),
+  head: () => ({ meta: [{ title: "Produtos — Tem na cidade" }] }),
   component: ProductsPage,
 });
 

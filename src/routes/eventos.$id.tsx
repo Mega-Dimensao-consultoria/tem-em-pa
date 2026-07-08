@@ -62,7 +62,7 @@ export const Route = createFileRoute('/eventos/$id')({
     const url = `${base}/eventos/${params.id}`
     const title = loaderData?.title
       ? `${loaderData.title} — Eventos em Pouso Alegre`
-      : 'Evento — Tem em Pouso Alegre'
+      : 'Evento — Tem na cidade'
     const when = loaderData
       ? new Date(loaderData.starts_at).toLocaleString('pt-BR', {
           day: '2-digit',

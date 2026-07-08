@@ -10,14 +10,14 @@ export const Route = createFileRoute('/contato')({
   loader: () => getSitePage({ data: { slug: 'contato' } }),
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData?.title ?? 'Contato'} — Tem em Pouso Alegre` },
+      { title: `${loaderData?.title ?? 'Contato'} — Tem na cidade` },
       {
         name: 'description',
         content:
-          'Fale com a equipe do Tem em Pouso Alegre. Tire dúvidas, envie sugestões ou reporte problemas.',
+          'Fale com a equipe do Tem na cidade. Tire dúvidas, envie sugestões ou reporte problemas.',
       },
-      { property: 'og:title', content: `${loaderData?.title ?? 'Contato'} — Tem em Pouso Alegre` },
-      { property: 'og:description', content: 'Fale com a equipe do Tem em Pouso Alegre.' },
+      { property: 'og:title', content: `${loaderData?.title ?? 'Contato'} — Tem na cidade` },
+      { property: 'og:description', content: 'Fale com a equipe do Tem na cidade.' },
       { property: 'og:url', content: CANONICAL },
     ],
     links: [{ rel: 'canonical', href: CANONICAL }],

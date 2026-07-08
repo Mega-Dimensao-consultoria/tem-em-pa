@@ -8,7 +8,7 @@ import { ReviewListSkeleton } from "@/components/feedback/Skeletons";
 import { useMyReviews } from "@/features/reviews/hooks/useMyReviews";
 
 export const Route = createFileRoute("/_authenticated/painel/avaliacoes")({
-  head: () => ({ meta: [{ title: "Minhas avaliações — Tem em P.A" }] }),
+  head: () => ({ meta: [{ title: "Minhas avaliações — Tem na cidade" }] }),
   component: MinhasAvaliacoes,
 });
 

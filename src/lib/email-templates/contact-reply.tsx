@@ -17,8 +17,8 @@ const Email = ({
   reply = '',
 }: Props) => (
   <EmailLayout
-    previewText={`Resposta da equipe do Tem em P.A. sobre: ${subjectLine}`}
-    title="Resposta da equipe Tem em P.A."
+    previewText={`Resposta da equipe do Tem na cidade. sobre: ${subjectLine}`}
+    title="Resposta da equipe Tem na cidade."
     intro={
       <>
         Olá{fullName ? <>, <strong>{fullName}</strong></> : null}! Obrigado por entrar
@@ -51,18 +51,18 @@ const Email = ({
           equipe vai dar continuidade ao atendimento normalmente.
         </Text>
         <Text style={text}>
-          O Tem em P.A. é um projeto independente voltado para a comunidade de Pouso
+          O Tem na cidade. é um projeto independente voltado para a comunidade de Pouso
           Alegre e região. Cada mensagem recebida ajuda a melhorar o serviço, então
           fique à vontade para enviar sugestões, denunciar informações incorretas
           sobre empresas listadas, pedir o cadastro do seu próprio negócio ou
           simplesmente comentar a sua experiência usando o diretório.
         </Text>
         <Text style={text}>
-          Obrigado novamente pelo seu contato e por usar o Tem em P.A.!
+          Obrigado novamente pelo seu contato e por usar o Tem na cidade.!
         </Text>
       </>
     }
-    footnote="Esta é a resposta oficial da nossa equipe ao contato que você enviou pelo formulário do site Tem em P.A."
+    footnote="Esta é a resposta oficial da nossa equipe ao contato que você enviou pelo formulário do site Tem na cidade."
   />
 )
 

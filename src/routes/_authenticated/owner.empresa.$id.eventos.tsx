@@ -17,7 +17,7 @@ import {
 import { EventFormDialog } from '@/features/events/components/EventFormDialog'
 
 export const Route = createFileRoute('/_authenticated/owner/empresa/$id/eventos')({
-  head: () => ({ meta: [{ title: 'Eventos — Tem em Pouso Alegre' }] }),
+  head: () => ({ meta: [{ title: 'Eventos — Tem na cidade' }] }),
   component: EventosOwnerPage,
 })
 

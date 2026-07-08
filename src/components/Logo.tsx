@@ -5,7 +5,7 @@ export function Logo({ className = "" }: { className?: string }) {
     <span className={`inline-flex items-center gap-2 font-display font-bold ${className}`}>
       <img
         src={logoSrc}
-        alt="Tem em P.A"
+        alt="Tem na cidade"
         width={36}
         height={36}
         className="h-9 w-9 shrink-0"

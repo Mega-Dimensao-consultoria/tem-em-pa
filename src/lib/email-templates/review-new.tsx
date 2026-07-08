@@ -69,7 +69,7 @@ const Email = ({
       }
       ctaLabel="Responder no painel"
       ctaUrl={ctaUrl}
-      footnote="Você está recebendo este e-mail porque é o responsável cadastrado por esta empresa no Tem em P.A."
+      footnote="Você está recebendo este e-mail porque é o responsável cadastrado por esta empresa no Tem na cidade."
     />
   )
 }

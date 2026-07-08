@@ -13,7 +13,7 @@ import { defaultHours, type HourRow } from "@/features/companies/components/Hour
 import { CompanyDetailSkeleton } from "@/components/feedback/Skeletons";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/editar")({
-  head: () => ({ meta: [{ title: "Editar empresa — Tem em P.A" }] }),
+  head: () => ({ meta: [{ title: "Editar empresa — Tem na cidade" }] }),
   component: EditarEmpresa,
 });
 

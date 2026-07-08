@@ -9,14 +9,14 @@ export const Route = createFileRoute('/termos')({
   loader: () => getSitePage({ data: { slug: 'termos' } }),
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData?.title ?? 'Termos de Uso'} — Tem em Pouso Alegre` },
+      { title: `${loaderData?.title ?? 'Termos de Uso'} — Tem na cidade` },
       {
         name: 'description',
         content:
-          'Termos de Uso do Tem em Pouso Alegre: regras da plataforma, direitos e deveres de usuários e cadastros.',
+          'Termos de Uso do Tem na cidade: regras da plataforma, direitos e deveres de usuários e cadastros.',
       },
-      { property: 'og:title', content: `${loaderData?.title ?? 'Termos de Uso'} — Tem em Pouso Alegre` },
-      { property: 'og:description', content: 'Regras de uso do Tem em Pouso Alegre.' },
+      { property: 'og:title', content: `${loaderData?.title ?? 'Termos de Uso'} — Tem na cidade` },
+      { property: 'og:description', content: 'Regras de uso do Tem na cidade.' },
       { property: 'og:url', content: CANONICAL },
     ],
     links: [{ rel: 'canonical', href: CANONICAL }],

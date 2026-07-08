@@ -27,7 +27,7 @@ const Email = ({
       <>
         <Text style={text}>
           O processo de reivindicação existe para proteger todos os negócios listados
-          no Tem em P.A. Como qualquer pessoa pode tentar assumir um cadastro, nós só
+          no Tem na cidade. Como qualquer pessoa pode tentar assumir um cadastro, nós só
           aprovamos pedidos quando temos evidências claras de que o solicitante é o
           dono, sócio ou representante legal do estabelecimento. Se as informações
           enviadas não foram suficientes para comprovar esse vínculo, o pedido é
@@ -54,7 +54,7 @@ const Email = ({
     }
     ctaLabel="Tentar novamente"
     ctaUrl={`${appUrl}/owner`}
-    footnote="Você está recebendo este e-mail porque enviou um pedido de reivindicação no Tem em P.A."
+    footnote="Você está recebendo este e-mail porque enviou um pedido de reivindicação no Tem na cidade."
   />
 )
 

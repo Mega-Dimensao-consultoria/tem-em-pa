@@ -14,7 +14,7 @@ import { CompanyStatusBadge } from "@/features/companies/components/CompanyStatu
 import { useMyCompanies } from "@/features/owner/hooks/useMyCompanies";
 
 export const Route = createFileRoute("/_authenticated/painel/")({
-  head: () => ({ meta: [{ title: "Meu painel — Tem em P.A" }] }),
+  head: () => ({ meta: [{ title: "Meu painel — Tem na cidade" }] }),
   component: PainelIndex,
 });
 

@@ -40,7 +40,7 @@ import {
 import { exportMetricsCsv, exportReviewsCsv } from "@/features/owner/functions/exportCsv";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard — Tem em P.A" }] }),
+  head: () => ({ meta: [{ title: "Dashboard — Tem na cidade" }] }),
   component: DashboardPage,
 });
 
@@ -144,7 +144,7 @@ function DashboardPage() {
             <PeriodSelector value={periodDays} onChange={setPeriodDays} />
             <ShareButton
               title={company.name}
-              text={`Confira ${company.name} no Tem em P.A`}
+              text={`Confira ${company.name} no Tem na cidade`}
               url={`https://tem-em-pa.lovable.app/empresa/${company.id}`}
               className="!px-3 !py-1.5 !text-xs"
             />

@@ -19,12 +19,12 @@ const Email = ({
     : `${appUrl}/owner`
   return (
     <EmailLayout
-      previewText={`${companyName} foi aprovada e já está visível no diretório Tem em P.A.`}
+      previewText={`${companyName} foi aprovada e já está visível no diretório Tem na cidade.`}
       title="Empresa aprovada e publicada 🎉"
       intro={
         <>
           Ótimas notícias! O cadastro de <strong>{companyName}</strong> passou pela
-          nossa moderação e acaba de ser publicado no diretório Tem em P.A. A partir
+          nossa moderação e acaba de ser publicado no diretório Tem na cidade. A partir
           de agora, qualquer pessoa que pesquisar por sua categoria, seu nome ou pela
           região vai encontrar a sua empresa.
         </>
@@ -63,7 +63,7 @@ const Email = ({
       }
       ctaLabel="Abrir painel da empresa"
       ctaUrl={ctaUrl}
-      footnote="Você está recebendo este e-mail porque é o responsável cadastrado por esta empresa no Tem em P.A."
+      footnote="Você está recebendo este e-mail porque é o responsável cadastrado por esta empresa no Tem na cidade."
     />
   )
 }

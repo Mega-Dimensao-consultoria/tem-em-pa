@@ -13,11 +13,11 @@ const Email = ({
   appUrl = 'https://tem-em-pa.lovable.app',
 }: Props) => (
   <EmailLayout
-    previewText={`Um usuário pediu a remoção da empresa ${companyName} no Tem em P.A.`}
+    previewText={`Um usuário pediu a remoção da empresa ${companyName} no Tem na cidade.`}
     title="Pedido de remoção recebido"
     intro={
       <>
-        Olá. Recebemos um pedido formal de um usuário do Tem em P.A. solicitando a
+        Olá. Recebemos um pedido formal de um usuário do Tem na cidade. solicitando a
         remoção do cadastro da empresa <strong>{companyName}</strong> do nosso
         diretório. Como você é o responsável atual por essa página, estamos te
         avisando para que possa se manifestar antes de qualquer decisão.
@@ -57,7 +57,7 @@ const Email = ({
     }
     ctaLabel="Atualizar cadastro"
     ctaUrl={`${appUrl}/owner`}
-    footnote="Você está recebendo este e-mail porque é o responsável cadastrado por esta empresa no Tem em P.A."
+    footnote="Você está recebendo este e-mail porque é o responsável cadastrado por esta empresa no Tem na cidade."
   />
 )
 

@@ -9,19 +9,19 @@ export const Route = createFileRoute('/privacidade')({
   loader: () => getSitePage({ data: { slug: 'privacidade' } }),
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData?.title ?? 'Política de Privacidade'} — Tem em Pouso Alegre` },
+      { title: `${loaderData?.title ?? 'Política de Privacidade'} — Tem na cidade` },
       {
         name: 'description',
         content:
-          'Política de Privacidade do Tem em Pouso Alegre: como coletamos, usamos e protegemos seus dados (LGPD).',
+          'Política de Privacidade do Tem na cidade: como coletamos, usamos e protegemos seus dados (LGPD).',
       },
       {
         property: 'og:title',
-        content: `${loaderData?.title ?? 'Política de Privacidade'} — Tem em Pouso Alegre`,
+        content: `${loaderData?.title ?? 'Política de Privacidade'} — Tem na cidade`,
       },
       {
         property: 'og:description',
-        content: 'Como tratamos seus dados no Tem em Pouso Alegre (LGPD).',
+        content: 'Como tratamos seus dados no Tem na cidade (LGPD).',
       },
       { property: 'og:url', content: CANONICAL },
     ],

@@ -19,12 +19,12 @@ const Email = ({
   const ctaUrl = companyId ? `${appUrl}/empresa/${companyId}` : appUrl
   return (
     <EmailLayout
-      previewText={`${companyName} respondeu publicamente a sua avaliação no Tem em P.A.`}
+      previewText={`${companyName} respondeu publicamente a sua avaliação no Tem na cidade.`}
       title="O dono respondeu sua avaliação 💬"
       intro={
         <>
           Olá! A empresa <strong>{companyName}</strong> acaba de responder
-          publicamente uma avaliação que você deixou no Tem em P.A. Achamos que vale
+          publicamente uma avaliação que você deixou no Tem na cidade. Achamos que vale
           a pena te avisar: respostas como essa mostram que o seu feedback foi lido e
           considerado por quem está à frente do negócio.
         </>
@@ -38,7 +38,7 @@ const Email = ({
             <Text style={quote}>“{reply}”</Text>
           ) : (
             <Text style={text}>
-              Abra a página da empresa no Tem em P.A. para ler a resposta completa.
+              Abra a página da empresa no Tem na cidade. para ler a resposta completa.
             </Text>
           )}
           <Text style={text}>
@@ -52,7 +52,7 @@ const Email = ({
             atendimento mudou depois desse contato), você pode voltar à página da
             empresa e <strong>atualizar a sua avaliação</strong> a qualquer momento.
             E, claro, sempre que tiver uma nova experiência — boa ou ruim — em
-            qualquer estabelecimento da cidade, conte com o Tem em P.A. para
+            qualquer estabelecimento da cidade, conte com o Tem na cidade. para
             registrar a sua opinião.
           </Text>
           <Text style={text}>
@@ -61,9 +61,9 @@ const Email = ({
           </Text>
         </>
       }
-      ctaLabel="Ver no Tem em P.A."
+      ctaLabel="Ver no Tem na cidade."
       ctaUrl={ctaUrl}
-      footnote="Você está recebendo este e-mail porque deixou uma avaliação para essa empresa no Tem em P.A."
+      footnote="Você está recebendo este e-mail porque deixou uma avaliação para essa empresa no Tem na cidade."
     />
   )
 }

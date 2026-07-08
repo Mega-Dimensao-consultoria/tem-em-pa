@@ -18,7 +18,7 @@ const Email = ({
     intro={
       <>
         Olá. Analisamos com atenção o seu pedido para remover o cadastro da empresa{' '}
-        <strong>{companyName}</strong> do diretório Tem em P.A. e, após a análise,
+        <strong>{companyName}</strong> do diretório Tem na cidade. e, após a análise,
         decidimos <strong>manter</strong> a empresa publicada por enquanto. Abaixo
         explicamos como funciona o processo e como você pode reforçar a sua
         solicitação, se ainda fizer sentido.
@@ -51,14 +51,14 @@ const Email = ({
           fica a análise.
         </Text>
         <Text style={text}>
-          Obrigado por colaborar com a qualidade do Tem em P.A. Estamos sempre
+          Obrigado por colaborar com a qualidade do Tem na cidade. Estamos sempre
           disponíveis pelo formulário de contato caso queira conversar sobre o caso.
         </Text>
       </>
     }
     ctaLabel="Abrir empresa no diretório"
     ctaUrl={appUrl}
-    footnote="Você está recebendo este e-mail porque enviou um pedido de remoção no Tem em P.A."
+    footnote="Você está recebendo este e-mail porque enviou um pedido de remoção no Tem na cidade."
   />
 )
 

@@ -99,7 +99,7 @@ function EventosPage() {
       }
       if (catSlug && ev.companies?.categories?.slug !== catSlug) return false
       if (nQ) {
-        const parts = [ev.location ?? '', ev.companies?.neighborhood ?? '']
+        const parts = [ev.location ?? '', ev.companies?.neighborhoods?.name ?? '']
           .filter(Boolean)
           .map(normalize)
           .join(' ')

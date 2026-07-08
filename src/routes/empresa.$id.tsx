@@ -221,7 +221,8 @@ function CompanyPage() {
           <SimilarCompanies
             id={company.id}
             categoryId={company.category_id}
-            neighborhood={company.neighborhood}
+            neighborhoodId={company.neighborhood_id}
+            cityId={company.city_id}
           />
         ) : null}
 

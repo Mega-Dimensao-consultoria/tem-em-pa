@@ -12,7 +12,7 @@ type Company = {
   name: string;
   description: string | null;
   logo_url: string | null;
-  categories?: { name: string } | null;
+  categories?: { name: string | null } | null;
 };
 
 export function CompanyHeader({

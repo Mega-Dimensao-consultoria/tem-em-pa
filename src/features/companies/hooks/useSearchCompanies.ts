@@ -13,6 +13,31 @@ export type SearchParams = {
   cityId?: string | null;
 };
 
+export type SearchedCompany = {
+  id: string;
+  name: string;
+  slug: string | null;
+  description: string | null;
+  city_id: string | null;
+  neighborhood_id: string | null;
+  state: string | null;
+  lat: number | null;
+  lng: number | null;
+  hours: unknown;
+  logo_url: string | null;
+  cover_url: string | null;
+  is_featured: boolean | null;
+  status: string;
+  owner_id: string | null;
+  category_id: string | null;
+  created_at: string;
+  categories: { name: string | null; slug: string | null; icon: string | null } | null;
+  city: string | null;
+  city_slug: string | null;
+  neighborhood: string | null;
+  neighborhood_slug: string | null;
+};
+
 export function useSearchCompanies({ q, cat, sort, userId, enabled, cityId }: SearchParams) {
   return useQuery({
     queryKey: [
@@ -20,7 +45,7 @@ export function useSearchCompanies({ q, cat, sort, userId, enabled, cityId }: Se
       cityId ?? "all",
     ],
     enabled,
-    queryFn: async () => {
+    queryFn: async (): Promise<SearchedCompany[]> => {
       let catId: string | null = null;
       if (cat) {
         const { data: c } = await supabase
@@ -43,20 +68,18 @@ export function useSearchCompanies({ q, cat, sort, userId, enabled, cityId }: Se
       if (catId) query = query.eq("category_id", catId);
       const { data, error } = await query;
       if (error) throw error;
-      // Flatten joined city/neighborhood to top-level `city`/`neighborhood` for consumers.
-      return (data ?? []).map((r) => {
-        const row = r as unknown as {
-          cities: { name: string | null; slug: string | null } | null;
+      return ((data ?? []) as unknown as Array<
+        Omit<SearchedCompany, "city" | "city_slug" | "neighborhood" | "neighborhood_slug"> & {
+          cities: { name: string | null; slug: string | null; state: string | null } | null;
           neighborhoods: { name: string | null; slug: string | null } | null;
-        } & Record<string, unknown>;
-        return {
-          ...row,
-          city: row.cities?.name ?? null,
-          city_slug: row.cities?.slug ?? null,
-          neighborhood: row.neighborhoods?.name ?? null,
-          neighborhood_slug: row.neighborhoods?.slug ?? null,
-        };
-      });
+        }
+      >).map((row) => ({
+        ...row,
+        city: row.cities?.name ?? null,
+        city_slug: row.cities?.slug ?? null,
+        neighborhood: row.neighborhoods?.name ?? null,
+        neighborhood_slug: row.neighborhoods?.slug ?? null,
+      })) as SearchedCompany[];
     },
   });
 }

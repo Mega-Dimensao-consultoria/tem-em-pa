@@ -16,6 +16,7 @@ import { Heart, LayoutDashboard, LogOut, Shield, Store, User as UserIcon, Buildi
 import { NotificationsBell } from "@/features/notifications/components/NotificationsBell";
 import { useMyCompaniesCount } from "@/features/owner/hooks/useMyCompaniesCount";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { SearchAutocomplete } from "@/components/SearchAutocomplete";
 
 export function Header() {
   const { user, loading } = useAuth();
@@ -42,16 +43,14 @@ export function Header() {
           <Logo />
         </Link>
 
+        <div className="hidden max-w-sm flex-1 md:block">
+          <SearchAutocomplete placeholder="Buscar empresas em Pouso Alegre…" />
+        </div>
+
         <nav
           aria-label="Navegação principal"
-          className="hidden items-center gap-1 md:flex"
+          className="hidden items-center gap-1 lg:flex"
         >
-          <Link
-            to="/buscar"
-            className="rounded-full px-4 py-2 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground"
-          >
-            Buscar
-          </Link>
           <Link
             to="/sobre"
             className="rounded-full px-4 py-2 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground"

@@ -8,12 +8,12 @@ type Input = {
   full_name?: string | null;
   phone?: string | null;
   avatar_url?: string | null;
+  handle?: string | null;
+  is_public?: boolean;
+  bio?: string | null;
 };
 
-/**
- * Mutation that updates the signed-in user's profile row and invalidates the
- * cached profile so consumers (Header avatar, settings page) re-fetch.
- */
+/** Updates the signed-in user's profile row. */
 export function useUpdateProfile() {
   const { user } = useAuth();
   const qc = useQueryClient();

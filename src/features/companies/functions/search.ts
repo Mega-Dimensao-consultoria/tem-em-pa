@@ -14,8 +14,19 @@ export const searchCompanies = createServerFn({ method: "GET" })
   .handler(async ({ data }) => {
     const sb = publicClient();
     let query = sb.from("companies").select(CARD_COLS).eq("status", "approved").limit(40);
+
     if (data.q && data.q.length > 0) {
-      query = query.ilike("name", `%${data.q}%`);
+      // Try full-text first via RPC; fall back to ilike for tiny/edge queries.
+      const { data: ftsIds, error: ftsErr } = await sb
+        .rpc("search_companies_autocomplete", { q: data.q, lim: 40 });
+      if (!ftsErr && ftsIds && ftsIds.length > 0) {
+        query = query.in(
+          "id",
+          (ftsIds as Array<{ id: string }>).map((r) => r.id),
+        );
+      } else {
+        query = query.ilike("name", `%${data.q}%`);
+      }
     }
     if (data.categorySlug) {
       const { data: cat } = await sb

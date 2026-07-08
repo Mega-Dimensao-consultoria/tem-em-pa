@@ -22,7 +22,7 @@ export const getCompanyById = createServerFn({ method: "GET" })
         .eq("is_active", true),
       sb
         .from("reviews")
-        .select("id, rating, comment, created_at, owner_reply, owner_reply_at")
+        .select("id, rating, comment, created_at, owner_reply, owner_reply_at, photos")
         .eq("company_id", data.id)
         .eq("status", "approved")
         .order("created_at", { ascending: false })

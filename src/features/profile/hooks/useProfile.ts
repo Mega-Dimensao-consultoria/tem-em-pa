@@ -7,6 +7,9 @@ export type ProfileRow = {
   full_name: string | null;
   phone: string | null;
   avatar_url: string | null;
+  handle: string | null;
+  is_public: boolean;
+  bio: string | null;
 };
 
 /** Loads the signed-in user's profile row. */
@@ -18,7 +21,7 @@ export function useProfile() {
     queryFn: async (): Promise<ProfileRow | null> => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("full_name, phone, avatar_url")
+        .select("full_name, phone, avatar_url, handle, is_public, bio")
         .eq("id", user!.id)
         .maybeSingle();
       if (error) throw error;

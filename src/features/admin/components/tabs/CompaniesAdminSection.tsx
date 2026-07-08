@@ -3,6 +3,7 @@ import { AllCompaniesTab } from "./AllCompaniesTab";
 import { PendingCompaniesTab } from "./PendingCompaniesTab";
 import { FlaggedCompaniesTab } from "./FlaggedCompaniesTab";
 import { DuplicatesTab } from "./DuplicatesTab";
+import { ImportCompaniesTab } from "./ImportCompaniesTab";
 
 export function CompaniesAdminSection() {
   return (
@@ -12,11 +13,13 @@ export function CompaniesAdminSection() {
         <TabsTrigger value="pendentes">Pendentes de aprovação</TabsTrigger>
         <TabsTrigger value="sinalizadas">Reivindicações & denúncias</TabsTrigger>
         <TabsTrigger value="duplicadas">Duplicadas</TabsTrigger>
+        <TabsTrigger value="importar">Importar CSV</TabsTrigger>
       </TabsList>
       <TabsContent value="todas"><AllCompaniesTab /></TabsContent>
       <TabsContent value="pendentes"><PendingCompaniesTab /></TabsContent>
       <TabsContent value="sinalizadas"><FlaggedCompaniesTab /></TabsContent>
       <TabsContent value="duplicadas"><DuplicatesTab /></TabsContent>
+      <TabsContent value="importar"><ImportCompaniesTab /></TabsContent>
     </Tabs>
   );
 }

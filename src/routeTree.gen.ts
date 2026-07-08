@@ -14,7 +14,6 @@ import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
-import { Route as EventosRouteImport } from './routes/eventos'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CitySlugRouteImport } from './routes/$citySlug'
@@ -82,11 +81,6 @@ const PrivacidadeRoute = PrivacidadeRouteImport.update({
   path: '/privacidade',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EventosRoute = EventosRouteImport.update({
-  id: '/eventos',
-  path: '/eventos',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ContatoRoute = ContatoRouteImport.update({
   id: '/contato',
   path: '/contato',
@@ -132,9 +126,9 @@ const PreviewTokenRoute = PreviewTokenRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const EventosIdRoute = EventosIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => EventosRoute,
+  id: '/eventos/$id',
+  path: '/eventos/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const EmpresaIdRoute = EmpresaIdRouteImport.update({
   id: '/empresa/$id',
@@ -314,7 +308,6 @@ export interface FileRoutesByFullPath {
   '/$citySlug': typeof CitySlugRouteWithChildren
   '/auth': typeof AuthRoute
   '/contato': typeof ContatoRoute
-  '/eventos': typeof EventosRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -361,7 +354,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/contato': typeof ContatoRoute
-  '/eventos': typeof EventosRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -410,7 +402,6 @@ export interface FileRoutesById {
   '/$citySlug': typeof CitySlugRouteWithChildren
   '/auth': typeof AuthRoute
   '/contato': typeof ContatoRoute
-  '/eventos': typeof EventosRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -460,7 +451,6 @@ export interface FileRouteTypes {
     | '/$citySlug'
     | '/auth'
     | '/contato'
-    | '/eventos'
     | '/privacidade'
     | '/reset-password'
     | '/sitemap.xml'
@@ -507,7 +497,6 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/contato'
-    | '/eventos'
     | '/privacidade'
     | '/reset-password'
     | '/sitemap.xml'
@@ -555,7 +544,6 @@ export interface FileRouteTypes {
     | '/$citySlug'
     | '/auth'
     | '/contato'
-    | '/eventos'
     | '/privacidade'
     | '/reset-password'
     | '/sitemap.xml'
@@ -605,7 +593,6 @@ export interface RootRouteChildren {
   CitySlugRoute: typeof CitySlugRouteWithChildren
   AuthRoute: typeof AuthRoute
   ContatoRoute: typeof ContatoRoute
-  EventosRoute: typeof EventosRouteWithChildren
   PrivacidadeRoute: typeof PrivacidadeRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -614,6 +601,7 @@ export interface RootRouteChildren {
   AuthTwoFactorRoute: typeof AuthTwoFactorRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   EmpresaIdRoute: typeof EmpresaIdRoute
+  EventosIdRoute: typeof EventosIdRoute
   PreviewTokenRoute: typeof PreviewTokenRoute
   SuporteRedefinir2faRoute: typeof SuporteRedefinir2faRoute
   UHandleRoute: typeof UHandleRoute
@@ -663,13 +651,6 @@ declare module '@tanstack/react-router' {
       path: '/privacidade'
       fullPath: '/privacidade'
       preLoaderRoute: typeof PrivacidadeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/eventos': {
-      id: '/eventos'
-      path: '/eventos'
-      fullPath: '/eventos'
-      preLoaderRoute: typeof EventosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contato': {
@@ -737,10 +718,10 @@ declare module '@tanstack/react-router' {
     }
     '/eventos/$id': {
       id: '/eventos/$id'
-      path: '/$id'
+      path: '/eventos/$id'
       fullPath: '/eventos/$id'
       preLoaderRoute: typeof EventosIdRouteImport
-      parentRoute: typeof EventosRoute
+      parentRoute: typeof rootRouteImport
     }
     '/empresa/$id': {
       id: '/empresa/$id'
@@ -1034,24 +1015,12 @@ const CitySlugRouteWithChildren = CitySlugRoute._addFileChildren(
   CitySlugRouteChildren,
 )
 
-interface EventosRouteChildren {
-  EventosIdRoute: typeof EventosIdRoute
-}
-
-const EventosRouteChildren: EventosRouteChildren = {
-  EventosIdRoute: EventosIdRoute,
-}
-
-const EventosRouteWithChildren =
-  EventosRoute._addFileChildren(EventosRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   CitySlugRoute: CitySlugRouteWithChildren,
   AuthRoute: AuthRoute,
   ContatoRoute: ContatoRoute,
-  EventosRoute: EventosRouteWithChildren,
   PrivacidadeRoute: PrivacidadeRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
@@ -1060,6 +1029,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthTwoFactorRoute: AuthTwoFactorRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   EmpresaIdRoute: EmpresaIdRoute,
+  EventosIdRoute: EventosIdRoute,
   PreviewTokenRoute: PreviewTokenRoute,
   SuporteRedefinir2faRoute: SuporteRedefinir2faRoute,
   UHandleRoute: UHandleRoute,

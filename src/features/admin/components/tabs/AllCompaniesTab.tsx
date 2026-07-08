@@ -120,6 +120,7 @@ export function AllCompaniesTab() {
             </button>
           ))}
         </div>
+        <CityFilterSelect value={cityId} onChange={setCityId} />
       </div>
 
       <div className="flex flex-wrap items-center gap-2">

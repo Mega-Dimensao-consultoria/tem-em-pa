@@ -1,34 +1,44 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Check, ExternalLink, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
 import { usePendingCompanies, useDecideCompany } from "@/features/admin/functions/companies";
+import { CityFilterSelect } from "./CityFilterSelect";
 import { Empty, Loading } from "../admin-ui";
 
 export function PendingCompaniesTab() {
   const { data = [], isLoading } = usePendingCompanies();
   const decide = useDecideCompany();
   const [filter, setFilter] = useState("");
+  const [cityId, setCityId] = useState<string>("all");
+
+  const filtered = useMemo(
+    () =>
+      data.filter((c) => {
+        if (cityId !== "all" && c.city_id !== cityId) return false;
+        if (!filter) return true;
+        const q = filter.toLowerCase();
+        return c.name.toLowerCase().includes(q) || (c.city ?? "").toLowerCase().includes(q);
+      }),
+    [data, filter, cityId],
+  );
 
   if (isLoading) return <Loading />;
   if (data.length === 0) return <Empty>Nenhuma empresa aguardando aprovação.</Empty>;
 
-  const filtered = data.filter(
-    (c) =>
-      !filter ||
-      c.name.toLowerCase().includes(filter.toLowerCase()) ||
-      (c.city ?? "").toLowerCase().includes(filter.toLowerCase()),
-  );
-
   return (
     <div className="mt-4 space-y-3">
-      <Input
-        placeholder="Filtrar por nome ou cidade…"
-        value={filter}
-        onChange={(e) => setFilter(e.target.value)}
-      />
+      <div className="flex flex-wrap items-center gap-3">
+        <Input
+          placeholder="Filtrar por nome ou cidade…"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="max-w-sm"
+        />
+        <CityFilterSelect value={cityId} onChange={setCityId} />
+      </div>
       <ul className="divide-y rounded-2xl border border-border bg-card shadow-soft">
         {filtered.map((c) => (
           <li key={c.id} className="flex flex-wrap items-start justify-between gap-3 p-4">

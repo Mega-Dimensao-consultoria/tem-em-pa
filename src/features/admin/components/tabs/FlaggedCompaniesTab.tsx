@@ -1,11 +1,18 @@
+import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { AlertTriangle, ExternalLink, Flag, ShieldQuestion } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFlaggedCompanies } from "@/features/admin/functions/companies";
+import { CityFilterSelect } from "./CityFilterSelect";
 import { Empty, Loading } from "../admin-ui";
 
 export function FlaggedCompaniesTab() {
   const { data = [], isLoading } = useFlaggedCompanies();
+  const [cityId, setCityId] = useState<string>("all");
+  const filtered = useMemo(
+    () => (cityId === "all" ? data : data.filter((c) => c.city_id === cityId)),
+    [data, cityId],
+  );
 
   if (isLoading) return <Loading />;
   if (data.length === 0)

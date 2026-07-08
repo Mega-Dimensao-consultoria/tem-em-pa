@@ -108,30 +108,19 @@ function EditarEmpresa() {
       return;
     }
 
-    // Resolve/create neighborhood.
+    // Resolve/create neighborhood via SECURITY DEFINER RPC.
     let neighborhood_id: string | null = null;
     if (v.neighborhood) {
-      const nbSlug = v.neighborhood
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "");
-      const { data: existing } = await supabase
-        .from("neighborhoods")
-        .select("id")
-        .eq("city_id", city_id)
-        .eq("slug", nbSlug)
-        .maybeSingle();
-      if (existing?.id) neighborhood_id = existing.id;
-      else {
-        const { data: created } = await supabase
-          .from("neighborhoods")
-          .insert({ city_id, name: v.neighborhood, slug: nbSlug, is_active: true })
-          .select("id")
-          .single();
-        neighborhood_id = created?.id ?? null;
+      const { data: nbId, error: nbErr } = await supabase.rpc("get_or_create_neighborhood", {
+        _city_id: city_id,
+        _name: v.neighborhood,
+      });
+      if (nbErr) {
+        setSubmitting(false);
+        toast.error(nbErr.message || "Falha ao resolver bairro");
+        return;
       }
+      neighborhood_id = (nbId as string) ?? null;
     }
 
     let lat: number | null | undefined = undefined;

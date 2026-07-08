@@ -6,7 +6,7 @@ import { PageShell } from "@/components/PageShell";
 import { ContactDialog } from "@/features/contact/ContactDialog";
 import { listStates, listCitiesByState } from "@/features/companies/functions";
 
-const BASE = "https://pousoalegre.megadimensao.com.br";
+const BASE = "https://temnacidade.com";
 
 const statesQO = queryOptions({
   queryKey: ["hub", "states"],

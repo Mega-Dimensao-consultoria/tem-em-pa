@@ -15,7 +15,7 @@ const Email = ({
   companyName = 'sua empresa',
   rating = 5,
   comment,
-  appUrl = 'https://pousoalegre.megadimensao.com.br',
+  appUrl = 'https://temnacidade.com',
   companyId,
 }: Props) => {
   const stars = '★'.repeat(rating) + '☆'.repeat(Math.max(0, 5 - rating))

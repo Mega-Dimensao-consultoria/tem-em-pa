@@ -3,7 +3,7 @@ import type {} from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 
-const BASE_URL = "https://pousoalegre.megadimensao.com.br";
+const BASE_URL = "https://temnacidade.com";
 
 interface SitemapEntry {
   path: string;

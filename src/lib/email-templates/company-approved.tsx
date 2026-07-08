@@ -11,7 +11,7 @@ interface Props {
 
 const Email = ({
   companyName = 'sua empresa',
-  appUrl = 'https://pousoalegre.megadimensao.com.br',
+  appUrl = 'https://temnacidade.com',
   companyId,
 }: Props) => {
   const ctaUrl = companyId

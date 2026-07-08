@@ -3,7 +3,7 @@ import { PageShell } from '@/components/PageShell'
 import { MarkdownRenderer } from '@/features/content/components/MarkdownRenderer'
 import { getSitePage } from '@/features/content/functions/getSitePage'
 
-const CANONICAL = 'https://pousoalegre.megadimensao.com.br/privacidade'
+const CANONICAL = 'https://temnacidade.com/privacidade'
 
 export const Route = createFileRoute('/privacidade')({
   loader: () => getSitePage({ data: { slug: 'privacidade' } }),

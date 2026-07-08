@@ -8,7 +8,7 @@ import { NotFoundState } from "@/components/feedback/NotFoundState";
 import { listCompaniesByNeighborhood } from "@/features/companies/functions";
 import { titleCase } from "@/lib/safe";
 
-const BASE = "https://pousoalegre.megadimensao.com.br";
+const BASE = "https://temnacidade.com";
 
 const neighborhoodQO = (citySlug: string, slug: string) =>
   queryOptions({

@@ -3,7 +3,7 @@ import { PageShell } from '@/components/PageShell'
 import { MarkdownRenderer } from '@/features/content/components/MarkdownRenderer'
 import { getSitePage } from '@/features/content/functions/getSitePage'
 
-const CANONICAL = 'https://pousoalegre.megadimensao.com.br/sobre'
+const CANONICAL = 'https://temnacidade.com/sobre'
 
 export const Route = createFileRoute('/sobre')({
   loader: () => getSitePage({ data: { slug: 'sobre' } }),

@@ -11,7 +11,7 @@ import { EmptyState } from "@/components/feedback/EmptyState";
 import { EventCalendarButtons } from "@/features/events/components/EventCalendarButtons";
 import { cityBySlugQO } from "./$citySlug";
 
-const BASE = "https://pousoalegre.megadimensao.com.br";
+const BASE = "https://temnacidade.com";
 
 export const Route = createFileRoute("/$citySlug/eventos")({
   loader: ({ context, params }) =>

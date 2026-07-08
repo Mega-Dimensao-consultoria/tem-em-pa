@@ -11,7 +11,7 @@ import { listCategories } from "@/features/companies/functions/categories";
 import { listFeaturedCompanies, listRecentCompaniesByCity } from "@/features/companies/functions";
 import { cityBySlugQO } from "./$citySlug";
 
-const BASE = "https://pousoalegre.megadimensao.com.br";
+const BASE = "https://temnacidade.com";
 const PAGE_SIZE = 15;
 
 const categoriesQO = queryOptions({

@@ -13,4 +13,4 @@ Disallow: /suporte/
 Disallow: /api/
 Disallow: /lovable/
 
-Sitemap: https://pousoalegre.megadimensao.com.br/sitemap.xml
+Sitemap: https://temnacidade.com/sitemap.xml

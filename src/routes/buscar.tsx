@@ -23,7 +23,7 @@ const searchSchema = z.object({
 });
 type SearchValues = z.infer<typeof searchSchema>;
 
-const BASE = "https://pousoalegre.megadimensao.com.br";
+const BASE = "https://temnacidade.com";
 
 export const Route = createFileRoute("/buscar")({
   validateSearch: searchSchema,

@@ -1,6 +1,6 @@
 import { breadcrumbJsonLd } from "@/components/Breadcrumbs";
 
-const BASE = "https://pousoalegre.megadimensao.com.br";
+const BASE = "https://temnacidade.com";
 const DAY_MAP = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 type AnyCompany = Record<string, unknown> | null | undefined;

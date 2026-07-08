@@ -3,4 +3,4 @@
  */
 export const SITE_NAME = "Tem na cidade";
 export const SITE_TAGLINE = "Guia local por cidade";
-export const SITE_URL = "https://pousoalegre.megadimensao.com.br";
+export const SITE_URL = "https://temnacidade.com";

@@ -10,7 +10,7 @@ interface Props {
 
 const Email = ({
   companyName = 'sua empresa',
-  appUrl = 'https://pousoalegre.megadimensao.com.br',
+  appUrl = 'https://temnacidade.com',
 }: Props) => (
   <EmailLayout
     previewText={`O cadastro de ${companyName} não foi aprovado — veja como ajustar e reenviar.`}

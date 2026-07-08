@@ -58,7 +58,7 @@ async function loadEvent(id: string): Promise<LoadedEvent> {
 export const Route = createFileRoute('/eventos/$id')({
   loader: ({ params }) => loadEvent(params.id),
   head: ({ params, loaderData }) => {
-    const base = 'https://pousoalegre.megadimensao.com.br'
+    const base = 'https://temnacidade.com'
     const url = `${base}/eventos/${params.id}`
     const title = loaderData?.title
       ? `${loaderData.title} — Eventos — Tem na cidade`
@@ -222,7 +222,7 @@ function EventDetailPage() {
           <ShareButton
             title={ev.title}
             text={`Confira: ${ev.title}`}
-            url={`https://pousoalegre.megadimensao.com.br/eventos/${ev.id}`}
+            url={`https://temnacidade.com/eventos/${ev.id}`}
           />
         </div>
       </article>

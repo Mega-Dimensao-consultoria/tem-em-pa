@@ -78,6 +78,17 @@ function CityHome() {
   const { data: categories } = useSuspenseQuery(categoriesQO);
   const { data: featured } = useSuspenseQuery(featuredByCityQO(city!.id));
 
+  const [recentLimit, setRecentLimit] = useState(PAGE_SIZE);
+  const showRecent = featured.length === 0;
+  const recentQuery = useQuery({
+    ...recentByCityQO(city!.id, recentLimit),
+    enabled: showRecent,
+  });
+  const recent = recentQuery.data?.companies ?? [];
+  const recentTotal = recentQuery.data?.total ?? 0;
+  const hasMore = recent.length < recentTotal;
+
+
   return (
     <PageShell>
       <section className="relative overflow-hidden">

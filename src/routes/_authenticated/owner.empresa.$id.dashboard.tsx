@@ -37,7 +37,7 @@ import {
   delta,
   splitByPeriod,
 } from "@/features/owner/functions/metrics";
-import { exportMetricsCsv } from "@/features/owner/functions/exportCsv";
+import { exportMetricsCsv, exportReviewsCsv } from "@/features/owner/functions/exportCsv";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — Tem em P.A" }] }),

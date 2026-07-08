@@ -273,7 +273,7 @@ function CompanyPage() {
 
           <aside className="space-y-4">
             <CompanyContactCard
-              company={{ ...(company as never), ...(contact ?? {}) }}
+              company={{ ...(company as unknown as Record<string, unknown>), ...(contact ?? {}) } as never}
               fullAddress={fullAddress}
               isPending={isPending}
             />

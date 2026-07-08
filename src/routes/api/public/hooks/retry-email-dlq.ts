@@ -20,10 +20,8 @@ export const Route = createFileRoute('/api/public/hooks/retry-email-dlq')({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const expected = process.env.SUPABASE_PUBLISHABLE_KEY
-        const provided =
-          request.headers.get('apikey') ??
-          request.headers.get('authorization')?.replace(/^Bearer\s+/i, '')
+        const expected = process.env.PUSH_DISPATCH_SECRET
+        const provided = request.headers.get('x-dispatch-secret')
         if (!expected || !provided || provided !== expected) {
           return new Response('Unauthorized', { status: 401 })
         }

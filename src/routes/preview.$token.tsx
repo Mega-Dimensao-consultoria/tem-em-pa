@@ -36,12 +36,10 @@ function PreviewPage() {
     queryKey: ["site-page-preview", token],
     queryFn: async (): Promise<Version | null> => {
       const { data, error } = await supabase
-        .from("site_pages_versions")
-        .select("slug, title, content_md, created_at")
-        .eq("preview_token", token)
+        .rpc("get_site_page_version_by_token", { _token: token })
         .maybeSingle();
       if (error) throw error;
-      return data as Version | null;
+      return (data as Version | null) ?? null;
     },
   });
 

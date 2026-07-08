@@ -1165,6 +1165,15 @@ export type Database = {
           rating: number
         }[]
       }
+      get_site_page_version_by_token: {
+        Args: { _token: string }
+        Returns: {
+          content_md: string
+          created_at: string
+          slug: string
+          title: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

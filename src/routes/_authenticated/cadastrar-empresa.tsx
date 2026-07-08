@@ -59,9 +59,55 @@ function CadastrarPage() {
     if (!user) return;
     setSubmitting(true);
 
+    // Resolve city_id (by name/UF) with fallback to default city.
+    const cityName = (v.city || "").trim();
+    const stateUf = (v.state || "").trim().toUpperCase();
+    let city_id: string | null = null;
+    if (cityName) {
+      let q = supabase.from("cities").select("id").eq("is_active", true);
+      q = q.ilike("name", cityName);
+      if (stateUf) q = q.eq("state", stateUf);
+      const { data: c } = await q.limit(1).maybeSingle();
+      city_id = c?.id ?? null;
+    }
+    if (!city_id) {
+      const { data: def } = await supabase
+        .from("cities")
+        .select("id")
+        .eq("is_default", true)
+        .maybeSingle();
+      city_id = def?.id ?? null;
+    }
+    if (!city_id) {
+      setSubmitting(false);
+      toastError(new Error("Cidade não encontrada"), "Falha ao cadastrar");
+      return;
+    }
+
+    // Resolve/create neighborhood.
+    let neighborhood_id: string | null = null;
+    if (v.neighborhood) {
+      const nbSlug = slugify(v.neighborhood);
+      const { data: existing } = await supabase
+        .from("neighborhoods")
+        .select("id")
+        .eq("city_id", city_id)
+        .eq("slug", nbSlug)
+        .maybeSingle();
+      if (existing?.id) neighborhood_id = existing.id;
+      else {
+        const { data: created } = await supabase
+          .from("neighborhoods")
+          .insert({ city_id, name: v.neighborhood, slug: nbSlug, is_active: true })
+          .select("id")
+          .single();
+        neighborhood_id = created?.id ?? null;
+      }
+    }
+
     let lat: number | null = null;
     let lng: number | null = null;
-    const fullAddr = [v.address, v.number, v.neighborhood, v.city || "Pouso Alegre", v.state || "MG", "Brasil"]
+    const fullAddr = [v.address, v.number, v.neighborhood, v.city, v.state || "MG", "Brasil"]
       .filter(Boolean)
       .join(", ");
     if (fullAddr.length > 10) {
@@ -84,8 +130,8 @@ function CadastrarPage() {
         cep: v.cep || null,
         address: v.address || null,
         number: v.number || null,
-        neighborhood: v.neighborhood || null,
-        city: v.city || null,
+        city_id,
+        neighborhood_id,
         state: v.state || null,
         phone: v.phone || null,
         whatsapp: v.whatsapp || null,

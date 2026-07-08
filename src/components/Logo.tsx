@@ -1,4 +1,4 @@
-import logoSrc from "@/assets/logo.png";
+import logoSrc from "@/assets/logo-emblem.png";
 
 export function Logo({ className = "" }: { className?: string }) {
   return (
@@ -11,7 +11,7 @@ export function Logo({ className = "" }: { className?: string }) {
         className="h-9 w-9 shrink-0"
       />
       <span className="text-lg tracking-tight">
-        Tem em <span className="text-primary">P.A</span>
+        Tem na <span className="text-secondary">cidade</span>
       </span>
     </span>
   );

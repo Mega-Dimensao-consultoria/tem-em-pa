@@ -87,7 +87,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Tem na cidade — o guia local por cidade" },
       { name: "description", content: "Descubra restaurantes, mercados, serviços e comércio local em várias cidades." },
       { name: "author", content: "Tem na cidade" },
-      { name: "theme-color", content: "#d23030" },
+      { name: "theme-color", content: "#F2B705" },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Tem na cidade" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import type { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
 import { RatingStars } from "@/features/reviews/components/RatingStars";
 import { ReviewForm } from "@/features/reviews/components/ReviewForm";
 import { ReportReviewDialog } from "@/features/reviews/components/ReportReviewDialog";
+import { RatingFilter, type RatingFilterValue } from "@/features/reviews/components/RatingFilter";
 import { NoReviews } from "@/components/feedback/EmptyState";
 
 type Review = {
@@ -30,21 +31,42 @@ export function CompanyReviewsSection({
   onReviewSubmitted: () => void;
 }) {
   const [visible, setVisible] = useState(PAGE_SIZE);
-  const shown = reviews.slice(0, visible);
-  const remaining = Math.max(0, reviews.length - shown.length);
+  const [rating, setRating] = useState<RatingFilterValue>(0);
+
+  const counts = useMemo(() => {
+    const c: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    for (const r of reviews) c[r.rating] = (c[r.rating] ?? 0) + 1;
+    return c;
+  }, [reviews]);
+
+  const filtered = useMemo(
+    () => (rating === 0 ? reviews : reviews.filter((r) => r.rating === rating)),
+    [reviews, rating],
+  );
+  const shown = filtered.slice(0, visible);
+  const remaining = Math.max(0, filtered.length - shown.length);
 
   return (
     <section aria-labelledby="reviews-heading">
-      <div className="mb-3 flex items-baseline justify-between gap-2">
+      <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
         <h2 id="reviews-heading" className="font-display text-lg font-semibold">
           Avaliações
         </h2>
         {reviews.length > 0 ? (
           <span className="text-xs text-muted-foreground">
-            {reviews.length} avaliação(ões)
+            {filtered.length} de {reviews.length} avaliação(ões)
           </span>
         ) : null}
       </div>
+      {reviews.length > 0 ? (
+        <div className="mb-3">
+          <RatingFilter
+            value={rating}
+            onChange={(v) => { setRating(v); setVisible(PAGE_SIZE); }}
+            counts={counts}
+          />
+        </div>
+      ) : null}
       {user ? (
         <div className="mb-4">
           <ReviewForm companyId={companyId} userId={user.id} onSubmitted={onReviewSubmitted} />

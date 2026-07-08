@@ -263,7 +263,15 @@ function EventosPage() {
                   <div className="aspect-[16/9] w-full bg-hero-gradient opacity-80" />
                 )}
                 <div className="p-4">
-                  {ev.companies ? (
+                  {ev.companies?.cities?.slug && ev.companies?.slug ? (
+                    <Link
+                      to="/$citySlug/empresa/$compSlug"
+                      params={{ citySlug: ev.companies.cities.slug, compSlug: ev.companies.slug }}
+                      className="text-xs font-medium uppercase tracking-wide text-primary hover:underline"
+                    >
+                      {ev.companies.name}
+                    </Link>
+                  ) : ev.companies ? (
                     <Link
                       to="/empresa/$id"
                       params={{ id: ev.companies.id }}

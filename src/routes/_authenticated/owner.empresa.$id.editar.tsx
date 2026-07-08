@@ -41,7 +41,9 @@ function EditarEmpresa() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("companies")
-        .select("*")
+        .select(
+          "*, cities:city_id(name, slug, state), neighborhoods:neighborhood_id(name, slug)",
+        )
         .eq("id", id)
         .maybeSingle();
       if (error) throw error;
@@ -52,26 +54,30 @@ function EditarEmpresa() {
   const initial = useMemo<Partial<CompanyFormValues> | undefined>(() => {
     if (!company) return undefined;
     const h = company.hours as HourRow[] | null;
+    const c = company as unknown as {
+      cities: { name: string | null; slug: string | null; state: string | null } | null;
+      neighborhoods: { name: string | null; slug: string | null } | null;
+    } & Record<string, unknown>;
     return {
       ...emptyCompanyForm(),
-      name: company.name ?? "",
-      category_id: company.category_id ?? "",
-      description: company.description ?? "",
-      phone: company.phone ?? "",
-      whatsapp: company.whatsapp ?? "",
-      email: company.email ?? "",
-      website: company.website ?? "",
-      instagram_url: company.instagram_url ?? "",
-      facebook_url: company.facebook_url ?? "",
-      cep: company.cep ?? "",
-      address: company.address ?? "",
-      number: company.number ?? "",
-      complement: company.complement ?? "",
-      neighborhood: company.neighborhood ?? "",
-      city: company.city ?? "Pouso Alegre",
-      state: company.state ?? "MG",
-      logo_url: company.logo_url ?? null,
-      cover_url: company.cover_url ?? null,
+      name: (company.name as string) ?? "",
+      category_id: (company.category_id as string) ?? "",
+      description: (company.description as string) ?? "",
+      phone: (company.phone as string) ?? "",
+      whatsapp: (company.whatsapp as string) ?? "",
+      email: (company.email as string) ?? "",
+      website: (company.website as string) ?? "",
+      instagram_url: (company.instagram_url as string) ?? "",
+      facebook_url: (company.facebook_url as string) ?? "",
+      cep: (company.cep as string) ?? "",
+      address: (company.address as string) ?? "",
+      number: (company.number as string) ?? "",
+      complement: (company.complement as string) ?? "",
+      neighborhood: c.neighborhoods?.name ?? "",
+      city: c.cities?.name ?? "Pouso Alegre",
+      state: (company.state as string) ?? c.cities?.state ?? "MG",
+      logo_url: (company.logo_url as string | null) ?? null,
+      cover_url: (company.cover_url as string | null) ?? null,
       gallery_urls: (company.gallery_urls as string[] | null) ?? [],
       hours: h && Array.isArray(h) && h.length === 7 ? h : defaultHours(),
     };
@@ -85,6 +91,48 @@ function EditarEmpresa() {
       return;
     }
     setSubmitting(true);
+
+    // Resolve city_id (by name/UF).
+    const cityName = (v.city || "").trim();
+    const stateUf = (v.state || "").trim().toUpperCase();
+    let city_id: string | null = (company?.city_id as string | null) ?? null;
+    if (cityName) {
+      let q = supabase.from("cities").select("id").eq("is_active", true).ilike("name", cityName);
+      if (stateUf) q = q.eq("state", stateUf);
+      const { data: cr } = await q.limit(1).maybeSingle();
+      if (cr?.id) city_id = cr.id;
+    }
+    if (!city_id) {
+      setSubmitting(false);
+      toast.error("Cidade não encontrada");
+      return;
+    }
+
+    // Resolve/create neighborhood.
+    let neighborhood_id: string | null = null;
+    if (v.neighborhood) {
+      const nbSlug = v.neighborhood
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+      const { data: existing } = await supabase
+        .from("neighborhoods")
+        .select("id")
+        .eq("city_id", city_id)
+        .eq("slug", nbSlug)
+        .maybeSingle();
+      if (existing?.id) neighborhood_id = existing.id;
+      else {
+        const { data: created } = await supabase
+          .from("neighborhoods")
+          .insert({ city_id, name: v.neighborhood, slug: nbSlug, is_active: true })
+          .select("id")
+          .single();
+        neighborhood_id = created?.id ?? null;
+      }
+    }
 
     let lat: number | null | undefined = undefined;
     let lng: number | null | undefined = undefined;
@@ -118,8 +166,8 @@ function EditarEmpresa() {
         address: v.address || null,
         number: v.number || null,
         complement: v.complement || null,
-        neighborhood: v.neighborhood || null,
-        city: v.city || null,
+        city_id,
+        neighborhood_id,
         state: v.state || null,
         logo_url: v.logo_url,
         cover_url: v.cover_url,

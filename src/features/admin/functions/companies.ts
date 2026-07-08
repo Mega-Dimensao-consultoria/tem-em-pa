@@ -19,17 +19,40 @@ export type FlaggedCompany = AdminCompany & {
   pending_reports: number;
 };
 
+type RawAdminRow = {
+  id: string;
+  name: string;
+  description: string | null;
+  status: string;
+  created_at: string;
+  cities: { name: string | null } | null;
+};
+
+function toAdmin(rows: RawAdminRow[]): AdminCompany[] {
+  return rows.map((r) => ({
+    id: r.id,
+    name: r.name,
+    description: r.description,
+    city: r.cities?.name ?? null,
+    status: r.status,
+    created_at: r.created_at,
+  }));
+}
+
+const ADMIN_SELECT =
+  "id, name, description, status, created_at, cities:city_id(name)" as const;
+
 export function usePendingCompanies() {
   return useQuery({
     queryKey: adminKeys.pendingCompanies(),
     queryFn: async () => {
       const { data, error } = await supabase
         .from("companies")
-        .select("id, name, description, city, status, created_at")
+        .select(ADMIN_SELECT)
         .in("status", ["pending", "claimed_pending"])
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data as PendingCompany[];
+      return toAdmin((data ?? []) as unknown as RawAdminRow[]) as PendingCompany[];
     },
   });
 }
@@ -40,11 +63,11 @@ export function useAllCompanies() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("companies")
-        .select("id, name, description, city, status, created_at")
+        .select(ADMIN_SELECT)
         .order("created_at", { ascending: false })
         .limit(500);
       if (error) throw error;
-      return data as AdminCompany[];
+      return toAdmin((data ?? []) as unknown as RawAdminRow[]);
     },
   });
 }
@@ -70,7 +93,7 @@ export function useFlaggedCompanies() {
         claimsByCompany.set(c.company_id, (claimsByCompany.get(c.company_id) ?? 0) + 1);
       });
       const reportsByCompany = new Map<string, number>();
-      (reports ?? []).forEach((r: any) => {
+      (reports ?? []).forEach((r: { reviews: { company_id: string } | null }) => {
         const cid = r.reviews?.company_id;
         if (cid) reportsByCompany.set(cid, (reportsByCompany.get(cid) ?? 0) + 1);
       });
@@ -80,12 +103,13 @@ export function useFlaggedCompanies() {
 
       const { data: companies, error: coErr } = await supabase
         .from("companies")
-        .select("id, name, description, city, status, created_at")
+        .select(ADMIN_SELECT)
         .in("id", ids);
       if (coErr) throw coErr;
 
-      return (companies ?? []).map((c) => ({
-        ...(c as AdminCompany),
+      const admins = toAdmin((companies ?? []) as unknown as RawAdminRow[]);
+      return admins.map((c) => ({
+        ...c,
         pending_claims: claimsByCompany.get(c.id) ?? 0,
         pending_reports: reportsByCompany.get(c.id) ?? 0,
       }));
@@ -98,10 +122,7 @@ type Decision = "approved" | "rejected";
 export function useDecideCompany() {
   return useAdminMutation<{ id: string; name: string; status: Decision }>({
     mutationFn: async ({ id, status }) => {
-      const { error } = await supabase
-        .from("companies")
-        .update({ status })
-        .eq("id", id);
+      const { error } = await supabase.from("companies").update({ status }).eq("id", id);
       if (error) throw error;
     },
     audit: ({ id, name, status }) => ({
@@ -115,7 +136,6 @@ export function useDecideCompany() {
   });
 }
 
-/** Suspend a published company (hides it from the public catalog). */
 export function useSuspendCompany() {
   return useAdminMutation<{ id: string; name: string }>({
     mutationFn: async ({ id }) => {
@@ -135,7 +155,6 @@ export function useSuspendCompany() {
   });
 }
 
-/** Re-publish a previously rejected/suspended company. */
 export function useRepublishCompany() {
   return useAdminMutation<{ id: string; name: string }>({
     mutationFn: async ({ id }) => {
@@ -155,7 +174,6 @@ export function useRepublishCompany() {
   });
 }
 
-/** Permanently delete a company and all related records (cascade). */
 export function useDeleteCompany() {
   return useAdminMutation<{ id: string; name: string }>({
     mutationFn: async ({ id }) => {
@@ -171,4 +189,3 @@ export function useDeleteCompany() {
     successMessage: "Empresa removida",
   });
 }
-

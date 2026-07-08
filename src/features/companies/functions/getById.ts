@@ -1,18 +1,18 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { publicClient, DETAIL_COLS } from "./_client";
+import { publicClient, DETAIL_COLS, normalizeCompany } from "./_client";
 
 export const getCompanyById = createServerFn({ method: "GET" })
   .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data }) => {
     const sb = publicClient();
-    const { data: company, error } = await sb
+    const { data: rawCompany, error } = await sb
       .from("companies")
       .select(DETAIL_COLS)
       .eq("id", data.id)
       .maybeSingle();
     if (error) throw new Error(error.message);
-    if (!company) return null;
+    if (!rawCompany) return null;
 
     const [products, reviews] = await Promise.all([
       sb
@@ -29,6 +29,7 @@ export const getCompanyById = createServerFn({ method: "GET" })
         .limit(50),
     ]);
 
+    const company = normalizeCompany(rawCompany as unknown as Record<string, unknown>);
     return {
       ...company,
       products: products.data ?? [],

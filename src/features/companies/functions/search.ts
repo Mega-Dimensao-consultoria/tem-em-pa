@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { publicClient, CARD_COLS } from "./_client";
+import { publicClient, CARD_COLS, normalizeCompanies } from "./_client";
 
 export const searchCompanies = createServerFn({ method: "GET" })
   .inputValidator((input: unknown) =>
@@ -8,17 +8,21 @@ export const searchCompanies = createServerFn({ method: "GET" })
       .object({
         q: z.string().trim().max(120).optional(),
         categorySlug: z.string().trim().max(60).optional(),
+        cityId: z.string().uuid().nullable().optional(),
       })
       .parse(input),
   )
   .handler(async ({ data }) => {
     const sb = publicClient();
     let query = sb.from("companies").select(CARD_COLS).eq("status", "approved").limit(40);
+    if (data.cityId) query = query.eq("city_id", data.cityId);
 
     if (data.q && data.q.length > 0) {
-      // Try full-text first via RPC; fall back to ilike for tiny/edge queries.
-      const { data: ftsIds, error: ftsErr } = await sb
-        .rpc("search_companies_autocomplete", { q: data.q, lim: 40 });
+      const { data: ftsIds, error: ftsErr } = await sb.rpc("search_companies_autocomplete", {
+        q: data.q,
+        _city_id: (data.cityId ?? null) as unknown as string,
+        lim: 40,
+      });
       if (!ftsErr && ftsIds && ftsIds.length > 0) {
         query = query.in(
           "id",
@@ -38,5 +42,5 @@ export const searchCompanies = createServerFn({ method: "GET" })
     }
     const { data: rows, error } = await query;
     if (error) throw new Error(error.message);
-    return rows ?? [];
+    return normalizeCompanies(rows as unknown as Record<string, unknown>[]);
   });

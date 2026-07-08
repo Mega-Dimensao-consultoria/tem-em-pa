@@ -16,15 +16,26 @@ export const privateCompanyQO = (id: string) =>
   queryOptions({
     queryKey: queryKeys.companies.private(id),
     queryFn: async (): Promise<CompanyData | null> => {
-      const { data: company, error } = await supabase
+      const { data: rawCompany, error } = await supabase
         .from("companies")
         .select(
-          "id, name, description, cep, address, number, complement, neighborhood, city, state, lat, lng, phone, whatsapp, email, website, instagram_url, facebook_url, hours, gallery_urls, logo_url, cover_url, status, owner_id, is_featured, category_id, categories:category_id(name, slug, icon)",
+          "id, name, description, cep, address, number, complement, city_id, neighborhood_id, state, lat, lng, phone, whatsapp, email, website, instagram_url, facebook_url, hours, gallery_urls, logo_url, cover_url, status, owner_id, is_featured, category_id, categories:category_id(name, slug, icon), cities:city_id(name, slug, state), neighborhoods:neighborhood_id(name, slug)",
         )
         .eq("id", id)
         .maybeSingle();
       if (error) throw new Error(error.message);
-      if (!company) return null;
+      if (!rawCompany) return null;
+      const row = rawCompany as unknown as {
+        cities: { name: string | null; slug: string | null; state: string | null } | null;
+        neighborhoods: { name: string | null; slug: string | null } | null;
+      } & Record<string, unknown>;
+      const flat = {
+        ...row,
+        city: row.cities?.name ?? null,
+        city_slug: row.cities?.slug ?? null,
+        neighborhood: row.neighborhoods?.name ?? null,
+        neighborhood_slug: row.neighborhoods?.slug ?? null,
+      };
       const [products, reviews] = await Promise.all([
         supabase
           .from("products")
@@ -40,7 +51,7 @@ export const privateCompanyQO = (id: string) =>
           .limit(50),
       ]);
       return {
-        ...(company as unknown as CompanyData),
+        ...(flat as unknown as CompanyData),
         products: products.data ?? [],
         reviews: reviews.data ?? [],
       } as CompanyData;

@@ -46,7 +46,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           sb.from("categories").select("slug"),
           sb
             .from("companies")
-            .select("id, updated_at, neighborhood")
+            .select("id, updated_at")
             .eq("status", "approved")
             .limit(5000),
           sb
@@ -56,10 +56,9 @@ export const Route = createFileRoute("/sitemap.xml")({
             .gte("starts_at", nowIso)
             .limit(2000),
           sb
-            .from("companies")
-            .select("neighborhood")
-            .eq("status", "approved")
-            .not("neighborhood", "is", null)
+            .from("neighborhoods")
+            .select("slug")
+            .eq("is_active", true)
             .limit(5000),
         ]);
 
@@ -84,9 +83,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         }
         const slugs = new Set<string>();
         for (const row of hoods.data ?? []) {
-          const n = (row.neighborhood ?? "").trim();
-          if (!n) continue;
-          const s = slugifyNeighborhood(n);
+          const s = (row.slug ?? "").trim();
           if (s) slugs.add(s);
         }
         for (const s of slugs) {

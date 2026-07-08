@@ -4,7 +4,7 @@ import { MarkdownRenderer } from '@/features/content/components/MarkdownRenderer
 import { getSitePage } from '@/features/content/functions/getSitePage'
 
 
-const CANONICAL = 'https://pousoalegre.megadimensao.com.br/contato'
+const CANONICAL = 'https://temnacidade.com/contato'
 
 export const Route = createFileRoute('/contato')({
   loader: () => getSitePage({ data: { slug: 'contato' } }),

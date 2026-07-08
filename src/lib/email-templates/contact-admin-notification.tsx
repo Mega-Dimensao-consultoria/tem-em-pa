@@ -16,7 +16,7 @@ const Email = ({
   fromEmail = '',
   subjectLine = '(sem assunto)',
   message = '',
-  adminUrl = 'https://pousoalegre.megadimensao.com.br/admin',
+  adminUrl = 'https://temnacidade.com/admin',
 }: Props) => (
   <EmailLayout
     previewText={`Nova mensagem de contato de ${fullName} no Tem na cidade.`}

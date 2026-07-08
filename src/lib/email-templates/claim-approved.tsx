@@ -10,7 +10,7 @@ interface Props {
 
 const Email = ({
   companyName = 'a empresa',
-  appUrl = 'https://pousoalegre.megadimensao.com.br',
+  appUrl = 'https://temnacidade.com',
 }: Props) => (
   <EmailLayout
     previewText={`Sua reivindicação de ${companyName} foi aprovada — agora você é o dono oficial no Tem na cidade.`}

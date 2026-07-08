@@ -7,7 +7,7 @@ import { searchCompanies, getCategoryBySlug } from "@/features/companies/functio
 import { NoCompanies } from "@/components/feedback/EmptyState";
 import { cityBySlugQO } from "./$citySlug";
 
-const BASE = "https://pousoalegre.megadimensao.com.br";
+const BASE = "https://temnacidade.com";
 
 const listQo = (cityId: string, slug: string) =>
   queryOptions({

@@ -52,7 +52,7 @@ export function buildIcs(ev: CalendarEvent): string {
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "BEGIN:VEVENT",
-    `UID:${esc(ev.uid)}@tem-em-pa.lovable.app`,
+    `UID:${esc(ev.uid)}@temnacidade.com`,
     `DTSTAMP:${toIcsUtc(new Date().toISOString())}`,
     `DTSTART:${toIcsUtc(ev.startsAt)}`,
     `DTEND:${toIcsUtc(end)}`,

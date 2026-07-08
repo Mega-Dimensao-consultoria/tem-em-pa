@@ -10,7 +10,7 @@ export type PendingReview = {
   created_at: string;
   rating: number;
   company_id: string;
-  companies: { name: string } | null;
+  companies: { name: string; city_id: string | null; cities: { slug: string | null } | null } | null;
 };
 
 export function usePendingReviews() {
@@ -20,7 +20,7 @@ export function usePendingReviews() {
       const { data, error } = await supabase
         .from("reviews")
         .select(
-          "id, comment, status, created_at, rating, company_id, companies:company_id(name)",
+          "id, comment, status, created_at, rating, company_id, companies:company_id(name, city_id, cities:city_id(slug))",
         )
         .in("status", ["pending_moderation", "flagged"])
         .order("created_at", { ascending: false });
@@ -28,6 +28,7 @@ export function usePendingReviews() {
       return (data ?? []) as unknown as PendingReview[];
     },
   });
+
 }
 
 type Decision = "approved" | "rejected";

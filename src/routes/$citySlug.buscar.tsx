@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { toast } from "sonner";
 import { PageShell } from "@/components/PageShell";
@@ -14,6 +15,7 @@ import {
   type SearchSort,
 } from "@/features/companies/hooks/useSearchCompanies";
 import { isOpenNow } from "@/lib/hours";
+import { cityBySlugQO } from "./$citySlug";
 
 const searchSchema = z.object({
   q: z.string().trim().max(120).optional(),
@@ -21,33 +23,37 @@ const searchSchema = z.object({
   sort: z.enum(["relevance", "recent", "name", "distance"]).optional(),
   open: z.coerce.boolean().optional(),
 });
-
 type SearchValues = z.infer<typeof searchSchema>;
 
-export const Route = createFileRoute("/buscar")({
+const BASE = "https://pousoalegre.megadimensao.com.br";
+
+export const Route = createFileRoute("/$citySlug/buscar")({
   validateSearch: searchSchema,
   ssr: false,
-  head: () => ({
-    meta: [
-      { title: "Buscar empresas — Tem na cidade" },
-      {
-        name: "description",
-        content:
-          "Busque empresas, restaurantes, serviços e produtos entre todas as cidades. Filtre por categoria e encontre o que precisa.",
-      },
-      { property: "og:title", content: "Buscar empresas — Tem na cidade" },
-      {
-        property: "og:description",
-        content: "Encontre empresas e serviços perto de você em várias cidades.",
-      },
-      { property: "og:url", content: "https://pousoalegre.megadimensao.com.br/buscar" },
-    ],
-    links: [{ rel: "canonical", href: "https://pousoalegre.megadimensao.com.br/buscar" }],
-  }),
-  component: SearchPage,
+  loader: ({ context, params }) =>
+    context.queryClient.ensureQueryData(cityBySlugQO(params.citySlug)),
+  head: ({ params, loaderData }) => {
+    const cityName = loaderData?.name ?? params.citySlug;
+    const title = `Buscar empresas em ${cityName} — Tem na cidade`;
+    const desc = `Busque empresas, restaurantes, serviços e produtos em ${cityName}. Filtre por categoria e encontre o que está mais perto de você.`;
+    const url = `${BASE}/${params.citySlug}/buscar`;
+    return {
+      meta: [
+        { title },
+        { name: "description", content: desc },
+        { property: "og:title", content: title },
+        { property: "og:description", content: desc },
+        { property: "og:url", content: url },
+      ],
+      links: [{ rel: "canonical", href: url }],
+    };
+  },
+  component: CitySearchPage,
 });
 
-function SearchPage() {
+function CitySearchPage() {
+  const { citySlug } = Route.useParams();
+  const { data: city } = useSuspenseQuery(cityBySlugQO(citySlug));
   const { q, cat, sort = "relevance", open } = Route.useSearch();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
@@ -55,16 +61,16 @@ function SearchPage() {
 
   const { data: categories = [] } = useCategories();
   const { data: rawData = [], isLoading } = useSearchCompanies({
-    q,
-    cat,
-    sort,
+    q, cat, sort,
     userId: user?.id,
     enabled: !authLoading,
+    cityId: city?.id ?? null,
   });
 
   function updateSearch(patch: Partial<SearchValues>) {
     navigate({
-      to: "/buscar",
+      to: "/$citySlug/buscar",
+      params: { citySlug },
       search: (prev: SearchValues) => ({ ...prev, ...patch }),
     });
   }
@@ -75,10 +81,9 @@ function SearchPage() {
     if (sort === "distance" && coords) {
       return [...rows]
         .map((c) => {
-          const dist =
-            c.lat != null && c.lng != null
-              ? haversineKm(coords.lat, coords.lng, c.lat, c.lng)
-              : Infinity;
+          const dist = c.lat != null && c.lng != null
+            ? haversineKm(coords.lat, coords.lng, c.lat, c.lng)
+            : Infinity;
           return { ...c, _dist: dist };
         })
         .sort((a, b) => a._dist - b._dist);
@@ -116,7 +121,7 @@ function SearchPage() {
     <PageShell>
       <section className="mx-auto max-w-6xl px-4 py-10">
         <div className="mb-6">
-          <SearchBar defaultValue={q ?? ""} size="md" />
+          <SearchBar defaultValue={q ?? ""} size="md" citySlug={citySlug} placeholder={`Buscar em ${city?.name ?? ""}…`} />
         </div>
 
         <SearchFilters
@@ -127,6 +132,7 @@ function SearchPage() {
           hasGeo={!!coords}
           geoLoading={geoLoading}
           q={q}
+          citySlug={citySlug}
           onCat={(slug) => updateSearch({ cat: slug })}
           onSort={handleSort}
           onRequestGeo={handleRequestGeo}
@@ -134,7 +140,7 @@ function SearchPage() {
         />
 
         <h1 className="font-display text-2xl font-bold">
-          {q ? `Resultados para "${q}"` : activeCat ? activeCat.name : "Todas as empresas"}
+          {q ? `Resultados para "${q}"` : activeCat ? activeCat.name : `Todas as empresas em ${city?.name ?? ""}`}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
           {isLoading ? "Buscando…" : `${approved.length} encontrada(s)`}

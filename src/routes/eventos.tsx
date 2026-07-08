@@ -15,17 +15,17 @@ const CANONICAL = 'https://pousoalegre.megadimensao.com.br/eventos'
 export const Route = createFileRoute('/eventos')({
   head: () => ({
     meta: [
-      { title: 'Eventos em Pouso Alegre — Tem em Pouso Alegre' },
+      { title: 'Eventos — Tem na cidade' },
       {
         name: 'description',
         content:
-          'Confira os próximos eventos, promoções e novidades das empresas e profissionais de Pouso Alegre.',
+          'Confira os próximos eventos e novidades das empresas e profissionais nas cidades atendidas.',
       },
-      { property: 'og:title', content: 'Eventos em Pouso Alegre — Tem em Pouso Alegre' },
+      { property: 'og:title', content: 'Eventos — Tem na cidade' },
       {
         property: 'og:description',
         content:
-          'Agenda de eventos e novidades do comércio e serviços de Pouso Alegre.',
+          'Agenda de eventos e novidades do comércio e serviços de várias cidades.',
       },
       { property: 'og:url', content: CANONICAL },
     ],
@@ -122,10 +122,10 @@ function EventosPage() {
             id="eventos-heading"
             className="font-display text-3xl font-bold md:text-4xl"
           >
-            Eventos em Pouso Alegre
+            Eventos
           </h1>
           <p className="mt-2 text-muted-foreground">
-            O que está acontecendo nas empresas e serviços da cidade.
+            Agenda de eventos das empresas e serviços em várias cidades.
           </p>
         </header>
 
@@ -263,7 +263,15 @@ function EventosPage() {
                   <div className="aspect-[16/9] w-full bg-hero-gradient opacity-80" />
                 )}
                 <div className="p-4">
-                  {ev.companies ? (
+                  {ev.companies?.cities?.slug && ev.companies?.slug ? (
+                    <Link
+                      to="/$citySlug/empresa/$compSlug"
+                      params={{ citySlug: ev.companies.cities.slug, compSlug: ev.companies.slug }}
+                      className="text-xs font-medium uppercase tracking-wide text-primary hover:underline"
+                    >
+                      {ev.companies.name}
+                    </Link>
+                  ) : ev.companies ? (
                     <Link
                       to="/empresa/$id"
                       params={{ id: ev.companies.id }}

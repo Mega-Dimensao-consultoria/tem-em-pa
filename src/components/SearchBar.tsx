@@ -2,13 +2,30 @@ import { Search } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 
-export function SearchBar({ defaultValue = "", size = "lg" }: { defaultValue?: string; size?: "lg" | "md" }) {
+type Props = {
+  defaultValue?: string;
+  size?: "lg" | "md";
+  citySlug?: string;
+  placeholder?: string;
+};
+
+export function SearchBar({
+  defaultValue = "",
+  size = "lg",
+  citySlug,
+  placeholder,
+}: Props) {
   const navigate = useNavigate();
   const [q, setQ] = useState(defaultValue);
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
-    navigate({ to: "/buscar", search: { q: q.trim() || undefined } });
+    const query = q.trim() || undefined;
+    if (citySlug) {
+      navigate({ to: "/$citySlug/buscar", params: { citySlug }, search: { q: query } });
+    } else {
+      navigate({ to: "/buscar", search: { q: query } });
+    }
   }
 
   const heights = size === "lg" ? "h-14 text-base" : "h-11 text-sm";
@@ -20,7 +37,7 @@ export function SearchBar({ defaultValue = "", size = "lg" }: { defaultValue?: s
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Buscar empresas, produtos ou serviços em Pouso Alegre…"
+          placeholder={placeholder ?? "Buscar empresas, produtos ou serviços…"}
           className="flex-1 bg-transparent px-3 outline-none placeholder:text-muted-foreground"
           maxLength={120}
         />

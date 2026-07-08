@@ -62,7 +62,7 @@ export function CompanyHeader({
             title={company.name}
             text={
               company.description?.slice(0, 140) ??
-              `Conheça ${company.name} no Tem em P.A`
+              `Conheça ${company.name} no Tem na cidade`
             }
           />
         ) : null}

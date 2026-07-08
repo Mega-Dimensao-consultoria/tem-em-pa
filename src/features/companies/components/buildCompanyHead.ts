@@ -1,5 +1,6 @@
 import { breadcrumbJsonLd } from "@/components/Breadcrumbs";
 
+const BASE = "https://pousoalegre.megadimensao.com.br";
 const DAY_MAP = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 type AnyCompany = Record<string, unknown> | null | undefined;
@@ -17,10 +18,23 @@ function asString(v: unknown): string | undefined {
   return typeof v === "string" ? v : undefined;
 }
 
-export function buildCompanyHead(loaderData: AnyCompany, id: string) {
-  const url = `https://tem-em-pa.lovable.app/empresa/${id}`;
+export type CompanyHeadParams =
+  | string /* legacy: company id path only */
+  | { citySlug: string; compSlug: string };
+
+export function buildCompanyHead(loaderData: AnyCompany, params: CompanyHeadParams) {
+  const isSlug = typeof params === "object";
+  const path = isSlug
+    ? `/${params.citySlug}/empresa/${params.compSlug}`
+    : `/empresa/${params}`;
+  const url = `${BASE}${path}`;
   const name = asString(loaderData?.name) ?? "Empresa";
-  const desc = asString(loaderData?.description) ?? "Empresa em Pouso Alegre/MG";
+  const cityName = asString(loaderData?.city) ?? "";
+  const stateUf = asString(loaderData?.state) ?? "";
+  const cityLabel = [cityName, stateUf].filter(Boolean).join("/");
+  const desc =
+    asString(loaderData?.description) ??
+    (cityLabel ? `Empresa em ${cityLabel}` : "Empresa no Tem na cidade");
   const img = asString(loaderData?.cover_url) ?? asString(loaderData?.logo_url);
   const reviews = (Array.isArray(loaderData?.reviews) ? loaderData?.reviews : []) as Array<{
     rating: number;
@@ -57,8 +71,8 @@ export function buildCompanyHead(loaderData: AnyCompany, id: string) {
     address: {
       "@type": "PostalAddress",
       streetAddress: loaderData?.address ?? undefined,
-      addressLocality: "Pouso Alegre",
-      addressRegion: "MG",
+      addressLocality: cityName || undefined,
+      addressRegion: stateUf || undefined,
       addressCountry: "BR",
     },
     ...(loaderData?.lat && loaderData?.lng
@@ -80,18 +94,24 @@ export function buildCompanyHead(loaderData: AnyCompany, id: string) {
   const cat = asRecord(loaderData?.categories);
   const catName = asString(cat?.name);
   const catSlug = asString(cat?.slug);
-  const crumbLd = breadcrumbJsonLd("https://tem-em-pa.lovable.app", [
-    ...(catName && catSlug
-      ? [{ label: catName, path: `/categoria/${catSlug}` }]
-      : [{ label: "Empresas", path: "/buscar" }]),
-    { label: name, path: `/empresa/${id}` },
-  ]);
+  const citySlugFromCompany = asString(loaderData?.city_slug);
+  const citySlugForCrumb = isSlug ? params.citySlug : citySlugFromCompany;
+
+  const crumbs: { label: string; path: string }[] = [];
+  if (citySlugForCrumb && cityName) {
+    crumbs.push({ label: cityName, path: `/${citySlugForCrumb}` });
+  }
+  if (catName && catSlug && citySlugForCrumb) {
+    crumbs.push({ label: catName, path: `/${citySlugForCrumb}/categoria/${catSlug}` });
+  }
+  crumbs.push({ label: name, path });
+  const crumbLd = breadcrumbJsonLd(BASE, crumbs);
 
   return {
     meta: [
-      { title: `${name} — Tem em P.A` },
+      { title: `${name}${cityLabel ? " — " + cityLabel : ""} | Tem na cidade` },
       { name: "description", content: desc },
-      { property: "og:title", content: `${name} — Tem em P.A` },
+      { property: "og:title", content: `${name}${cityLabel ? " — " + cityLabel : ""} | Tem na cidade` },
       { property: "og:description", content: desc },
       { property: "og:url", content: url },
       { property: "og:type", content: "business.business" },

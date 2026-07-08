@@ -10,16 +10,16 @@ export function Footer() {
     >
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-3">
         <section aria-labelledby="footer-brand">
-          <h2 id="footer-brand" className="sr-only">Sobre o Tem em Pouso Alegre</h2>
+          <h2 id="footer-brand" className="sr-only">Sobre o Tem na cidade</h2>
           <Logo />
           <p className="mt-3 max-w-xs text-sm text-muted-foreground">
-            O guia comercial inteligente de Pouso Alegre. Descubra empresas, produtos e serviços perto de você.
+            O guia local por cidade. Descubra empresas, produtos e serviços perto de você em várias cidades.
           </p>
         </section>
         <nav aria-labelledby="footer-nav-heading">
           <h4 id="footer-nav-heading" className="mb-3 text-sm font-semibold">Navegar</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/buscar" className="hover:text-foreground">Buscar empresas</Link></li>
+            <li><Link to="/" className="hover:text-foreground">Cidades</Link></li>
             <li><Link to="/eventos" className="hover:text-foreground">Eventos</Link></li>
             <li><Link to="/cadastrar-empresa" className="hover:text-foreground">Cadastrar empresa</Link></li>
             <li><Link to="/sobre" className="hover:text-foreground">Sobre</Link></li>
@@ -33,12 +33,12 @@ export function Footer() {
             <li><Link to="/privacidade" className="hover:text-foreground">Política de Privacidade</Link></li>
           </ul>
           <p className="mt-4 text-sm text-muted-foreground">
-            Pouso Alegre / MG — conectando moradores e comércio local.
+            Conectando moradores e comércio local.
           </p>
         </nav>
       </div>
       <div className="border-t border-border/60 py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Tem em P.A — Todos os direitos reservados.
+        © {new Date().getFullYear()} Tem na cidade — Todos os direitos reservados.
       </div>
     </footer>
   );

@@ -12,15 +12,6 @@ interface SitemapEntry {
   priority?: string;
 }
 
-function slugifyNeighborhood(name: string): string {
-  return name
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-}
-
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
@@ -33,8 +24,7 @@ export const Route = createFileRoute("/sitemap.xml")({
 
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "daily", priority: "1.0" },
-          { path: "/buscar", changefreq: "daily", priority: "0.9" },
-          { path: "/eventos", changefreq: "daily", priority: "0.8" },
+          { path: "/eventos", changefreq: "daily", priority: "0.7" },
           { path: "/sobre", changefreq: "monthly", priority: "0.5" },
           { path: "/contato", changefreq: "monthly", priority: "0.5" },
           { path: "/termos", changefreq: "yearly", priority: "0.3" },
@@ -42,38 +32,66 @@ export const Route = createFileRoute("/sitemap.xml")({
         ];
 
         const nowIso = new Date().toISOString();
-        const [cats, companies, events, hoods] = await Promise.all([
+        const [cities, cats, companies, events, hoods] = await Promise.all([
+          sb.from("cities").select("id, slug").eq("is_active", true),
           sb.from("categories").select("slug"),
           sb
             .from("companies")
-            .select("id, updated_at")
+            .select("id, slug, updated_at, cities:city_id(slug)")
             .eq("status", "approved")
             .limit(5000),
           sb
             .from("city_events")
-            .select("id, updated_at, starts_at")
+            .select("id, updated_at, starts_at, cities:city_id(slug)")
             .eq("is_active", true)
             .gte("starts_at", nowIso)
             .limit(2000),
           sb
             .from("neighborhoods")
-            .select("slug")
+            .select("slug, cities:city_id(slug)")
             .eq("is_active", true)
             .limit(5000),
         ]);
 
-        for (const c of cats.data ?? []) {
-          entries.push({ path: `/categoria/${c.slug}`, changefreq: "weekly", priority: "0.8" });
+        const activeCitySlugs = new Set<string>(
+          ((cities.data ?? []) as Array<{ slug: string | null }>)
+            .map((c) => c.slug)
+            .filter((s): s is string => !!s),
+        );
+
+        for (const s of activeCitySlugs) {
+          entries.push({ path: `/${s}`, changefreq: "daily", priority: "0.9" });
+          entries.push({ path: `/${s}/buscar`, changefreq: "daily", priority: "0.8" });
+          entries.push({ path: `/${s}/eventos`, changefreq: "daily", priority: "0.7" });
+          for (const cat of cats.data ?? []) {
+            entries.push({
+              path: `/${s}/categoria/${cat.slug}`,
+              changefreq: "weekly",
+              priority: "0.7",
+            });
+          }
         }
-        for (const c of companies.data ?? []) {
+
+        for (const row of (companies.data ?? []) as Array<{
+          id: string;
+          slug: string | null;
+          updated_at: string | null;
+          cities: { slug: string | null } | null;
+        }>) {
+          const citySlug = row.cities?.slug;
+          if (!citySlug || !row.slug) continue;
           entries.push({
-            path: `/empresa/${c.id}`,
-            lastmod: c.updated_at ? new Date(c.updated_at).toISOString().slice(0, 10) : undefined,
+            path: `/${citySlug}/empresa/${row.slug}`,
+            lastmod: row.updated_at ? new Date(row.updated_at).toISOString().slice(0, 10) : undefined,
             changefreq: "weekly",
             priority: "0.7",
           });
         }
-        for (const e of events.data ?? []) {
+
+        for (const e of (events.data ?? []) as Array<{
+          id: string;
+          updated_at: string | null;
+        }>) {
           entries.push({
             path: `/eventos/${e.id}`,
             lastmod: e.updated_at ? new Date(e.updated_at).toISOString().slice(0, 10) : undefined,
@@ -81,13 +99,19 @@ export const Route = createFileRoute("/sitemap.xml")({
             priority: "0.6",
           });
         }
-        const slugs = new Set<string>();
-        for (const row of hoods.data ?? []) {
-          const s = (row.slug ?? "").trim();
-          if (s) slugs.add(s);
-        }
-        for (const s of slugs) {
-          entries.push({ path: `/bairro/${s}`, changefreq: "weekly", priority: "0.6" });
+
+        const seen = new Set<string>();
+        for (const row of (hoods.data ?? []) as Array<{
+          slug: string | null;
+          cities: { slug: string | null } | null;
+        }>) {
+          const s = row.cities?.slug;
+          const b = row.slug;
+          if (!s || !b) continue;
+          const key = `${s}/${b}`;
+          if (seen.has(key)) continue;
+          seen.add(key);
+          entries.push({ path: `/${s}/bairro/${b}`, changefreq: "weekly", priority: "0.6" });
         }
 
         const urls = entries.map((e) =>

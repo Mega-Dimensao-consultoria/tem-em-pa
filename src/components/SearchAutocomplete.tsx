@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Search, Loader2 } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useAutocomplete } from "@/features/companies/hooks/useAutocomplete";
@@ -14,6 +14,30 @@ export function SearchAutocomplete({ placeholder = "Buscar empresas…" }: { pla
   const [active, setActive] = useState(0);
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const { data = [], isFetching } = useAutocomplete(q);
+  const listboxId = useId();
+  const optionIdPrefix = useId();
+
+  const trimmed = q.trim();
+  const showList = open && trimmed.length >= 2 && data.length > 0;
+  const activeIndex = Math.min(active, Math.max(0, data.length - 1));
+  const activeItem = showList ? data[activeIndex] : undefined;
+  const activeOptionId = activeItem ? `${optionIdPrefix}-${activeItem.id}` : undefined;
+
+  // Live-region status: results count + currently highlighted option.
+  const statusMessage = (() => {
+    if (trimmed.length < 2) return "";
+    if (isFetching) return "Buscando empresas…";
+    if (data.length === 0) return "Nenhuma empresa encontrada.";
+    const countMsg =
+      data.length === 1
+        ? "1 empresa encontrada."
+        : `${data.length} empresas encontradas.`;
+    if (activeItem) {
+      const where = activeItem.neighborhood ? `, ${activeItem.neighborhood}` : "";
+      return `${countMsg} Selecionada: ${activeItem.name}${where}. Opção ${activeIndex + 1} de ${data.length}.`;
+    }
+    return countMsg;
+  })();
 
   useEffect(() => {
     function onDoc(e: MouseEvent) {
@@ -30,8 +54,8 @@ export function SearchAutocomplete({ placeholder = "Buscar empresas…" }: { pla
   }
 
   function submit() {
-    if (data[active]) return go(data[active].id);
-    if (q.trim()) navigate({ to: "/buscar", search: { q: q.trim() } });
+    if (data[activeIndex]) return go(data[activeIndex].id);
+    if (trimmed) navigate({ to: "/buscar", search: { q: trimmed } });
     setOpen(false);
   }
 
@@ -64,29 +88,35 @@ export function SearchAutocomplete({ placeholder = "Buscar empresas…" }: { pla
           placeholder={placeholder}
           className="h-10 flex-1 bg-transparent px-2 text-sm outline-none placeholder:text-muted-foreground"
           role="combobox"
-          aria-expanded={open}
+          aria-expanded={showList}
           aria-autocomplete="list"
+          aria-controls={showList ? listboxId : undefined}
+          aria-activedescendant={activeOptionId}
+          aria-label="Buscar empresas"
           maxLength={120}
         />
         {isFetching ? (
           <Loader2 className="mr-3 h-4 w-4 animate-spin text-muted-foreground" aria-hidden />
         ) : null}
       </div>
-      {open && q.trim().length >= 2 && data.length > 0 ? (
+      {showList ? (
         <ul
+          id={listboxId}
           role="listbox"
+          aria-label="Sugestões de empresas"
           className="absolute left-0 right-0 top-full z-50 mt-1 max-h-80 overflow-auto rounded-2xl border border-border bg-popover p-1 shadow-elegant"
         >
           {data.map((r, i) => (
             <li key={r.id}>
               <button
                 type="button"
+                id={`${optionIdPrefix}-${r.id}`}
                 onMouseEnter={() => setActive(i)}
                 onClick={() => go(r.id)}
                 role="option"
-                aria-selected={i === active}
+                aria-selected={i === activeIndex}
                 className={`flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm ${
-                  i === active ? "bg-muted" : "hover:bg-muted/60"
+                  i === activeIndex ? "bg-muted" : "hover:bg-muted/60"
                 }`}
               >
                 {r.logo_url ? (
@@ -105,6 +135,9 @@ export function SearchAutocomplete({ placeholder = "Buscar empresas…" }: { pla
           ))}
         </ul>
       ) : null}
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {statusMessage}
+      </div>
     </div>
   );
 }

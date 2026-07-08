@@ -20,7 +20,9 @@ import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as UHandleRouteImport } from './routes/u.$handle'
 import { Route as SuporteRedefinir2faRouteImport } from './routes/suporte.redefinir-2fa'
+import { Route as PreviewTokenRouteImport } from './routes/preview.$token'
 import { Route as EventosIdRouteImport } from './routes/eventos.$id'
 import { Route as EmpresaIdRouteImport } from './routes/empresa.$id'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
@@ -105,9 +107,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UHandleRoute = UHandleRouteImport.update({
+  id: '/u/$handle',
+  path: '/u/$handle',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SuporteRedefinir2faRoute = SuporteRedefinir2faRouteImport.update({
   id: '/suporte/redefinir-2fa',
   path: '/suporte/redefinir-2fa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewTokenRoute = PreviewTokenRouteImport.update({
+  id: '/preview/$token',
+  path: '/preview/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EventosIdRoute = EventosIdRouteImport.update({
@@ -293,7 +305,9 @@ export interface FileRoutesByFullPath {
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
+  '/preview/$token': typeof PreviewTokenRoute
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
+  '/u/$handle': typeof UHandleRoute
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
@@ -334,7 +348,9 @@ export interface FileRoutesByTo {
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
+  '/preview/$token': typeof PreviewTokenRoute
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
+  '/u/$handle': typeof UHandleRoute
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
@@ -378,7 +394,9 @@ export interface FileRoutesById {
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
+  '/preview/$token': typeof PreviewTokenRoute
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
+  '/u/$handle': typeof UHandleRoute
   '/_authenticated/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/_authenticated/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/_authenticated/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
@@ -422,7 +440,9 @@ export interface FileRouteTypes {
     | '/email/unsubscribe'
     | '/empresa/$id'
     | '/eventos/$id'
+    | '/preview/$token'
     | '/suporte/redefinir-2fa'
+    | '/u/$handle'
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
     | '/painel/seguranca'
@@ -463,7 +483,9 @@ export interface FileRouteTypes {
     | '/email/unsubscribe'
     | '/empresa/$id'
     | '/eventos/$id'
+    | '/preview/$token'
     | '/suporte/redefinir-2fa'
+    | '/u/$handle'
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
     | '/painel/seguranca'
@@ -506,7 +528,9 @@ export interface FileRouteTypes {
     | '/email/unsubscribe'
     | '/empresa/$id'
     | '/eventos/$id'
+    | '/preview/$token'
     | '/suporte/redefinir-2fa'
+    | '/u/$handle'
     | '/_authenticated/painel/avaliacoes'
     | '/_authenticated/painel/configuracoes'
     | '/_authenticated/painel/seguranca'
@@ -544,7 +568,9 @@ export interface RootRouteChildren {
   CategoriaSlugRoute: typeof CategoriaSlugRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   EmpresaIdRoute: typeof EmpresaIdRoute
+  PreviewTokenRoute: typeof PreviewTokenRoute
   SuporteRedefinir2faRoute: typeof SuporteRedefinir2faRoute
+  UHandleRoute: typeof UHandleRoute
   ApiPublicContactSubmitRoute: typeof ApiPublicContactSubmitRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiPublicHooksNotificationEmailRoute: typeof ApiPublicHooksNotificationEmailRoute
@@ -635,11 +661,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/u/$handle': {
+      id: '/u/$handle'
+      path: '/u/$handle'
+      fullPath: '/u/$handle'
+      preLoaderRoute: typeof UHandleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/suporte/redefinir-2fa': {
       id: '/suporte/redefinir-2fa'
       path: '/suporte/redefinir-2fa'
       fullPath: '/suporte/redefinir-2fa'
       preLoaderRoute: typeof SuporteRedefinir2faRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/$token': {
+      id: '/preview/$token'
+      path: '/preview/$token'
+      fullPath: '/preview/$token'
+      preLoaderRoute: typeof PreviewTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/eventos/$id': {
@@ -926,7 +966,9 @@ const rootRouteChildren: RootRouteChildren = {
   CategoriaSlugRoute: CategoriaSlugRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   EmpresaIdRoute: EmpresaIdRoute,
+  PreviewTokenRoute: PreviewTokenRoute,
   SuporteRedefinir2faRoute: SuporteRedefinir2faRoute,
+  UHandleRoute: UHandleRoute,
   ApiPublicContactSubmitRoute: ApiPublicContactSubmitRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiPublicHooksNotificationEmailRoute: ApiPublicHooksNotificationEmailRoute,

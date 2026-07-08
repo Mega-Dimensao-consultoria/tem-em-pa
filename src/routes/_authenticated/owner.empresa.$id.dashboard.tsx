@@ -37,7 +37,7 @@ import {
   delta,
   splitByPeriod,
 } from "@/features/owner/functions/metrics";
-import { exportMetricsCsv } from "@/features/owner/functions/exportCsv";
+import { exportMetricsCsv, exportReviewsCsv } from "@/features/owner/functions/exportCsv";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — Tem em P.A" }] }),
@@ -159,7 +159,17 @@ function DashboardPage() {
                 })
               }
             >
-              <Download className="mr-1 h-3 w-3" /> Exportar CSV
+              <Download className="mr-1 h-3 w-3" /> Métricas CSV
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={reviews.length === 0}
+              onClick={() =>
+                exportReviewsCsv({ companyName: company.name, reviews })
+              }
+            >
+              <Download className="mr-1 h-3 w-3" /> Avaliações CSV
             </Button>
             <Button asChild variant="outline" size="sm">
               <Link to="/empresa/$id" params={{ id }}>

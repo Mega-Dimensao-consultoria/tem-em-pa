@@ -185,6 +185,7 @@ export type Database = {
           number: string | null
           owner_id: string | null
           phone: string | null
+          search_tsv: unknown
           slug: string | null
           state: string | null
           status: Database["public"]["Enums"]["company_status"]
@@ -216,6 +217,7 @@ export type Database = {
           number?: string | null
           owner_id?: string | null
           phone?: string | null
+          search_tsv?: unknown
           slug?: string | null
           state?: string | null
           status?: Database["public"]["Enums"]["company_status"]
@@ -247,6 +249,7 @@ export type Database = {
           number?: string | null
           owner_id?: string | null
           phone?: string | null
+          search_tsv?: unknown
           slug?: string | null
           state?: string | null
           status?: Database["public"]["Enums"]["company_status"]
@@ -678,30 +681,39 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          bio: string | null
           created_at: string
           full_name: string | null
+          handle: string | null
           id: string
           is_banned: boolean
+          is_public: boolean
           onboarding_completed_at: string | null
           phone: string | null
           updated_at: string
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string
           full_name?: string | null
+          handle?: string | null
           id: string
           is_banned?: boolean
+          is_public?: boolean
           onboarding_completed_at?: string | null
           phone?: string | null
           updated_at?: string
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string
           full_name?: string | null
+          handle?: string | null
           id?: string
           is_banned?: boolean
+          is_public?: boolean
           onboarding_completed_at?: string | null
           phone?: string | null
           updated_at?: string
@@ -801,6 +813,7 @@ export type Database = {
           is_anonymous: boolean
           owner_reply: string | null
           owner_reply_at: string | null
+          photos: string[]
           rating: number
           status: Database["public"]["Enums"]["review_status"]
           updated_at: string
@@ -814,6 +827,7 @@ export type Database = {
           is_anonymous?: boolean
           owner_reply?: string | null
           owner_reply_at?: string | null
+          photos?: string[]
           rating: number
           status?: Database["public"]["Enums"]["review_status"]
           updated_at?: string
@@ -827,6 +841,7 @@ export type Database = {
           is_anonymous?: boolean
           owner_reply?: string | null
           owner_reply_at?: string | null
+          photos?: string[]
           rating?: number
           status?: Database["public"]["Enums"]["review_status"]
           updated_at?: string
@@ -871,6 +886,7 @@ export type Database = {
           content_md: string
           created_at: string
           id: string
+          preview_token: string | null
           saved_by: string | null
           slug: string
           title: string
@@ -879,6 +895,7 @@ export type Database = {
           content_md: string
           created_at?: string
           id?: string
+          preview_token?: string | null
           saved_by?: string | null
           slug: string
           title: string
@@ -887,6 +904,7 @@ export type Database = {
           content_md?: string
           created_at?: string
           id?: string
+          preview_token?: string | null
           saved_by?: string | null
           slug?: string
           title?: string
@@ -1061,6 +1079,10 @@ export type Database = {
         Args: { _source_id: string; _target_id: string }
         Returns: undefined
       }
+      admin_resolve_review_report: {
+        Args: { _action: string; _report_id: string }
+        Returns: undefined
+      }
       create_notification: {
         Args: {
           _link?: string
@@ -1106,6 +1128,7 @@ export type Database = {
           is_anonymous: boolean
           owner_reply: string | null
           owner_reply_at: string | null
+          photos: string[]
           rating: number
           status: Database["public"]["Enums"]["review_status"]
           updated_at: string
@@ -1117,6 +1140,30 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      get_public_profile: {
+        Args: { _handle: string }
+        Returns: {
+          avatar_url: string
+          bio: string
+          full_name: string
+          handle: string
+          id: string
+          review_count: number
+        }[]
+      }
+      get_public_profile_reviews: {
+        Args: { _handle: string; lim?: number }
+        Returns: {
+          comment: string
+          company_id: string
+          company_name: string
+          company_slug: string
+          created_at: string
+          id: string
+          photos: string[]
+          rating: number
+        }[]
       }
       has_role: {
         Args: {
@@ -1145,6 +1192,16 @@ export type Database = {
       reply_to_review: {
         Args: { p_reply: string; p_review_id: string }
         Returns: undefined
+      }
+      search_companies_autocomplete: {
+        Args: { lim?: number; q: string }
+        Returns: {
+          id: string
+          logo_url: string
+          name: string
+          neighborhood: string
+          slug: string
+        }[]
       }
     }
     Enums: {

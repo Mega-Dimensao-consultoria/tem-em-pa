@@ -18,7 +18,11 @@ export const CARD_COLS =
 export const DETAIL_COLS =
   "id, name, slug, description, cep, address, number, complement, city_id, neighborhood_id, state, lat, lng, phone, whatsapp, email, website, instagram_url, facebook_url, hours, gallery_urls, logo_url, cover_url, status, owner_id, is_featured, category_id, categories:category_id(name, slug, icon), cities:city_id(name, slug, state), neighborhoods:neighborhood_id(name, slug)" as const;
 
-/** Shape plano usado pelos componentes de card / detalhe. */
+type JsonPrimitive = string | number | boolean | null;
+type Json = JsonPrimitive | Json[] | { [key: string]: Json };
+
+/** Shape plano usado pelos componentes de card / detalhe.
+ * Todos os campos são JSON-serializáveis para atravessar o RPC de server fn. */
 export type NormalizedCompany = {
   id: string;
   name: string;
@@ -31,21 +35,27 @@ export type NormalizedCompany = {
   cover_url: string | null;
   is_featured: boolean | null;
   category_id: string | null;
+  status?: string | null;
+  owner_id?: string | null;
+  address?: string | null;
+  number?: string | null;
+  complement?: string | null;
+  cep?: string | null;
+  lat?: number | null;
+  lng?: number | null;
+  phone?: string | null;
+  whatsapp?: string | null;
+  email?: string | null;
+  website?: string | null;
+  instagram_url?: string | null;
+  facebook_url?: string | null;
+  hours?: Json;
+  gallery_urls?: string[] | null;
   categories: { name: string | null; slug: string | null; icon: string | null } | null;
   city: string | null;
   city_slug: string | null;
   neighborhood: string | null;
   neighborhood_slug: string | null;
-  hours?: unknown;
-  // demais campos ficam disponíveis pelo detail select
-  [key: string]:
-    | string
-    | number
-    | boolean
-    | null
-    | undefined
-    | Record<string, unknown>
-    | unknown[];
 };
 
 type RawJoinRow = {
@@ -57,14 +67,18 @@ type RawJoinRow = {
 
 export function normalizeCompany(row: unknown): NormalizedCompany {
   const r = row as RawJoinRow;
+  const base = { ...(r as unknown as Record<string, unknown>) };
+  delete base.cities;
+  delete base.neighborhoods;
   return {
-    ...(r as unknown as Record<string, unknown>),
+    ...(base as unknown as NormalizedCompany),
     city: r.cities?.name ?? null,
     city_slug: r.cities?.slug ?? null,
     neighborhood: r.neighborhoods?.name ?? null,
     neighborhood_slug: r.neighborhoods?.slug ?? null,
     state: r.state ?? r.cities?.state ?? null,
-  } as unknown as NormalizedCompany;
+    categories: (r as { categories?: NormalizedCompany["categories"] }).categories ?? null,
+  };
 }
 
 export function normalizeCompanies(rows: unknown): NormalizedCompany[] {

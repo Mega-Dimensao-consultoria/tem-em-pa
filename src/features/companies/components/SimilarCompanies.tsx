@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { listSimilarCompanies } from "@/features/companies/functions";
+import type { NormalizedCompany } from "@/features/companies/functions/_client";
 import { CompanyCard } from "./CompanyCard";
 
 type Props = {
@@ -10,7 +11,7 @@ type Props = {
 };
 
 export function SimilarCompanies({ id, categoryId, neighborhoodId, cityId }: Props) {
-  const { data } = useQuery({
+  const { data } = useQuery<NormalizedCompany[]>({
     queryKey: ["similar-companies", id, categoryId, neighborhoodId, cityId ?? "all"],
     queryFn: () =>
       listSimilarCompanies({
@@ -20,13 +21,14 @@ export function SimilarCompanies({ id, categoryId, neighborhoodId, cityId }: Pro
           neighborhoodId: neighborhoodId ?? null,
           cityId: cityId ?? null,
         },
-      }),
+      }) as unknown as Promise<NormalizedCompany[]>,
     enabled: !!categoryId,
     staleTime: 60_000,
   });
 
   if (!categoryId) return null;
-  if (!data || data.length === 0) return null;
+  const list = data ?? [];
+  if (list.length === 0) return null;
 
   return (
     <section className="mt-12">
@@ -35,8 +37,8 @@ export function SimilarCompanies({ id, categoryId, neighborhoodId, cityId }: Pro
         <span className="text-xs text-muted-foreground">Mesma categoria</span>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {data.map((c) => (
-          <CompanyCard key={(c as { id: string }).id} company={c as never} />
+        {list.map((c) => (
+          <CompanyCard key={c.id} company={c} />
         ))}
       </div>
     </section>

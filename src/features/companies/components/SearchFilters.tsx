@@ -108,13 +108,24 @@ export function SearchFilters({
           Aberto agora
         </button>
         {q || cat || open ? (
-          <Link
-            to="/buscar"
-            search={{}}
-            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
-          >
-            <X className="h-3 w-3" /> Limpar filtros
-          </Link>
+          citySlug ? (
+            <Link
+              to="/$citySlug/buscar"
+              params={{ citySlug }}
+              search={{}}
+              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-3 w-3" /> Limpar filtros
+            </Link>
+          ) : (
+            <Link
+              to="/buscar"
+              search={{}}
+              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-3 w-3" /> Limpar filtros
+            </Link>
+          )
         ) : null}
       </div>
     </div>

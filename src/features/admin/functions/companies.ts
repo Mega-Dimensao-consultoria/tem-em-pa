@@ -8,6 +8,8 @@ export type AdminCompany = {
   name: string;
   description: string | null;
   city: string | null;
+  city_id: string | null;
+  city_slug: string | null;
   status: string;
   created_at: string;
 };
@@ -25,7 +27,8 @@ type RawAdminRow = {
   description: string | null;
   status: string;
   created_at: string;
-  cities: { name: string | null } | null;
+  city_id: string | null;
+  cities: { name: string | null; slug: string | null } | null;
 };
 
 function toAdmin(rows: RawAdminRow[]): AdminCompany[] {
@@ -34,13 +37,15 @@ function toAdmin(rows: RawAdminRow[]): AdminCompany[] {
     name: r.name,
     description: r.description,
     city: r.cities?.name ?? null,
+    city_id: r.city_id,
+    city_slug: r.cities?.slug ?? null,
     status: r.status,
     created_at: r.created_at,
   }));
 }
 
 const ADMIN_SELECT =
-  "id, name, description, status, created_at, cities:city_id(name)" as const;
+  "id, name, description, status, created_at, city_id, cities:city_id(name, slug)" as const;
 
 export function usePendingCompanies() {
   return useQuery({

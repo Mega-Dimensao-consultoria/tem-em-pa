@@ -30,6 +30,10 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:url", content: `${BASE}/` },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: `${BASE}/og-default.jpg` },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { name: "twitter:image", content: `${BASE}/og-default.jpg` },
     ],
     links: [{ rel: "canonical", href: `${BASE}/` }],
     scripts: [

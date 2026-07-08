@@ -1,11 +1,18 @@
+import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { AlertTriangle, ExternalLink, Flag, ShieldQuestion } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFlaggedCompanies } from "@/features/admin/functions/companies";
+import { CityFilterSelect } from "./CityFilterSelect";
 import { Empty, Loading } from "../admin-ui";
 
 export function FlaggedCompaniesTab() {
   const { data = [], isLoading } = useFlaggedCompanies();
+  const [cityId, setCityId] = useState<string>("all");
+  const filtered = useMemo(
+    () => (cityId === "all" ? data : data.filter((c) => c.city_id === cityId)),
+    [data, cityId],
+  );
 
   if (isLoading) return <Loading />;
   if (data.length === 0)
@@ -23,6 +30,8 @@ export function FlaggedCompaniesTab() {
         </p>
       </header>
 
+      <CityFilterSelect value={cityId} onChange={setCityId} />
+
       <div className="overflow-x-auto rounded-2xl border border-border bg-card shadow-soft">
         <table className="w-full text-sm">
           <caption className="sr-only">
@@ -36,7 +45,7 @@ export function FlaggedCompaniesTab() {
             </tr>
           </thead>
           <tbody>
-            {data.map((c) => (
+            {filtered.map((c) => (
               <tr key={c.id} className="border-t border-border transition hover:bg-muted/40">
                 <td className="px-4 py-3">
                   <p className="font-medium text-foreground">{c.name}</p>

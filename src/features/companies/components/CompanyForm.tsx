@@ -60,7 +60,7 @@ export const emptyCompanyForm = (): CompanyFormValues => ({
   complement: "",
   neighborhood: "",
   city: "",
-  state: "MG",
+  state: "",
   logo_url: null,
   cover_url: null,
   gallery_urls: [],

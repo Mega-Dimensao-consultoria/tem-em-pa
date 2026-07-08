@@ -1,16 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
-import { Sparkles, Store, ShieldCheck } from "lucide-react";
+import { useSuspenseQuery, useQuery, queryOptions } from "@tanstack/react-query";
+import { useState } from "react";
+import { Sparkles, Store, ShieldCheck, Loader2 } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { SearchBar } from "@/components/SearchBar";
 import { CategoryCard } from "@/features/companies/components/CategoryCard";
 import { CompanyCard } from "@/features/companies/components/CompanyCard";
 import { NoCompanies } from "@/components/feedback/EmptyState";
 import { listCategories } from "@/features/companies/functions/categories";
-import { listFeaturedCompanies } from "@/features/companies/functions";
+import { listFeaturedCompanies, listRecentCompaniesByCity } from "@/features/companies/functions";
 import { cityBySlugQO } from "./$citySlug";
 
 const BASE = "https://pousoalegre.megadimensao.com.br";
+const PAGE_SIZE = 15;
 
 const categoriesQO = queryOptions({
   queryKey: ["categories"],
@@ -22,6 +24,13 @@ const featuredByCityQO = (cityId: string) =>
   queryOptions({
     queryKey: ["companies", "featured", cityId],
     queryFn: () => listFeaturedCompanies({ data: { cityId } }),
+    staleTime: 60_000,
+  });
+
+const recentByCityQO = (cityId: string, limit: number) =>
+  queryOptions({
+    queryKey: ["companies", "recent", cityId, limit],
+    queryFn: () => listRecentCompaniesByCity({ data: { cityId, limit, offset: 0 } }),
     staleTime: 60_000,
   });
 
@@ -68,6 +77,17 @@ function CityHome() {
   const { data: city } = useSuspenseQuery(cityBySlugQO(citySlug));
   const { data: categories } = useSuspenseQuery(categoriesQO);
   const { data: featured } = useSuspenseQuery(featuredByCityQO(city!.id));
+
+  const [recentLimit, setRecentLimit] = useState(PAGE_SIZE);
+  const showRecent = featured.length === 0;
+  const recentQuery = useQuery({
+    ...recentByCityQO(city!.id, recentLimit),
+    enabled: showRecent,
+  });
+  const recent = recentQuery.data?.companies ?? [];
+  const recentTotal = recentQuery.data?.total ?? 0;
+  const hasMore = recent.length < recentTotal;
+
 
   return (
     <PageShell>
@@ -120,21 +140,65 @@ function CityHome() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-12">
-        <div className="mb-6">
-          <h2 className="font-display text-2xl font-bold md:text-3xl">Em destaque</h2>
-          <p className="text-sm text-muted-foreground">Empresas que se destacam em {city!.name}</p>
-        </div>
-        {featured.length === 0 ? (
-          <NoCompanies
-            title="Em breve novos destaques"
-            description={`Ainda não há empresas em destaque em ${city!.name}. Volte em breve!`}
-          />
+        {showRecent ? (
+          <>
+            <div className="mb-6">
+              <h2 className="font-display text-2xl font-bold md:text-3xl">Empresas em {city!.name}</h2>
+              <p className="text-sm text-muted-foreground">
+                Ainda não há destaques — veja as empresas cadastradas mais recentemente.
+              </p>
+            </div>
+            {recentQuery.isLoading ? (
+              <div className="flex items-center justify-center py-12 text-muted-foreground">
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Carregando empresas…
+              </div>
+            ) : recent.length === 0 ? (
+              <NoCompanies
+                title={`Nenhuma empresa cadastrada em ${city!.name}`}
+                description="Ainda não há empresas aprovadas nesta cidade. Que tal ser a primeira?"
+                action={
+                  <Link
+                    to="/cadastrar-empresa"
+                    className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+                  >
+                    Cadastrar minha empresa
+                  </Link>
+                }
+              />
+            ) : (
+              <>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {recent.map((c) => <CompanyCard key={c.id} company={c} />)}
+                </div>
+                {hasMore && (
+                  <div className="mt-8 flex justify-center">
+                    <button
+                      type="button"
+                      onClick={() => setRecentLimit((n) => n + PAGE_SIZE)}
+                      disabled={recentQuery.isFetching}
+                      className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-6 py-3 text-sm font-semibold text-primary transition hover:bg-primary/10 disabled:opacity-60"
+                    >
+                      {recentQuery.isFetching && <Loader2 className="h-4 w-4 animate-spin" />}
+                      Mostrar mais empresas
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {featured.map((c) => <CompanyCard key={c.id} company={c} />)}
-          </div>
+          <>
+            <div className="mb-6">
+              <h2 className="font-display text-2xl font-bold md:text-3xl">Em destaque</h2>
+              <p className="text-sm text-muted-foreground">Empresas que se destacam em {city!.name}</p>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {featured.map((c) => <CompanyCard key={c.id} company={c} />)}
+            </div>
+          </>
         )}
       </section>
+
 
       <section className="mx-auto max-w-6xl px-4 pb-20 pt-8">
         <div className="overflow-hidden rounded-3xl bg-hero-gradient p-8 text-center text-white shadow-elegant md:p-12">

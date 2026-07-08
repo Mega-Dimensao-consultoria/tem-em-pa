@@ -36,7 +36,7 @@ export function ImportCompaniesTab() {
   const [rows, setRows] = useState<ParsedRow[]>([]);
   const [fileName, setFileName] = useState<string>("");
   const [importing, setImporting] = useState(false);
-  const [status, setStatus] = useState<"draft" | "approved">("approved");
+  const [status, setStatus] = useState<"pending" | "approved">("approved");
   const { user } = useAuth();
 
   const validCount = useMemo(() => rows.filter((r) => r.errors.length === 0).length, [rows]);
@@ -175,10 +175,10 @@ export function ImportCompaniesTab() {
             <select
               className="rounded-md border border-border bg-background px-2 py-1 text-xs"
               value={status}
-              onChange={(e) => setStatus(e.target.value as "draft" | "approved")}
+              onChange={(e) => setStatus(e.target.value as "pending" | "approved")}
             >
               <option value="approved">Aprovadas (publicadas)</option>
-              <option value="draft">Pendentes (revisão manual)</option>
+              <option value="pending">Pendentes (revisão manual)</option>
             </select>
           </label>
         </div>

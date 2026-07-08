@@ -112,16 +112,11 @@ export type Database = {
       }
       cities: {
         Row: {
-          bbox_max_lat: number | null
-          bbox_max_lng: number | null
-          bbox_min_lat: number | null
-          bbox_min_lng: number | null
           created_at: string
           hero_headline: string | null
           hero_subheadline: string | null
           id: string
           is_active: boolean
-          is_default: boolean
           lat: number | null
           lng: number | null
           name: string
@@ -133,16 +128,11 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          bbox_max_lat?: number | null
-          bbox_max_lng?: number | null
-          bbox_min_lat?: number | null
-          bbox_min_lng?: number | null
           created_at?: string
           hero_headline?: string | null
           hero_subheadline?: string | null
           id?: string
           is_active?: boolean
-          is_default?: boolean
           lat?: number | null
           lng?: number | null
           name: string
@@ -154,16 +144,11 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          bbox_max_lat?: number | null
-          bbox_max_lng?: number | null
-          bbox_min_lat?: number | null
-          bbox_min_lng?: number | null
           created_at?: string
           hero_headline?: string | null
           hero_subheadline?: string | null
           id?: string
           is_active?: boolean
-          is_default?: boolean
           lat?: number | null
           lng?: number | null
           name?: string
@@ -263,7 +248,6 @@ export type Database = {
           phone: string | null
           search_tsv: unknown
           slug: string | null
-          state: string | null
           status: Database["public"]["Enums"]["company_status"]
           updated_at: string
           website: string | null
@@ -295,7 +279,6 @@ export type Database = {
           phone?: string | null
           search_tsv?: unknown
           slug?: string | null
-          state?: string | null
           status?: Database["public"]["Enums"]["company_status"]
           updated_at?: string
           website?: string | null
@@ -327,7 +310,6 @@ export type Database = {
           phone?: string | null
           search_tsv?: unknown
           slug?: string | null
-          state?: string | null
           status?: Database["public"]["Enums"]["company_status"]
           updated_at?: string
           website?: string | null

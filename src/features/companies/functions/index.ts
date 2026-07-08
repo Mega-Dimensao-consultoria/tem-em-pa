@@ -9,7 +9,6 @@ export { getCompanyBySlug, getCompanySlugPathById } from "./getBySlug";
 export {
   listActiveCities,
   getCityBySlug,
-  getDefaultCity,
   listNeighborhoodsByCity,
   getNeighborhoodBySlug,
   type City,

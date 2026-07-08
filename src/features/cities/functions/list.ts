@@ -12,7 +12,7 @@ function publicClient() {
 }
 
 const CITY_COLS =
-  "id, name, slug, state, lat, lng, timezone, is_active, is_default, hero_headline, hero_subheadline, search_placeholder, og_image_url" as const;
+  "id, name, slug, state, lat, lng, timezone, is_active, hero_headline, hero_subheadline, search_placeholder, og_image_url" as const;
 
 export type City = {
   id: string;
@@ -23,7 +23,6 @@ export type City = {
   lng: number | null;
   timezone: string;
   is_active: boolean;
-  is_default: boolean;
   hero_headline: string | null;
   hero_subheadline: string | null;
   search_placeholder: string | null;
@@ -64,17 +63,6 @@ export const getCityBySlug = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
     return (city ?? null) as City | null;
   });
-
-export const getDefaultCity = createServerFn({ method: "GET" }).handler(async () => {
-  const sb = publicClient();
-  const { data, error } = await sb
-    .from("cities")
-    .select(CITY_COLS)
-    .eq("is_default", true)
-    .maybeSingle();
-  if (error) throw new Error(error.message);
-  return (data ?? null) as City | null;
-});
 
 export const listNeighborhoodsByCity = createServerFn({ method: "GET" })
   .inputValidator((input: unknown) =>

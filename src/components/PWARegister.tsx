@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { canRegisterHere, pushSupported } from "@/features/notifications/push";
 
 /**
- * Registra o service worker (/sw.js) para habilitar cache offline (app shell).
+ * Registra o service worker (/sw.js) apenas para receber push notifications.
  * Reaproveita os mesmos guards do push: nunca registra em preview/dev/iframe
  * ou quando ?sw=off está presente. Roda independente de autenticação.
  */

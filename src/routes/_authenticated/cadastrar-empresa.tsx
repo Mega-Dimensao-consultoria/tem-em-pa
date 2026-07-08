@@ -59,7 +59,7 @@ function CadastrarPage() {
     if (!user) return;
     setSubmitting(true);
 
-    // Resolve city_id (by name/UF) with fallback to default city.
+    // Resolve city_id (by name/UF). Cidade é obrigatória: se não bater, aborta.
     const cityName = (v.city || "").trim();
     const stateUf = (v.state || "").trim().toUpperCase();
     let city_id: string | null = null;
@@ -71,16 +71,11 @@ function CadastrarPage() {
       city_id = c?.id ?? null;
     }
     if (!city_id) {
-      const { data: def } = await supabase
-        .from("cities")
-        .select("id")
-        .eq("is_default", true)
-        .maybeSingle();
-      city_id = def?.id ?? null;
-    }
-    if (!city_id) {
       setSubmitting(false);
-      toastError(new Error("Cidade não encontrada"), "Falha ao cadastrar");
+      toastError(
+        new Error("Cidade não atendida. Verifique o nome/UF."),
+        "Falha ao cadastrar",
+      );
       return;
     }
 
@@ -101,7 +96,7 @@ function CadastrarPage() {
 
     let lat: number | null = null;
     let lng: number | null = null;
-    const fullAddr = [v.address, v.number, v.neighborhood, v.city, v.state || "MG", "Brasil"]
+    const fullAddr = [v.address, v.number, v.neighborhood, v.city, v.state, "Brasil"]
       .filter(Boolean)
       .join(", ");
     if (fullAddr.length > 10) {
@@ -126,7 +121,6 @@ function CadastrarPage() {
         number: v.number || null,
         city_id,
         neighborhood_id,
-        state: v.state || null,
         phone: v.phone || null,
         whatsapp: v.whatsapp || null,
         email: v.email || null,

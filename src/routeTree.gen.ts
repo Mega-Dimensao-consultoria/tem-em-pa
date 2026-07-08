@@ -36,6 +36,7 @@ import { Route as AuthenticatedNotificacoesRouteImport } from './routes/_authent
 import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
 import { Route as AuthenticatedCadastrarEmpresaRouteImport } from './routes/_authenticated/cadastrar-empresa'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as CitySlugBuscarRouteImport } from './routes/$citySlug.buscar'
 import { Route as AuthenticatedPainelIndexRouteImport } from './routes/_authenticated/painel.index'
 import { Route as AuthenticatedOwnerIndexRouteImport } from './routes/_authenticated/owner.index'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
@@ -191,6 +192,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const CitySlugBuscarRoute = CitySlugBuscarRouteImport.update({
+  id: '/buscar',
+  path: '/buscar',
+  getParentRoute: () => CitySlugRoute,
+} as any)
 const AuthenticatedPainelIndexRoute =
   AuthenticatedPainelIndexRouteImport.update({
     id: '/',
@@ -307,6 +313,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/$citySlug/buscar': typeof CitySlugBuscarRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
@@ -352,6 +359,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/$citySlug/buscar': typeof CitySlugBuscarRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
@@ -399,6 +407,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/$citySlug/buscar': typeof CitySlugBuscarRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/cadastrar-empresa': typeof AuthenticatedCadastrarEmpresaRoute
   '/_authenticated/favoritos': typeof AuthenticatedFavoritosRoute
@@ -447,6 +456,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sobre'
     | '/termos'
+    | '/$citySlug/buscar'
     | '/admin'
     | '/cadastrar-empresa'
     | '/favoritos'
@@ -492,6 +502,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sobre'
     | '/termos'
+    | '/$citySlug/buscar'
     | '/admin'
     | '/cadastrar-empresa'
     | '/favoritos'
@@ -538,6 +549,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sobre'
     | '/termos'
+    | '/$citySlug/buscar'
     | '/_authenticated/admin'
     | '/_authenticated/cadastrar-empresa'
     | '/_authenticated/favoritos'
@@ -796,6 +808,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/$citySlug/buscar': {
+      id: '/$citySlug/buscar'
+      path: '/buscar'
+      fullPath: '/$citySlug/buscar'
+      preLoaderRoute: typeof CitySlugBuscarRouteImport
+      parentRoute: typeof CitySlugRoute
+    }
     '/_authenticated/painel/': {
       id: '/_authenticated/painel/'
       path: '/'
@@ -976,10 +995,12 @@ const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface CitySlugRouteChildren {
+  CitySlugBuscarRoute: typeof CitySlugBuscarRoute
   CitySlugIndexRoute: typeof CitySlugIndexRoute
 }
 
 const CitySlugRouteChildren: CitySlugRouteChildren = {
+  CitySlugBuscarRoute: CitySlugBuscarRoute,
   CitySlugIndexRoute: CitySlugIndexRoute,
 }
 

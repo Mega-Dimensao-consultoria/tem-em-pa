@@ -20,6 +20,7 @@ export function SearchFilters({
   hasGeo,
   geoLoading,
   q,
+  citySlug,
   onCat,
   onSort,
   onRequestGeo,
@@ -32,6 +33,7 @@ export function SearchFilters({
   hasGeo: boolean;
   geoLoading: boolean;
   q: string | undefined;
+  citySlug?: string;
   onCat: (slug: string | undefined) => void;
   onSort: (v: SearchSort) => void;
   onRequestGeo: () => void;

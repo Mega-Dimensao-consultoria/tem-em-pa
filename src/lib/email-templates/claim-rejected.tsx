@@ -10,7 +10,7 @@ interface Props {
 
 const Email = ({
   companyName = 'a empresa',
-  appUrl = 'https://tem-em-pa.lovable.app',
+  appUrl = 'https://pousoalegre.megadimensao.com.br',
 }: Props) => (
   <EmailLayout
     previewText={`Sua reivindicação de ${companyName} não foi aprovada — veja como tentar de novo.`}

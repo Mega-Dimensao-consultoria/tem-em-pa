@@ -10,7 +10,7 @@ import {
 const SITE_NAME = 'tem-em-pa'
 const SENDER_DOMAIN = 'notificacoes.sistemas.megadimensao.com.br'
 const FROM_DOMAIN = 'notificacoes.sistemas.megadimensao.com.br'
-const APP_URL = 'https://tem-em-pa.lovable.app'
+const APP_URL = 'https://pousoalegre.megadimensao.com.br'
 
 function generateToken(): string {
   const bytes = new Uint8Array(32)

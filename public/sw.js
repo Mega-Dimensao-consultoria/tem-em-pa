@@ -1,10 +1,12 @@
-// Service worker do Tem em P.A
+// Service worker do Tem na cidade
 // 1) Recebe push notifications
 // 2) Cache offline do app shell (NetworkFirst para navegação, CacheFirst para assets versionados)
 
 const VERSION = "v2";
 const RUNTIME_CACHE = `tem-em-pa-runtime-${VERSION}`;
 const ASSETS_CACHE = `tem-em-pa-assets-${VERSION}`;
+// NOTE: cache key prefix "tem-em-pa-" mantido de propósito — trocar hoje deixaria
+// caches antigos órfãos nos navegadores dos usuários instalados.
 const OFFLINE_URL = "/";
 
 self.addEventListener("install", (event) => {

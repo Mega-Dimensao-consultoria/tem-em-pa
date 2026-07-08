@@ -132,9 +132,9 @@ const PreviewTokenRoute = PreviewTokenRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const EventosIdRoute = EventosIdRouteImport.update({
-  id: '/eventos/$id',
-  path: '/eventos/$id',
-  getParentRoute: () => rootRouteImport,
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => EventosRoute,
 } as any)
 const EmpresaIdRoute = EmpresaIdRouteImport.update({
   id: '/empresa/$id',
@@ -614,7 +614,6 @@ export interface RootRouteChildren {
   AuthTwoFactorRoute: typeof AuthTwoFactorRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   EmpresaIdRoute: typeof EmpresaIdRoute
-  EventosIdRoute: typeof EventosIdRoute
   PreviewTokenRoute: typeof PreviewTokenRoute
   SuporteRedefinir2faRoute: typeof SuporteRedefinir2faRoute
   UHandleRoute: typeof UHandleRoute
@@ -738,10 +737,10 @@ declare module '@tanstack/react-router' {
     }
     '/eventos/$id': {
       id: '/eventos/$id'
-      path: '/eventos/$id'
+      path: '/$id'
       fullPath: '/eventos/$id'
       preLoaderRoute: typeof EventosIdRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof EventosRoute
     }
     '/empresa/$id': {
       id: '/empresa/$id'
@@ -1050,7 +1049,6 @@ const rootRouteChildren: RootRouteChildren = {
   AuthTwoFactorRoute: AuthTwoFactorRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   EmpresaIdRoute: EmpresaIdRoute,
-  EventosIdRoute: EventosIdRoute,
   PreviewTokenRoute: PreviewTokenRoute,
   SuporteRedefinir2faRoute: SuporteRedefinir2faRoute,
   UHandleRoute: UHandleRoute,
@@ -1067,3 +1065,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

@@ -122,10 +122,10 @@ function EventosPage() {
             id="eventos-heading"
             className="font-display text-3xl font-bold md:text-4xl"
           >
-            Eventos em Pouso Alegre
+            Eventos
           </h1>
           <p className="mt-2 text-muted-foreground">
-            O que está acontecendo nas empresas e serviços da cidade.
+            Agenda de eventos das empresas e serviços em várias cidades.
           </p>
         </header>
 

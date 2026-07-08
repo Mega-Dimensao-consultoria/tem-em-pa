@@ -159,7 +159,17 @@ function DashboardPage() {
                 })
               }
             >
-              <Download className="mr-1 h-3 w-3" /> Exportar CSV
+              <Download className="mr-1 h-3 w-3" /> Métricas CSV
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={reviews.length === 0}
+              onClick={() =>
+                exportReviewsCsv({ companyName: company.name, reviews })
+              }
+            >
+              <Download className="mr-1 h-3 w-3" /> Avaliações CSV
             </Button>
             <Button asChild variant="outline" size="sm">
               <Link to="/empresa/$id" params={{ id }}>

@@ -15,17 +15,17 @@ const CANONICAL = 'https://pousoalegre.megadimensao.com.br/eventos'
 export const Route = createFileRoute('/eventos')({
   head: () => ({
     meta: [
-      { title: 'Eventos em Pouso Alegre — Tem em Pouso Alegre' },
+      { title: 'Eventos — Tem na cidade' },
       {
         name: 'description',
         content:
-          'Confira os próximos eventos, promoções e novidades das empresas e profissionais de Pouso Alegre.',
+          'Confira os próximos eventos e novidades das empresas e profissionais nas cidades atendidas.',
       },
-      { property: 'og:title', content: 'Eventos em Pouso Alegre — Tem em Pouso Alegre' },
+      { property: 'og:title', content: 'Eventos — Tem na cidade' },
       {
         property: 'og:description',
         content:
-          'Agenda de eventos e novidades do comércio e serviços de Pouso Alegre.',
+          'Agenda de eventos e novidades do comércio e serviços de várias cidades.',
       },
       { property: 'og:url', content: CANONICAL },
     ],

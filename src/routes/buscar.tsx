@@ -29,20 +29,20 @@ export const Route = createFileRoute("/buscar")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Buscar empresas em Pouso Alegre — Tem em P.A" },
+      { title: "Buscar empresas — Tem na cidade" },
       {
         name: "description",
         content:
-          "Busque empresas, restaurantes, serviços e produtos em Pouso Alegre/MG. Filtre por categoria e encontre o que está mais perto de você.",
+          "Busque empresas, restaurantes, serviços e produtos entre todas as cidades. Filtre por categoria e encontre o que precisa.",
       },
-      { property: "og:title", content: "Buscar empresas em Pouso Alegre — Tem em P.A" },
+      { property: "og:title", content: "Buscar empresas — Tem na cidade" },
       {
         property: "og:description",
-        content: "Encontre empresas e serviços perto de você em Pouso Alegre/MG.",
+        content: "Encontre empresas e serviços perto de você em várias cidades.",
       },
-      { property: "og:url", content: "https://tem-em-pa.lovable.app/buscar" },
+      { property: "og:url", content: "https://pousoalegre.megadimensao.com.br/buscar" },
     ],
-    links: [{ rel: "canonical", href: "https://tem-em-pa.lovable.app/buscar" }],
+    links: [{ rel: "canonical", href: "https://pousoalegre.megadimensao.com.br/buscar" }],
   }),
   component: SearchPage,
 });

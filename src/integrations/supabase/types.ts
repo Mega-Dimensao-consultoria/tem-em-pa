@@ -988,6 +988,7 @@ export type Database = {
         Row: {
           city_id: string | null
           content_md: string
+          is_published: boolean
           slug: string
           title: string
           updated_at: string
@@ -996,6 +997,7 @@ export type Database = {
         Insert: {
           city_id?: string | null
           content_md: string
+          is_published?: boolean
           slug: string
           title: string
           updated_at?: string
@@ -1004,6 +1006,7 @@ export type Database = {
         Update: {
           city_id?: string | null
           content_md?: string
+          is_published?: boolean
           slug?: string
           title?: string
           updated_at?: string

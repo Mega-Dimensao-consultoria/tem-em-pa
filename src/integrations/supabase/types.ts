@@ -1057,6 +1057,10 @@ export type Database = {
       }
     }
     Functions: {
+      admin_merge_companies: {
+        Args: { _source_id: string; _target_id: string }
+        Returns: undefined
+      }
       create_notification: {
         Args: {
           _link?: string

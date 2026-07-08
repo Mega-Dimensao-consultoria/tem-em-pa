@@ -36,17 +36,6 @@ function ContatoPage() {
         <div className="mt-6">
           <MarkdownRenderer content={page?.content_md ?? ''} />
         </div>
-        <ul className="mt-8 space-y-3 text-base">
-          <li className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-soft">
-            <Mail className="h-5 w-5 text-primary" />
-            <a
-              href="mailto:contato@tememp.a"
-              className="font-semibold hover:underline"
-            >
-              contato@tememp.a
-            </a>
-          </li>
-        </ul>
       </section>
     </PageShell>
   )

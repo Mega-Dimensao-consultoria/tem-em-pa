@@ -45,6 +45,7 @@ import { Route as AuthenticatedPainelSegurancaRouteImport } from './routes/_auth
 import { Route as AuthenticatedPainelConfiguracoesRouteImport } from './routes/_authenticated/painel.configuracoes'
 import { Route as AuthenticatedPainelAvaliacoesRouteImport } from './routes/_authenticated/painel.avaliacoes'
 import { Route as CitySlugCategoriaCatSlugRouteImport } from './routes/$citySlug.categoria.$catSlug'
+import { Route as CitySlugBairroBairroSlugRouteImport } from './routes/$citySlug.bairro.$bairroSlug'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
@@ -243,6 +244,12 @@ const CitySlugCategoriaCatSlugRoute =
     path: '/categoria/$catSlug',
     getParentRoute: () => CitySlugRoute,
   } as any)
+const CitySlugBairroBairroSlugRoute =
+  CitySlugBairroBairroSlugRouteImport.update({
+    id: '/bairro/$bairroSlug',
+    path: '/bairro/$bairroSlug',
+    getParentRoute: () => CitySlugRoute,
+  } as any)
 const LovableEmailTransactionalSendRoute =
   LovableEmailTransactionalSendRouteImport.update({
     id: '/lovable/email/transactional/send',
@@ -336,6 +343,7 @@ export interface FileRoutesByFullPath {
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/u/$handle': typeof UHandleRoute
   '/$citySlug/': typeof CitySlugIndexRoute
+  '/$citySlug/bairro/$bairroSlug': typeof CitySlugBairroBairroSlugRoute
   '/$citySlug/categoria/$catSlug': typeof CitySlugCategoriaCatSlugRoute
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
@@ -382,6 +390,7 @@ export interface FileRoutesByTo {
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/u/$handle': typeof UHandleRoute
   '/$citySlug': typeof CitySlugIndexRoute
+  '/$citySlug/bairro/$bairroSlug': typeof CitySlugBairroBairroSlugRoute
   '/$citySlug/categoria/$catSlug': typeof CitySlugCategoriaCatSlugRoute
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
@@ -432,6 +441,7 @@ export interface FileRoutesById {
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/u/$handle': typeof UHandleRoute
   '/$citySlug/': typeof CitySlugIndexRoute
+  '/$citySlug/bairro/$bairroSlug': typeof CitySlugBairroBairroSlugRoute
   '/$citySlug/categoria/$catSlug': typeof CitySlugCategoriaCatSlugRoute
   '/_authenticated/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/_authenticated/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
@@ -482,6 +492,7 @@ export interface FileRouteTypes {
     | '/suporte/redefinir-2fa'
     | '/u/$handle'
     | '/$citySlug/'
+    | '/$citySlug/bairro/$bairroSlug'
     | '/$citySlug/categoria/$catSlug'
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
@@ -528,6 +539,7 @@ export interface FileRouteTypes {
     | '/suporte/redefinir-2fa'
     | '/u/$handle'
     | '/$citySlug'
+    | '/$citySlug/bairro/$bairroSlug'
     | '/$citySlug/categoria/$catSlug'
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
@@ -577,6 +589,7 @@ export interface FileRouteTypes {
     | '/suporte/redefinir-2fa'
     | '/u/$handle'
     | '/$citySlug/'
+    | '/$citySlug/bairro/$bairroSlug'
     | '/$citySlug/categoria/$catSlug'
     | '/_authenticated/painel/avaliacoes'
     | '/_authenticated/painel/configuracoes'
@@ -884,6 +897,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CitySlugCategoriaCatSlugRouteImport
       parentRoute: typeof CitySlugRoute
     }
+    '/$citySlug/bairro/$bairroSlug': {
+      id: '/$citySlug/bairro/$bairroSlug'
+      path: '/bairro/$bairroSlug'
+      fullPath: '/$citySlug/bairro/$bairroSlug'
+      preLoaderRoute: typeof CitySlugBairroBairroSlugRouteImport
+      parentRoute: typeof CitySlugRoute
+    }
     '/lovable/email/transactional/send': {
       id: '/lovable/email/transactional/send'
       path: '/lovable/email/transactional/send'
@@ -1017,12 +1037,14 @@ const AuthenticatedRouteRouteWithChildren =
 interface CitySlugRouteChildren {
   CitySlugBuscarRoute: typeof CitySlugBuscarRoute
   CitySlugIndexRoute: typeof CitySlugIndexRoute
+  CitySlugBairroBairroSlugRoute: typeof CitySlugBairroBairroSlugRoute
   CitySlugCategoriaCatSlugRoute: typeof CitySlugCategoriaCatSlugRoute
 }
 
 const CitySlugRouteChildren: CitySlugRouteChildren = {
   CitySlugBuscarRoute: CitySlugBuscarRoute,
   CitySlugIndexRoute: CitySlugIndexRoute,
+  CitySlugBairroBairroSlugRoute: CitySlugBairroBairroSlugRoute,
   CitySlugCategoriaCatSlugRoute: CitySlugCategoriaCatSlugRoute,
 }
 

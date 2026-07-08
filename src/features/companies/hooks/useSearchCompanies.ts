@@ -58,7 +58,7 @@ export function useSearchCompanies({ q, cat, sort, userId, enabled, cityId }: Se
       let query = supabase
         .from("companies")
         .select(
-          "id, name, slug, description, city_id, neighborhood_id, state, lat, lng, hours, logo_url, cover_url, is_featured, status, owner_id, category_id, created_at, categories:category_id(name, slug, icon), cities:city_id(name, slug, state), neighborhoods:neighborhood_id(name, slug)",
+          "id, name, slug, description, city_id, neighborhood_id, lat, lng, hours, logo_url, cover_url, is_featured, status, owner_id, category_id, created_at, categories:category_id(name, slug, icon), cities:city_id(name, slug, state), neighborhoods:neighborhood_id(name, slug)",
         )
         .limit(120);
       if (cityId) query = query.eq("city_id", cityId);
@@ -69,7 +69,7 @@ export function useSearchCompanies({ q, cat, sort, userId, enabled, cityId }: Se
       const { data, error } = await query;
       if (error) throw error;
       return ((data ?? []) as unknown as Array<
-        Omit<SearchedCompany, "city" | "city_slug" | "neighborhood" | "neighborhood_slug"> & {
+        Omit<SearchedCompany, "city" | "city_slug" | "neighborhood" | "neighborhood_slug" | "state"> & {
           cities: { name: string | null; slug: string | null; state: string | null } | null;
           neighborhoods: { name: string | null; slug: string | null } | null;
         }
@@ -77,9 +77,11 @@ export function useSearchCompanies({ q, cat, sort, userId, enabled, cityId }: Se
         ...row,
         city: row.cities?.name ?? null,
         city_slug: row.cities?.slug ?? null,
+        state: row.cities?.state ?? null,
         neighborhood: row.neighborhoods?.name ?? null,
         neighborhood_slug: row.neighborhoods?.slug ?? null,
       })) as SearchedCompany[];
+
     },
   });
 }

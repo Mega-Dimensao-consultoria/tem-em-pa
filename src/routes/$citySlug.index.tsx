@@ -140,21 +140,65 @@ function CityHome() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-12">
-        <div className="mb-6">
-          <h2 className="font-display text-2xl font-bold md:text-3xl">Em destaque</h2>
-          <p className="text-sm text-muted-foreground">Empresas que se destacam em {city!.name}</p>
-        </div>
-        {featured.length === 0 ? (
-          <NoCompanies
-            title="Em breve novos destaques"
-            description={`Ainda não há empresas em destaque em ${city!.name}. Volte em breve!`}
-          />
+        {showRecent ? (
+          <>
+            <div className="mb-6">
+              <h2 className="font-display text-2xl font-bold md:text-3xl">Empresas em {city!.name}</h2>
+              <p className="text-sm text-muted-foreground">
+                Ainda não há destaques — veja as empresas cadastradas mais recentemente.
+              </p>
+            </div>
+            {recentQuery.isLoading ? (
+              <div className="flex items-center justify-center py-12 text-muted-foreground">
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Carregando empresas…
+              </div>
+            ) : recent.length === 0 ? (
+              <NoCompanies
+                title={`Nenhuma empresa cadastrada em ${city!.name}`}
+                description="Ainda não há empresas aprovadas nesta cidade. Que tal ser a primeira?"
+                action={
+                  <Link
+                    to="/cadastrar-empresa"
+                    className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+                  >
+                    Cadastrar minha empresa
+                  </Link>
+                }
+              />
+            ) : (
+              <>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {recent.map((c) => <CompanyCard key={c.id} company={c} />)}
+                </div>
+                {hasMore && (
+                  <div className="mt-8 flex justify-center">
+                    <button
+                      type="button"
+                      onClick={() => setRecentLimit((n) => n + PAGE_SIZE)}
+                      disabled={recentQuery.isFetching}
+                      className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-6 py-3 text-sm font-semibold text-primary transition hover:bg-primary/10 disabled:opacity-60"
+                    >
+                      {recentQuery.isFetching && <Loader2 className="h-4 w-4 animate-spin" />}
+                      Mostrar mais empresas
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {featured.map((c) => <CompanyCard key={c.id} company={c} />)}
-          </div>
+          <>
+            <div className="mb-6">
+              <h2 className="font-display text-2xl font-bold md:text-3xl">Em destaque</h2>
+              <p className="text-sm text-muted-foreground">Empresas que se destacam em {city!.name}</p>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {featured.map((c) => <CompanyCard key={c.id} company={c} />)}
+            </div>
+          </>
         )}
       </section>
+
 
       <section className="mx-auto max-w-6xl px-4 pb-20 pt-8">
         <div className="overflow-hidden rounded-3xl bg-hero-gradient p-8 text-center text-white shadow-elegant md:p-12">

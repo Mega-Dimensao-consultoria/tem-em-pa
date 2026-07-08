@@ -42,7 +42,7 @@ function MinhasAvaliacoes() {
               description="Visite a página de uma empresa para deixar sua opinião."
               action={
                 <Button asChild>
-                  <Link to="/buscar">Procurar empresas</Link>
+                  <Link to="/">Procurar empresas</Link>
                 </Button>
               }
             />

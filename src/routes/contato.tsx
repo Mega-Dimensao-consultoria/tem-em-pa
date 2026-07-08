@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Mail } from 'lucide-react'
 import { PageShell } from '@/components/PageShell'
 import { MarkdownRenderer } from '@/features/content/components/MarkdownRenderer'
 import { getSitePage } from '@/features/content/functions/getSitePage'
+
 
 const CANONICAL = 'https://pousoalegre.megadimensao.com.br/contato'
 

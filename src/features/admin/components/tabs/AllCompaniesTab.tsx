@@ -12,6 +12,7 @@ import {
   useSuspendCompany,
 } from "@/features/admin/functions/companies";
 import { useBulkCompanyAction, type BulkAction } from "@/features/admin/functions/bulk";
+import { CityFilterSelect } from "./CityFilterSelect";
 import { Empty, Loading } from "../admin-ui";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -43,11 +44,13 @@ export function AllCompaniesTab() {
   const bulk = useBulkCompanyAction();
   const [filter, setFilter] = useState("");
   const [status, setStatus] = useState<string>("all");
+  const [cityId, setCityId] = useState<string>("all");
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
   const filtered = useMemo(() => {
     return data.filter((c) => {
       if (status !== "all" && c.status !== status) return false;
+      if (cityId !== "all" && c.city_id !== cityId) return false;
       if (!filter) return true;
       const q = filter.toLowerCase();
       return (
@@ -56,7 +59,7 @@ export function AllCompaniesTab() {
         c.id.includes(filter)
       );
     });
-  }, [data, filter, status]);
+  }, [data, filter, status, cityId]);
 
   const allSelected = filtered.length > 0 && filtered.every((c) => selected.has(c.id));
   const toggleAll = () => {

@@ -21,6 +21,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CitySlugRouteImport } from './routes/$citySlug'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CitySlugIndexRouteImport } from './routes/$citySlug.index'
 import { Route as UHandleRouteImport } from './routes/u.$handle'
 import { Route as SuporteRedefinir2faRouteImport } from './routes/suporte.redefinir-2fa'
 import { Route as PreviewTokenRouteImport } from './routes/preview.$token'
@@ -112,6 +113,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const CitySlugIndexRoute = CitySlugIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => CitySlugRoute,
 } as any)
 const UHandleRoute = UHandleRouteImport.update({
   id: '/u/$handle',
@@ -291,7 +297,7 @@ const AuthenticatedOwnerEmpresaIdDashboardRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/$citySlug': typeof CitySlugRoute
+  '/$citySlug': typeof CitySlugRouteWithChildren
   '/auth': typeof AuthRoute
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
@@ -315,6 +321,7 @@ export interface FileRoutesByFullPath {
   '/preview/$token': typeof PreviewTokenRoute
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/u/$handle': typeof UHandleRoute
+  '/$citySlug/': typeof CitySlugIndexRoute
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
@@ -336,7 +343,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/$citySlug': typeof CitySlugRoute
   '/auth': typeof AuthRoute
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
@@ -359,6 +365,7 @@ export interface FileRoutesByTo {
   '/preview/$token': typeof PreviewTokenRoute
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/u/$handle': typeof UHandleRoute
+  '/$citySlug': typeof CitySlugIndexRoute
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
@@ -382,7 +389,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/$citySlug': typeof CitySlugRoute
+  '/$citySlug': typeof CitySlugRouteWithChildren
   '/auth': typeof AuthRoute
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
@@ -406,6 +413,7 @@ export interface FileRoutesById {
   '/preview/$token': typeof PreviewTokenRoute
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/u/$handle': typeof UHandleRoute
+  '/$citySlug/': typeof CitySlugIndexRoute
   '/_authenticated/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/_authenticated/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/_authenticated/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
@@ -453,6 +461,7 @@ export interface FileRouteTypes {
     | '/preview/$token'
     | '/suporte/redefinir-2fa'
     | '/u/$handle'
+    | '/$citySlug/'
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
     | '/painel/seguranca'
@@ -474,7 +483,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/$citySlug'
     | '/auth'
     | '/buscar'
     | '/contato'
@@ -497,6 +505,7 @@ export interface FileRouteTypes {
     | '/preview/$token'
     | '/suporte/redefinir-2fa'
     | '/u/$handle'
+    | '/$citySlug'
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
     | '/painel/seguranca'
@@ -543,6 +552,7 @@ export interface FileRouteTypes {
     | '/preview/$token'
     | '/suporte/redefinir-2fa'
     | '/u/$handle'
+    | '/$citySlug/'
     | '/_authenticated/painel/avaliacoes'
     | '/_authenticated/painel/configuracoes'
     | '/_authenticated/painel/seguranca'
@@ -566,7 +576,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  CitySlugRoute: typeof CitySlugRoute
+  CitySlugRoute: typeof CitySlugRouteWithChildren
   AuthRoute: typeof AuthRoute
   BuscarRoute: typeof BuscarRoute
   ContatoRoute: typeof ContatoRoute
@@ -680,6 +690,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/$citySlug/': {
+      id: '/$citySlug/'
+      path: '/'
+      fullPath: '/$citySlug/'
+      preLoaderRoute: typeof CitySlugIndexRouteImport
+      parentRoute: typeof CitySlugRoute
     }
     '/u/$handle': {
       id: '/u/$handle'
@@ -958,6 +975,18 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface CitySlugRouteChildren {
+  CitySlugIndexRoute: typeof CitySlugIndexRoute
+}
+
+const CitySlugRouteChildren: CitySlugRouteChildren = {
+  CitySlugIndexRoute: CitySlugIndexRoute,
+}
+
+const CitySlugRouteWithChildren = CitySlugRoute._addFileChildren(
+  CitySlugRouteChildren,
+)
+
 interface EventosRouteChildren {
   EventosIdRoute: typeof EventosIdRoute
 }
@@ -972,7 +1001,7 @@ const EventosRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  CitySlugRoute: CitySlugRoute,
+  CitySlugRoute: CitySlugRouteWithChildren,
   AuthRoute: AuthRoute,
   BuscarRoute: BuscarRoute,
   ContatoRoute: ContatoRoute,

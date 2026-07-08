@@ -6,6 +6,7 @@ import { toastError } from '@/lib/safe'
 export type CityEvent = {
   id: string
   company_id: string
+  city_id: string
   title: string
   description: string | null
   starts_at: string
@@ -24,43 +25,46 @@ export type CityEventWithCompany = CityEvent & {
         name: string
         logo_url: string | null
         slug?: string | null
-        neighborhood?: string | null
         category_id?: string | null
         categories?: { name: string; slug: string } | null
+        cities?: { name: string | null; slug: string | null } | null
+        neighborhoods?: { name: string | null; slug: string | null } | null
       }
     | null
 }
 
 export const cityEventsKeys = {
   all: ['city-events'] as const,
-  publicList: () => [...cityEventsKeys.all, 'public'] as const,
-  byCompany: (id: string) => [...cityEventsKeys.all, 'company', id] as const,
+  publicList: (cityId?: string | null) =>
+    [...['city-events'] as const, 'public', cityId ?? 'all'] as const,
+  byCompany: (id: string) => [...['city-events'] as const, 'company', id] as const,
   ownerList: (companyId: string) =>
-    [...cityEventsKeys.all, 'owner', companyId] as const,
+    [...['city-events'] as const, 'owner', companyId] as const,
 }
 
-/** Public listing: active + not-ended events across all approved companies. */
-export function usePublicCityEvents() {
+/** Public listing: active + not-ended events, optionally scoped to a city. */
+export function usePublicCityEvents(cityId?: string | null) {
   return useQuery({
-    queryKey: cityEventsKeys.publicList(),
+    queryKey: cityEventsKeys.publicList(cityId),
     queryFn: async (): Promise<CityEventWithCompany[]> => {
       const nowIso = new Date().toISOString()
-      const { data, error } = await supabase
+      let query = supabase
         .from('city_events')
         .select(
-          'id, company_id, title, description, starts_at, ends_at, location, image_url, is_active, created_at, updated_at, companies:company_id(id, name, logo_url, neighborhood, category_id, categories:category_id(name, slug))',
+          'id, company_id, city_id, title, description, starts_at, ends_at, location, image_url, is_active, created_at, updated_at, companies:company_id(id, name, logo_url, category_id, categories:category_id(name, slug), cities:city_id(name, slug), neighborhoods:neighborhood_id(name, slug))',
         )
         .eq('is_active', true)
         .or(`ends_at.is.null,ends_at.gte.${nowIso}`)
         .order('starts_at', { ascending: true })
         .limit(200)
+      if (cityId) query = query.eq('city_id', cityId)
+      const { data, error } = await query
       if (error) throw error
       return (data ?? []) as unknown as CityEventWithCompany[]
     },
   })
 }
 
-/** Active events for a single company, used on the company detail page. */
 export function useCompanyCityEvents(companyId: string) {
   return useQuery({
     queryKey: cityEventsKeys.byCompany(companyId),
@@ -70,7 +74,7 @@ export function useCompanyCityEvents(companyId: string) {
       const { data, error } = await supabase
         .from('city_events')
         .select(
-          'id, company_id, title, description, starts_at, ends_at, location, image_url, is_active, created_at, updated_at',
+          'id, company_id, city_id, title, description, starts_at, ends_at, location, image_url, is_active, created_at, updated_at',
         )
         .eq('company_id', companyId)
         .eq('is_active', true)
@@ -78,8 +82,6 @@ export function useCompanyCityEvents(companyId: string) {
         .order('starts_at', { ascending: true })
         .limit(20)
       if (error) throw error
-      // Defense in depth: even if the transport ever returns unrelated rows,
-      // never render events that do not belong to the requested company.
       return ((data ?? []) as CityEvent[]).filter(
         (ev) => ev.company_id === companyId,
       )
@@ -87,7 +89,6 @@ export function useCompanyCityEvents(companyId: string) {
   })
 }
 
-/** Full list (including inactive/past) for the company owner. */
 export function useOwnerCityEvents(companyId: string, enabled: boolean) {
   return useQuery({
     queryKey: cityEventsKeys.ownerList(companyId),
@@ -96,7 +97,7 @@ export function useOwnerCityEvents(companyId: string, enabled: boolean) {
       const { data, error } = await supabase
         .from('city_events')
         .select(
-          'id, company_id, title, description, starts_at, ends_at, location, image_url, is_active, created_at, updated_at',
+          'id, company_id, city_id, title, description, starts_at, ends_at, location, image_url, is_active, created_at, updated_at',
         )
         .eq('company_id', companyId)
         .order('starts_at', { ascending: false })
@@ -123,13 +124,25 @@ function invalidate(qc: ReturnType<typeof useQueryClient>, companyId: string) {
   qc.invalidateQueries({ queryKey: cityEventsKeys.ownerList(companyId) })
 }
 
+async function getCityIdForCompany(companyId: string): Promise<string> {
+  const { data, error } = await supabase
+    .from('companies')
+    .select('city_id')
+    .eq('id', companyId)
+    .maybeSingle()
+  if (error) throw error
+  if (!data?.city_id) throw new Error('Empresa sem cidade associada')
+  return data.city_id
+}
+
 export function useCreateCityEvent(companyId: string) {
   const qc = useQueryClient()
   return useMutation({
     mutationFn: async (input: EventInput) => {
+      const city_id = await getCityIdForCompany(companyId)
       const { error } = await supabase
         .from('city_events')
-        .insert({ ...input, company_id: companyId })
+        .insert({ ...input, company_id: companyId, city_id })
       if (error) throw error
     },
     onSuccess: () => {

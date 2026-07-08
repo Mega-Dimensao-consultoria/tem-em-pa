@@ -36,19 +36,40 @@ function digits(s: string | null | undefined): string {
   return (s ?? "").replace(/\D+/g, "");
 }
 
-/** Fetches companies and groups likely duplicates by normalized name / phone. */
+type RawDupRow = {
+  id: string;
+  name: string;
+  phone: string | null;
+  whatsapp: string | null;
+  status: string;
+  created_at: string;
+  cities: { name: string | null } | null;
+  neighborhoods: { name: string | null } | null;
+};
+
 export function useDuplicateGroups() {
   return useQuery({
     queryKey: [...adminKeys.all, "duplicates"] as const,
     queryFn: async (): Promise<DupGroup[]> => {
       const { data, error } = await supabase
         .from("companies")
-        .select("id, name, city, neighborhood, phone, whatsapp, status, created_at")
+        .select(
+          "id, name, phone, whatsapp, status, created_at, cities:city_id(name), neighborhoods:neighborhood_id(name)",
+        )
         .in("status", ["approved", "pending", "claimed_pending", "rejected"])
         .order("created_at", { ascending: true })
         .limit(2000);
       if (error) throw error;
-      const rows = (data ?? []) as DupCandidate[];
+      const rows: DupCandidate[] = ((data ?? []) as unknown as RawDupRow[]).map((r) => ({
+        id: r.id,
+        name: r.name,
+        city: r.cities?.name ?? null,
+        neighborhood: r.neighborhoods?.name ?? null,
+        phone: r.phone,
+        whatsapp: r.whatsapp,
+        status: r.status,
+        created_at: r.created_at,
+      }));
 
       const byName = new Map<string, DupCandidate[]>();
       const byPhone = new Map<string, DupCandidate[]>();
@@ -71,12 +92,10 @@ export function useDuplicateGroups() {
 
       const groups: DupGroup[] = [];
       for (const [k, items] of byName) {
-        if (items.length >= 2)
-          groups.push({ key: `name:${k}`, reason: "name", items });
+        if (items.length >= 2) groups.push({ key: `name:${k}`, reason: "name", items });
       }
       for (const [k, items] of byPhone) {
-        if (items.length >= 2)
-          groups.push({ key: `phone:${k}`, reason: "phone", items });
+        if (items.length >= 2) groups.push({ key: `phone:${k}`, reason: "phone", items });
       }
       return groups.sort((a, b) => b.items.length - a.items.length);
     },
@@ -93,7 +112,6 @@ export function useMergeCompanies() {
       sourceName: string;
       targetName: string;
     }) => {
-      // rpc typed via generated types; cast to satisfy strict TS if type not yet regenerated
       const { error } = await (supabase.rpc as unknown as (
         fn: string,
         args: Record<string, unknown>,

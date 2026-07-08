@@ -2,7 +2,6 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { publicClient } from "./_client";
 
-/** Strip diacritics, lowercase, keep alphanumerics and spaces. */
 function normalize(s: string): string {
   return s
     .normalize("NFD")
@@ -13,7 +12,6 @@ function normalize(s: string): string {
     .trim();
 }
 
-/** Keep digits only. */
 function digits(s: string): string {
   return s.replace(/\D+/g, "");
 }
@@ -28,11 +26,16 @@ export type DuplicateMatch = {
   reason: "name" | "phone";
 };
 
-/**
- * Best-effort duplicate check for company registration.
- * Returns up to 5 approved/pending candidates that match by normalized name
- * or by identical phone/whatsapp digits. Case-insensitive; ignores accents.
- */
+type RawDupRow = {
+  id: string;
+  name: string;
+  phone: string | null;
+  whatsapp: string | null;
+  status: string;
+  cities: { name: string | null } | null;
+  neighborhoods: { name: string | null } | null;
+};
+
 export const checkCompanyDuplicate = createServerFn({ method: "GET" })
   .inputValidator((input: unknown) =>
     z
@@ -40,6 +43,7 @@ export const checkCompanyDuplicate = createServerFn({ method: "GET" })
         name: z.string().trim().min(2).max(120),
         phone: z.string().trim().max(20).optional().or(z.literal("")),
         whatsapp: z.string().trim().max(20).optional().or(z.literal("")),
+        cityId: z.string().uuid().nullable().optional(),
       })
       .parse(input),
   )
@@ -49,21 +53,25 @@ export const checkCompanyDuplicate = createServerFn({ method: "GET" })
     const firstWord = nameNorm.split(" ")[0];
     if (firstWord.length < 3) return [] as DuplicateMatch[];
 
-    const { data: rows, error } = await sb
+    let q = sb
       .from("companies")
-      .select("id, name, neighborhood, city, phone, whatsapp, status")
+      .select(
+        "id, name, phone, whatsapp, status, cities:city_id(name), neighborhoods:neighborhood_id(name)",
+      )
       .in("status", ["approved", "pending", "claimed_pending"])
       .ilike("name", `%${firstWord}%`)
       .limit(50);
+    if (data.cityId) q = q.eq("city_id", data.cityId);
+    const { data: rowsRaw, error } = await q;
     if (error) return [] as DuplicateMatch[];
+    const rows = (rowsRaw ?? []) as unknown as RawDupRow[];
 
     const phoneDigits = data.phone ? digits(data.phone) : "";
     const wppDigits = data.whatsapp ? digits(data.whatsapp) : "";
 
     const matches: DuplicateMatch[] = [];
-    for (const r of rows ?? []) {
+    for (const r of rows) {
       const rn = normalize(r.name ?? "");
-      // Name match: exact normalized OR both share their first two words
       const nameMatch =
         rn === nameNorm ||
         rn.startsWith(nameNorm) ||
@@ -78,8 +86,8 @@ export const checkCompanyDuplicate = createServerFn({ method: "GET" })
         matches.push({
           id: r.id,
           name: r.name,
-          neighborhood: r.neighborhood,
-          city: r.city,
+          neighborhood: r.neighborhoods?.name ?? null,
+          city: r.cities?.name ?? null,
           phone: r.phone,
           whatsapp: r.whatsapp,
           reason: nameMatch ? "name" : "phone",

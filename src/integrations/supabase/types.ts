@@ -110,8 +110,75 @@ export type Database = {
         }
         Relationships: []
       }
+      cities: {
+        Row: {
+          bbox_max_lat: number | null
+          bbox_max_lng: number | null
+          bbox_min_lat: number | null
+          bbox_min_lng: number | null
+          created_at: string
+          hero_headline: string | null
+          hero_subheadline: string | null
+          id: string
+          is_active: boolean
+          is_default: boolean
+          lat: number | null
+          lng: number | null
+          name: string
+          og_image_url: string | null
+          search_placeholder: string | null
+          slug: string
+          state: string
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          bbox_max_lat?: number | null
+          bbox_max_lng?: number | null
+          bbox_min_lat?: number | null
+          bbox_min_lng?: number | null
+          created_at?: string
+          hero_headline?: string | null
+          hero_subheadline?: string | null
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          lat?: number | null
+          lng?: number | null
+          name: string
+          og_image_url?: string | null
+          search_placeholder?: string | null
+          slug: string
+          state: string
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          bbox_max_lat?: number | null
+          bbox_max_lng?: number | null
+          bbox_min_lat?: number | null
+          bbox_min_lng?: number | null
+          created_at?: string
+          hero_headline?: string | null
+          hero_subheadline?: string | null
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          lat?: number | null
+          lng?: number | null
+          name?: string
+          og_image_url?: string | null
+          search_placeholder?: string | null
+          slug?: string
+          state?: string
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       city_events: {
         Row: {
+          city_id: string
           company_id: string
           created_at: string
           description: string | null
@@ -125,6 +192,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          city_id: string
           company_id: string
           created_at?: string
           description?: string | null
@@ -138,6 +206,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          city_id?: string
           company_id?: string
           created_at?: string
           description?: string | null
@@ -152,6 +221,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "city_events_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "city_events_company_id_fkey"
             columns: ["company_id"]
             isOneToOne: false
@@ -165,7 +241,7 @@ export type Database = {
           address: string | null
           category_id: string | null
           cep: string | null
-          city: string | null
+          city_id: string
           complement: string | null
           cover_url: string | null
           created_at: string
@@ -181,7 +257,7 @@ export type Database = {
           lng: number | null
           logo_url: string | null
           name: string
-          neighborhood: string | null
+          neighborhood_id: string | null
           number: string | null
           owner_id: string | null
           phone: string | null
@@ -197,7 +273,7 @@ export type Database = {
           address?: string | null
           category_id?: string | null
           cep?: string | null
-          city?: string | null
+          city_id: string
           complement?: string | null
           cover_url?: string | null
           created_at?: string
@@ -213,7 +289,7 @@ export type Database = {
           lng?: number | null
           logo_url?: string | null
           name: string
-          neighborhood?: string | null
+          neighborhood_id?: string | null
           number?: string | null
           owner_id?: string | null
           phone?: string | null
@@ -229,7 +305,7 @@ export type Database = {
           address?: string | null
           category_id?: string | null
           cep?: string | null
-          city?: string | null
+          city_id?: string
           complement?: string | null
           cover_url?: string | null
           created_at?: string
@@ -245,7 +321,7 @@ export type Database = {
           lng?: number | null
           logo_url?: string | null
           name?: string
-          neighborhood?: string | null
+          neighborhood_id?: string | null
           number?: string | null
           owner_id?: string | null
           phone?: string | null
@@ -263,6 +339,20 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "companies_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "companies_neighborhood_id_fkey"
+            columns: ["neighborhood_id"]
+            isOneToOne: false
+            referencedRelation: "neighborhoods"
             referencedColumns: ["id"]
           },
         ]
@@ -551,6 +641,50 @@ export type Database = {
           },
         ]
       }
+      neighborhoods: {
+        Row: {
+          city_id: string
+          created_at: string
+          id: string
+          is_active: boolean
+          lat: number | null
+          lng: number | null
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          city_id: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          lat?: number | null
+          lng?: number | null
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          city_id?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          lat?: number | null
+          lng?: number | null
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "neighborhoods_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           created_at: string
@@ -685,6 +819,7 @@ export type Database = {
           created_at: string
           full_name: string | null
           handle: string | null
+          home_city_id: string | null
           id: string
           is_banned: boolean
           is_public: boolean
@@ -698,6 +833,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           handle?: string | null
+          home_city_id?: string | null
           id: string
           is_banned?: boolean
           is_public?: boolean
@@ -711,6 +847,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           handle?: string | null
+          home_city_id?: string | null
           id?: string
           is_banned?: boolean
           is_public?: boolean
@@ -718,7 +855,15 @@ export type Database = {
           phone?: string | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_home_city_id_fkey"
+            columns: ["home_city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       push_subscriptions: {
         Row: {
@@ -859,6 +1004,7 @@ export type Database = {
       }
       site_pages: {
         Row: {
+          city_id: string | null
           content_md: string
           slug: string
           title: string
@@ -866,6 +1012,7 @@ export type Database = {
           updated_by: string | null
         }
         Insert: {
+          city_id?: string | null
           content_md: string
           slug: string
           title: string
@@ -873,13 +1020,22 @@ export type Database = {
           updated_by?: string | null
         }
         Update: {
+          city_id?: string | null
           content_md?: string
           slug?: string
           title?: string
           updated_at?: string
           updated_by?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "site_pages_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       site_pages_versions: {
         Row: {
@@ -1203,8 +1359,9 @@ export type Database = {
         Returns: undefined
       }
       search_companies_autocomplete: {
-        Args: { lim?: number; q: string }
+        Args: { _city_id: string; lim?: number; q: string }
         Returns: {
+          city_slug: string
           id: string
           logo_url: string
           name: string
@@ -1212,6 +1369,7 @@ export type Database = {
           slug: string
         }[]
       }
+      slugify: { Args: { input: string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "owner" | "user"

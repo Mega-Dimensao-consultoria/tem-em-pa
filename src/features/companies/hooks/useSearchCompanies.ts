@@ -10,11 +10,15 @@ export type SearchParams = {
   sort: SearchSort;
   userId: string | undefined;
   enabled: boolean;
+  cityId?: string | null;
 };
 
-export function useSearchCompanies({ q, cat, sort, userId, enabled }: SearchParams) {
+export function useSearchCompanies({ q, cat, sort, userId, enabled, cityId }: SearchParams) {
   return useQuery({
-    queryKey: queryKeys.companies.search(q ?? "", cat ?? "", sort, userId ?? "anon"),
+    queryKey: [
+      ...queryKeys.companies.search(q ?? "", cat ?? "", sort, userId ?? "anon"),
+      cityId ?? "all",
+    ],
     enabled,
     queryFn: async () => {
       let catId: string | null = null;
@@ -29,25 +33,34 @@ export function useSearchCompanies({ q, cat, sort, userId, enabled }: SearchPara
       let query = supabase
         .from("companies")
         .select(
-          "id, name, slug, description, neighborhood, city, state, lat, lng, hours, logo_url, cover_url, is_featured, status, owner_id, category_id, created_at, categories:category_id(name, slug, icon)",
+          "id, name, slug, description, city_id, neighborhood_id, state, lat, lng, hours, logo_url, cover_url, is_featured, status, owner_id, category_id, created_at, categories:category_id(name, slug, icon), cities:city_id(name, slug, state), neighborhoods:neighborhood_id(name, slug)",
         )
         .limit(120);
+      if (cityId) query = query.eq("city_id", cityId);
       if (sort === "name") query = query.order("name", { ascending: true });
       else query = query.order("created_at", { ascending: false });
       if (q) query = query.ilike("name", `%${q}%`);
       if (catId) query = query.eq("category_id", catId);
       const { data, error } = await query;
       if (error) throw error;
-      return data ?? [];
+      // Flatten joined city/neighborhood to top-level `city`/`neighborhood` for consumers.
+      return (data ?? []).map((r) => {
+        const row = r as unknown as {
+          cities: { name: string | null; slug: string | null } | null;
+          neighborhoods: { name: string | null; slug: string | null } | null;
+        } & Record<string, unknown>;
+        return {
+          ...row,
+          city: row.cities?.name ?? null,
+          city_slug: row.cities?.slug ?? null,
+          neighborhood: row.neighborhoods?.name ?? null,
+          neighborhood_slug: row.neighborhoods?.slug ?? null,
+        };
+      });
     },
   });
 }
 
-/**
- * Client-side relevance score. Higher is better.
- * - exact/prefix/substring name match against the query
- * - featured boost, description/logo completeness, mild recency
- */
 export function scoreCompanyRelevance(
   c: {
     name: string;
@@ -71,7 +84,6 @@ export function scoreCompanyRelevance(
   if (c.logo_url) score += 3;
   if (c.created_at) {
     const days = (Date.now() - new Date(c.created_at).getTime()) / 86_400_000;
-    // slight boost for newer listings, capped at ~5 points
     score += Math.max(0, 5 - days / 30);
   }
   return score;

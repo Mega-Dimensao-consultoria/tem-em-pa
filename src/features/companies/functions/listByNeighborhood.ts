@@ -1,82 +1,65 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { publicClient, CARD_COLS } from "./_client";
-
-type Company = {
-  id: string;
-  name: string;
-  slug: string | null;
-  description: string | null;
-  neighborhood: string | null;
-  city: string | null;
-  state: string | null;
-  logo_url: string | null;
-  cover_url: string | null;
-  is_featured: boolean | null;
-  category_id: string | null;
-  categories: { name: string | null; slug: string | null; icon: string | null } | null;
-};
+import { publicClient, CARD_COLS, normalizeCompanies } from "./_client";
 
 export type NeighborhoodPayload = {
   neighborhood: string | null;
+  neighborhoodSlug: string | null;
   city: string | null;
-  companies: Company[];
+  citySlug: string | null;
+  companies: Array<ReturnType<typeof normalizeCompanies>[number]>;
 };
 
 /**
- * Lista empresas aprovadas de um bairro. Slug é normalizado no servidor para
- * casar com `neighborhood` da tabela `companies`.
+ * Lista empresas aprovadas de um bairro. Requer citySlug para desambiguar
+ * bairros com mesmo nome em cidades diferentes.
  */
 export const listCompaniesByNeighborhood = createServerFn({ method: "GET" })
   .inputValidator((input: unknown) =>
     z
       .object({
-        slug: z
-          .string()
-          .trim()
-          .min(1)
-          .max(80)
-          .regex(/^[a-z0-9-]+$/, "slug inválido"),
+        citySlug: z.string().trim().regex(/^[a-z0-9-]+$/).max(80),
+        slug: z.string().trim().regex(/^[a-z0-9-]+$/).max(80),
       })
       .parse(input),
   )
   .handler(async ({ data }): Promise<NeighborhoodPayload> => {
     const sb = publicClient();
 
-    const { data: rows, error } = await sb
-      .from("companies")
-      .select("neighborhood, city")
-      .eq("status", "approved")
-      .not("neighborhood", "is", null);
-    if (error) throw new Error(error.message);
-
-    const match = (rows ?? []).find((r) => slugifyServer(r.neighborhood) === data.slug);
-    if (!match || !match.neighborhood) {
-      return { neighborhood: null, city: null, companies: [] };
+    const { data: city } = await sb
+      .from("cities")
+      .select("id, name, slug")
+      .eq("slug", data.citySlug)
+      .eq("is_active", true)
+      .maybeSingle();
+    if (!city) {
+      return { neighborhood: null, neighborhoodSlug: null, city: null, citySlug: null, companies: [] };
     }
 
-    const { data: companies, error: err2 } = await sb
+    const { data: hood } = await sb
+      .from("neighborhoods")
+      .select("id, name, slug")
+      .eq("city_id", city.id)
+      .eq("slug", data.slug)
+      .eq("is_active", true)
+      .maybeSingle();
+    if (!hood) {
+      return { neighborhood: null, neighborhoodSlug: null, city: city.name, citySlug: city.slug, companies: [] };
+    }
+
+    const { data: companies, error } = await sb
       .from("companies")
       .select(CARD_COLS)
       .eq("status", "approved")
-      .eq("neighborhood", match.neighborhood)
+      .eq("neighborhood_id", hood.id)
       .limit(60);
-    if (err2) throw new Error(err2.message);
+    if (error) throw new Error(error.message);
 
     return {
-      neighborhood: match.neighborhood,
-      city: match.city,
-      companies: (companies ?? []) as unknown as Company[],
+      neighborhood: hood.name,
+      neighborhoodSlug: hood.slug,
+      city: city.name,
+      citySlug: city.slug,
+      companies: normalizeCompanies(companies as unknown as Record<string, unknown>[]),
     };
   });
-
-function slugifyServer(input: string | null): string {
-  if (!input) return "";
-  return input
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}

@@ -15,7 +15,7 @@ import { CompanyProductsBlock } from "@/features/companies/components/CompanyPro
 import { CompanyMapCard } from "@/features/companies/components/CompanyMapCard";
 import { CompanyEventsBlock } from "@/features/events/components/CompanyEventsBlock";
 import { buildCompanyHead } from "@/features/companies/components/buildCompanyHead";
-import { useAuth } from "@/features/auth/use-auth";
+import { useAuth, useRoles } from "@/features/auth/use-auth";
 import { trackEvent } from "@/lib/track";
 import { getCompanyBySlug } from "@/features/companies/functions";
 import { getCompanyContact } from "@/features/companies/functions/contact";
@@ -116,6 +116,7 @@ export const Route = createFileRoute("/$citySlug/empresa/$compSlug")({
 function CompanyPage() {
   const params = Route.useParams();
   const { user, loading: authLoading } = useAuth();
+  const { isAdmin } = useRoles();
   const qc = useQueryClient();
   const { data: publicCompany } = useSuspenseQuery(publicBySlugQO(params));
 
@@ -200,10 +201,10 @@ function CompanyPage() {
             <p className="flex-1">
               <strong>Aguardando aprovação.</strong> Esta página está visível somente para você.
             </p>
-            {isOwner ? (
+            {isOwner || isAdmin ? (
               <Button asChild size="sm" variant="outline" className="shrink-0">
-                <Link to="/owner/empresa/$id/produtos" params={{ id: company.id }}>
-                  <Pencil className="mr-1 h-3 w-3" /> Gerenciar
+                <Link to="/owner/empresa/$id/editar" params={{ id: company.id }}>
+                  <Pencil className="mr-1 h-3 w-3" /> Editar
                 </Link>
               </Button>
             ) : null}

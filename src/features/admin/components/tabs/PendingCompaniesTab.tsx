@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Check, ExternalLink, X } from "lucide-react";
+import { Check, ExternalLink, Pencil, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
@@ -56,6 +56,12 @@ export function PendingCompaniesTab() {
                 <Link to="/empresa/$id" params={{ id: c.id }} target="_blank">
                   <ExternalLink className="mr-1 h-3 w-3" />
                   Ver
+                </Link>
+              </Button>
+              <Button asChild size="sm" variant="outline">
+                <Link to="/owner/empresa/$id/editar" params={{ id: c.id }}>
+                  <Pencil className="mr-1 h-3 w-3" />
+                  Editar
                 </Link>
               </Button>
               <ConfirmDestructive

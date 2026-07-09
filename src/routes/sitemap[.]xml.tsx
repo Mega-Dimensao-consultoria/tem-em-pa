@@ -24,6 +24,7 @@ export const Route = createFileRoute("/sitemap.xml")({
 
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "daily", priority: "1.0" },
+          { path: "/blog", changefreq: "daily", priority: "0.8" },
           { path: "/sobre", changefreq: "monthly", priority: "0.5" },
           { path: "/contato", changefreq: "monthly", priority: "0.5" },
           { path: "/termos", changefreq: "yearly", priority: "0.3" },
@@ -31,7 +32,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         ];
 
         const nowIso = new Date().toISOString();
-        const [cats, companies, events, hoods] = await Promise.all([
+        const [cats, companies, events, hoods, blogPosts, blogCats] = await Promise.all([
           sb.from("categories").select("slug"),
           sb
             .from("companies")
@@ -49,6 +50,16 @@ export const Route = createFileRoute("/sitemap.xml")({
             .select("slug, cities:city_id(slug)")
             .eq("is_active", true)
             .limit(5000),
+          sb
+            .from("blog_posts")
+            .select("slug, updated_at")
+            .eq("status", "published")
+            .lte("published_at", nowIso)
+            .limit(5000),
+          sb
+            .from("blog_categories")
+            .select("slug")
+            .eq("is_active", true),
         ]);
 
         // Indexação condicional: só listar cidades/estados que possuem pelo menos

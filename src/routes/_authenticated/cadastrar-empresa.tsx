@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { geocodeAddress } from "@/lib/geocode.functions";
 import { CompanyForm, type CompanyFormValues } from "@/features/companies/components/CompanyForm";
+import { CnpjLookup } from "@/features/companies/components/CnpjLookup";
 import {
   checkCompanyDuplicate,
   type DuplicateMatch,
@@ -54,6 +55,8 @@ function CadastrarPage() {
   const [submitting, setSubmitting] = useState(false);
   const [duplicates, setDuplicates] = useState<DuplicateMatch[] | null>(null);
   const [pendingValues, setPendingValues] = useState<CompanyFormValues | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [prefill, setPrefill] = useState<Partial<CompanyFormValues> | undefined>(undefined);
 
   async function proceedInsert(v: CompanyFormValues) {
     if (!user) return;
@@ -175,14 +178,27 @@ function CadastrarPage() {
         <p className="mt-1 text-sm text-muted-foreground">
           Após o envio, sua empresa passa por aprovação do nosso time antes de ficar visível.
         </p>
-        <div className="mt-8">
-          <CompanyForm
-            mode="create"
-            submitting={submitting}
-            submitLabel="Enviar para aprovação"
-            onSubmit={handleSubmit}
-          />
-        </div>
+        {!showForm ? (
+          <div className="mt-8">
+            <CnpjLookup
+              onPrefill={(v) => {
+                setPrefill(v);
+                setShowForm(true);
+              }}
+              onSkip={() => setShowForm(true)}
+            />
+          </div>
+        ) : (
+          <div className="mt-8">
+            <CompanyForm
+              mode="create"
+              initial={prefill}
+              submitting={submitting}
+              submitLabel="Enviar para aprovação"
+              onSubmit={handleSubmit}
+            />
+          </div>
+        )}
       </section>
 
       <Dialog

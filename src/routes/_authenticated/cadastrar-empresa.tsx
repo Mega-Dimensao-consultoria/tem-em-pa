@@ -178,14 +178,27 @@ function CadastrarPage() {
         <p className="mt-1 text-sm text-muted-foreground">
           Após o envio, sua empresa passa por aprovação do nosso time antes de ficar visível.
         </p>
-        <div className="mt-8">
-          <CompanyForm
-            mode="create"
-            submitting={submitting}
-            submitLabel="Enviar para aprovação"
-            onSubmit={handleSubmit}
-          />
-        </div>
+        {!showForm ? (
+          <div className="mt-8">
+            <CnpjLookup
+              onPrefill={(v) => {
+                setPrefill(v);
+                setShowForm(true);
+              }}
+              onSkip={() => setShowForm(true)}
+            />
+          </div>
+        ) : (
+          <div className="mt-8">
+            <CompanyForm
+              mode="create"
+              initial={prefill}
+              submitting={submitting}
+              submitLabel="Enviar para aprovação"
+              onSubmit={handleSubmit}
+            />
+          </div>
+        )}
       </section>
 
       <Dialog

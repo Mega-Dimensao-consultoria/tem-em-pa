@@ -104,7 +104,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "Tem na cidade",
+          url: "https://temnacidade.com",
           description: "Guia local por cidade — restaurantes, mercados, serviços e comércio.",
+          sameAs: [
+            "https://www.instagram.com/temnacidadebr",
+            "https://www.facebook.com/temnacidade",
+            "https://www.tiktok.com/temnacidade",
+          ],
         }),
       },
     ],

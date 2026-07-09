@@ -110,7 +110,6 @@ function sanitize(message: string): string {
  * Retorna string vazia quando a mensagem não for reconhecida.
  */
 function translateAuthMessage(message: string): string {
-  const m = message.toLowerCase();
 
   // Senha vazada (HaveIBeenPwned)
   if (/password is known to be weak|pwned|has been leaked|found in a data breach/i.test(message)) {

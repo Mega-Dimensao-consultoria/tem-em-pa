@@ -32,6 +32,44 @@ function maskCnpj(v: string) {
     .replace(/(\d{4})(\d)/, "$1-$2");
 }
 
+function stringField(data: Record<string, unknown>, key: string) {
+  return typeof data[key] === "string" ? data[key] : "";
+}
+
+function normalizedField(data: Record<string, unknown>, key: string) {
+  return data[key] === null || data[key] === undefined ? "" : String(data[key]);
+}
+
+async function lookupCnpj(cnpj: string): Promise<CnpjLookupResult> {
+  const digits = cnpj.replace(/\D/g, "");
+  if (digits.length !== 14) throw new Error("CNPJ inválido");
+
+  const response = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${digits}`, {
+    headers: { accept: "application/json" },
+  });
+  if (response.status === 404) throw new Error("CNPJ não encontrado");
+  if (!response.ok) throw new Error("Falha ao consultar CNPJ");
+
+  const data = (await response.json()) as Record<string, unknown>;
+  const cepRaw = normalizedField(data, "cep").replace(/\D/g, "");
+  const cep = cepRaw.length === 8 ? `${cepRaw.slice(0, 5)}-${cepRaw.slice(5)}` : "";
+
+  return {
+    razao_social: stringField(data, "razao_social"),
+    nome_fantasia: stringField(data, "nome_fantasia") || stringField(data, "razao_social"),
+    cep,
+    address: stringField(data, "logradouro"),
+    number: normalizedField(data, "numero"),
+    complement: stringField(data, "complemento"),
+    neighborhood: stringField(data, "bairro"),
+    city: stringField(data, "municipio"),
+    state: stringField(data, "uf"),
+    phone: normalizedField(data, "ddd_telefone_1"),
+    email: stringField(data, "email"),
+    atividade: stringField(data, "cnae_fiscal_descricao"),
+  };
+}
+
 function toPrefill(r: CnpjLookupResult): Partial<CompanyFormValues> {
   return {
     name: r.nome_fantasia || r.razao_social,
@@ -61,16 +99,7 @@ export function CnpjLookup({ onPrefill, onSkip }: Props) {
   async function handleLookup() {
     setLoading(true);
     try {
-      const response = await fetch("/api/public/cnpj-lookup", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ cnpj }),
-      });
-      const payload = (await response.json()) as CnpjLookupResult | { error?: string };
-      if (!response.ok) {
-        throw new Error("error" in payload && payload.error ? payload.error : "Falha ao consultar CNPJ");
-      }
-      const r = payload as CnpjLookupResult;
+      const r = await lookupCnpj(cnpj);
       onPrefill(toPrefill(r));
       toast.success("Dados preenchidos a partir do CNPJ");
     } catch (e) {

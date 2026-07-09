@@ -52,13 +52,16 @@ export const Route = createFileRoute("/sitemap.xml")({
             .limit(5000),
         ]);
 
-        const activeCitySlugs = new Set<string>(
-          ((cities.data ?? []) as Array<{ slug: string | null }>)
-            .map((c) => c.slug)
+        // Indexação condicional: só listar cidades/estados que possuem pelo menos
+        // uma empresa aprovada. Cidades vazias ficam fora do sitemap para evitar
+        // páginas sem conteúdo nos motores de busca.
+        const citySlugsWithCompanies = new Set<string>(
+          ((companies.data ?? []) as Array<{ cities: { slug: string | null } | null }>)
+            .map((c) => c.cities?.slug)
             .filter((s): s is string => !!s),
         );
 
-        for (const s of activeCitySlugs) {
+        for (const s of citySlugsWithCompanies) {
           entries.push({ path: `/${s}`, changefreq: "daily", priority: "0.9" });
           entries.push({ path: `/${s}/buscar`, changefreq: "daily", priority: "0.8" });
           entries.push({ path: `/${s}/eventos`, changefreq: "daily", priority: "0.7" });

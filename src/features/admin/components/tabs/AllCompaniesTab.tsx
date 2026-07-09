@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Check, CheckSquare, ExternalLink, EyeOff, RotateCcw, Square, Trash2, X } from "lucide-react";
+import { Check, CheckSquare, ExternalLink, EyeOff, Plus, RotateCcw, Square, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
@@ -121,6 +121,11 @@ export function AllCompaniesTab() {
           ))}
         </div>
         <CityFilterSelect value={cityId} onChange={setCityId} />
+        <Button asChild size="sm" className="ml-auto">
+          <Link to="/cadastrar-empresa">
+            <Plus className="mr-1 h-4 w-4" /> Cadastrar empresa
+          </Link>
+        </Button>
       </div>
 
       <div className="flex flex-wrap items-center gap-2">

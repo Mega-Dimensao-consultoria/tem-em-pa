@@ -75,9 +75,8 @@ export function useSavePost() {
   const { user } = useAuth();
   return useMutation({
     mutationFn: async (input: PostInput) => {
-      const payload = {
+      const base = {
         title: input.title.trim(),
-        slug: input.slug?.trim() || null,
         excerpt: input.excerpt?.trim() || null,
         content_html: input.content_html,
         cover_image_url: input.cover_image_url || null,
@@ -85,6 +84,9 @@ export function useSavePost() {
         status: input.status,
         published_at: input.published_at || null,
       };
+      // slug fica opcional: quando vazio, o trigger do banco gera automaticamente.
+      const slug = input.slug?.trim();
+      const payload = slug ? { ...base, slug } : base;
       if (input.id) {
         const { data, error } = await supabase
           .from("blog_posts")
@@ -95,9 +97,12 @@ export function useSavePost() {
         if (error) throw error;
         return data;
       }
+      // No INSERT o slug é NOT NULL — quando ausente enviamos string vazia e
+      // o trigger blog_posts_before_write substitui pelo slug do título.
+      const insertPayload = { ...base, slug: slug ?? "", author_id: user?.id ?? null };
       const { data, error } = await supabase
         .from("blog_posts")
-        .insert({ ...payload, author_id: user?.id ?? null })
+        .insert(insertPayload)
         .select("id, slug")
         .single();
       if (error) throw error;

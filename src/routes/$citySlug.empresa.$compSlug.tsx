@@ -201,10 +201,10 @@ function CompanyPage() {
             <p className="flex-1">
               <strong>Aguardando aprovação.</strong> Esta página está visível somente para você.
             </p>
-            {isOwner ? (
+            {isOwner || isAdmin ? (
               <Button asChild size="sm" variant="outline" className="shrink-0">
-                <Link to="/owner/empresa/$id/produtos" params={{ id: company.id }}>
-                  <Pencil className="mr-1 h-3 w-3" /> Gerenciar
+                <Link to="/owner/empresa/$id/editar" params={{ id: company.id }}>
+                  <Pencil className="mr-1 h-3 w-3" /> Editar
                 </Link>
               </Button>
             ) : null}

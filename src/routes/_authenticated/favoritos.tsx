@@ -9,7 +9,7 @@ import { ErrorState } from "@/components/feedback/ErrorState";
 
 export const Route = createFileRoute("/_authenticated/favoritos")({
   component: FavoritosPage,
-  head: () => ({ meta: [{ title: "Meus favoritos | Tem em PA" }] }),
+  head: () => ({ meta: [{ title: "Meus favoritos | Tem na cidade" }] }),
 });
 
 function FavoritosPage() {

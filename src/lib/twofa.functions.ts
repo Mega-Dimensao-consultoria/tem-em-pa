@@ -2,9 +2,9 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-const SITE_NAME = "tem-em-pa";
-const SENDER_DOMAIN = "notificacoes.sistemas.megadimensao.com.br";
-const FROM_DOMAIN = "notificacoes.sistemas.megadimensao.com.br";
+const SITE_NAME = "Tem na cidade";
+const SENDER_DOMAIN = "notificacoes.temnacidade.com";
+const FROM_DOMAIN = "notificacoes.temnacidade.com";
 const OTP_TTL_MIN = 10;
 const MAX_ATTEMPTS = 5;
 

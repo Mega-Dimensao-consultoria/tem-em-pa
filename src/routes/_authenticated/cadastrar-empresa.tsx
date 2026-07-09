@@ -55,6 +55,8 @@ function CadastrarPage() {
   const [submitting, setSubmitting] = useState(false);
   const [duplicates, setDuplicates] = useState<DuplicateMatch[] | null>(null);
   const [pendingValues, setPendingValues] = useState<CompanyFormValues | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [prefill, setPrefill] = useState<Partial<CompanyFormValues> | undefined>(undefined);
 
   async function proceedInsert(v: CompanyFormValues) {
     if (!user) return;

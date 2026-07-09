@@ -211,12 +211,14 @@ function CompanyPage() {
         </div>
       ) : null}
 
-      <div className="relative h-48 w-full overflow-hidden bg-muted md:h-72">
-        {company.cover_url ? (
-          <img src={company.cover_url} alt={company.name} className="h-full w-full object-cover" />
-        ) : (
-          <div className="h-full w-full bg-hero-gradient opacity-90" />
-        )}
+      <div className="mx-auto mt-6 max-w-5xl px-4">
+        <div className="relative h-48 w-full overflow-hidden rounded-3xl bg-muted md:h-72">
+          {company.cover_url ? (
+            <img src={company.cover_url} alt={company.name} className="h-full w-full object-cover" />
+          ) : (
+            <div className="h-full w-full bg-hero-gradient opacity-90" />
+          )}
+        </div>
       </div>
 
       <div className="mx-auto max-w-5xl px-4">

@@ -181,6 +181,7 @@ function RootComponent() {
       <ThemeProvider>
         <AuthProvider>
           <PWARegister />
+          <GoogleAnalytics />
           <PushBootstrap />
           <PushPermissionBanner />
           <Outlet />

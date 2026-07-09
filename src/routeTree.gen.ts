@@ -39,6 +39,7 @@ import { Route as AuthenticatedPainelIndexRouteImport } from './routes/_authenti
 import { Route as AuthenticatedOwnerIndexRouteImport } from './routes/_authenticated/owner.index'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as ApiPublicContactSubmitRouteImport } from './routes/api/public/contact-submit'
+import { Route as ApiPublicCnpjLookupRouteImport } from './routes/api/public/cnpj-lookup'
 import { Route as AuthenticatedPainelSegurancaRouteImport } from './routes/_authenticated/painel.seguranca'
 import { Route as AuthenticatedPainelConfiguracoesRouteImport } from './routes/_authenticated/painel.configuracoes'
 import { Route as AuthenticatedPainelAvaliacoesRouteImport } from './routes/_authenticated/painel.avaliacoes'
@@ -209,6 +210,11 @@ const ApiPublicContactSubmitRoute = ApiPublicContactSubmitRouteImport.update({
   path: '/api/public/contact-submit',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicCnpjLookupRoute = ApiPublicCnpjLookupRouteImport.update({
+  id: '/api/public/cnpj-lookup',
+  path: '/api/public/cnpj-lookup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedPainelSegurancaRoute =
   AuthenticatedPainelSegurancaRouteImport.update({
     id: '/seguranca',
@@ -341,6 +347,7 @@ export interface FileRoutesByFullPath {
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
+  '/api/public/cnpj-lookup': typeof ApiPublicCnpjLookupRoute
   '/api/public/contact-submit': typeof ApiPublicContactSubmitRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/owner/': typeof AuthenticatedOwnerIndexRoute
@@ -387,6 +394,7 @@ export interface FileRoutesByTo {
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
+  '/api/public/cnpj-lookup': typeof ApiPublicCnpjLookupRoute
   '/api/public/contact-submit': typeof ApiPublicContactSubmitRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/owner': typeof AuthenticatedOwnerIndexRoute
@@ -437,6 +445,7 @@ export interface FileRoutesById {
   '/_authenticated/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/_authenticated/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/_authenticated/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
+  '/api/public/cnpj-lookup': typeof ApiPublicCnpjLookupRoute
   '/api/public/contact-submit': typeof ApiPublicContactSubmitRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/_authenticated/owner/': typeof AuthenticatedOwnerIndexRoute
@@ -487,6 +496,7 @@ export interface FileRouteTypes {
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
     | '/painel/seguranca'
+    | '/api/public/cnpj-lookup'
     | '/api/public/contact-submit'
     | '/lovable/email/suppression'
     | '/owner/'
@@ -533,6 +543,7 @@ export interface FileRouteTypes {
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
     | '/painel/seguranca'
+    | '/api/public/cnpj-lookup'
     | '/api/public/contact-submit'
     | '/lovable/email/suppression'
     | '/owner'
@@ -582,6 +593,7 @@ export interface FileRouteTypes {
     | '/_authenticated/painel/avaliacoes'
     | '/_authenticated/painel/configuracoes'
     | '/_authenticated/painel/seguranca'
+    | '/api/public/cnpj-lookup'
     | '/api/public/contact-submit'
     | '/lovable/email/suppression'
     | '/_authenticated/owner/'
@@ -618,6 +630,7 @@ export interface RootRouteChildren {
   PreviewTokenRoute: typeof PreviewTokenRoute
   SuporteRedefinir2faRoute: typeof SuporteRedefinir2faRoute
   UHandleRoute: typeof UHandleRoute
+  ApiPublicCnpjLookupRoute: typeof ApiPublicCnpjLookupRoute
   ApiPublicContactSubmitRoute: typeof ApiPublicContactSubmitRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiPublicHooksNotificationEmailRoute: typeof ApiPublicHooksNotificationEmailRoute
@@ -841,6 +854,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicContactSubmitRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/cnpj-lookup': {
+      id: '/api/public/cnpj-lookup'
+      path: '/api/public/cnpj-lookup'
+      fullPath: '/api/public/cnpj-lookup'
+      preLoaderRoute: typeof ApiPublicCnpjLookupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/painel/seguranca': {
       id: '/_authenticated/painel/seguranca'
       path: '/seguranca'
@@ -1054,6 +1074,7 @@ const rootRouteChildren: RootRouteChildren = {
   PreviewTokenRoute: PreviewTokenRoute,
   SuporteRedefinir2faRoute: SuporteRedefinir2faRoute,
   UHandleRoute: UHandleRoute,
+  ApiPublicCnpjLookupRoute: ApiPublicCnpjLookupRoute,
   ApiPublicContactSubmitRoute: ApiPublicContactSubmitRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiPublicHooksNotificationEmailRoute: ApiPublicHooksNotificationEmailRoute,

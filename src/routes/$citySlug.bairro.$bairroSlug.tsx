@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { PageShell } from "@/components/PageShell";
 import { CompanyCard } from "@/features/companies/components/CompanyCard";
-import { Breadcrumbs, breadcrumbJsonLd } from "@/components/Breadcrumbs";
+import { breadcrumbJsonLd } from "@/components/Breadcrumbs";
 import { NoCompanies } from "@/components/feedback/EmptyState";
 import { NotFoundState } from "@/components/feedback/NotFoundState";
 import { listCompaniesByNeighborhood } from "@/features/companies/functions";

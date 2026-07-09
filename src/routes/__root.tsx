@@ -21,6 +21,7 @@ import { ThemeProvider, themeNoFlashScript } from "@/components/ThemeProvider";
 import { AccessibilityBar } from "@/components/AccessibilityBar";
 import { VLibrasWidget } from "@/components/VLibrasWidget";
 import { PWARegister } from "@/components/PWARegister";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 
 function NotFoundComponent() {
   return (
@@ -180,6 +181,7 @@ function RootComponent() {
       <ThemeProvider>
         <AuthProvider>
           <PWARegister />
+          <GoogleAnalytics />
           <PushBootstrap />
           <PushPermissionBanner />
           <Outlet />

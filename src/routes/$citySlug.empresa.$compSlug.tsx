@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { Clock, Pencil } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
-import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { SimilarCompanies } from "@/features/companies/components/SimilarCompanies";
 import { HoursBlock } from "@/features/companies/components/HoursBlock";
 import { CompanyContactCard } from "@/features/companies/components/CompanyContactCard";
@@ -221,20 +220,7 @@ function CompanyPage() {
       </div>
 
       <div className="mx-auto max-w-5xl px-4">
-        <div className="pt-4">
-          <Breadcrumbs
-            items={[
-              { label: company.city ?? params.citySlug, to: `/${params.citySlug}` },
-              ...(company.categories?.name && company.categories?.slug
-                ? [{
-                    label: company.categories.name,
-                    to: `/${params.citySlug}/categoria/${company.categories.slug}`,
-                  }]
-                : []),
-              { label: company.name },
-            ]}
-          />
-        </div>
+
 
         <CompanyHeader
           company={company}

@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { PageShell } from "@/components/PageShell";
 import { CompanyCard } from "@/features/companies/components/CompanyCard";
-import { Breadcrumbs, breadcrumbJsonLd } from "@/components/Breadcrumbs";
+import { breadcrumbJsonLd } from "@/components/Breadcrumbs";
 import { NoCompanies } from "@/components/feedback/EmptyState";
 import { NotFoundState } from "@/components/feedback/NotFoundState";
 import { listCompaniesByNeighborhood } from "@/features/companies/functions";
@@ -78,13 +78,7 @@ function NeighborhoodPage() {
   return (
     <PageShell>
       <section className="mx-auto max-w-6xl px-4 py-10">
-        <Breadcrumbs
-          items={[
-            { label: city ?? citySlug, to: `/${citySlug}` },
-            { label: `Bairro ${neighborhood}` },
-          ]}
-        />
-        <h1 className="mt-3 font-display text-3xl font-bold">
+        <h1 className="font-display text-3xl font-bold">
           Empresas no bairro {neighborhood}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">

@@ -99,8 +99,93 @@ function sanitize(message: string): string {
   if (/permission denied|jwt|row-level security|relation .* does not exist/i.test(trimmed)) {
     return "Não foi possível concluir a operação.";
   }
+  const translated = translateAuthMessage(trimmed);
+  if (translated) return translated;
   // limita tamanho
   return trimmed.length > 200 ? `${trimmed.slice(0, 200)}…` : trimmed;
+}
+
+/**
+ * Traduz mensagens comuns da Supabase Auth (que vêm em inglês) para pt-BR.
+ * Retorna string vazia quando a mensagem não for reconhecida.
+ */
+function translateAuthMessage(message: string): string {
+
+  // Senha vazada (HaveIBeenPwned)
+  if (/password is known to be weak|pwned|has been leaked|found in a data breach/i.test(message)) {
+    return "Esta senha apareceu em vazamentos públicos de dados. Escolha uma senha diferente.";
+  }
+  // Senha muito curta — captura o número quando presente
+  const shortMatch = message.match(/password should be at least (\d+) characters?/i);
+  if (shortMatch) {
+    return `A senha precisa ter pelo menos ${shortMatch[1]} caracteres.`;
+  }
+  // Requisitos de composição
+  if (/password should contain at least one character of each/i.test(message)) {
+    const needs: string[] = [];
+    if (/abcdefghijklmnopqrstuvwxyz/i.test(message) && /ABCDEFGHIJKLMNOPQRSTUVWXYZ/.test(message)) {
+      needs.push("letras maiúsculas e minúsculas");
+    } else if (/abcdefghijklmnopqrstuvwxyz/i.test(message)) {
+      needs.push("letras");
+    }
+    if (/0123456789/.test(message)) needs.push("números");
+    if (/[!@#\$%\^&\*]/.test(message)) needs.push("símbolos");
+    const list = needs.length ? needs.join(", ") : "letras, números e símbolos";
+    return `A senha precisa conter ${list}.`;
+  }
+  // Fraca (regra genérica)
+  if (/password is too weak|weak password/i.test(message)) {
+    return "Senha muito fraca. Escolha uma senha mais forte.";
+  }
+  // E-mail já cadastrado
+  if (/user already registered|already been registered|email address .* has already/i.test(message)) {
+    return "Este e-mail já está cadastrado. Faça login ou recupere sua senha.";
+  }
+  // E-mail inválido
+  if (/unable to validate email address|invalid email|email address .* is invalid/i.test(message)) {
+    return "E-mail inválido. Verifique e tente novamente.";
+  }
+  // Credenciais inválidas (login)
+  if (/invalid login credentials|invalid credentials/i.test(message)) {
+    return "E-mail ou senha incorretos.";
+  }
+  // E-mail não confirmado
+  if (/email not confirmed|email address not confirmed/i.test(message)) {
+    return "Confirme seu e-mail antes de entrar. Verifique sua caixa de entrada.";
+  }
+  // Rate limit — captura segundos se houver
+  const rateMatch = message.match(/you can only request this after (\d+) seconds?/i);
+  if (rateMatch) {
+    return `Aguarde ${rateMatch[1]} segundos antes de tentar novamente.`;
+  }
+  if (/email rate limit exceeded|rate limit exceeded|too many requests/i.test(message)) {
+    return "Muitas tentativas em pouco tempo. Aguarde alguns minutos e tente novamente.";
+  }
+  // Sessão / token
+  if (/invalid refresh token|refresh token not found|jwt expired/i.test(message)) {
+    return "Sua sessão expirou. Entre novamente.";
+  }
+  // Novo password igual ao antigo
+  if (/new password should be different|same as the old password/i.test(message)) {
+    return "A nova senha precisa ser diferente da atual.";
+  }
+  // Signup desabilitado
+  if (/signups? (are )?not allowed|signup is disabled/i.test(message)) {
+    return "Novos cadastros estão temporariamente desativados.";
+  }
+  // Usuário não encontrado
+  if (/user not found/i.test(message)) {
+    return "Usuário não encontrado.";
+  }
+  // OAuth provider indisponível
+  if (/unsupported provider|provider is not enabled/i.test(message)) {
+    return "Este método de login não está disponível no momento.";
+  }
+  // Captcha
+  if (/captcha (verification )?(failed|protection)/i.test(message)) {
+    return "Verificação de captcha falhou. Tente novamente.";
+  }
+  return "";
 }
 
 /** Slugify com normalização de acentos e fallback seguro. */

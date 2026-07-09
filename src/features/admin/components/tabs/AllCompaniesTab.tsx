@@ -309,6 +309,17 @@ export function AllCompaniesTab() {
                             Visualizar
                           </Link>
                         </Button>
+                        <Button
+                          asChild
+                          size="sm"
+                          variant="outline"
+                          aria-label={`Editar cadastro de ${c.name}`}
+                        >
+                          <Link to="/owner/empresa/$id/editar" params={{ id: c.id }}>
+                            <Pencil className="mr-1 h-4 w-4" aria-hidden="true" />
+                            Editar
+                          </Link>
+                        </Button>
                         <ConfirmDestructive
                           trigger={
                             <Button

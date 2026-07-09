@@ -3,7 +3,7 @@ import { Loader2, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import { toast } from "sonner";
 import { lookupCnpj, type CnpjLookupResult } from "@/lib/cnpj.functions";
 import { maskPhone } from "@/lib/masks";
@@ -97,14 +97,16 @@ export function CnpjLookup({ onPrefill, onSkip }: Props) {
       </div>
 
       <div className="mt-4 flex items-center gap-2">
-        <Checkbox
+        <input
+          type="checkbox"
           id="no-cnpj"
           checked={noCnpj}
-          onCheckedChange={(v) => {
-            const checked = v === true;
+          onChange={(e) => {
+            const checked = e.target.checked;
             setNoCnpj(checked);
             if (checked) onSkip();
           }}
+          className="h-4 w-4 rounded border-border"
         />
         <Label htmlFor="no-cnpj" className="text-sm font-normal">
           Meu negócio ainda não tem um CNPJ (cadastrar manualmente)

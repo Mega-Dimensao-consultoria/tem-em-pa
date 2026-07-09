@@ -58,6 +58,12 @@ export function PendingCompaniesTab() {
                   Ver
                 </Link>
               </Button>
+              <Button asChild size="sm" variant="outline">
+                <Link to="/owner/empresa/$id/editar" params={{ id: c.id }}>
+                  <Pencil className="mr-1 h-3 w-3" />
+                  Editar
+                </Link>
+              </Button>
               <ConfirmDestructive
                 trigger={
                   <Button size="sm" variant="outline">

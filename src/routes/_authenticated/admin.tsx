@@ -16,6 +16,7 @@ import { TwoFaResetRequestsTab } from "@/features/admin/components/tabs/TwoFaRes
 import { PendingRemovalsTab } from "@/features/admin/components/tabs/PendingRemovalsTab";
 import { ContactMessagesTab } from "@/features/admin/components/tabs/ContactMessagesTab";
 import { SitePagesTab } from "@/features/admin/components/tabs/SitePagesTab";
+import { BlogSection } from "@/features/admin/components/tabs/BlogSection";
 import { AdminOverviewTab } from "@/features/admin/components/tabs/AdminOverviewTab";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -75,6 +76,7 @@ function AdminPage() {
             <TabsTrigger value="palavras">Palavras proibidas</TabsTrigger>
             <TabsTrigger value="usuarios">Usuários</TabsTrigger>
             <TabsTrigger value="paginas">Páginas</TabsTrigger>
+            <TabsTrigger value="blog">Blog</TabsTrigger>
             <TabsTrigger value="reset2fa">Reset 2FA</TabsTrigger>
             <TabsTrigger value="auditoria">Auditoria</TabsTrigger>
           </TabsList>
@@ -90,6 +92,7 @@ function AdminPage() {
           <TabsContent value="palavras"><BannedWordsTab /></TabsContent>
           <TabsContent value="usuarios"><UsersTab /></TabsContent>
           <TabsContent value="paginas"><SitePagesTab /></TabsContent>
+          <TabsContent value="blog"><BlogSection /></TabsContent>
           <TabsContent value="reset2fa"><TwoFaResetRequestsTab /></TabsContent>
           <TabsContent value="auditoria"><AuditLogTab /></TabsContent>
         </Tabs>

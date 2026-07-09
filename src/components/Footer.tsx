@@ -58,7 +58,7 @@ export function Footer() {
           <h4 id="footer-nav-heading" className="mb-3 text-sm font-semibold">Navegar</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li><Link to="/" className="hover:text-foreground">Cidades</Link></li>
-            
+            <li><Link to="/blog" className="hover:text-foreground">Blog</Link></li>
             <li><Link to="/cadastrar-empresa" className="hover:text-foreground">Cadastrar empresa</Link></li>
             <li><Link to="/sobre" className="hover:text-foreground">Sobre</Link></li>
             <li><Link to="/contato" className="hover:text-foreground">Contato</Link></li>

@@ -52,6 +52,12 @@ export function Header() {
           className="hidden items-center gap-1 lg:flex"
         >
           <Link
+            to="/blog"
+            className="rounded-full px-4 py-2 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground"
+          >
+            Blog
+          </Link>
+          <Link
             to="/sobre"
             className="rounded-full px-4 py-2 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground"
           >

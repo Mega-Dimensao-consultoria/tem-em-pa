@@ -16,10 +16,12 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as BuscarRouteImport } from './routes/buscar'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CitySlugRouteImport } from './routes/$citySlug'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as CitySlugIndexRouteImport } from './routes/$citySlug.index'
 import { Route as UHandleRouteImport } from './routes/u.$handle'
 import { Route as SuporteRedefinir2faRouteImport } from './routes/suporte.redefinir-2fa'
@@ -27,6 +29,7 @@ import { Route as PreviewTokenRouteImport } from './routes/preview.$token'
 import { Route as EventosIdRouteImport } from './routes/eventos.$id'
 import { Route as EmpresaIdRouteImport } from './routes/empresa.$id'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthTwoFactorRouteImport } from './routes/auth_.two-factor'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedNotificacoesRouteImport } from './routes/_authenticated/notificacoes'
@@ -38,6 +41,7 @@ import { Route as CitySlugBuscarRouteImport } from './routes/$citySlug.buscar'
 import { Route as AuthenticatedPainelIndexRouteImport } from './routes/_authenticated/painel.index'
 import { Route as AuthenticatedOwnerIndexRouteImport } from './routes/_authenticated/owner.index'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
+import { Route as BlogCategoriaSlugRouteImport } from './routes/blog.categoria.$slug'
 import { Route as ApiPublicContactSubmitRouteImport } from './routes/api/public/contact-submit'
 import { Route as AuthenticatedPainelSegurancaRouteImport } from './routes/_authenticated/painel.seguranca'
 import { Route as AuthenticatedPainelConfiguracoesRouteImport } from './routes/_authenticated/painel.configuracoes'
@@ -92,6 +96,11 @@ const BuscarRoute = BuscarRouteImport.update({
   path: '/buscar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -110,6 +119,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BlogRoute,
 } as any)
 const CitySlugIndexRoute = CitySlugIndexRouteImport.update({
   id: '/',
@@ -145,6 +159,11 @@ const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
   id: '/email/unsubscribe',
   path: '/email/unsubscribe',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
 } as any)
 const AuthTwoFactorRoute = AuthTwoFactorRouteImport.update({
   id: '/auth_/two-factor',
@@ -203,6 +222,11 @@ const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
   id: '/lovable/email/suppression',
   path: '/lovable/email/suppression',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BlogCategoriaSlugRoute = BlogCategoriaSlugRouteImport.update({
+  id: '/categoria/$slug',
+  path: '/categoria/$slug',
+  getParentRoute: () => BlogRoute,
 } as any)
 const ApiPublicContactSubmitRoute = ApiPublicContactSubmitRouteImport.update({
   id: '/api/public/contact-submit',
@@ -313,6 +337,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$citySlug': typeof CitySlugRouteWithChildren
   '/auth': typeof AuthRoute
+  '/blog': typeof BlogRouteWithChildren
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
   '/privacidade': typeof PrivacidadeRoute
@@ -328,6 +353,7 @@ export interface FileRoutesByFullPath {
   '/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/painel': typeof AuthenticatedPainelRouteWithChildren
   '/auth/two-factor': typeof AuthTwoFactorRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
@@ -335,6 +361,7 @@ export interface FileRoutesByFullPath {
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/u/$handle': typeof UHandleRoute
   '/$citySlug/': typeof CitySlugIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/$citySlug/bairro/$bairroSlug': typeof CitySlugBairroBairroSlugRoute
   '/$citySlug/categoria/$catSlug': typeof CitySlugCategoriaCatSlugRoute
   '/$citySlug/empresa/$compSlug': typeof CitySlugEmpresaCompSlugRoute
@@ -342,6 +369,7 @@ export interface FileRoutesByFullPath {
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
   '/api/public/contact-submit': typeof ApiPublicContactSubmitRoute
+  '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/owner/': typeof AuthenticatedOwnerIndexRoute
   '/painel/': typeof AuthenticatedPainelIndexRoute
@@ -374,6 +402,7 @@ export interface FileRoutesByTo {
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/auth/two-factor': typeof AuthTwoFactorRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
@@ -381,6 +410,7 @@ export interface FileRoutesByTo {
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/u/$handle': typeof UHandleRoute
   '/$citySlug': typeof CitySlugIndexRoute
+  '/blog': typeof BlogIndexRoute
   '/$citySlug/bairro/$bairroSlug': typeof CitySlugBairroBairroSlugRoute
   '/$citySlug/categoria/$catSlug': typeof CitySlugCategoriaCatSlugRoute
   '/$citySlug/empresa/$compSlug': typeof CitySlugEmpresaCompSlugRoute
@@ -388,6 +418,7 @@ export interface FileRoutesByTo {
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
   '/api/public/contact-submit': typeof ApiPublicContactSubmitRoute
+  '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/owner': typeof AuthenticatedOwnerIndexRoute
   '/painel': typeof AuthenticatedPainelIndexRoute
@@ -409,6 +440,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/$citySlug': typeof CitySlugRouteWithChildren
   '/auth': typeof AuthRoute
+  '/blog': typeof BlogRouteWithChildren
   '/buscar': typeof BuscarRoute
   '/contato': typeof ContatoRoute
   '/privacidade': typeof PrivacidadeRoute
@@ -424,6 +456,7 @@ export interface FileRoutesById {
   '/_authenticated/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/_authenticated/painel': typeof AuthenticatedPainelRouteWithChildren
   '/auth_/two-factor': typeof AuthTwoFactorRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
@@ -431,6 +464,7 @@ export interface FileRoutesById {
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/u/$handle': typeof UHandleRoute
   '/$citySlug/': typeof CitySlugIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/$citySlug/bairro/$bairroSlug': typeof CitySlugBairroBairroSlugRoute
   '/$citySlug/categoria/$catSlug': typeof CitySlugCategoriaCatSlugRoute
   '/$citySlug/empresa/$compSlug': typeof CitySlugEmpresaCompSlugRoute
@@ -438,6 +472,7 @@ export interface FileRoutesById {
   '/_authenticated/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/_authenticated/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
   '/api/public/contact-submit': typeof ApiPublicContactSubmitRoute
+  '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/_authenticated/owner/': typeof AuthenticatedOwnerIndexRoute
   '/_authenticated/painel/': typeof AuthenticatedPainelIndexRoute
@@ -459,6 +494,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$citySlug'
     | '/auth'
+    | '/blog'
     | '/buscar'
     | '/contato'
     | '/privacidade'
@@ -474,6 +510,7 @@ export interface FileRouteTypes {
     | '/notificacoes'
     | '/painel'
     | '/auth/two-factor'
+    | '/blog/$slug'
     | '/email/unsubscribe'
     | '/empresa/$id'
     | '/eventos/$id'
@@ -481,6 +518,7 @@ export interface FileRouteTypes {
     | '/suporte/redefinir-2fa'
     | '/u/$handle'
     | '/$citySlug/'
+    | '/blog/'
     | '/$citySlug/bairro/$bairroSlug'
     | '/$citySlug/categoria/$catSlug'
     | '/$citySlug/empresa/$compSlug'
@@ -488,6 +526,7 @@ export interface FileRouteTypes {
     | '/painel/configuracoes'
     | '/painel/seguranca'
     | '/api/public/contact-submit'
+    | '/blog/categoria/$slug'
     | '/lovable/email/suppression'
     | '/owner/'
     | '/painel/'
@@ -520,6 +559,7 @@ export interface FileRouteTypes {
     | '/favoritos'
     | '/notificacoes'
     | '/auth/two-factor'
+    | '/blog/$slug'
     | '/email/unsubscribe'
     | '/empresa/$id'
     | '/eventos/$id'
@@ -527,6 +567,7 @@ export interface FileRouteTypes {
     | '/suporte/redefinir-2fa'
     | '/u/$handle'
     | '/$citySlug'
+    | '/blog'
     | '/$citySlug/bairro/$bairroSlug'
     | '/$citySlug/categoria/$catSlug'
     | '/$citySlug/empresa/$compSlug'
@@ -534,6 +575,7 @@ export interface FileRouteTypes {
     | '/painel/configuracoes'
     | '/painel/seguranca'
     | '/api/public/contact-submit'
+    | '/blog/categoria/$slug'
     | '/lovable/email/suppression'
     | '/owner'
     | '/painel'
@@ -554,6 +596,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/$citySlug'
     | '/auth'
+    | '/blog'
     | '/buscar'
     | '/contato'
     | '/privacidade'
@@ -569,6 +612,7 @@ export interface FileRouteTypes {
     | '/_authenticated/notificacoes'
     | '/_authenticated/painel'
     | '/auth_/two-factor'
+    | '/blog/$slug'
     | '/email/unsubscribe'
     | '/empresa/$id'
     | '/eventos/$id'
@@ -576,6 +620,7 @@ export interface FileRouteTypes {
     | '/suporte/redefinir-2fa'
     | '/u/$handle'
     | '/$citySlug/'
+    | '/blog/'
     | '/$citySlug/bairro/$bairroSlug'
     | '/$citySlug/categoria/$catSlug'
     | '/$citySlug/empresa/$compSlug'
@@ -583,6 +628,7 @@ export interface FileRouteTypes {
     | '/_authenticated/painel/configuracoes'
     | '/_authenticated/painel/seguranca'
     | '/api/public/contact-submit'
+    | '/blog/categoria/$slug'
     | '/lovable/email/suppression'
     | '/_authenticated/owner/'
     | '/_authenticated/painel/'
@@ -604,6 +650,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   CitySlugRoute: typeof CitySlugRouteWithChildren
   AuthRoute: typeof AuthRoute
+  BlogRoute: typeof BlogRouteWithChildren
   BuscarRoute: typeof BuscarRoute
   ContatoRoute: typeof ContatoRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
@@ -680,6 +727,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BuscarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -707,6 +761,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/$citySlug/': {
       id: '/$citySlug/'
@@ -756,6 +817,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/email/unsubscribe'
       preLoaderRoute: typeof EmailUnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/auth_/two-factor': {
       id: '/auth_/two-factor'
@@ -833,6 +901,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/lovable/email/suppression'
       preLoaderRoute: typeof LovableEmailSuppressionRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/blog/categoria/$slug': {
+      id: '/blog/categoria/$slug'
+      path: '/categoria/$slug'
+      fullPath: '/blog/categoria/$slug'
+      preLoaderRoute: typeof BlogCategoriaSlugRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/api/public/contact-submit': {
       id: '/api/public/contact-submit'
@@ -1035,11 +1110,26 @@ const CitySlugRouteWithChildren = CitySlugRoute._addFileChildren(
   CitySlugRouteChildren,
 )
 
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
+  BlogCategoriaSlugRoute: typeof BlogCategoriaSlugRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
+  BlogCategoriaSlugRoute: BlogCategoriaSlugRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   CitySlugRoute: CitySlugRouteWithChildren,
   AuthRoute: AuthRoute,
+  BlogRoute: BlogRouteWithChildren,
   BuscarRoute: BuscarRoute,
   ContatoRoute: ContatoRoute,
   PrivacidadeRoute: PrivacidadeRoute,

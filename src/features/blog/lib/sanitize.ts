@@ -26,8 +26,3 @@ export function sanitizeHtml(input: string | null | undefined): string {
   });
 }
 
-/** Detecta se o conteúdo é HTML (novo formato) ou markdown legado. */
-export function isHtmlContent(content: string): boolean {
-  const trimmed = content.trimStart();
-  return trimmed.startsWith("<");
-}

@@ -116,6 +116,7 @@ export const Route = createFileRoute("/$citySlug/empresa/$compSlug")({
 function CompanyPage() {
   const params = Route.useParams();
   const { user, loading: authLoading } = useAuth();
+  const { isAdmin } = useRoles();
   const qc = useQueryClient();
   const { data: publicCompany } = useSuspenseQuery(publicBySlugQO(params));
 

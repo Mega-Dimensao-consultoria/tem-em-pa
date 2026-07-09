@@ -5,9 +5,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { toast } from "sonner";
-import { lookupCnpj, type CnpjLookupResult } from "@/lib/cnpj.functions";
 import { maskPhone } from "@/lib/masks";
 import type { CompanyFormValues } from "./CompanyForm";
+
+type CnpjLookupResult = {
+  razao_social: string;
+  nome_fantasia: string;
+  cep: string;
+  address: string;
+  number: string;
+  complement: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  phone: string;
+  email: string;
+  atividade: string;
+};
 
 function maskCnpj(v: string) {
   const d = v.replace(/\D/g, "").slice(0, 14);
@@ -47,7 +61,16 @@ export function CnpjLookup({ onPrefill, onSkip }: Props) {
   async function handleLookup() {
     setLoading(true);
     try {
-      const r = await lookupCnpj({ data: { cnpj } });
+      const response = await fetch("/api/public/cnpj-lookup", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ cnpj }),
+      });
+      const payload = (await response.json()) as CnpjLookupResult | { error?: string };
+      if (!response.ok) {
+        throw new Error("error" in payload && payload.error ? payload.error : "Falha ao consultar CNPJ");
+      }
+      const r = payload as CnpjLookupResult;
       onPrefill(toPrefill(r));
       toast.success("Dados preenchidos a partir do CNPJ");
     } catch (e) {

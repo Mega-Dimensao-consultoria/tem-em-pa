@@ -2,7 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PageShell } from "@/components/PageShell";
-import { MarkdownRenderer } from "@/features/content/components/MarkdownRenderer";
+import { HtmlContent } from "@/features/content/components/HtmlContent";
 import { Skeleton } from "@/components/ui/skeleton";
 import { NotFoundState } from "@/components/feedback/NotFoundState";
 import { ErrorState } from "@/components/feedback/ErrorState";
@@ -26,7 +26,7 @@ export const Route = createFileRoute("/preview/$token")({
 type Version = {
   slug: string;
   title: string;
-  content_md: string;
+  content_html: string;
   created_at: string;
 };
 
@@ -63,7 +63,7 @@ function PreviewPage() {
           Pré-visualização de rascunho — não publicado
         </div>
         <h1 className="mb-4 font-display text-3xl font-bold">{data.title}</h1>
-        <MarkdownRenderer content={data.content_md} />
+        <HtmlContent content={data.content_html} />
         <p className="mt-6 text-xs text-muted-foreground">
           Salvo em {new Date(data.created_at).toLocaleString("pt-BR")}
         </p>

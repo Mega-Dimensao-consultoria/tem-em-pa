@@ -7,7 +7,7 @@ export type SitePageVersion = {
   id: string
   slug: string
   title: string
-  content_md: string
+  content_html: string
   saved_by: string | null
   created_at: string
 }
@@ -21,7 +21,7 @@ export function useSitePageVersions(slug: string | null) {
     queryFn: async (): Promise<SitePageVersion[]> => {
       const { data, error } = await supabase
         .from('site_pages_versions')
-        .select('id, slug, title, content_md, saved_by, created_at')
+        .select('id, slug, title, content_html, saved_by, created_at')
         .eq('slug', slug!)
         .order('created_at', { ascending: false })
         .limit(50)
@@ -37,7 +37,7 @@ export function useRestoreSitePageVersion() {
     mutationFn: async (version: SitePageVersion) => {
       const { error } = await supabase
         .from('site_pages')
-        .update({ title: version.title, content_md: version.content_md })
+        .update({ title: version.title, content_html: version.content_html })
         .eq('slug', version.slug)
       if (error) throw error
       return version

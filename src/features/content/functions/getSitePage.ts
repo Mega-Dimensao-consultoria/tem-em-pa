@@ -6,7 +6,7 @@ import type { Database } from '@/integrations/supabase/types'
 export type SitePage = {
   slug: string
   title: string
-  content_md: string
+  content_html: string
   updated_at: string
 }
 
@@ -22,7 +22,7 @@ export const getSitePage = createServerFn({ method: 'GET' })
     )
     const { data: page, error } = await supabase
       .from('site_pages')
-      .select('slug, title, content_md, updated_at')
+      .select('slug, title, content_html, updated_at')
       .eq('slug', data.slug)
       .maybeSingle()
     if (error) throw new Error(error.message)

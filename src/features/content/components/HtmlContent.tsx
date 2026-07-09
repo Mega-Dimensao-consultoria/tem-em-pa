@@ -8,10 +8,9 @@ type Props = {
 
 /**
  * Renderiza conteúdo institucional a partir de HTML sanitizado
- * (produzido pelo editor WYSIWYG). O suporte a Markdown foi removido
- * após a migração de todos os registros para HTML.
+ * (produzido pelo editor WYSIWYG).
  */
-export function MarkdownRenderer({ content, className }: Props) {
+export function HtmlContent({ content, className }: Props) {
   return (
     <div
       className={cn(

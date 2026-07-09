@@ -1080,7 +1080,7 @@ export type Database = {
       site_pages: {
         Row: {
           city_id: string | null
-          content_md: string
+          content_html: string
           is_published: boolean
           slug: string
           title: string
@@ -1089,7 +1089,7 @@ export type Database = {
         }
         Insert: {
           city_id?: string | null
-          content_md: string
+          content_html: string
           is_published?: boolean
           slug: string
           title: string
@@ -1098,7 +1098,7 @@ export type Database = {
         }
         Update: {
           city_id?: string | null
-          content_md?: string
+          content_html?: string
           is_published?: boolean
           slug?: string
           title?: string
@@ -1117,7 +1117,7 @@ export type Database = {
       }
       site_pages_versions: {
         Row: {
-          content_md: string
+          content_html: string
           created_at: string
           id: string
           preview_token: string | null
@@ -1126,7 +1126,7 @@ export type Database = {
           title: string
         }
         Insert: {
-          content_md: string
+          content_html: string
           created_at?: string
           id?: string
           preview_token?: string | null
@@ -1135,7 +1135,7 @@ export type Database = {
           title: string
         }
         Update: {
-          content_md?: string
+          content_html?: string
           created_at?: string
           id?: string
           preview_token?: string | null
@@ -1406,7 +1406,7 @@ export type Database = {
       get_site_page_version_by_token: {
         Args: { _token: string }
         Returns: {
-          content_md: string
+          content_html: string
           created_at: string
           slug: string
           title: string

@@ -14,7 +14,7 @@ import {
   uploadSitePageImage,
   type SitePageVersion,
 } from '@/features/content/functions/sitePageVersions'
-import { MarkdownRenderer } from '@/features/content/components/MarkdownRenderer'
+import { HtmlContent } from '@/features/content/components/HtmlContent'
 import { RichEditor } from '@/features/content/components/RichEditor'
 import { Empty, Loading } from '../admin-ui'
 
@@ -71,10 +71,10 @@ export function SitePagesTab() {
 
 function PageEditor({ page }: { page: AdminSitePage }) {
   const [title, setTitle] = useState(page.title)
-  const [content, setContent] = useState(page.content_md)
+  const [content, setContent] = useState(page.content_html)
   const update = useUpdateSitePage()
 
-  const dirty = title !== page.title || content !== page.content_md
+  const dirty = title !== page.title || content !== page.content_html
 
   return (
     <section
@@ -91,7 +91,7 @@ function PageEditor({ page }: { page: AdminSitePage }) {
           </p>
         </div>
         <Button
-          onClick={() => update.mutate({ slug: page.slug, title, content_md: content })}
+          onClick={() => update.mutate({ slug: page.slug, title, content_html: content })}
           disabled={!dirty || update.isPending}
           size="sm"
         >
@@ -141,7 +141,7 @@ function PageEditor({ page }: { page: AdminSitePage }) {
         <TabsContent value="preview" className="mt-3">
           <div className="rounded-xl border border-border bg-background p-6">
             <h1 className="mb-4 font-display text-3xl font-bold">{title}</h1>
-            <MarkdownRenderer content={content} />
+            <HtmlContent content={content} />
           </div>
         </TabsContent>
 
@@ -150,7 +150,7 @@ function PageEditor({ page }: { page: AdminSitePage }) {
             slug={page.slug}
             onRestore={(v) => {
               setTitle(v.title)
-              setContent(v.content_md)
+              setContent(v.content_html)
             }}
           />
         </TabsContent>
@@ -228,7 +228,7 @@ function VersionHistory({
               </Button>
             </div>
             <h1 className="mb-3 font-display text-2xl font-bold">{previewing.title}</h1>
-            <MarkdownRenderer content={previewing.content_md} />
+            <HtmlContent content={previewing.content_html} />
           </>
         ) : (
           <p className="text-sm text-muted-foreground">

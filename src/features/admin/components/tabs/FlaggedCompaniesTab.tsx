@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { AlertTriangle, ExternalLink, Flag, ShieldQuestion } from "lucide-react";
+import { AlertTriangle, ExternalLink, Flag, Pencil, ShieldQuestion } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFlaggedCompanies } from "@/features/admin/functions/companies";
 import { CityFilterSelect } from "./CityFilterSelect";

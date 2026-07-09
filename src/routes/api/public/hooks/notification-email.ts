@@ -7,9 +7,9 @@ import {
   NOTIFICATION_TYPE_TO_TEMPLATE,
 } from '@/lib/email-templates/registry'
 
-const SITE_NAME = 'tem-em-pa'
-const SENDER_DOMAIN = 'notificacoes.sistemas.megadimensao.com.br'
-const FROM_DOMAIN = 'notificacoes.sistemas.megadimensao.com.br'
+const SITE_NAME = 'Tem na cidade'
+const SENDER_DOMAIN = 'notificacoes.temnacidade.com'
+const FROM_DOMAIN = 'notificacoes.temnacidade.com'
 const APP_URL = 'https://temnacidade.com'
 
 function generateToken(): string {

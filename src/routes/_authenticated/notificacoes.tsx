@@ -12,7 +12,7 @@ import { NoNotifications } from "@/components/feedback/EmptyState";
 export const Route = createFileRoute("/_authenticated/notificacoes")({
   component: NotificacoesPage,
   head: () => ({
-    meta: [{ title: "Notificações | Tem em PA" }],
+    meta: [{ title: "Notificações | Tem na cidade" }],
   }),
 });
 

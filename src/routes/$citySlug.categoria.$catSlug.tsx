@@ -68,13 +68,7 @@ function CategoryPage() {
   return (
     <PageShell>
       <section className="mx-auto max-w-6xl px-4 py-10">
-        <Breadcrumbs
-          items={[
-            { label: city!.name, to: `/${citySlug}` },
-            { label: name },
-          ]}
-        />
-        <h1 className="mt-3 font-display text-3xl font-bold capitalize">{name}</h1>
+        <h1 className="font-display text-3xl font-bold capitalize">{name}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           {data.length} empresa(s) de {name.toLowerCase()} em {city!.name}
         </p>

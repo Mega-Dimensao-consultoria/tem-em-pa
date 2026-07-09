@@ -15,7 +15,7 @@ import { CompanyProductsBlock } from "@/features/companies/components/CompanyPro
 import { CompanyMapCard } from "@/features/companies/components/CompanyMapCard";
 import { CompanyEventsBlock } from "@/features/events/components/CompanyEventsBlock";
 import { buildCompanyHead } from "@/features/companies/components/buildCompanyHead";
-import { useAuth } from "@/features/auth/use-auth";
+import { useAuth, useRoles } from "@/features/auth/use-auth";
 import { trackEvent } from "@/lib/track";
 import { getCompanyBySlug } from "@/features/companies/functions";
 import { getCompanyContact } from "@/features/companies/functions/contact";

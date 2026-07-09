@@ -31,8 +31,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         ];
 
         const nowIso = new Date().toISOString();
-        const [cities, cats, companies, events, hoods] = await Promise.all([
-          sb.from("cities").select("id, slug").eq("is_active", true),
+        const [cats, companies, events, hoods] = await Promise.all([
           sb.from("categories").select("slug"),
           sb
             .from("companies")

@@ -34,9 +34,9 @@ export const listCitiesByState = createServerFn({ method: "GET" })
   )
   .handler(async ({ data }): Promise<CityOption[]> => {
     const sb = publicClient();
-    const { data: rows, error } = await sb.rpc("list_active_cities_by_state", {
-      _uf: data.uf.toUpperCase(),
-    });
+    const { data: rows, error } = await (
+      sb.rpc as unknown as (fn: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>
+    )("list_active_cities_by_state", { _uf: data.uf.toUpperCase() });
     if (error) throw new Error(error.message);
     return (rows ?? []) as CityOption[];
   });

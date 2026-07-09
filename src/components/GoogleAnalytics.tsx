@@ -3,7 +3,7 @@ import { useRouterState } from "@tanstack/react-router";
 
 const GA_ID = "G-8F135T6RZ1";
 
-const EXCLUDED_PREFIXES = ["/admin", "/owner", "/painel"];
+const EXCLUDED_PREFIXES = ["/admin"];
 
 function isExcludedPath(pathname: string) {
   return EXCLUDED_PREFIXES.some(

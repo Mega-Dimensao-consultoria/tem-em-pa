@@ -38,11 +38,16 @@ export const Route = createFileRoute("/$citySlug/")({
   loader: async ({ context, params }) => {
     const city = await context.queryClient.ensureQueryData(cityBySlugQO(params.citySlug));
     if (!city) return null;
-    await Promise.all([
+    const [, featured] = await Promise.all([
       context.queryClient.ensureQueryData(categoriesQO),
       context.queryClient.ensureQueryData(featuredByCityQO(city.id)),
     ]);
-    return city;
+    let hasCompanies = featured.length > 0;
+    if (!hasCompanies) {
+      const recent = await context.queryClient.ensureQueryData(recentByCityQO(city.id, 1));
+      hasCompanies = (recent?.total ?? 0) > 0;
+    }
+    return { ...city, hasCompanies };
   },
   head: ({ params, loaderData }) => {
     const cityName = loaderData?.name ?? params.citySlug;
@@ -54,10 +59,12 @@ export const Route = createFileRoute("/$citySlug/")({
       loaderData?.hero_subheadline ??
       `Restaurantes, mercados, serviços e comércio local em ${cityName}. Avaliações reais e contato direto.`;
     const url = `${BASE}/${params.citySlug}`;
+    const noindex = loaderData && loaderData.hasCompanies === false;
     return {
       meta: [
         { title },
         { name: "description", content: desc },
+        ...(noindex ? [{ name: "robots", content: "noindex, follow" }] : []),
         { property: "og:title", content: title },
         { property: "og:description", content: desc },
         { property: "og:url", content: url },
@@ -71,6 +78,7 @@ export const Route = createFileRoute("/$citySlug/")({
   },
   component: CityHome,
 });
+
 
 function CityHome() {
   const { citySlug } = Route.useParams();

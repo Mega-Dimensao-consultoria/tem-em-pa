@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { PageShell } from '@/components/PageShell'
-import { MarkdownRenderer } from '@/features/content/components/MarkdownRenderer'
+import { HtmlContent } from '@/features/content/components/HtmlContent'
 import { getSitePage } from '@/features/content/functions/getSitePage'
 
 const CANONICAL = 'https://temnacidade.com/sobre'
@@ -36,7 +36,7 @@ function SobrePage() {
           {page?.title ?? 'Sobre'}
         </h1>
         <div className="mt-6">
-          <MarkdownRenderer content={page?.content_md ?? ''} />
+          <HtmlContent content={page?.content_html ?? ''} />
         </div>
       </section>
     </PageShell>

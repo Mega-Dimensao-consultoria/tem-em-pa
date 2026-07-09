@@ -186,10 +186,6 @@ function translateAuthMessage(message: string): string {
   if (/captcha (verification )?(failed|protection)/i.test(message)) {
     return "Verificação de captcha falhou. Tente novamente.";
   }
-  // Fallback: mensagem inglesa genérica não reconhecida
-  if (/^[\x00-\x7F\s.,'"!?()-]+$/.test(message) && /[a-zA-Z]/.test(message) && m === message) {
-    // string puramente ASCII e minúscula original — provavelmente inglesa; deixa passar
-  }
   return "";
 }
 

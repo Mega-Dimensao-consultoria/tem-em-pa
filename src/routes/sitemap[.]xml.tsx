@@ -127,6 +127,29 @@ export const Route = createFileRoute("/sitemap.xml")({
           entries.push({ path: `/${s}/bairro/${b}`, changefreq: "weekly", priority: "0.6" });
         }
 
+        // Blog: categorias ativas + cada post publicado.
+        for (const row of (blogCats.data ?? []) as Array<{ slug: string | null }>) {
+          if (!row.slug) continue;
+          entries.push({
+            path: `/blog/categoria/${row.slug}`,
+            changefreq: "weekly",
+            priority: "0.6",
+          });
+        }
+        for (const row of (blogPosts.data ?? []) as Array<{
+          slug: string | null;
+          updated_at: string | null;
+        }>) {
+          if (!row.slug) continue;
+          entries.push({
+            path: `/blog/${row.slug}`,
+            lastmod: row.updated_at ? new Date(row.updated_at).toISOString().slice(0, 10) : undefined,
+            changefreq: "monthly",
+            priority: "0.7",
+          });
+        }
+
+
         const urls = entries.map((e) =>
           [
             `  <url>`,

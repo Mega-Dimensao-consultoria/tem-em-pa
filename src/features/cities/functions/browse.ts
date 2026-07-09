@@ -18,7 +18,7 @@ export type CityOption = { id: string; slug: string; name: string; state: string
 export const listStates = createServerFn({ method: "GET" }).handler(
   async (): Promise<StateOption[]> => {
     const sb = publicClient();
-    const { data, error } = await sb.rpc("list_active_states");
+    const { data, error } = await (sb.rpc as unknown as (fn: string) => Promise<{ data: unknown; error: { message: string } | null }>)("list_active_states");
     if (error) throw new Error(error.message);
     return ((data ?? []) as Array<{ uf: string; city_count: number }>).map((r) => ({
       uf: r.uf,

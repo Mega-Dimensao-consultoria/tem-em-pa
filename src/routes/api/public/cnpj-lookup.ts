@@ -34,7 +34,12 @@ export const Route = createFileRoute("/api/public/cnpj-lookup")({
 
         const response = await fetch(
           `https://brasilapi.com.br/api/cnpj/v1/${parsed.data.cnpj}`,
-          { headers: { accept: "application/json" } },
+          {
+            headers: {
+              accept: "application/json",
+              "user-agent": "TemNaCidade/1.0 contato@temnacidade.com",
+            },
+          },
         );
 
         if (response.status === 404) {

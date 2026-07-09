@@ -1326,6 +1326,22 @@ export type Database = {
         }
         Returns: boolean
       }
+      list_active_cities_by_state: {
+        Args: { _uf: string }
+        Returns: {
+          id: string
+          name: string
+          slug: string
+          state: string
+        }[]
+      }
+      list_active_states: {
+        Args: never
+        Returns: {
+          city_count: number
+          uf: string
+        }[]
+      }
       move_to_dlq: {
         Args: {
           dlq_name: string

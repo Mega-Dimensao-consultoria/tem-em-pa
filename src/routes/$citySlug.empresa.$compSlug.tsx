@@ -221,20 +221,7 @@ function CompanyPage() {
       </div>
 
       <div className="mx-auto max-w-5xl px-4">
-        <div className="pt-4">
-          <Breadcrumbs
-            items={[
-              { label: company.city ?? params.citySlug, to: `/${params.citySlug}` },
-              ...(company.categories?.name && company.categories?.slug
-                ? [{
-                    label: company.categories.name,
-                    to: `/${params.citySlug}/categoria/${company.categories.slug}`,
-                  }]
-                : []),
-              { label: company.name },
-            ]}
-          />
-        </div>
+
 
         <CompanyHeader
           company={company}

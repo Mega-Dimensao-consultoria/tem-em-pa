@@ -110,6 +110,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           const s = row.cities?.slug;
           const b = row.slug;
           if (!s || !b) continue;
+          if (!citySlugsWithCompanies.has(s)) continue;
           const key = `${s}/${b}`;
           if (seen.has(key)) continue;
           seen.add(key);

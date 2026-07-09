@@ -91,11 +91,12 @@ export function BlogCategoriesTab() {
                         description={`A categoria "${c.name}" será excluída. Posts associados ficam sem categoria.`}
                         confirmText="Excluir"
                         onConfirm={() => remove.mutate(c.id)}
-                      >
-                        <Button size="icon" variant="ghost" aria-label={`Excluir ${c.name}`}>
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </ConfirmDestructive>
+                        trigger={
+                          <Button size="icon" variant="ghost" aria-label={`Excluir ${c.name}`}>
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
+                        }
+                      />
                     </div>
                   </td>
                 </tr>

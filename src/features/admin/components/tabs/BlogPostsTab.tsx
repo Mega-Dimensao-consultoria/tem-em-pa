@@ -174,11 +174,12 @@ export function BlogPostsTab() {
                         description={`O post "${p.title}" será excluído permanentemente.`}
                         confirmText="Excluir"
                         onConfirm={() => remove.mutate(p.id)}
-                      >
-                        <Button size="icon" variant="ghost" aria-label={`Excluir ${p.title}`}>
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </ConfirmDestructive>
+                        trigger={
+                          <Button size="icon" variant="ghost" aria-label={`Excluir ${p.title}`}>
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
+                        }
+                      />
                     </div>
                   </td>
                 </tr>

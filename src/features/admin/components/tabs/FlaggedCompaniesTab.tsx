@@ -73,7 +73,7 @@ export function FlaggedCompaniesTab() {
                   </div>
                 </td>
                 <td className="px-4 py-3">
-                  <div className="flex justify-end">
+                  <div className="flex flex-wrap justify-end gap-2">
                     <Button
                       asChild
                       size="sm"
@@ -88,6 +88,17 @@ export function FlaggedCompaniesTab() {
                       >
                         <ExternalLink className="mr-1 h-4 w-4" aria-hidden="true" />
                         Visualizar
+                      </Link>
+                    </Button>
+                    <Button
+                      asChild
+                      size="sm"
+                      variant="outline"
+                      aria-label={`Editar ${c.name}`}
+                    >
+                      <Link to="/owner/empresa/$id/editar" params={{ id: c.id }}>
+                        <Pencil className="mr-1 h-4 w-4" aria-hidden="true" />
+                        Editar
                       </Link>
                     </Button>
                   </div>

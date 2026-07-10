@@ -15,7 +15,13 @@ const searchSchema = z.object({ redirect: z.string().optional() });
 
 export const Route = createFileRoute("/auth_/two-factor")({
   validateSearch: searchSchema,
-  head: () => ({ meta: [{ title: "Verificação em duas etapas — Tem na cidade" }] }),
+  head: () => ({
+    meta: [
+      { title: "Verificação em duas etapas — Tem na cidade" },
+      { name: "description", content: "Informe o código do aplicativo autenticador para concluir o login com 2FA no Tem na cidade." },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: TwoFactorPage,
 });
 

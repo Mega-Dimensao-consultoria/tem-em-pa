@@ -24,7 +24,13 @@ import {
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/cadastrar-empresa")({
-  head: () => ({ meta: [{ title: "Cadastrar empresa — Tem na cidade" }] }),
+  head: () => ({
+    meta: [
+      { title: "Cadastrar empresa gratuitamente — Tem na cidade" },
+      { name: "description", content: "Cadastre seu negócio no Tem na cidade em minutos: adicione fotos, horários, endereço e produtos para ser encontrado no guia local da sua cidade." },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: CadastrarPage,
 });
 

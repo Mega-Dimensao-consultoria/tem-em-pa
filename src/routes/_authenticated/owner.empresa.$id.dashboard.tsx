@@ -40,7 +40,13 @@ import {
 import { exportMetricsCsv, exportReviewsCsv } from "@/features/owner/functions/exportCsv";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard — Tem na cidade" }] }),
+  head: () => ({
+    meta: [
+      { title: "Painel da empresa e métricas — Tem na cidade" },
+      { name: "description", content: "Acompanhe visualizações, contatos, avaliações e desempenho da sua empresa no Tem na cidade em tempo real." },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: DashboardPage,
 });
 

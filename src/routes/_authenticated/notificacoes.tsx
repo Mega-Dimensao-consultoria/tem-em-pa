@@ -12,7 +12,11 @@ import { NoNotifications } from "@/components/feedback/EmptyState";
 export const Route = createFileRoute("/_authenticated/notificacoes")({
   component: NotificacoesPage,
   head: () => ({
-    meta: [{ title: "Notificações | Tem na cidade" }],
+    meta: [
+      { title: "Minhas notificações — Tem na cidade" },
+      { name: "description", content: "Veja alertas de novas avaliações, respostas do proprietário e novidades das empresas que você acompanha no Tem na cidade." },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
   }),
 });
 

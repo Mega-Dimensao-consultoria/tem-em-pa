@@ -14,7 +14,13 @@ import { CompanyStatusBadge } from "@/features/companies/components/CompanyStatu
 import { useMyCompanies } from "@/features/owner/hooks/useMyCompanies";
 
 export const Route = createFileRoute("/_authenticated/painel/")({
-  head: () => ({ meta: [{ title: "Meu painel — Tem na cidade" }] }),
+  head: () => ({
+    meta: [
+      { title: "Visão geral do painel — Tem na cidade" },
+      { name: "description", content: "Atalhos para suas empresas cadastradas, avaliações, favoritos, notificações, segurança e configurações da conta no Tem na cidade." },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: PainelIndex,
 });
 

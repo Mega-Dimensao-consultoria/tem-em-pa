@@ -13,7 +13,13 @@ import { PushSettingsCard } from "@/features/notifications/components/PushSettin
 import { SecuritySection } from "@/features/security/components/SecuritySection";
 
 export const Route = createFileRoute("/_authenticated/painel/configuracoes")({
-  head: () => ({ meta: [{ title: "Configurações — Tem na cidade" }] }),
+  head: () => ({
+    meta: [
+      { title: "Configurações da conta — Tem na cidade" },
+      { name: "description", content: "Atualize seu perfil, e-mail, senha e preferências de notificação da sua conta no Tem na cidade." },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: Configuracoes,
 });
 

@@ -8,7 +8,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useMyCompanies } from "@/features/owner/hooks/useMyCompanies";
 
 export const Route = createFileRoute("/_authenticated/owner/")({
-  head: () => ({ meta: [{ title: "Painel do proprietário — Tem na cidade" }] }),
+  head: () => ({
+    meta: [
+      { title: "Minhas empresas cadastradas — Tem na cidade" },
+      { name: "description", content: "Gerencie as empresas que você cadastrou no Tem na cidade: edite dados, produtos, eventos e acompanhe métricas de visualização." },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: OwnerPage,
 });
 

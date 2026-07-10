@@ -10,7 +10,13 @@ import { Logo } from "@/components/Logo";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/reset-password")({
-  head: () => ({ meta: [{ title: "Redefinir senha — Tem na cidade" }] }),
+  head: () => ({
+    meta: [
+      { title: "Redefinir senha da conta — Tem na cidade" },
+      { name: "description", content: "Crie uma nova senha para sua conta no Tem na cidade e recupere o acesso ao painel de usuário e às suas empresas." },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: ResetPasswordPage,
 });
 

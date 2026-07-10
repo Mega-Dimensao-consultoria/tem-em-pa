@@ -34,7 +34,12 @@ export function CompanyCard({ company }: { company: Company }) {
       <Link {...linkProps} className="flex flex-col">
         <div className="relative aspect-[16/9] overflow-hidden bg-muted">
           {company.cover_url ? (
-            <img src={company.cover_url} alt={company.name} className="h-full w-full object-cover transition group-hover:scale-105" loading="lazy" />
+            <img
+              src={company.cover_url}
+              alt={`Foto de capa da empresa ${company.name}${company.city ? ` em ${company.city}` : ""}`}
+              className="h-full w-full object-cover transition group-hover:scale-105"
+              loading="lazy"
+            />
           ) : (
             <div className="h-full w-full bg-hero-gradient opacity-90" />
           )}

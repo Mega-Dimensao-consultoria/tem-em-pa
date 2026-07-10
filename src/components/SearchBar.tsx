@@ -31,18 +31,26 @@ export function SearchBar({
   const heights = size === "lg" ? "h-14 text-base" : "h-11 text-sm";
 
   return (
-    <form onSubmit={onSubmit} className="w-full">
+    <form onSubmit={onSubmit} className="w-full" role="search" aria-label="Buscar no Tem na cidade">
       <div className={`group relative flex w-full items-center rounded-full border border-border bg-card shadow-soft transition focus-within:border-primary focus-within:shadow-elegant ${heights}`}>
-        <Search className="ml-5 h-5 w-5 text-muted-foreground" />
+        <label htmlFor="site-search-input" className="sr-only">
+          Buscar empresas, produtos ou serviços
+        </label>
+        <Search className="ml-5 h-5 w-5 text-muted-foreground" aria-hidden="true" />
         <input
+          id="site-search-input"
+          type="search"
+          name="q"
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder={placeholder ?? "Buscar empresas, produtos ou serviços…"}
+          aria-label="Buscar empresas, produtos ou serviços"
           className="flex-1 bg-transparent px-3 outline-none placeholder:text-muted-foreground"
           maxLength={120}
         />
         <button
           type="submit"
+          aria-label="Buscar"
           className="mr-1.5 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
         >
           Buscar

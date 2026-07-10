@@ -13,7 +13,13 @@ import { defaultHours, type HourRow } from "@/features/companies/components/Hour
 import { CompanyDetailSkeleton } from "@/components/feedback/Skeletons";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/editar")({
-  head: () => ({ meta: [{ title: "Editar empresa — Tem na cidade" }] }),
+  head: () => ({
+    meta: [
+      { title: "Editar dados da empresa — Tem na cidade" },
+      { name: "description", content: "Atualize nome, endereço, horários, categoria, fotos e descrição da sua empresa cadastrada no Tem na cidade." },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: EditarEmpresa,
 });
 

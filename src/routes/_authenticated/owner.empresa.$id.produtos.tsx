@@ -15,7 +15,13 @@ import { ProductList } from "@/features/products/components/ProductList";
 import { queryKeys } from "@/lib/queryKeys";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/produtos")({
-  head: () => ({ meta: [{ title: "Produtos — Tem na cidade" }] }),
+  head: () => ({
+    meta: [
+      { title: "Produtos e serviços da empresa — Tem na cidade" },
+      { name: "description", content: "Cadastre e organize o catálogo de produtos e serviços da sua empresa exibido na ficha pública do Tem na cidade." },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: ProductsPage,
 });
 

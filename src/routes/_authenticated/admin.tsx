@@ -21,7 +21,13 @@ import { AdminOverviewTab } from "@/features/admin/components/tabs/AdminOverview
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  head: () => ({ meta: [{ title: "Admin — Tem na cidade" }] }),
+  head: () => ({
+    meta: [
+      { title: "Painel Administrativo — Tem na cidade" },
+      { name: "description", content: "Área restrita da equipe Tem na cidade para moderar empresas, avaliações, denúncias e usuários do guia local." },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: AdminPage,
 });
 

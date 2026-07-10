@@ -4,7 +4,13 @@ import { PageShell } from "@/components/PageShell";
 import { SecuritySection } from "@/features/security/components/SecuritySection";
 
 export const Route = createFileRoute("/_authenticated/painel/seguranca")({
-  head: () => ({ meta: [{ title: "Segurança — Tem na cidade" }] }),
+  head: () => ({
+    meta: [
+      { title: "Segurança da conta e 2FA — Tem na cidade" },
+      { name: "description", content: "Ative a verificação em duas etapas, gerencie sessões e reforce a segurança da sua conta no Tem na cidade." },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: PainelSeguranca,
 });
 

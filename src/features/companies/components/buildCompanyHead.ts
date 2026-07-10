@@ -114,7 +114,7 @@ export function buildCompanyHead(loaderData: AnyCompany, params: CompanyHeadPara
       { property: "og:title", content: `${name}${cityLabel ? " — " + cityLabel : ""} | Tem na cidade` },
       { property: "og:description", content: desc },
       { property: "og:url", content: url },
-      { property: "og:type", content: "business.business" },
+      { property: "og:type", content: "website" },
       ...(img
         ? [
             { property: "og:image", content: img },

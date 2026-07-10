@@ -21,7 +21,7 @@ export function PostCard({ post }: { post: BlogPostWithCategory }) {
         {post.cover_image_url ? (
           <img
             src={post.cover_image_url}
-            alt=""
+            alt={`Imagem de capa do post: ${post.title}`}
             loading="lazy"
             className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
           />

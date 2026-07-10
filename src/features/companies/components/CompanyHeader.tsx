@@ -34,7 +34,11 @@ export function CompanyHeader({
     <div className="mt-4 flex flex-col gap-4 rounded-3xl border border-border bg-card p-6 shadow-soft md:flex-row md:items-end">
       <div className="h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-border bg-background">
         {company.logo_url ? (
-          <img src={company.logo_url} alt="" className="h-full w-full object-cover" />
+          <img
+            src={company.logo_url}
+            alt={`Logotipo de ${company.name}`}
+            className="h-full w-full object-cover"
+          />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-muted text-2xl font-bold text-muted-foreground">
             {company.name.charAt(0)}

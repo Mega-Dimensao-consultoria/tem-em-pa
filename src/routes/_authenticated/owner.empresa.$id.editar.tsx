@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Search } from "lucide-react";
 import { CompanyForm, emptyCompanyForm, type CompanyFormValues } from "@/features/companies/components/CompanyForm";
 import { defaultHours, type HourRow } from "@/features/companies/components/HoursEditor";
 import { CompanyDetailSkeleton } from "@/components/feedback/Skeletons";
+import { SeoOverrideDialog } from "@/features/seo/components/SeoOverrideDialog";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/editar")({
   head: () => ({

@@ -49,7 +49,7 @@ export const listPromotedCompanies = createServerFn({ method: "GET" })
   .handler(async ({ data }): Promise<PromotedCompany[]> => {
     const sb = publicClient();
     const { data: rows, error } = await sb.rpc("list_promoted_companies", {
-      _city_id: data?.cityId ?? null,
+      _city_id: data?.cityId ?? undefined,
       _limit: data?.limit ?? 10,
     });
     if (error) throw new Error(error.message);

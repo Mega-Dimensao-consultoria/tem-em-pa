@@ -13,6 +13,7 @@ export const Route = createFileRoute('/privacidade')({
       fallbackTitle: `${loaderData?.title ?? 'Política de Privacidade'} — Tem na minha cidade`,
       fallbackDescription:
         'Política de Privacidade do Tem na minha cidade: como coletamos, usamos e protegemos seus dados (LGPD).',
+      fallbackSchemaType: 'WebPage',
       override: loaderData ?? undefined,
     })
     return buildSeoHead({ seo })

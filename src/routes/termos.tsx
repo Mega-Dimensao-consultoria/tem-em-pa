@@ -13,6 +13,7 @@ export const Route = createFileRoute('/termos')({
       fallbackTitle: `${loaderData?.title ?? 'Termos de Uso'} — Tem na minha cidade`,
       fallbackDescription:
         'Termos de Uso do Tem na minha cidade: regras da plataforma, direitos e deveres de usuários e cadastros.',
+      fallbackSchemaType: 'WebPage',
       override: loaderData ?? undefined,
     })
     return buildSeoHead({ seo })

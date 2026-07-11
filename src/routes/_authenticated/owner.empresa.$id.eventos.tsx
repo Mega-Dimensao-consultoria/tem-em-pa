@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { ArrowLeft, Plus, Pencil, Trash2, Calendar, MapPin } from 'lucide-react'
+import { ArrowLeft, Plus, Pencil, Trash2, Calendar, MapPin, Search } from 'lucide-react'
 import { PageShell } from '@/components/PageShell'
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/integrations/supabase/client'
@@ -12,9 +12,11 @@ import { EmptyState } from '@/components/feedback/EmptyState'
 import {
   useOwnerCityEvents,
   useDeleteCityEvent,
+  cityEventsKeys,
   type CityEvent,
 } from '@/features/events/hooks/useCityEvents'
 import { EventFormDialog } from '@/features/events/components/EventFormDialog'
+import { SeoOverrideDialog } from '@/features/seo/components/SeoOverrideDialog'
 
 export const Route = createFileRoute('/_authenticated/owner/empresa/$id/eventos')({
   head: () => ({

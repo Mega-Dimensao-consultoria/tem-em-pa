@@ -181,67 +181,18 @@ export function SeoFieldsSection({
       {f.ogImage && (
         <div>
           <Label>Imagem social (og:image)</Label>
-          <div className="mt-1 flex flex-wrap items-start gap-3">
-            {value.og_image_url ? (
-              <div className="relative">
-                <img
-                  src={value.og_image_url}
-                  alt="Prévia og:image"
-                  className="h-24 w-40 rounded-md border border-border object-cover"
-                />
-                <button
-                  type="button"
-                  onClick={() => onChange({ og_image_url: null })}
-                  className="absolute -right-2 -top-2 rounded-full bg-background p-1 shadow ring-1 ring-border"
-                  aria-label="Remover imagem"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </div>
-            ) : (
-              <div className="flex h-24 w-40 items-center justify-center rounded-md border border-dashed border-border text-muted-foreground">
-                <ImageIcon className="h-6 w-6" />
-              </div>
-            )}
-            <div className="flex flex-1 flex-col gap-2">
-              <Input
-                value={value.og_image_url ?? ""}
-                onChange={(e) => onChange({ og_image_url: e.target.value || null })}
-                placeholder="Cole uma URL ou envie um arquivo"
-              />
-              {uploadImage && (
-                <>
-                  <input
-                    ref={fileRef}
-                    type="file"
-                    accept="image/*"
-                    hidden
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) void handleFile(file);
-                      e.target.value = "";
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => fileRef.current?.click()}
-                    disabled={uploading}
-                  >
-                    {uploading ? (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    ) : (
-                      <Upload className="mr-2 h-4 w-4" />
-                    )}
-                    Enviar imagem
-                  </Button>
-                </>
-              )}
-            </div>
+          <div className="mt-1">
+            <AttachmentPicker
+              value={value.og_image_url}
+              onChange={(url) => onChange({ og_image_url: url })}
+              upload={doUpload}
+              remove={doRemove}
+              label="Enviar imagem"
+            />
           </div>
         </div>
       )}
+
 
       {f.canonical && (
         <div>

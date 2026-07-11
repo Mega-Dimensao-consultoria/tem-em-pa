@@ -6,6 +6,7 @@ import { PageShell } from "@/components/PageShell";
 import { SearchBar } from "@/components/SearchBar";
 import { CategoryCard } from "@/features/companies/components/CategoryCard";
 import { CompanyCard } from "@/features/companies/components/CompanyCard";
+import { PromotedCompaniesSection } from "@/features/promotions/components/PromotedCompaniesSection";
 import { NoCompanies } from "@/components/feedback/EmptyState";
 import { listCategories } from "@/features/companies/functions/categories";
 import { listFeaturedCompanies, listRecentCompaniesByCity } from "@/features/companies/functions";

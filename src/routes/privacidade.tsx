@@ -2,31 +2,21 @@ import { createFileRoute } from '@tanstack/react-router'
 import { PageShell } from '@/components/PageShell'
 import { HtmlContent } from '@/features/content/components/HtmlContent'
 import { getSitePage } from '@/features/content/functions/getSitePage'
-
-const CANONICAL = 'https://www.temnaminhacidade.com.br/privacidade'
+import { resolveSeo, buildSeoHead, SEO_SITE_URL } from '@/lib/seo/render'
 
 export const Route = createFileRoute('/privacidade')({
   loader: () => getSitePage({ data: { slug: 'privacidade' } }),
-  head: ({ loaderData }) => ({
-    meta: [
-      { title: `${loaderData?.title ?? 'Política de Privacidade'} — Tem na minha cidade` },
-      {
-        name: 'description',
-        content:
-          'Política de Privacidade do Tem na minha cidade: como coletamos, usamos e protegemos seus dados (LGPD).',
-      },
-      {
-        property: 'og:title',
-        content: `${loaderData?.title ?? 'Política de Privacidade'} — Tem na minha cidade`,
-      },
-      {
-        property: 'og:description',
-        content: 'Como tratamos seus dados no Tem na minha cidade (LGPD).',
-      },
-      { property: 'og:url', content: CANONICAL },
-    ],
-    links: [{ rel: 'canonical', href: CANONICAL }],
-  }),
+  head: ({ loaderData }) => {
+    const url = `${SEO_SITE_URL}/privacidade`
+    const seo = resolveSeo({
+      url,
+      fallbackTitle: `${loaderData?.title ?? 'Política de Privacidade'} — Tem na minha cidade`,
+      fallbackDescription:
+        'Política de Privacidade do Tem na minha cidade: como coletamos, usamos e protegemos seus dados (LGPD).',
+      override: loaderData ?? undefined,
+    })
+    return buildSeoHead({ seo })
+  },
   component: PrivacidadePage,
 })
 

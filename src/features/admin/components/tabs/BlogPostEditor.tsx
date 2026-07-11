@@ -46,6 +46,13 @@ export function BlogPostEditor({ postId, onClose }: Props) {
   const [status, setStatus] = useState<BlogStatus>("draft");
   const [publishedAt, setPublishedAt] = useState<string>("");
   const [coverUploading, setCoverUploading] = useState(false);
+  const [seo, setSeo] = useState<SeoOverride>({
+    seo_title: null,
+    seo_description: null,
+    og_image_url: null,
+    canonical_url: null,
+    noindex: false,
+  });
 
   useEffect(() => {
     if (!existing) return;
@@ -58,6 +65,13 @@ export function BlogPostEditor({ postId, onClose }: Props) {
     setCategoryId(existing.category_id);
     setStatus(existing.status);
     setPublishedAt(existing.published_at ? existing.published_at.slice(0, 16) : "");
+    setSeo({
+      seo_title: existing.seo_title,
+      seo_description: existing.seo_description,
+      og_image_url: existing.og_image_url,
+      canonical_url: existing.canonical_url,
+      noindex: existing.noindex,
+    });
   }, [existing]);
 
   async function handleCoverFile(file: File) {
@@ -94,10 +108,16 @@ export function BlogPostEditor({ postId, onClose }: Props) {
         category_id: categoryId,
         status: finalStatus,
         published_at: publishedAt ? new Date(publishedAt).toISOString() : null,
+        seo_title: seo.seo_title ?? null,
+        seo_description: seo.seo_description ?? null,
+        og_image_url: seo.og_image_url ?? null,
+        canonical_url: seo.canonical_url ?? null,
+        noindex: !!seo.noindex,
       },
       { onSuccess: () => onClose() },
     );
   }
+
 
   if (postId && isLoading) {
     return (

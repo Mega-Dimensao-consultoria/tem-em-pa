@@ -8,9 +8,11 @@ const SELECT = `
   id, title, slug, excerpt, content_html, cover_image_url,
   author_id, category_id, status, published_at, reading_minutes,
   created_at, updated_at,
+  seo_title, seo_description, og_image_url, canonical_url, noindex,
   category:blog_categories(id, name, slug),
   author:profiles(id, full_name, avatar_url)
 `;
+
 
 async function fetchPublishedList(page: number, categoryId?: string | null) {
   const from = page * PAGE_SIZE;

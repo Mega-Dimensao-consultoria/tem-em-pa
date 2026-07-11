@@ -16,6 +16,9 @@ import { CompanyDetailSkeleton } from "@/components/feedback/Skeletons";
  * open the canonical URL for their own pending records.
  */
 export const Route = createFileRoute("/empresa/$id")({
+  head: () => ({
+    meta: [{ name: "robots", content: "noindex, follow" }],
+  }),
   beforeLoad: async ({ params }) => {
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(params.id);
     if (!isUuid) return;

@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Search } from "lucide-react";
 import { CompanyForm, emptyCompanyForm, type CompanyFormValues } from "@/features/companies/components/CompanyForm";
 import { defaultHours, type HourRow } from "@/features/companies/components/HoursEditor";
 import { CompanyDetailSkeleton } from "@/components/feedback/Skeletons";
+import { SeoOverrideDialog } from "@/features/seo/components/SeoOverrideDialog";
 
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/editar")({
   head: () => ({
@@ -40,6 +41,7 @@ function EditarEmpresa() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [submitting, setSubmitting] = useState(false);
+  const [seoOpen, setSeoOpen] = useState(false);
 
   const { data: company, isLoading } = useQuery({
     queryKey: ["company-edit", id],
@@ -215,6 +217,12 @@ function EditarEmpresa() {
           Mantenha os dados do seu negócio sempre atualizados.
         </p>
 
+        <div className="mt-4">
+          <Button variant="outline" size="sm" onClick={() => setSeoOpen(true)}>
+            <Search className="mr-1 h-4 w-4" /> Editar SEO da página
+          </Button>
+        </div>
+
         <div className="mt-8">
           <CompanyForm
             mode="edit"
@@ -230,6 +238,25 @@ function EditarEmpresa() {
           />
         </div>
       </section>
+
+      {company ? (
+        <SeoOverrideDialog
+          table="companies"
+          id={id}
+          open={seoOpen}
+          onOpenChange={setSeoOpen}
+          title={(company.name as string) ?? ""}
+          previewUrl={`https://www.temnaminhacidade.com.br/empresa/${id}`}
+          initial={{
+            seo_title: (company as { seo_title?: string | null }).seo_title ?? null,
+            seo_description: (company as { seo_description?: string | null }).seo_description ?? null,
+            og_image_url: (company as { og_image_url?: string | null }).og_image_url ?? null,
+            canonical_url: (company as { canonical_url?: string | null }).canonical_url ?? null,
+            noindex: (company as { noindex?: boolean | null }).noindex ?? null,
+          }}
+          invalidateKeys={[["company-edit", id], ["company"]]}
+        />
+      ) : null}
     </PageShell>
   );
 }

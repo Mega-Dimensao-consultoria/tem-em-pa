@@ -7,6 +7,8 @@ import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { NotFoundState } from "@/components/feedback/NotFoundState";
 import { SITE_URL } from "@/lib/site";
+import { seoGlobalsServerQO } from "@/features/seo/functions/getGlobals";
+import { resolveSeo, buildSeoHead } from "@/lib/seo/render";
 
 const search = z.object({ page: z.coerce.number().int().min(1).max(500).default(1) });
 
@@ -14,29 +16,36 @@ export const Route = createFileRoute("/blog/categoria/$slug")({
   validateSearch: search,
   loaderDeps: ({ search: s }) => ({ page: s.page }),
   loader: async ({ context, params, deps }) => {
-    const cat = await context.queryClient.ensureQueryData(blogQueries.category(params.slug));
+    const [cat, globals] = await Promise.all([
+      context.queryClient.ensureQueryData(blogQueries.category(params.slug)),
+      context.queryClient.ensureQueryData(seoGlobalsServerQO),
+    ]);
     if (!cat) throw notFound();
     await Promise.all([
       context.queryClient.ensureQueryData(blogQueries.list(deps.page - 1, cat.id)),
       context.queryClient.ensureQueryData(blogQueries.categories()),
     ]);
-    return { category: cat };
+    return { category: cat, globals };
   },
   head: ({ params, loaderData }) => {
-    const name = loaderData?.category?.name ?? "Categoria";
-    const description = loaderData?.category?.description ??
-      `Todos os posts da categoria ${name} no blog do Tem na minha cidade.`;
-    return {
-      meta: [
-        { title: `${name} — Blog Tem na minha cidade` },
-        { name: "description", content: description },
-        { property: "og:title", content: `${name} — Blog Tem na minha cidade` },
-        { property: "og:description", content: description },
-        { property: "og:url", content: `${SITE_URL}/blog/categoria/${params.slug}` },
-        { property: "og:type", content: "website" },
-      ],
-      links: [{ rel: "canonical", href: `${SITE_URL}/blog/categoria/${params.slug}` }],
-    };
+    const cat = loaderData?.category;
+    const name = cat?.name ?? "Categoria";
+    const url = `${SITE_URL}/blog/categoria/${params.slug}`;
+    const seo = resolveSeo({
+      url,
+      fallbackTitle: `${name} — Blog Tem na minha cidade`,
+      fallbackDescription:
+        cat?.description ?? `Todos os posts da categoria ${name} no blog do Tem na minha cidade.`,
+      override: {
+        seo_title: cat?.seo_title ?? null,
+        seo_description: cat?.seo_description ?? null,
+        og_image_url: cat?.og_image_url ?? null,
+        canonical_url: cat?.canonical_url ?? null,
+        noindex: cat?.noindex ?? null,
+      },
+      globals: loaderData?.globals ?? null,
+    });
+    return buildSeoHead({ seo, ogType: "website" });
   },
   component: BlogCategoryPage,
   errorComponent: ({ error, reset }) => (

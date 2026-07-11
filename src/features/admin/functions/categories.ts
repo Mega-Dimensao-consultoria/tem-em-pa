@@ -9,6 +9,11 @@ export type AdminCategory = {
   slug: string;
   icon: string | null;
   sort_order: number | null;
+  seo_title: string | null;
+  seo_description: string | null;
+  og_image_url: string | null;
+  canonical_url: string | null;
+  noindex: boolean | null;
 };
 
 export type CategoryPayload = {
@@ -25,7 +30,7 @@ export function useAdminCategories() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("categories")
-        .select("id, name, slug, icon, sort_order")
+        .select("id, name, slug, icon, sort_order, seo_title, seo_description, og_image_url, canonical_url, noindex")
         .order("sort_order");
       if (error) throw error;
       return data as AdminCategory[];

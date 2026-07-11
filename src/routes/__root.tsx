@@ -22,6 +22,8 @@ import { AccessibilityBar } from "@/components/AccessibilityBar";
 import { VLibrasWidget } from "@/components/VLibrasWidget";
 import { PWARegister } from "@/components/PWARegister";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import { seoGlobalsServerQO } from "@/features/seo/functions/getGlobals";
+import { DEFAULT_GLOBALS } from "@/lib/seo/types";
 
 function NotFoundComponent() {
   return (
@@ -81,57 +83,72 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
+  loader: async ({ context }) => {
+    try {
+      const globals = await context.queryClient.ensureQueryData(seoGlobalsServerQO);
+      return { globals };
+    } catch {
+      return { globals: DEFAULT_GLOBALS };
+    }
+  },
+  head: ({ loaderData }) => {
+    const g = loaderData?.globals ?? DEFAULT_GLOBALS;
+    const meta: Array<Record<string, string>> = [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "author", content: "Tem na minha cidade" },
+      { name: "author", content: g.org_name ?? g.site_name },
       { name: "theme-color", content: "#F2B705" },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "Tem na minha cidade" },
+      { property: "og:site_name", content: g.site_name },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "google-site-verification", content: "RYWbEQO8h1P-dQRPz6_wz8ks-m7O51QSvjPJiRYqb4s" },
-      { name: "msvalidate.01", content: "6687200C91D573BF276E12C076B3D628" },
-    ],
-    scripts: [
-      {
-        children: themeNoFlashScript,
-      },
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          name: "Tem na minha cidade",
-          url: "https://www.temnaminhacidade.com.br",
-          description: "Guia local por cidade — restaurantes, mercados, serviços e comércio.",
-          sameAs: [
-            "https://www.instagram.com/temnaminhacidade",
-            "https://www.facebook.com/temnaminhacidade",
-            "https://www.tiktok.com/temnaminhacidade",
-            "https://www.threads.com/@temnaminhacidade",
-          ],
-        }),
-      },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "icon", type: "image/png", href: "/favicon.png" },
-      { rel: "apple-touch-icon", href: "/favicon.png" },
-      { rel: "manifest", href: "/manifest.webmanifest" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "preload",
-        as: "style",
-        href: "https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap",
-      },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap",
-      },
-    ],
-  }),
+    ];
+    if (g.twitter_handle) {
+      meta.push({ name: "twitter:site", content: g.twitter_handle });
+    }
+    if (g.google_site_verification) {
+      meta.push({ name: "google-site-verification", content: g.google_site_verification });
+    }
+    if (g.bing_site_verification) {
+      meta.push({ name: "msvalidate.01", content: g.bing_site_verification });
+    }
+    const orgLd: Record<string, unknown> = {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: g.org_name ?? g.site_name,
+      url: "https://www.temnaminhacidade.com.br",
+      description: g.default_description,
+    };
+    if (g.org_logo_url) orgLd.logo = g.org_logo_url;
+    if (g.org_social_urls?.length) orgLd.sameAs = g.org_social_urls;
+
+    return {
+      meta,
+      scripts: [
+        { children: themeNoFlashScript },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(orgLd),
+        },
+      ],
+      links: [
+        { rel: "stylesheet", href: appCss },
+        { rel: "icon", type: "image/png", href: "/favicon.png" },
+        { rel: "apple-touch-icon", href: "/favicon.png" },
+        { rel: "manifest", href: "/manifest.webmanifest" },
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+        {
+          rel: "preload",
+          as: "style",
+          href: "https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap",
+        },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap",
+        },
+      ],
+    };
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,

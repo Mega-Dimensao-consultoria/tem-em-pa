@@ -10,27 +10,29 @@ import { Input } from "@/components/ui/input";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { EventCalendarButtons } from "@/features/events/components/EventCalendarButtons";
 import { cityBySlugQO } from "./$citySlug";
+import { seoGlobalsServerQO } from "@/features/seo/functions/getGlobals";
+import { resolveSeo, buildSeoHead } from "@/lib/seo/render";
 
 const BASE = "https://www.temnaminhacidade.com.br";
 
 export const Route = createFileRoute("/$citySlug/eventos")({
-  loader: ({ context, params }) =>
-    context.queryClient.ensureQueryData(cityBySlugQO(params.citySlug)),
+  loader: async ({ context, params }) => {
+    const [city, globals] = await Promise.all([
+      context.queryClient.ensureQueryData(cityBySlugQO(params.citySlug)),
+      context.queryClient.ensureQueryData(seoGlobalsServerQO),
+    ]);
+    return { city, globals };
+  },
   head: ({ params, loaderData }) => {
-    const cityName = loaderData?.name ?? params.citySlug;
-    const title = `Eventos em ${cityName} — Tem na minha cidade`;
-    const desc = `Confira os próximos eventos, promoções e novidades das empresas em ${cityName}.`;
+    const cityName = loaderData?.city?.name ?? params.citySlug;
     const url = `${BASE}/${params.citySlug}/eventos`;
-    return {
-      meta: [
-        { title },
-        { name: "description", content: desc },
-        { property: "og:title", content: title },
-        { property: "og:description", content: desc },
-        { property: "og:url", content: url },
-      ],
-      links: [{ rel: "canonical", href: url }],
-    };
+    const seo = resolveSeo({
+      url,
+      fallbackTitle: `Eventos em ${cityName} — Tem na minha cidade`,
+      fallbackDescription: `Confira os próximos eventos, promoções e novidades das empresas em ${cityName}.`,
+      globals: loaderData?.globals ?? null,
+    });
+    return buildSeoHead({ seo, ogType: "website" });
   },
   component: CityEventosPage,
 });

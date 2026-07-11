@@ -1,10 +1,13 @@
-import { Pencil, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { Pencil, Trash2, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
 import type { AdminCategory } from "@/features/admin/functions/categories";
 import { useDeleteCategory } from "@/features/admin/functions/categories";
 import type { EditingCategory } from "./CategoryFormCard";
 import { CategoryIcon } from "./CategoryIcon";
+import { SeoOverrideDialog } from "@/features/seo/components/SeoOverrideDialog";
+import { adminKeys } from "@/features/admin/functions/keys";
 
 export function CategoryRow({
   category,
@@ -14,6 +17,7 @@ export function CategoryRow({
   onEdit: (editing: EditingCategory) => void;
 }) {
   const deleteCategory = useDeleteCategory();
+  const [seoOpen, setSeoOpen] = useState(false);
 
   const startEdit = () =>
     onEdit({
@@ -56,6 +60,15 @@ export function CategoryRow({
             <Pencil className="mr-1 h-4 w-4" aria-hidden="true" />
             Editar
           </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setSeoOpen(true)}
+            aria-label={`Editar SEO da categoria ${category.name}`}
+          >
+            <Search className="mr-1 h-4 w-4" aria-hidden="true" />
+            SEO
+          </Button>
           <ConfirmDestructive
             trigger={
               <Button
@@ -83,6 +96,22 @@ export function CategoryRow({
           />
         </div>
       </td>
+      <SeoOverrideDialog
+        table="categories"
+        id={category.id}
+        open={seoOpen}
+        onOpenChange={setSeoOpen}
+        title={category.name}
+        previewUrl={`https://www.temnaminhacidade.com.br/exemplo/categoria/${category.slug}`}
+        initial={{
+          seo_title: category.seo_title,
+          seo_description: category.seo_description,
+          og_image_url: category.og_image_url,
+          canonical_url: category.canonical_url,
+          noindex: category.noindex,
+        }}
+        invalidateKeys={[adminKeys.categories()]}
+      />
     </tr>
   );
 }

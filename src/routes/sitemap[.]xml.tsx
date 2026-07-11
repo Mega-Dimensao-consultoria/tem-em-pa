@@ -33,17 +33,22 @@ export const Route = createFileRoute("/sitemap.xml")({
         ];
 
         const nowIso = new Date().toISOString();
-        const [cats, companies, events, hoods, blogPosts, blogCats] = await Promise.all([
-          sb.from("categories").select("slug"),
+        const [cats, companies, events, hoods, blogPosts, blogCats, cities] = await Promise.all([
+          sb
+            .from("categories")
+            .select("slug, noindex")
+            .or("noindex.is.null,noindex.eq.false"),
           sb
             .from("companies")
-            .select("id, slug, updated_at, cities:city_id(slug)")
+            .select("id, slug, updated_at, noindex, cities:city_id(slug)")
             .eq("status", "approved")
+            .or("noindex.is.null,noindex.eq.false")
             .limit(5000),
           sb
             .from("city_events")
-            .select("id, updated_at, starts_at, cities:city_id(slug)")
+            .select("id, updated_at, starts_at, noindex, cities:city_id(slug)")
             .eq("is_active", true)
+            .or("noindex.is.null,noindex.eq.false")
             .gte("starts_at", nowIso)
             .limit(2000),
           sb
@@ -62,9 +67,19 @@ export const Route = createFileRoute("/sitemap.xml")({
             .from("blog_categories")
             .select("slug, noindex")
             .eq("is_active", true)
-            .eq("noindex", false),
+            .or("noindex.is.null,noindex.eq.false"),
+          sb
+            .from("cities")
+            .select("slug, noindex")
+            .eq("is_active", true)
+            .or("noindex.is.null,noindex.eq.false"),
         ]);
 
+        const indexableCitySlugs = new Set<string>(
+          ((cities.data ?? []) as Array<{ slug: string | null }>)
+            .map((c) => c.slug)
+            .filter((s): s is string => !!s),
+        );
 
         // Indexação condicional: só listar cidades/estados que possuem pelo menos
         // uma empresa aprovada. Cidades vazias ficam fora do sitemap para evitar
@@ -72,7 +87,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         const citySlugsWithCompanies = new Set<string>(
           ((companies.data ?? []) as Array<{ cities: { slug: string | null } | null }>)
             .map((c) => c.cities?.slug)
-            .filter((s): s is string => !!s),
+            .filter((s): s is string => !!s && indexableCitySlugs.has(s)),
         );
 
         for (const s of citySlugsWithCompanies) {

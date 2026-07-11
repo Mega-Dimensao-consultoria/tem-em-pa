@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { ArrowLeft, Plus, Pencil, Trash2, Calendar, MapPin } from 'lucide-react'
+import { ArrowLeft, Plus, Pencil, Trash2, Calendar, MapPin, Search } from 'lucide-react'
 import { PageShell } from '@/components/PageShell'
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/integrations/supabase/client'
@@ -12,9 +12,11 @@ import { EmptyState } from '@/components/feedback/EmptyState'
 import {
   useOwnerCityEvents,
   useDeleteCityEvent,
+  cityEventsKeys,
   type CityEvent,
 } from '@/features/events/hooks/useCityEvents'
 import { EventFormDialog } from '@/features/events/components/EventFormDialog'
+import { SeoOverrideDialog } from '@/features/seo/components/SeoOverrideDialog'
 
 export const Route = createFileRoute('/_authenticated/owner/empresa/$id/eventos')({
   head: () => ({
@@ -32,6 +34,7 @@ function EventosOwnerPage() {
   const { user } = useAuth()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editing, setEditing] = useState<CityEvent | null>(null)
+  const [seoFor, setSeoFor] = useState<CityEvent | null>(null)
 
   const company = useQuery({
     queryKey: queryKeys.owner.companyAny(id),
@@ -156,6 +159,15 @@ function EventosOwnerPage() {
                     <Pencil className="mr-1 h-3.5 w-3.5" />
                     Editar
                   </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSeoFor(ev)}
+                    aria-label={`Editar SEO do evento ${ev.title}`}
+                  >
+                    <Search className="mr-1 h-3.5 w-3.5" />
+                    SEO
+                  </Button>
                   <ConfirmDestructive
                     trigger={
                       <Button variant="ghost" size="sm">
@@ -180,6 +192,25 @@ function EventosOwnerPage() {
           companyId={id}
           userId={user.id}
           event={editing}
+        />
+      ) : null}
+
+      {seoFor ? (
+        <SeoOverrideDialog
+          table="city_events"
+          id={seoFor.id}
+          open={!!seoFor}
+          onOpenChange={(v) => (v ? null : setSeoFor(null))}
+          title={seoFor.title}
+          previewUrl={`https://www.temnaminhacidade.com.br/eventos/${seoFor.id}`}
+          initial={{
+            seo_title: seoFor.seo_title ?? null,
+            seo_description: seoFor.seo_description ?? null,
+            og_image_url: seoFor.og_image_url ?? null,
+            canonical_url: seoFor.canonical_url ?? null,
+            noindex: seoFor.noindex ?? null,
+          }}
+          invalidateKeys={[cityEventsKeys.ownerList(id), cityEventsKeys.byCompany(id)]}
         />
       ) : null}
     </PageShell>

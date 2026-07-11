@@ -336,6 +336,16 @@ export function AllCompaniesTab() {
                           <Search className="mr-1 h-4 w-4" aria-hidden="true" />
                           SEO
                         </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setPromoForId(c.id)}
+                          aria-label={`Destacar ${c.name}`}
+                          className="text-primary hover:bg-primary/10"
+                        >
+                          <Sparkles className="mr-1 h-4 w-4" aria-hidden="true" />
+                          Destacar
+                        </Button>
                         <ConfirmDestructive
                           trigger={
                             <Button

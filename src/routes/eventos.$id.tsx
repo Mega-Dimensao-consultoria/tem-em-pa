@@ -18,11 +18,11 @@ type LoadedEvent = {
   company: { id: string; name: string; logo_url: string | null } | null
 }
 
-async function loadEvent(id: string): Promise<LoadedEvent> {
+async function loadEvent(id: string): Promise<LoadedEvent & { seo_title: string | null; seo_description: string | null; og_image_url: string | null; canonical_url: string | null; noindex: boolean | null }> {
   const { data, error } = await supabase
     .from('city_events')
     .select(
-      'id, title, description, starts_at, ends_at, location, image_url, is_active, companies:company_id(id, name, logo_url, status)',
+      'id, title, description, starts_at, ends_at, location, image_url, is_active, seo_title, seo_description, og_image_url, canonical_url, noindex, companies:company_id(id, name, logo_url, status, cities:city_id(name, state))',
     )
     .eq('id', id)
     .maybeSingle()
@@ -37,7 +37,12 @@ async function loadEvent(id: string): Promise<LoadedEvent> {
         location: string | null
         image_url: string | null
         is_active: boolean
-        companies: { id: string; name: string; logo_url: string | null; status: string } | null
+        seo_title: string | null
+        seo_description: string | null
+        og_image_url: string | null
+        canonical_url: string | null
+        noindex: boolean | null
+        companies: { id: string; name: string; logo_url: string | null; status: string; cities: { name: string | null; state: string | null } | null } | null
       }
     | null
   if (!row || !row.is_active || row.companies?.status !== 'approved') {
@@ -51,8 +56,13 @@ async function loadEvent(id: string): Promise<LoadedEvent> {
     ends_at: row.ends_at,
     location: row.location,
     image_url: row.image_url,
+    seo_title: row.seo_title,
+    seo_description: row.seo_description,
+    og_image_url: row.og_image_url,
+    canonical_url: row.canonical_url,
+    noindex: row.noindex,
     company: row.companies
-      ? { id: row.companies.id, name: row.companies.name, logo_url: row.companies.logo_url }
+      ? { id: row.companies.id, name: row.companies.name, logo_url: row.companies.logo_url, cityName: row.companies.cities?.name ?? null, state: row.companies.cities?.state ?? null } as never
       : null,
   }
 }

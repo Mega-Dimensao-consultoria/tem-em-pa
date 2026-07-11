@@ -15,6 +15,7 @@ import { useBulkCompanyAction, type BulkAction } from "@/features/admin/function
 import { CityFilterSelect } from "./CityFilterSelect";
 import { Empty, Loading } from "../admin-ui";
 import { SeoOverrideDialog } from "@/features/seo/components/SeoOverrideDialog";
+import { AdminGrantPromotionDialog } from "@/features/promotions/components/AdminGrantPromotionDialog";
 import { adminKeys } from "@/features/admin/functions/keys";
 
 const STATUS_LABEL: Record<string, string> = {

@@ -30,7 +30,7 @@ const DEFAULTS: A11ySettings = {
   readableFont: false,
 };
 
-const STORAGE_KEY = "tem-em-pa-a11y";
+const STORAGE_KEY = "tnmc-a11y";
 
 function loadSettings(): A11ySettings {
   if (typeof window === "undefined") return DEFAULTS;

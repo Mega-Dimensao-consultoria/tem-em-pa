@@ -24,7 +24,7 @@ function classifySource(): Source {
 export async function trackEvent(companyId: string, eventType: EventType) {
   try {
     if (eventType === "view") {
-      const k = `tem-em-pa-view:${companyId}`;
+      const k = `tnmc-view:${companyId}`;
       if (sentViews.has(k)) return;
       sentViews.add(k);
       if (typeof sessionStorage !== "undefined") {

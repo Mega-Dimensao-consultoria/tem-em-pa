@@ -16,7 +16,7 @@ self.addEventListener("activate", (event) => {
         const names = await caches.keys();
         await Promise.all(
           names
-            .filter((n) => n.startsWith("tem-em-pa-"))
+            .filter((n) => n.startsWith("tem-em-pa-") || n.startsWith("tnmc-"))
             .map((n) => caches.delete(n)),
         );
       } catch {

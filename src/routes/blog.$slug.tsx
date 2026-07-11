@@ -27,19 +27,25 @@ export const Route = createFileRoute("/blog/$slug")({
       };
     }
     const p = loaderData.post;
-    const description = p.excerpt || truncateWords(p.content_html, 30) || "Post do blog Tem na minha cidade.";
+    const fallbackDesc =
+      p.excerpt || truncateWords(p.content_html, 30) || "Post do blog Tem na minha cidade.";
     const url = `${SITE_URL}/blog/${params.slug}`;
-    const image = p.cover_image_url ?? undefined;
+    const title = p.seo_title || `${p.title} — Blog Tem na minha cidade`;
+    const description = p.seo_description || fallbackDesc;
+    const canonical = p.canonical_url || url;
+    const image = p.og_image_url || p.cover_image_url || undefined;
     const meta: Array<Record<string, string>> = [
-      { title: `${p.title} — Blog Tem na minha cidade` },
+      { title },
       { name: "description", content: description },
-      { property: "og:title", content: p.title },
+      { property: "og:title", content: title },
       { property: "og:description", content: description },
-      { property: "og:url", content: url },
+      { property: "og:url", content: canonical },
       { property: "og:type", content: "article" },
       { property: "article:published_time", content: p.published_at ?? "" },
       { property: "article:modified_time", content: p.updated_at },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: title },
+      { name: "twitter:description", content: description },
     ];
     if (image) {
       meta.push({ property: "og:image", content: image });
@@ -48,9 +54,12 @@ export const Route = createFileRoute("/blog/$slug")({
     if (p.category) {
       meta.push({ property: "article:section", content: p.category.name });
     }
+    if (p.noindex) {
+      meta.push({ name: "robots", content: "noindex, nofollow" });
+    }
     return {
       meta,
-      links: [{ rel: "canonical", href: url }],
+      links: [{ rel: "canonical", href: canonical }],
       scripts: [
         {
           type: "application/ld+json",
@@ -62,7 +71,7 @@ export const Route = createFileRoute("/blog/$slug")({
             image: image ? [image] : undefined,
             datePublished: p.published_at ?? undefined,
             dateModified: p.updated_at,
-            mainEntityOfPage: url,
+            mainEntityOfPage: canonical,
             author: p.author?.full_name
               ? { "@type": "Person", name: p.author.full_name }
               : { "@type": "Organization", name: "Tem na minha cidade" },
@@ -77,6 +86,7 @@ export const Route = createFileRoute("/blog/$slug")({
       ],
     };
   },
+
   component: BlogPostPage,
   errorComponent: ({ error, reset }) => (
     <div className="mx-auto max-w-3xl px-4 py-10">

@@ -322,14 +322,18 @@ function TemplatesEditor({ initial }: { initial: SeoGlobals }) {
               </div>
               <div>
                 <Label>Imagem social padrão para este tipo</Label>
-                <Input
-                  value={tpl.og_image_url ?? ""}
-                  onChange={(e) =>
-                    patchTpl(k, { og_image_url: e.target.value || null })
-                  }
-                  placeholder="Opcional — usa a imagem global se vazio"
+                <p className="mb-1 text-xs text-muted-foreground">
+                  Opcional — usa a imagem global se vazio.
+                </p>
+                <AttachmentPicker
+                  value={tpl.og_image_url ?? null}
+                  onChange={(url) => patchTpl(k, { og_image_url: url })}
+                  upload={uploadSeoImage}
+                  remove={removeSeoImage}
+                  label="Enviar imagem"
                 />
               </div>
+
             </div>
             <div className="mt-4">
               <div className="mb-1 text-xs text-muted-foreground">Prévia com dados de exemplo</div>

@@ -85,10 +85,19 @@ const privateBySlugQO = (p: SlugParams) =>
   });
 
 export const Route = createFileRoute("/$citySlug/empresa/$compSlug")({
-  loader: ({ context, params }) =>
-    context.queryClient.ensureQueryData(publicBySlugQO(params)),
+  loader: async ({ context, params }) => {
+    const [company, globals] = await Promise.all([
+      context.queryClient.ensureQueryData(publicBySlugQO(params)),
+      context.queryClient.ensureQueryData(seoGlobalsServerQO),
+    ]);
+    return { company, globals };
+  },
   head: ({ params, loaderData }) =>
-    buildCompanyHead(loaderData ?? null, { citySlug: params.citySlug, compSlug: params.compSlug }),
+    buildCompanyHead(loaderData?.company ?? null, {
+      citySlug: params.citySlug,
+      compSlug: params.compSlug,
+      globals: loaderData?.globals ?? null,
+    }),
   component: CompanyPage,
   notFoundComponent: () => (
     <PageShell>

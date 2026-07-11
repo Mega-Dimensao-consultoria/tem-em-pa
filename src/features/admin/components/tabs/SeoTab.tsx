@@ -17,6 +17,13 @@ import { renderTemplate } from "@/lib/seo/render";
 import { SeoPreview } from "@/features/seo/components/SeoPreview";
 import { Loading } from "../admin-ui";
 import { CitiesSeoTab } from "./CitiesSeoTab";
+import { AttachmentPicker } from "@/components/upload/AttachmentPicker";
+import { uploadSitePageImage } from "@/features/content/functions/sitePageVersions";
+import { removeFromBucket } from "@/lib/storage/uploadFile";
+
+const uploadSeoImage = (file: File) => uploadSitePageImage("seo", file);
+const removeSeoImage = (url: string) => removeFromBucket("site-pages-images", url);
+
 
 export function SeoTab() {
   const { data, isLoading } = useSeoGlobals();

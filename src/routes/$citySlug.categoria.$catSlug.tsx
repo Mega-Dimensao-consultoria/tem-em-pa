@@ -6,6 +6,8 @@ import { breadcrumbJsonLd } from "@/components/Breadcrumbs";
 import { searchCompanies, getCategoryBySlug } from "@/features/companies/functions";
 import { NoCompanies } from "@/components/feedback/EmptyState";
 import { cityBySlugQO } from "./$citySlug";
+import { seoGlobalsServerQO } from "@/features/seo/functions/getGlobals";
+import { resolveSeo, buildSeoHead } from "@/lib/seo/render";
 
 const BASE = "https://www.temnaminhacidade.com.br";
 
@@ -23,35 +25,52 @@ const catQo = (slug: string) =>
 
 export const Route = createFileRoute("/$citySlug/categoria/$catSlug")({
   loader: async ({ context, params }) => {
-    const city = await context.queryClient.ensureQueryData(cityBySlugQO(params.citySlug));
+    const [city, globals] = await Promise.all([
+      context.queryClient.ensureQueryData(cityBySlugQO(params.citySlug)),
+      context.queryClient.ensureQueryData(seoGlobalsServerQO),
+    ]);
     if (!city) return null;
     const [list, cat] = await Promise.all([
       context.queryClient.ensureQueryData(listQo(city.id, params.catSlug)),
       context.queryClient.ensureQueryData(catQo(params.catSlug)),
     ]);
-    return { city, list, cat };
+    return { city, list, cat, globals };
   },
   head: ({ params, loaderData }) => {
     const cityName = loaderData?.city?.name ?? params.citySlug;
-    const name = loaderData?.cat?.name ?? params.catSlug.replace(/-/g, " ");
+    const state = loaderData?.city?.state ?? "";
+    const catRow = loaderData?.cat as
+      | { name?: string | null; seo_title?: string | null; seo_description?: string | null; og_image_url?: string | null; canonical_url?: string | null; noindex?: boolean | null }
+      | null
+      | undefined;
+    const name = catRow?.name ?? params.catSlug.replace(/-/g, " ");
     const label = name.charAt(0).toUpperCase() + name.slice(1);
-    const title = `${label} em ${cityName} — Tem na minha cidade`;
-    const desc = `Encontre as melhores empresas de ${name} em ${cityName}. Endereços, contatos, avaliações e horário de funcionamento.`;
+    const fallbackTitle = `${label} em ${cityName} — Tem na minha cidade`;
+    const fallbackDesc = `Encontre as melhores empresas de ${name} em ${cityName}. Endereços, contatos, avaliações e horário de funcionamento.`;
     const url = `${BASE}/${params.citySlug}/categoria/${params.catSlug}`;
+    const seo = resolveSeo({
+      url,
+      fallbackTitle,
+      fallbackDescription: fallbackDesc,
+      override: {
+        seo_title: catRow?.seo_title ?? null,
+        seo_description: catRow?.seo_description ?? null,
+        og_image_url: catRow?.og_image_url ?? null,
+        canonical_url: catRow?.canonical_url ?? null,
+        noindex: catRow?.noindex ?? null,
+      },
+      templateKind: "category",
+      templateVars: { categoria: label, cidade: cityName, estado: state },
+      globals: loaderData?.globals ?? null,
+    });
+    const head = buildSeoHead({ seo, ogType: "website" });
     const crumbLd = breadcrumbJsonLd(BASE, [
       { label: cityName, path: `/${params.citySlug}` },
       { label, path: `/${params.citySlug}/categoria/${params.catSlug}` },
     ]);
     return {
-      meta: [
-        { title },
-        { name: "description", content: desc },
-        { property: "og:title", content: title },
-        { property: "og:description", content: desc },
-        { property: "og:url", content: url },
-        { property: "og:type", content: "website" },
-      ],
-      links: [{ rel: "canonical", href: url }],
+      meta: head.meta,
+      links: head.links,
       scripts: [{ type: "application/ld+json", children: JSON.stringify(crumbLd) }],
     };
   },

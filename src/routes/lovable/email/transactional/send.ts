@@ -7,9 +7,9 @@ import { TEMPLATES } from '@/lib/email-templates/registry'
 // Configuration baked in at scaffold time
 const SITE_NAME = "Tem na minha cidade"
 // SENDER_DOMAIN is the verified sender subdomain FQDN.
-const SENDER_DOMAIN = "notificacoes.temnaminhacidade.com.br"
+const SENDER_DOMAIN = "sistema.temnaminhacidade.com.br"
 // FROM_DOMAIN is the domain shown in the From: header.
-const FROM_DOMAIN = "notificacoes.temnaminhacidade.com.br"
+const FROM_DOMAIN = "sistema.temnaminhacidade.com.br"
 
 function redactEmail(email: string | null | undefined): string {
   if (!email) return '***'

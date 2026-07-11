@@ -3,8 +3,8 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const SITE_NAME = "Tem na minha cidade";
-const SENDER_DOMAIN = "notificacoes.temnaminhacidade.com.br";
-const FROM_DOMAIN = "notificacoes.temnaminhacidade.com.br";
+const SENDER_DOMAIN = "sistema.temnaminhacidade.com.br";
+const FROM_DOMAIN = "sistema.temnaminhacidade.com.br";
 const OTP_TTL_MIN = 10;
 const MAX_ATTEMPTS = 5;
 

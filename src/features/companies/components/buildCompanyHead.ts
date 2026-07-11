@@ -1,4 +1,6 @@
 import { breadcrumbJsonLd } from "@/components/Breadcrumbs";
+import { resolveSeo, buildSeoHead } from "@/lib/seo/render";
+import type { SeoGlobals, SeoOverride } from "@/lib/seo/types";
 
 const BASE = "https://www.temnaminhacidade.com.br";
 const DAY_MAP = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -20,7 +22,7 @@ function asString(v: unknown): string | undefined {
 
 export type CompanyHeadParams =
   | string /* legacy: company id path only */
-  | { citySlug: string; compSlug: string };
+  | { citySlug: string; compSlug: string; globals?: SeoGlobals | null };
 
 export function buildCompanyHead(loaderData: AnyCompany, params: CompanyHeadParams) {
   const isSlug = typeof params === "object";
@@ -32,10 +34,44 @@ export function buildCompanyHead(loaderData: AnyCompany, params: CompanyHeadPara
   const cityName = asString(loaderData?.city) ?? "";
   const stateUf = asString(loaderData?.state) ?? "";
   const cityLabel = [cityName, stateUf].filter(Boolean).join("/");
-  const desc =
+  const cat = asRecord(loaderData?.categories);
+  const catName = asString(cat?.name);
+  const catSlug = asString(cat?.slug);
+  const neighborhoodName = asString(loaderData?.neighborhood);
+
+  const fallbackTitle = `${name}${cityLabel ? " — " + cityLabel : ""} | Tem na minha cidade`;
+  const fallbackDesc =
     asString(loaderData?.description) ??
     (cityLabel ? `Empresa em ${cityLabel}` : "Empresa no Tem na minha cidade");
   const img = asString(loaderData?.cover_url) ?? asString(loaderData?.logo_url);
+
+  const override: SeoOverride = {
+    seo_title: asString(loaderData?.seo_title) ?? null,
+    seo_description: asString(loaderData?.seo_description) ?? null,
+    og_image_url: asString(loaderData?.og_image_url) ?? img ?? null,
+    canonical_url: asString(loaderData?.canonical_url) ?? null,
+    noindex: (loaderData?.noindex as boolean | null) ?? null,
+  };
+
+  const globals = isSlug ? (params.globals ?? null) : null;
+  const seo = resolveSeo({
+    url,
+    fallbackTitle,
+    fallbackDescription: fallbackDesc,
+    override,
+    templateKind: "company",
+    templateVars: {
+      nome: name,
+      cidade: cityName,
+      bairro: neighborhoodName ?? "",
+      categoria: catName ?? "",
+      estado: stateUf,
+    },
+    globals,
+  });
+  const head = buildSeoHead({ seo, ogType: "website" });
+
+  // JSON-LD LocalBusiness + Breadcrumbs
   const reviews = (Array.isArray(loaderData?.reviews) ? loaderData?.reviews : []) as Array<{
     rating: number;
   }>;
@@ -44,7 +80,6 @@ export function buildCompanyHead(loaderData: AnyCompany, params: CompanyHeadPara
     ratingCount > 0
       ? Number((reviews.reduce((s, r) => s + r.rating, 0) / ratingCount).toFixed(2))
       : 0;
-
   const hoursArr: HoursRow[] = Array.isArray(loaderData?.hours)
     ? (loaderData?.hours as HoursRow[])
     : [];
@@ -64,7 +99,7 @@ export function buildCompanyHead(loaderData: AnyCompany, params: CompanyHeadPara
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name,
-    description: desc,
+    description: seo.description,
     url,
     ...(img ? { image: img } : {}),
     ...(loaderData?.phone ? { telephone: loaderData.phone } : {}),
@@ -91,12 +126,9 @@ export function buildCompanyHead(loaderData: AnyCompany, params: CompanyHeadPara
       : {}),
     ...(openingHoursSpecification.length > 0 ? { openingHoursSpecification } : {}),
   };
-  const cat = asRecord(loaderData?.categories);
-  const catName = asString(cat?.name);
-  const catSlug = asString(cat?.slug);
+
   const citySlugFromCompany = asString(loaderData?.city_slug);
   const citySlugForCrumb = isSlug ? params.citySlug : citySlugFromCompany;
-
   const crumbs: { label: string; path: string }[] = [];
   if (citySlugForCrumb && cityName) {
     crumbs.push({ label: cityName, path: `/${citySlugForCrumb}` });
@@ -108,21 +140,8 @@ export function buildCompanyHead(loaderData: AnyCompany, params: CompanyHeadPara
   const crumbLd = breadcrumbJsonLd(BASE, crumbs);
 
   return {
-    meta: [
-      { title: `${name}${cityLabel ? " — " + cityLabel : ""} | Tem na minha cidade` },
-      { name: "description", content: desc },
-      { property: "og:title", content: `${name}${cityLabel ? " — " + cityLabel : ""} | Tem na minha cidade` },
-      { property: "og:description", content: desc },
-      { property: "og:url", content: url },
-      { property: "og:type", content: "website" },
-      ...(img
-        ? [
-            { property: "og:image", content: img },
-            { name: "twitter:image", content: img },
-          ]
-        : []),
-    ],
-    links: [{ rel: "canonical", href: url }],
+    meta: head.meta,
+    links: head.links,
     scripts: [
       { type: "application/ld+json", children: JSON.stringify(ld) },
       { type: "application/ld+json", children: JSON.stringify(crumbLd) },

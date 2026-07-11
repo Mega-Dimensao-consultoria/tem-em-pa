@@ -52,6 +52,19 @@ export function Footer() {
                 </svg>
               </a>
             </li>
+            <li>
+              <a
+                href="https://www.threads.com/@temnaminhacidade"
+                target="_blank"
+                rel="noopener noreferrer me"
+                aria-label="Threads do Tem na minha cidade"
+                className="text-muted-foreground transition hover:text-foreground"
+              >
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12.19 2C6.6 2 2.75 5.67 2.75 12s3.85 10 9.44 10c5.06 0 8.7-3.15 8.7-7.5 0-3-1.72-5.13-4.36-5.86-.29-2.36-2.14-3.83-4.63-3.83-1.9 0-3.55.94-4.32 2.44l1.62.94c.44-.85 1.45-1.44 2.7-1.44 1.5 0 2.55.78 2.83 2.13-.63-.09-1.29-.14-1.97-.14-3.44 0-5.62 1.6-5.62 4.05 0 2.28 1.94 3.86 4.42 3.86 2.16 0 3.75-.98 4.55-2.66.75.53 1.19 1.4 1.19 2.51 0 2.05-1.95 3.7-5.15 3.7-4.34 0-7.44-2.9-7.44-8s3.1-8 7.44-8c3.02 0 5.32 1.4 6.55 3.78l1.72-.9C18.6 3.8 15.83 2 12.19 2Zm.05 10.16c.72 0 1.4.06 2.02.18-.19 1.9-1.49 3-3.14 3-1.28 0-2.36-.7-2.36-1.79 0-.94.9-1.39 3.48-1.39Z"/>
+                </svg>
+              </a>
+            </li>
           </ul>
         </section>
         <nav aria-labelledby="footer-nav-heading">

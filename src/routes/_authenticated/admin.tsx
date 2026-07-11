@@ -16,6 +16,8 @@ import { TwoFaResetRequestsTab } from "@/features/admin/components/tabs/TwoFaRes
 import { PendingRemovalsTab } from "@/features/admin/components/tabs/PendingRemovalsTab";
 import { ContactMessagesTab } from "@/features/admin/components/tabs/ContactMessagesTab";
 import { SitePagesTab } from "@/features/admin/components/tabs/SitePagesTab";
+import { SeoTab } from "@/features/admin/components/tabs/SeoTab";
+
 import { BlogSection } from "@/features/admin/components/tabs/BlogSection";
 import { AdminOverviewTab } from "@/features/admin/components/tabs/AdminOverviewTab";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -84,8 +86,10 @@ function AdminPage() {
             <TabsTrigger value="paginas">Páginas</TabsTrigger>
             <TabsTrigger value="blog">Blog</TabsTrigger>
             <TabsTrigger value="reset2fa">Reset 2FA</TabsTrigger>
+            <TabsTrigger value="seo">SEO</TabsTrigger>
             <TabsTrigger value="auditoria">Auditoria</TabsTrigger>
           </TabsList>
+
 
           <TabsContent value="visao"><AdminOverviewTab /></TabsContent>
           <TabsContent value="empresas"><CompaniesAdminSection /></TabsContent>
@@ -100,7 +104,9 @@ function AdminPage() {
           <TabsContent value="paginas"><SitePagesTab /></TabsContent>
           <TabsContent value="blog"><BlogSection /></TabsContent>
           <TabsContent value="reset2fa"><TwoFaResetRequestsTab /></TabsContent>
+          <TabsContent value="seo"><SeoTab /></TabsContent>
           <TabsContent value="auditoria"><AuditLogTab /></TabsContent>
+
         </Tabs>
       </section>
     </PageShell>

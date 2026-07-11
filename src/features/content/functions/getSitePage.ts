@@ -8,6 +8,13 @@ export type SitePage = {
   title: string
   content_html: string
   updated_at: string
+  seo_title: string | null
+  seo_description: string | null
+  og_title: string | null
+  og_description: string | null
+  og_image_url: string | null
+  canonical_url: string | null
+  noindex: boolean
 }
 
 export const getSitePage = createServerFn({ method: 'GET' })
@@ -22,7 +29,9 @@ export const getSitePage = createServerFn({ method: 'GET' })
     )
     const { data: page, error } = await supabase
       .from('site_pages')
-      .select('slug, title, content_html, updated_at')
+      .select(
+        'slug, title, content_html, updated_at, seo_title, seo_description, og_title, og_description, og_image_url, canonical_url, noindex',
+      )
       .eq('slug', data.slug)
       .maybeSingle()
     if (error) throw new Error(error.message)

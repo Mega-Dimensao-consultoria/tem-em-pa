@@ -53,15 +53,18 @@ export const Route = createFileRoute("/sitemap.xml")({
             .limit(5000),
           sb
             .from("blog_posts")
-            .select("slug, updated_at")
+            .select("slug, updated_at, noindex")
             .eq("status", "published")
+            .eq("noindex", false)
             .lte("published_at", nowIso)
             .limit(5000),
           sb
             .from("blog_categories")
-            .select("slug")
-            .eq("is_active", true),
+            .select("slug, noindex")
+            .eq("is_active", true)
+            .eq("noindex", false),
         ]);
+
 
         // Indexação condicional: só listar cidades/estados que possuem pelo menos
         // uma empresa aprovada. Cidades vazias ficam fora do sitemap para evitar

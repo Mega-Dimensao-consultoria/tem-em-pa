@@ -17,6 +17,11 @@ import {
 import { HtmlContent } from '@/features/content/components/HtmlContent'
 import { RichEditor } from '@/features/content/components/RichEditor'
 import { Empty, Loading } from '../admin-ui'
+import { SeoFieldsSection } from '@/features/seo/components/SeoFieldsSection'
+import { SeoPreview } from '@/features/seo/components/SeoPreview'
+import { Search } from 'lucide-react'
+import type { SeoOverride } from '@/lib/seo/types'
+
 
 const SLUG_LABELS: Record<string, string> = {
   sobre: 'Sobre',
@@ -72,9 +77,27 @@ export function SitePagesTab() {
 function PageEditor({ page }: { page: AdminSitePage }) {
   const [title, setTitle] = useState(page.title)
   const [content, setContent] = useState(page.content_html)
+  const [seo, setSeo] = useState<SeoOverride>({
+    seo_title: page.seo_title,
+    seo_description: page.seo_description,
+    og_title: page.og_title,
+    og_description: page.og_description,
+    og_image_url: page.og_image_url,
+    canonical_url: page.canonical_url,
+    noindex: page.noindex,
+  })
   const update = useUpdateSitePage()
 
-  const dirty = title !== page.title || content !== page.content_html
+  const dirty =
+    title !== page.title ||
+    content !== page.content_html ||
+    seo.seo_title !== page.seo_title ||
+    seo.seo_description !== page.seo_description ||
+    seo.og_title !== page.og_title ||
+    seo.og_description !== page.og_description ||
+    seo.og_image_url !== page.og_image_url ||
+    seo.canonical_url !== page.canonical_url ||
+    !!seo.noindex !== page.noindex
 
   return (
     <section
@@ -91,7 +114,21 @@ function PageEditor({ page }: { page: AdminSitePage }) {
           </p>
         </div>
         <Button
-          onClick={() => update.mutate({ slug: page.slug, title, content_html: content })}
+          onClick={() =>
+            update.mutate({
+              slug: page.slug,
+              title,
+              content_html: content,
+              seo_title: seo.seo_title ?? null,
+              seo_description: seo.seo_description ?? null,
+              og_title: seo.og_title ?? null,
+              og_description: seo.og_description ?? null,
+              og_image_url: seo.og_image_url ?? null,
+              canonical_url: seo.canonical_url ?? null,
+              noindex: !!seo.noindex,
+            })
+          }
+
           disabled={!dirty || update.isPending}
           size="sm"
         >
@@ -103,6 +140,7 @@ function PageEditor({ page }: { page: AdminSitePage }) {
           Salvar
         </Button>
       </header>
+
 
       <label className="mb-1 block text-xs font-medium text-muted-foreground">Título</label>
       <Input
@@ -119,6 +157,9 @@ function PageEditor({ page }: { page: AdminSitePage }) {
           </TabsTrigger>
           <TabsTrigger value="preview">
             <Eye className="mr-1 h-4 w-4" /> Visualizar
+          </TabsTrigger>
+          <TabsTrigger value="seo">
+            <Search className="mr-1 h-4 w-4" /> SEO
           </TabsTrigger>
           <TabsTrigger value="history">
             <History className="mr-1 h-4 w-4" /> Histórico
@@ -145,6 +186,21 @@ function PageEditor({ page }: { page: AdminSitePage }) {
           </div>
         </TabsContent>
 
+        <TabsContent value="seo" className="mt-3 space-y-4">
+          <SeoFieldsSection
+            value={seo}
+            onChange={(p) => setSeo((prev) => ({ ...prev, ...p }))}
+            uploadImage={(f) => uploadSitePageImage(page.slug, f)}
+            helperFor={{ title, description: '' }}
+          />
+          <SeoPreview
+            title={seo.seo_title || title}
+            description={seo.seo_description || ''}
+            url={`https://www.temnaminhacidade.com.br/${page.slug}`}
+            image={seo.og_image_url}
+          />
+        </TabsContent>
+
         <TabsContent value="history" className="mt-3">
           <VersionHistory
             slug={page.slug}
@@ -155,6 +211,7 @@ function PageEditor({ page }: { page: AdminSitePage }) {
           />
         </TabsContent>
       </Tabs>
+
     </section>
   )
 }

@@ -22,7 +22,13 @@ export type BlogPost = {
   reading_minutes: number;
   created_at: string;
   updated_at: string;
+  seo_title: string | null;
+  seo_description: string | null;
+  og_image_url: string | null;
+  canonical_url: string | null;
+  noindex: boolean;
 };
+
 
 export type BlogPostWithCategory = BlogPost & {
   category: Pick<BlogCategory, "id" | "name" | "slug"> | null;

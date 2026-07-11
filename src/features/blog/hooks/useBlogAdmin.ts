@@ -63,6 +63,11 @@ export type PostInput = {
   category_id?: string | null;
   status: BlogStatus;
   published_at?: string | null;
+  seo_title?: string | null;
+  seo_description?: string | null;
+  og_image_url?: string | null;
+  canonical_url?: string | null;
+  noindex?: boolean;
 };
 
 function invalidateAll(qc: ReturnType<typeof useQueryClient>) {
@@ -83,7 +88,13 @@ export function useSavePost() {
         category_id: input.category_id || null,
         status: input.status,
         published_at: input.published_at || null,
+        seo_title: input.seo_title || null,
+        seo_description: input.seo_description || null,
+        og_image_url: input.og_image_url || null,
+        canonical_url: input.canonical_url || null,
+        noindex: !!input.noindex,
       };
+
       // slug fica opcional: quando vazio, o trigger do banco gera automaticamente.
       const slug = input.slug?.trim();
       const payload = slug ? { ...base, slug } : base;

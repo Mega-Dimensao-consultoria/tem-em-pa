@@ -180,13 +180,32 @@ function Toolbar({
   onImageClick,
   onLinkClick,
   uploading,
+  sourceMode,
+  onToggleSource,
 }: {
   editor: Editor | null;
   onImageClick: () => void;
   onLinkClick: () => void;
   uploading: boolean;
+  sourceMode: boolean;
+  onToggleSource: () => void;
 }) {
-  if (!editor) return <div className="h-11 border-b border-border bg-muted/40" />;
+  if (!editor)
+    return (
+      <div className="flex h-11 items-center justify-end border-b border-border bg-muted/40 px-1.5">
+        <Button
+          type="button"
+          size="sm"
+          variant={sourceMode ? "default" : "ghost"}
+          className="h-8"
+          onClick={onToggleSource}
+        >
+          <Code2 className="mr-1 h-4 w-4" />
+          {sourceMode ? "Visual" : "HTML"}
+        </Button>
+      </div>
+    );
+
 
   const buttons: Array<{
     key: string;

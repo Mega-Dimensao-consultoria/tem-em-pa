@@ -70,6 +70,8 @@ export function BlogPostEditor({ postId, onClose }: Props) {
     setSeo({
       seo_title: existing.seo_title,
       seo_description: existing.seo_description,
+      seo_keywords: existing.seo_keywords,
+      schema_type: existing.schema_type,
       og_image_url: existing.og_image_url,
       canonical_url: existing.canonical_url,
       noindex: existing.noindex,
@@ -112,6 +114,8 @@ export function BlogPostEditor({ postId, onClose }: Props) {
         published_at: publishedAt ? new Date(publishedAt).toISOString() : null,
         seo_title: seo.seo_title ?? null,
         seo_description: seo.seo_description ?? null,
+        seo_keywords: seo.seo_keywords ?? null,
+        schema_type: (seo.schema_type as string | null) ?? null,
         og_image_url: seo.og_image_url ?? null,
         canonical_url: seo.canonical_url ?? null,
         noindex: !!seo.noindex,

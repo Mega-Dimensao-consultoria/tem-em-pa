@@ -48,11 +48,11 @@ export function buildIcs(ev: CalendarEvent): string {
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Tem na cidade//Eventos//PT-BR",
+    "PRODID:-//Tem na minha cidade//Eventos//PT-BR",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "BEGIN:VEVENT",
-    `UID:${esc(ev.uid)}@temnacidade.com`,
+    `UID:${esc(ev.uid)}@www.temnaminhacidade.com.br`,
     `DTSTAMP:${toIcsUtc(new Date().toISOString())}`,
     `DTSTART:${toIcsUtc(ev.startsAt)}`,
     `DTEND:${toIcsUtc(end)}`,

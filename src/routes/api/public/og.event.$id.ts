@@ -50,7 +50,7 @@ function buildSvg(title: string, subtitle: string, company: string): string {
   <rect width="1200" height="630" fill="url(#g)"/>
   <rect x="72" y="72" width="140" height="6" fill="#fbbf24"/>
   <text x="72" y="140" font-family="system-ui,Segoe UI,Roboto,sans-serif" font-size="28" fill="#e2e8f0" font-weight="600">
-    Tem na cidade · Eventos
+    Tem na minha cidade · Eventos
   </text>
   <text font-family="system-ui,Segoe UI,Roboto,sans-serif" font-size="64" fill="#ffffff" font-weight="800">
     ${tspans}
@@ -95,7 +95,7 @@ export const Route = createFileRoute('/api/public/og/event/$id')({
 
           const visible =
             event && event.is_active && event.companies?.status === 'approved'
-          const title = visible ? event!.title : 'Evento — Tem na cidade'
+          const title = visible ? event!.title : 'Evento — Tem na minha cidade'
           const when = visible
             ? new Date(event!.starts_at).toLocaleString('pt-BR', {
                 day: '2-digit',
@@ -107,7 +107,7 @@ export const Route = createFileRoute('/api/public/og/event/$id')({
           const subtitle = visible
             ? [when, event!.location].filter(Boolean).join(' · ')
             : 'Descubra o que está acontecendo na cidade'
-          const company = visible ? event!.companies!.name : 'Tem na cidade'
+          const company = visible ? event!.companies!.name : 'Tem na minha cidade'
 
           const svg = buildSvg(title, subtitle, company)
           return new Response(svg, {
@@ -118,9 +118,9 @@ export const Route = createFileRoute('/api/public/og/event/$id')({
           })
         } catch {
           const svg = buildSvg(
-            'Evento — Tem na cidade',
-            'Tem na cidade',
-            'Tem na cidade',
+            'Evento — Tem na minha cidade',
+            'Tem na minha cidade',
+            'Tem na minha cidade',
           )
           return new Response(svg, {
             headers: { 'Content-Type': 'image/svg+xml; charset=utf-8' },

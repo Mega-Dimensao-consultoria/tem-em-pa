@@ -69,7 +69,7 @@ export const Route = createFileRoute('/api/public/contact-submit')({
               fromEmail: parsed.data.email,
               subjectLine: parsed.data.subject,
               message: parsed.data.message,
-              adminUrl: 'https://temnacidade.com/admin',
+              adminUrl: 'https://www.temnaminhacidade.com.br/admin',
             },
           })
         } catch {

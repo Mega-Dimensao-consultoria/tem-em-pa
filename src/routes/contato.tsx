@@ -4,20 +4,20 @@ import { HtmlContent } from '@/features/content/components/HtmlContent'
 import { getSitePage } from '@/features/content/functions/getSitePage'
 
 
-const CANONICAL = 'https://temnacidade.com/contato'
+const CANONICAL = 'https://www.temnaminhacidade.com.br/contato'
 
 export const Route = createFileRoute('/contato')({
   loader: () => getSitePage({ data: { slug: 'contato' } }),
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData?.title ?? 'Contato'} — Tem na cidade` },
+      { title: `${loaderData?.title ?? 'Contato'} — Tem na minha cidade` },
       {
         name: 'description',
         content:
-          'Fale com a equipe do Tem na cidade. Tire dúvidas, envie sugestões ou reporte problemas.',
+          'Fale com a equipe do Tem na minha cidade. Tire dúvidas, envie sugestões ou reporte problemas.',
       },
-      { property: 'og:title', content: `${loaderData?.title ?? 'Contato'} — Tem na cidade` },
-      { property: 'og:description', content: 'Fale com a equipe do Tem na cidade.' },
+      { property: 'og:title', content: `${loaderData?.title ?? 'Contato'} — Tem na minha cidade` },
+      { property: 'og:description', content: 'Fale com a equipe do Tem na minha cidade.' },
       { property: 'og:url', content: CANONICAL },
     ],
     links: [{ rel: 'canonical', href: CANONICAL }],

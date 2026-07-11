@@ -11,7 +11,7 @@ interface Props {
 
 const Email = ({
   companyName = 'sua empresa',
-  appUrl = 'https://temnacidade.com',
+  appUrl = 'https://www.temnaminhacidade.com.br',
   companyId,
 }: Props) => {
   const ctaUrl = companyId
@@ -19,12 +19,12 @@ const Email = ({
     : `${appUrl}/owner`
   return (
     <EmailLayout
-      previewText={`${companyName} foi aprovada e já está visível no diretório Tem na cidade.`}
+      previewText={`${companyName} foi aprovada e já está visível no diretório Tem na minha cidade.`}
       title="Empresa aprovada e publicada 🎉"
       intro={
         <>
           Ótimas notícias! O cadastro de <strong>{companyName}</strong> passou pela
-          nossa moderação e acaba de ser publicado no diretório Tem na cidade. A partir
+          nossa moderação e acaba de ser publicado no diretório Tem na minha cidade. A partir
           de agora, qualquer pessoa que pesquisar por sua categoria, seu nome ou pela
           região vai encontrar a sua empresa.
         </>
@@ -63,7 +63,7 @@ const Email = ({
       }
       ctaLabel="Abrir painel da empresa"
       ctaUrl={ctaUrl}
-      footnote="Você está recebendo este e-mail porque é o responsável cadastrado por esta empresa no Tem na cidade."
+      footnote="Você está recebendo este e-mail porque é o responsável cadastrado por esta empresa no Tem na minha cidade."
     />
   )
 }

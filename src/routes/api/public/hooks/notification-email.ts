@@ -7,10 +7,10 @@ import {
   NOTIFICATION_TYPE_TO_TEMPLATE,
 } from '@/lib/email-templates/registry'
 
-const SITE_NAME = 'Tem na cidade'
-const SENDER_DOMAIN = 'notificacoes.temnacidade.com'
-const FROM_DOMAIN = 'notificacoes.temnacidade.com'
-const APP_URL = 'https://temnacidade.com'
+const SITE_NAME = 'Tem na minha cidade'
+const SENDER_DOMAIN = 'notificacoes.www.temnaminhacidade.com.br'
+const FROM_DOMAIN = 'notificacoes.www.temnaminhacidade.com.br'
+const APP_URL = 'https://www.temnaminhacidade.com.br'
 
 function generateToken(): string {
   const bytes = new Uint8Array(32)

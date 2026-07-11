@@ -6,7 +6,7 @@ import { PageShell } from "@/components/PageShell";
 import { ContactDialog } from "@/features/contact/ContactDialog";
 import { listStates, listCitiesByState } from "@/features/companies/functions";
 
-const BASE = "https://temnacidade.com";
+const BASE = "https://www.temnaminhacidade.com.br";
 
 const statesQO = queryOptions({
   queryKey: ["hub", "states"],
@@ -25,13 +25,13 @@ const citiesByStateQO = (uf: string) =>
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Tem na cidade — o guia local por cidade" },
+      { title: "Tem na minha cidade — o guia local por cidade" },
       {
         name: "description",
         content:
           "Descubra restaurantes, mercados, serviços e comércio local em qualquer cidade do Brasil. Avaliações reais e contato direto.",
       },
-      { property: "og:title", content: "Tem na cidade — o guia local por cidade" },
+      { property: "og:title", content: "Tem na minha cidade — o guia local por cidade" },
       {
         property: "og:description",
         content:
@@ -51,7 +51,7 @@ export const Route = createFileRoute("/")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebSite",
-          name: "Tem na cidade",
+          name: "Tem na minha cidade",
           url: `${BASE}/`,
         }),
       },
@@ -90,7 +90,7 @@ function Hub() {
         <div className="absolute inset-0 -z-10 bg-hero-gradient opacity-[0.08]" />
         <div className="mx-auto max-w-4xl px-4 pb-12 pt-16 text-center md:pt-24">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
-            <Sparkles className="h-3.5 w-3.5" /> Tem na cidade
+            <Sparkles className="h-3.5 w-3.5" /> Tem na minha cidade
           </span>
           <h1 className="mt-5 text-balance font-display text-4xl font-bold leading-[1.05] tracking-tight md:text-6xl">
             O <span className="text-primary">comércio local</span> da sua cidade,

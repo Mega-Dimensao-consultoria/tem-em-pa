@@ -17,8 +17,8 @@ import { queryKeys } from "@/lib/queryKeys";
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/produtos")({
   head: () => ({
     meta: [
-      { title: "Produtos e serviços da empresa — Tem na cidade" },
-      { name: "description", content: "Cadastre e organize o catálogo de produtos e serviços da sua empresa exibido na ficha pública do Tem na cidade." },
+      { title: "Produtos e serviços da empresa — Tem na minha cidade" },
+      { name: "description", content: "Cadastre e organize o catálogo de produtos e serviços da sua empresa exibido na ficha pública do Tem na minha cidade." },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

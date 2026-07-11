@@ -15,7 +15,7 @@ const Email = ({
   companyName = 'sua empresa',
   rating = 5,
   comment,
-  appUrl = 'https://temnacidade.com',
+  appUrl = 'https://www.temnaminhacidade.com.br',
   companyId,
 }: Props) => {
   const stars = '★'.repeat(rating) + '☆'.repeat(Math.max(0, 5 - rating))
@@ -69,7 +69,7 @@ const Email = ({
       }
       ctaLabel="Responder no painel"
       ctaUrl={ctaUrl}
-      footnote="Você está recebendo este e-mail porque é o responsável cadastrado por esta empresa no Tem na cidade."
+      footnote="Você está recebendo este e-mail porque é o responsável cadastrado por esta empresa no Tem na minha cidade."
     />
   )
 }

@@ -3,25 +3,25 @@ import { PageShell } from '@/components/PageShell'
 import { HtmlContent } from '@/features/content/components/HtmlContent'
 import { getSitePage } from '@/features/content/functions/getSitePage'
 
-const CANONICAL = 'https://temnacidade.com/privacidade'
+const CANONICAL = 'https://www.temnaminhacidade.com.br/privacidade'
 
 export const Route = createFileRoute('/privacidade')({
   loader: () => getSitePage({ data: { slug: 'privacidade' } }),
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData?.title ?? 'Política de Privacidade'} — Tem na cidade` },
+      { title: `${loaderData?.title ?? 'Política de Privacidade'} — Tem na minha cidade` },
       {
         name: 'description',
         content:
-          'Política de Privacidade do Tem na cidade: como coletamos, usamos e protegemos seus dados (LGPD).',
+          'Política de Privacidade do Tem na minha cidade: como coletamos, usamos e protegemos seus dados (LGPD).',
       },
       {
         property: 'og:title',
-        content: `${loaderData?.title ?? 'Política de Privacidade'} — Tem na cidade`,
+        content: `${loaderData?.title ?? 'Política de Privacidade'} — Tem na minha cidade`,
       },
       {
         property: 'og:description',
-        content: 'Como tratamos seus dados no Tem na cidade (LGPD).',
+        content: 'Como tratamos seus dados no Tem na minha cidade (LGPD).',
       },
       { property: 'og:url', content: CANONICAL },
     ],

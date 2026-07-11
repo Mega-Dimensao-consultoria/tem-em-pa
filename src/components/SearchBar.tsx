@@ -31,7 +31,7 @@ export function SearchBar({
   const heights = size === "lg" ? "h-14 text-base" : "h-11 text-sm";
 
   return (
-    <form onSubmit={onSubmit} className="w-full" role="search" aria-label="Buscar no Tem na cidade">
+    <form onSubmit={onSubmit} className="w-full" role="search" aria-label="Buscar no Tem na minha cidade">
       <div className={`group relative flex w-full items-center rounded-full border border-border bg-card shadow-soft transition focus-within:border-primary focus-within:shadow-elegant ${heights}`}>
         <label htmlFor="site-search-input" className="sr-only">
           Buscar empresas, produtos ou serviços

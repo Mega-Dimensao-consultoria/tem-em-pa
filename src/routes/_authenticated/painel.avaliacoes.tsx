@@ -10,8 +10,8 @@ import { useMyReviews } from "@/features/reviews/hooks/useMyReviews";
 export const Route = createFileRoute("/_authenticated/painel/avaliacoes")({
   head: () => ({
     meta: [
-      { title: "Minhas avaliações publicadas — Tem na cidade" },
-      { name: "description", content: "Consulte, edite ou exclua as avaliações que você deixou para empresas locais no guia Tem na cidade." },
+      { title: "Minhas avaliações publicadas — Tem na minha cidade" },
+      { name: "description", content: "Consulte, edite ou exclua as avaliações que você deixou para empresas locais no guia Tem na minha cidade." },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

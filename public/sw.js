@@ -1,4 +1,4 @@
-// Service worker do Tem na cidade
+// Service worker do Tem na minha cidade
 // Responsável apenas por receber push notifications. Sem cache de app shell —
 // a evolução do site fica a cargo do próprio browser (cache HTTP + Vite).
 
@@ -30,7 +30,7 @@ self.addEventListener("activate", (event) => {
 // ============== PUSH ==============
 self.addEventListener("push", (event) => {
   let payload = {
-    title: "Tem na cidade",
+    title: "Tem na minha cidade",
     body: "Você tem uma nova notificação",
     link: "/notificacoes",
   };

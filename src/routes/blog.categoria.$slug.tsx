@@ -25,12 +25,12 @@ export const Route = createFileRoute("/blog/categoria/$slug")({
   head: ({ params, loaderData }) => {
     const name = loaderData?.category?.name ?? "Categoria";
     const description = loaderData?.category?.description ??
-      `Todos os posts da categoria ${name} no blog do Tem na cidade.`;
+      `Todos os posts da categoria ${name} no blog do Tem na minha cidade.`;
     return {
       meta: [
-        { title: `${name} — Blog Tem na cidade` },
+        { title: `${name} — Blog Tem na minha cidade` },
         { name: "description", content: description },
-        { property: "og:title", content: `${name} — Blog Tem na cidade` },
+        { property: "og:title", content: `${name} — Blog Tem na minha cidade` },
         { property: "og:description", content: description },
         { property: "og:url", content: `${SITE_URL}/blog/categoria/${params.slug}` },
         { property: "og:type", content: "website" },

@@ -10,14 +10,14 @@ interface Props {
 
 const Email = ({
   companyName = 'sua empresa',
-  appUrl = 'https://temnacidade.com',
+  appUrl = 'https://www.temnaminhacidade.com.br',
 }: Props) => (
   <EmailLayout
-    previewText={`Um usuário pediu a remoção da empresa ${companyName} no Tem na cidade.`}
+    previewText={`Um usuário pediu a remoção da empresa ${companyName} no Tem na minha cidade.`}
     title="Pedido de remoção recebido"
     intro={
       <>
-        Olá. Recebemos um pedido formal de um usuário do Tem na cidade. solicitando a
+        Olá. Recebemos um pedido formal de um usuário do Tem na minha cidade. solicitando a
         remoção do cadastro da empresa <strong>{companyName}</strong> do nosso
         diretório. Como você é o responsável atual por essa página, estamos te
         avisando para que possa se manifestar antes de qualquer decisão.
@@ -57,7 +57,7 @@ const Email = ({
     }
     ctaLabel="Atualizar cadastro"
     ctaUrl={`${appUrl}/owner`}
-    footnote="Você está recebendo este e-mail porque é o responsável cadastrado por esta empresa no Tem na cidade."
+    footnote="Você está recebendo este e-mail porque é o responsável cadastrado por esta empresa no Tem na minha cidade."
   />
 )
 

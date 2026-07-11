@@ -72,5 +72,5 @@ do segundo fator via suporte e recuperar o acesso à conta.
 
 ## Registro
 
-Manter planilha (Drive) `Tem na cidade > QA > 2FA reset log` com colunas:
+Manter planilha (Drive) `Tem na minha cidade > QA > 2FA reset log` com colunas:
 `data | tester | conta usada | tempo total | resultado | observações`.

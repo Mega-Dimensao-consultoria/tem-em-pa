@@ -3,20 +3,20 @@ import { PageShell } from '@/components/PageShell'
 import { HtmlContent } from '@/features/content/components/HtmlContent'
 import { getSitePage } from '@/features/content/functions/getSitePage'
 
-const CANONICAL = 'https://temnacidade.com/termos'
+const CANONICAL = 'https://www.temnaminhacidade.com.br/termos'
 
 export const Route = createFileRoute('/termos')({
   loader: () => getSitePage({ data: { slug: 'termos' } }),
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData?.title ?? 'Termos de Uso'} — Tem na cidade` },
+      { title: `${loaderData?.title ?? 'Termos de Uso'} — Tem na minha cidade` },
       {
         name: 'description',
         content:
-          'Termos de Uso do Tem na cidade: regras da plataforma, direitos e deveres de usuários e cadastros.',
+          'Termos de Uso do Tem na minha cidade: regras da plataforma, direitos e deveres de usuários e cadastros.',
       },
-      { property: 'og:title', content: `${loaderData?.title ?? 'Termos de Uso'} — Tem na cidade` },
-      { property: 'og:description', content: 'Regras de uso do Tem na cidade.' },
+      { property: 'og:title', content: `${loaderData?.title ?? 'Termos de Uso'} — Tem na minha cidade` },
+      { property: 'og:description', content: 'Regras de uso do Tem na minha cidade.' },
       { property: 'og:url', content: CANONICAL },
     ],
     links: [{ rel: 'canonical', href: CANONICAL }],

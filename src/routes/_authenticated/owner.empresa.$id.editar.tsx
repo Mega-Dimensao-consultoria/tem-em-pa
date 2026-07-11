@@ -15,8 +15,8 @@ import { CompanyDetailSkeleton } from "@/components/feedback/Skeletons";
 export const Route = createFileRoute("/_authenticated/owner/empresa/$id/editar")({
   head: () => ({
     meta: [
-      { title: "Editar dados da empresa — Tem na cidade" },
-      { name: "description", content: "Atualize nome, endereço, horários, categoria, fotos e descrição da sua empresa cadastrada no Tem na cidade." },
+      { title: "Editar dados da empresa — Tem na minha cidade" },
+      { name: "description", content: "Atualize nome, endereço, horários, categoria, fotos e descrição da sua empresa cadastrada no Tem na minha cidade." },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

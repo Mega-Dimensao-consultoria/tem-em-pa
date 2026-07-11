@@ -85,10 +85,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "author", content: "Tem na cidade" },
+      { name: "author", content: "Tem na minha cidade" },
       { name: "theme-color", content: "#F2B705" },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "Tem na cidade" },
+      { property: "og:site_name", content: "Tem na minha cidade" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "google-site-verification", content: "xZko0wxu0QO4efbnjywGmwd-W9C3hUAp06veaQSiAIE" },
       { name: "msvalidate.01", content: "6687200C91D573BF276E12C076B3D628" },
@@ -102,8 +102,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: "Tem na cidade",
-          url: "https://temnacidade.com",
+          name: "Tem na minha cidade",
+          url: "https://www.temnaminhacidade.com.br",
           description: "Guia local por cidade — restaurantes, mercados, serviços e comércio.",
           sameAs: [
             "https://www.instagram.com/temnacidadebr",

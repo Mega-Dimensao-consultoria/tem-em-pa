@@ -58,11 +58,11 @@ async function loadEvent(id: string): Promise<LoadedEvent> {
 export const Route = createFileRoute('/eventos/$id')({
   loader: ({ params }) => loadEvent(params.id),
   head: ({ params, loaderData }) => {
-    const base = 'https://temnacidade.com'
+    const base = 'https://www.temnaminhacidade.com.br'
     const url = `${base}/eventos/${params.id}`
     const title = loaderData?.title
-      ? `${loaderData.title} — Eventos — Tem na cidade`
-      : 'Evento — Tem na cidade'
+      ? `${loaderData.title} — Eventos — Tem na minha cidade`
+      : 'Evento — Tem na minha cidade'
     const when = loaderData
       ? new Date(loaderData.starts_at).toLocaleString('pt-BR', {
           day: '2-digit',
@@ -222,7 +222,7 @@ function EventDetailPage() {
           <ShareButton
             title={ev.title}
             text={`Confira: ${ev.title}`}
-            url={`https://temnacidade.com/eventos/${ev.id}`}
+            url={`https://www.temnaminhacidade.com.br/eventos/${ev.id}`}
           />
         </div>
       </article>

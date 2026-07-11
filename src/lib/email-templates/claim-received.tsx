@@ -10,14 +10,14 @@ interface Props {
 
 const Email = ({
   companyName = 'sua empresa',
-  appUrl = 'https://temnacidade.com',
+  appUrl = 'https://www.temnaminhacidade.com.br',
 }: Props) => (
   <EmailLayout
-    previewText={`Recebemos um pedido para reivindicar a empresa ${companyName} no Tem na cidade.`}
+    previewText={`Recebemos um pedido para reivindicar a empresa ${companyName} no Tem na minha cidade.`}
     title="Pedido de reivindicação recebido"
     intro={
       <>
-        Olá! Um usuário do Tem na cidade. acaba de enviar um pedido formal para reivindicar
+        Olá! Um usuário do Tem na minha cidade. acaba de enviar um pedido formal para reivindicar
         a empresa <strong>{companyName}</strong>. Como você consta no nosso sistema
         como contato relacionado a esse cadastro, estamos te avisando para que tudo
         seja resolvido com transparência.
@@ -53,7 +53,7 @@ const Email = ({
     }
     ctaLabel="Abrir painel do dono"
     ctaUrl={`${appUrl}/owner`}
-    footnote="Você está recebendo este e-mail porque consta como contato vinculado a este cadastro no Tem na cidade."
+    footnote="Você está recebendo este e-mail porque consta como contato vinculado a este cadastro no Tem na minha cidade."
   />
 )
 

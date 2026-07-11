@@ -11,14 +11,14 @@ import { EmptyState } from "@/components/feedback/EmptyState";
 import { EventCalendarButtons } from "@/features/events/components/EventCalendarButtons";
 import { cityBySlugQO } from "./$citySlug";
 
-const BASE = "https://temnacidade.com";
+const BASE = "https://www.temnaminhacidade.com.br";
 
 export const Route = createFileRoute("/$citySlug/eventos")({
   loader: ({ context, params }) =>
     context.queryClient.ensureQueryData(cityBySlugQO(params.citySlug)),
   head: ({ params, loaderData }) => {
     const cityName = loaderData?.name ?? params.citySlug;
-    const title = `Eventos em ${cityName} — Tem na cidade`;
+    const title = `Eventos em ${cityName} — Tem na minha cidade`;
     const desc = `Confira os próximos eventos, promoções e novidades das empresas em ${cityName}.`;
     const url = `${BASE}/${params.citySlug}/eventos`;
     return {

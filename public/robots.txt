@@ -13,4 +13,4 @@ Disallow: /suporte/
 Disallow: /api/
 Disallow: /lovable/
 
-Sitemap: https://temnacidade.com/sitemap.xml
+Sitemap: https://www.temnaminhacidade.com.br/sitemap.xml

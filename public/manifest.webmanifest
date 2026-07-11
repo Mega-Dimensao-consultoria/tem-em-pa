@@ -1,6 +1,6 @@
 {
-  "name": "Tem na cidade — Guia local por cidade",
-  "short_name": "Tem na cidade",
+  "name": "Tem na minha cidade — Guia local por cidade",
+  "short_name": "Tem na minha cidade",
   "description": "Descubra empresas, produtos e serviços na sua cidade.",
   "start_url": "/",
   "scope": "/",

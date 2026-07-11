@@ -16,15 +16,15 @@ const Email = ({
   fromEmail = '',
   subjectLine = '(sem assunto)',
   message = '',
-  adminUrl = 'https://temnacidade.com/admin',
+  adminUrl = 'https://www.temnaminhacidade.com.br/admin',
 }: Props) => (
   <EmailLayout
-    previewText={`Nova mensagem de contato de ${fullName} no Tem na cidade.`}
+    previewText={`Nova mensagem de contato de ${fullName} no Tem na minha cidade.`}
     title="Nova mensagem no formulário de contato"
     intro={
       <>
         Você recebeu uma nova mensagem enviada pelo formulário público de contato do
-        Tem na cidade. Abaixo estão os dados do remetente e o conteúdo completo da
+        Tem na minha cidade. Abaixo estão os dados do remetente e o conteúdo completo da
         mensagem para análise e resposta.
       </>
     }
@@ -43,7 +43,7 @@ const Email = ({
           Recomendamos responder pelo <strong>painel administrativo</strong> em vez
           de responder direto neste e-mail. Ao responder pelo painel, a resposta fica
           registrada no histórico da mensagem, o remetente recebe um e-mail formatado
-          com a identidade visual do Tem na cidade. e o status do contato é atualizado
+          com a identidade visual do Tem na minha cidade. e o status do contato é atualizado
           automaticamente para “respondido”.
         </Text>
         <Text style={text}>
@@ -58,7 +58,7 @@ const Email = ({
     }
     ctaLabel="Abrir painel administrativo"
     ctaUrl={adminUrl}
-    footnote="Esta mensagem foi gerada automaticamente a partir do formulário público de contato do Tem na cidade."
+    footnote="Esta mensagem foi gerada automaticamente a partir do formulário público de contato do Tem na minha cidade."
   />
 )
 

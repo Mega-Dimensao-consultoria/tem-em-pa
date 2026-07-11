@@ -10,7 +10,7 @@ interface Props {
 
 const Email = ({
   companyName = 'sua empresa',
-  appUrl = 'https://temnacidade.com',
+  appUrl = 'https://www.temnaminhacidade.com.br',
 }: Props) => (
   <EmailLayout
     previewText={`Sua solicitação de remoção de ${companyName} foi aprovada.`}
@@ -19,7 +19,7 @@ const Email = ({
       <>
         Olá! O seu pedido de remoção da empresa <strong>{companyName}</strong> foi
         analisado pela nossa equipe de moderação e aprovado. A partir de agora, esse
-        cadastro deixa de aparecer no diretório Tem na cidade. e em todas as listagens
+        cadastro deixa de aparecer no diretório Tem na minha cidade. e em todas as listagens
         públicas da plataforma.
       </>
     }
@@ -33,7 +33,7 @@ const Email = ({
           porque o responsável legal solicitou a retirada de forma legítima.
         </Text>
         <Text style={text}>
-          Em nome de toda a comunidade do Tem na cidade., <strong>muito obrigado</strong>{' '}
+          Em nome de toda a comunidade do Tem na minha cidade., <strong>muito obrigado</strong>{' '}
           por colaborar para que o diretório se mantenha confiável e atualizado.
           Cada denúncia bem fundamentada ajuda outros moradores e visitantes da
           sua região a tomarem decisões melhores no dia a dia.
@@ -50,9 +50,9 @@ const Email = ({
         </Text>
       </>
     }
-    ctaLabel="Voltar ao Tem na cidade."
+    ctaLabel="Voltar ao Tem na minha cidade."
     ctaUrl={appUrl}
-    footnote="Você está recebendo este e-mail porque solicitou a remoção dessa empresa no Tem na cidade."
+    footnote="Você está recebendo este e-mail porque solicitou a remoção dessa empresa no Tem na minha cidade."
   />
 )
 

@@ -23,13 +23,13 @@ const searchSchema = z.object({
 });
 type SearchValues = z.infer<typeof searchSchema>;
 
-const BASE = "https://temnacidade.com";
+const BASE = "https://www.temnaminhacidade.com.br";
 
 export const Route = createFileRoute("/buscar")({
   validateSearch: searchSchema,
   ssr: false,
   head: () => {
-    const title = "Buscar empresas — Tem na cidade";
+    const title = "Buscar empresas — Tem na minha cidade";
     const desc = "Busque empresas, restaurantes, serviços e produtos em todo o Brasil. Filtre por categoria e encontre o que precisa.";
     const url = `${BASE}/buscar`;
     return {

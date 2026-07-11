@@ -7,9 +7,9 @@ import * as React from 'react'
 import { render } from '@react-email/components'
 import { TEMPLATES } from '@/lib/email-templates/registry'
 
-const SITE_NAME = 'Tem na cidade'
-const SENDER_DOMAIN = 'notificacoes.temnacidade.com'
-const FROM_DOMAIN = 'notificacoes.temnacidade.com'
+const SITE_NAME = 'Tem na minha cidade'
+const SENDER_DOMAIN = 'notificacoes.www.temnaminhacidade.com.br'
+const FROM_DOMAIN = 'notificacoes.www.temnaminhacidade.com.br'
 
 export async function enqueueContactEmail(args: {
   supabase: any
@@ -83,4 +83,4 @@ export async function enqueueContactEmail(args: {
   return { queued: true as const }
 }
 
-export const ADMIN_CONTACT_EMAIL = 'contato@temnacidade.com'
+export const ADMIN_CONTACT_EMAIL = 'contato@www.temnaminhacidade.com.br'

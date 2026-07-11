@@ -12,11 +12,11 @@ export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Entrar — Tem na cidade" },
+      { title: "Entrar — Tem na minha cidade" },
       {
         name: "description",
         content:
-          "Acesse sua conta no Tem na cidade para avaliar empresas e gerenciar seu negócio.",
+          "Acesse sua conta no Tem na minha cidade para avaliar empresas e gerenciar seu negócio.",
       },
     ],
   }),

@@ -1,13 +1,13 @@
-# Tem na cidade
+# Tem na minha cidade
 
 > Guia local por cidade no Brasil — descubra restaurantes, mercados, serviços e comércio local, com avaliações reais e contato direto.
 
-Tem na cidade reúne empresas cadastradas por cidade, com fichas detalhadas (endereço, horários, produtos, avaliações) e conteúdo editorial sobre o comércio e eventos locais. Donos podem cadastrar e gerenciar seus negócios gratuitamente.
+Tem na minha cidade reúne empresas cadastradas por cidade, com fichas detalhadas (endereço, horários, produtos, avaliações) e conteúdo editorial sobre o comércio e eventos locais. Donos podem cadastrar e gerenciar seus negócios gratuitamente.
 
 ## Pages
 
 - [Home](/): Escolha estado e cidade para explorar o comércio local.
-- [Sobre](/sobre): O que é o Tem na cidade e como funciona.
+- [Sobre](/sobre): O que é o Tem na minha cidade e como funciona.
 - [Contato](/contato): Fale com a equipe.
 - [Cadastrar empresa](/cadastrar-empresa): Cadastre gratuitamente seu negócio.
 - [Blog](/blog): Conteúdo sobre comércio local, cidades e novidades.

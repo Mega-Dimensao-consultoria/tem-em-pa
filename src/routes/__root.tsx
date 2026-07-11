@@ -90,7 +90,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Tem na minha cidade" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "google-site-verification", content: "xZko0wxu0QO4efbnjywGmwd-W9C3hUAp06veaQSiAIE" },
+      { name: "google-site-verification", content: "RYWbEQO8h1P-dQRPz6_wz8ks-m7O51QSvjPJiRYqb4s" },
       { name: "msvalidate.01", content: "6687200C91D573BF276E12C076B3D628" },
     ],
     scripts: [

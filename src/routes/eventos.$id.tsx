@@ -68,61 +68,77 @@ async function loadEvent(id: string): Promise<LoadedEvent & { seo_title: string 
 }
 
 export const Route = createFileRoute('/eventos/$id')({
-  loader: ({ params }) => loadEvent(params.id),
+  loader: async ({ params, context }) => {
+    const [event, globals] = await Promise.all([
+      loadEvent(params.id),
+      context.queryClient.ensureQueryData(seoGlobalsServerQO),
+    ])
+    return { event, globals }
+  },
   head: ({ params, loaderData }) => {
     const base = 'https://www.temnaminhacidade.com.br'
     const url = `${base}/eventos/${params.id}`
-    const title = loaderData?.title
-      ? `${loaderData.title} — Eventos — Tem na minha cidade`
-      : 'Evento — Tem na minha cidade'
-    const when = loaderData
-      ? new Date(loaderData.starts_at).toLocaleString('pt-BR', {
+    const ev = loaderData?.event
+    const company = ev?.company as unknown as { name: string; cityName?: string | null; state?: string | null } | null | undefined
+    const cityName = company?.cityName ?? ''
+    const state = company?.state ?? ''
+    const when = ev
+      ? new Date(ev.starts_at).toLocaleString('pt-BR', {
           day: '2-digit',
           month: 'long',
           hour: '2-digit',
           minute: '2-digit',
         })
       : ''
-    const description = loaderData
-      ? [when, loaderData.location, loaderData.company?.name]
-          .filter(Boolean)
-          .join(' · ')
-          .slice(0, 160)
+    const fallbackTitle = ev?.title
+      ? `${ev.title} — Eventos — Tem na minha cidade`
+      : 'Evento — Tem na minha cidade'
+    const fallbackDesc = ev
+      ? [when, ev.location, company?.name].filter(Boolean).join(' · ').slice(0, 160)
       : 'Agenda de eventos das cidades atendidas.'
-    const ogImage =
-      loaderData?.image_url ?? `${base}/api/public/og/event/${params.id}`
+    const ogImage = ev?.og_image_url ?? ev?.image_url ?? `${base}/api/public/og/event/${params.id}`
+    const seo = resolveSeo({
+      url,
+      fallbackTitle,
+      fallbackDescription: fallbackDesc,
+      override: {
+        seo_title: ev?.seo_title ?? null,
+        seo_description: ev?.seo_description ?? null,
+        og_image_url: ogImage,
+        canonical_url: ev?.canonical_url ?? null,
+        noindex: ev?.noindex ?? null,
+      },
+      templateKind: 'event',
+      templateVars: {
+        nome: ev?.title ?? '',
+        cidade: cityName,
+        estado: state,
+        data: when,
+      },
+      globals: loaderData?.globals ?? null,
+    })
+    const head = buildSeoHead({ seo, ogType: 'article' })
     return {
-      meta: [
-        { title },
-        { name: 'description', content: description },
-        { property: 'og:title', content: title },
-        { property: 'og:description', content: description },
-        { property: 'og:url', content: url },
-        { property: 'og:type', content: 'article' },
-        { property: 'og:image', content: ogImage },
-        { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:image', content: ogImage },
-      ],
-      links: [{ rel: 'canonical', href: url }],
-      scripts: loaderData
+      meta: head.meta,
+      links: head.links,
+      scripts: ev
         ? [
             {
               type: 'application/ld+json',
               children: JSON.stringify({
                 '@context': 'https://schema.org',
                 '@type': 'Event',
-                name: loaderData.title,
-                startDate: loaderData.starts_at,
-                endDate: loaderData.ends_at ?? undefined,
+                name: ev.title,
+                startDate: ev.starts_at,
+                endDate: ev.ends_at ?? undefined,
                 eventStatus: 'https://schema.org/EventScheduled',
-                eventAttendanceMode:
-                  'https://schema.org/OfflineEventAttendanceMode',
-                location: loaderData.location
-                  ? { '@type': 'Place', name: loaderData.location }
+                eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+                location: ev.location
+                  ? { '@type': 'Place', name: ev.location }
                   : undefined,
                 image: ogImage,
-                organizer: loaderData.company
-                  ? { '@type': 'Organization', name: loaderData.company.name }
+                organizer: company
+                  ? { '@type': 'Organization', name: company.name }
                   : undefined,
               }),
             },

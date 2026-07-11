@@ -82,29 +82,44 @@ export type Database = {
       }
       blog_categories: {
         Row: {
+          canonical_url: string | null
           created_at: string
           description: string | null
           id: string
           is_active: boolean
           name: string
+          noindex: boolean
+          og_image_url: string | null
+          seo_description: string | null
+          seo_title: string | null
           slug: string
           updated_at: string
         }
         Insert: {
+          canonical_url?: string | null
           created_at?: string
           description?: string | null
           id?: string
           is_active?: boolean
           name: string
+          noindex?: boolean
+          og_image_url?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
           slug: string
           updated_at?: string
         }
         Update: {
+          canonical_url?: string | null
           created_at?: string
           description?: string | null
           id?: string
           is_active?: boolean
           name?: string
+          noindex?: boolean
+          og_image_url?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
           slug?: string
           updated_at?: string
         }
@@ -113,14 +128,19 @@ export type Database = {
       blog_posts: {
         Row: {
           author_id: string | null
+          canonical_url: string | null
           category_id: string | null
           content_html: string
           cover_image_url: string | null
           created_at: string
           excerpt: string | null
           id: string
+          noindex: boolean
+          og_image_url: string | null
           published_at: string | null
           reading_minutes: number
+          seo_description: string | null
+          seo_title: string | null
           slug: string
           status: string
           title: string
@@ -128,14 +148,19 @@ export type Database = {
         }
         Insert: {
           author_id?: string | null
+          canonical_url?: string | null
           category_id?: string | null
           content_html?: string
           cover_image_url?: string | null
           created_at?: string
           excerpt?: string | null
           id?: string
+          noindex?: boolean
+          og_image_url?: string | null
           published_at?: string | null
           reading_minutes?: number
+          seo_description?: string | null
+          seo_title?: string | null
           slug: string
           status?: string
           title: string
@@ -143,14 +168,19 @@ export type Database = {
         }
         Update: {
           author_id?: string | null
+          canonical_url?: string | null
           category_id?: string | null
           content_html?: string
           cover_image_url?: string | null
           created_at?: string
           excerpt?: string | null
           id?: string
+          noindex?: boolean
+          og_image_url?: string | null
           published_at?: string | null
           reading_minutes?: number
+          seo_description?: string | null
+          seo_title?: string | null
           slug?: string
           status?: string
           title?: string
@@ -175,28 +205,43 @@ export type Database = {
       }
       categories: {
         Row: {
+          canonical_url: string | null
           created_at: string
           icon: string | null
           id: string
           name: string
+          noindex: boolean
+          og_image_url: string | null
+          seo_description: string | null
+          seo_title: string | null
           slug: string
           sort_order: number
           updated_at: string
         }
         Insert: {
+          canonical_url?: string | null
           created_at?: string
           icon?: string | null
           id?: string
           name: string
+          noindex?: boolean
+          og_image_url?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
           slug: string
           sort_order?: number
           updated_at?: string
         }
         Update: {
+          canonical_url?: string | null
           created_at?: string
           icon?: string | null
           id?: string
           name?: string
+          noindex?: boolean
+          og_image_url?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
           slug?: string
           sort_order?: number
           updated_at?: string
@@ -205,6 +250,7 @@ export type Database = {
       }
       cities: {
         Row: {
+          canonical_url: string | null
           created_at: string
           hero_headline: string | null
           hero_subheadline: string | null
@@ -213,14 +259,18 @@ export type Database = {
           lat: number | null
           lng: number | null
           name: string
+          noindex: boolean
           og_image_url: string | null
           search_placeholder: string | null
+          seo_description: string | null
+          seo_title: string | null
           slug: string
           state: string
           timezone: string
           updated_at: string
         }
         Insert: {
+          canonical_url?: string | null
           created_at?: string
           hero_headline?: string | null
           hero_subheadline?: string | null
@@ -229,14 +279,18 @@ export type Database = {
           lat?: number | null
           lng?: number | null
           name: string
+          noindex?: boolean
           og_image_url?: string | null
           search_placeholder?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
           slug: string
           state: string
           timezone?: string
           updated_at?: string
         }
         Update: {
+          canonical_url?: string | null
           created_at?: string
           hero_headline?: string | null
           hero_subheadline?: string | null
@@ -245,8 +299,11 @@ export type Database = {
           lat?: number | null
           lng?: number | null
           name?: string
+          noindex?: boolean
           og_image_url?: string | null
           search_placeholder?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
           slug?: string
           state?: string
           timezone?: string
@@ -256,6 +313,7 @@ export type Database = {
       }
       city_events: {
         Row: {
+          canonical_url: string | null
           city_id: string
           company_id: string
           created_at: string
@@ -265,11 +323,16 @@ export type Database = {
           image_url: string | null
           is_active: boolean
           location: string | null
+          noindex: boolean
+          og_image_url: string | null
+          seo_description: string | null
+          seo_title: string | null
           starts_at: string
           title: string
           updated_at: string
         }
         Insert: {
+          canonical_url?: string | null
           city_id: string
           company_id: string
           created_at?: string
@@ -279,11 +342,16 @@ export type Database = {
           image_url?: string | null
           is_active?: boolean
           location?: string | null
+          noindex?: boolean
+          og_image_url?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
           starts_at: string
           title: string
           updated_at?: string
         }
         Update: {
+          canonical_url?: string | null
           city_id?: string
           company_id?: string
           created_at?: string
@@ -293,6 +361,10 @@ export type Database = {
           image_url?: string | null
           is_active?: boolean
           location?: string | null
+          noindex?: boolean
+          og_image_url?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
           starts_at?: string
           title?: string
           updated_at?: string
@@ -317,6 +389,7 @@ export type Database = {
       companies: {
         Row: {
           address: string | null
+          canonical_url: string | null
           category_id: string | null
           cep: string | null
           city_id: string
@@ -336,10 +409,14 @@ export type Database = {
           logo_url: string | null
           name: string
           neighborhood_id: string | null
+          noindex: boolean
           number: string | null
+          og_image_url: string | null
           owner_id: string | null
           phone: string | null
           search_tsv: unknown
+          seo_description: string | null
+          seo_title: string | null
           slug: string | null
           status: Database["public"]["Enums"]["company_status"]
           updated_at: string
@@ -348,6 +425,7 @@ export type Database = {
         }
         Insert: {
           address?: string | null
+          canonical_url?: string | null
           category_id?: string | null
           cep?: string | null
           city_id: string
@@ -367,10 +445,14 @@ export type Database = {
           logo_url?: string | null
           name: string
           neighborhood_id?: string | null
+          noindex?: boolean
           number?: string | null
+          og_image_url?: string | null
           owner_id?: string | null
           phone?: string | null
           search_tsv?: unknown
+          seo_description?: string | null
+          seo_title?: string | null
           slug?: string | null
           status?: Database["public"]["Enums"]["company_status"]
           updated_at?: string
@@ -379,6 +461,7 @@ export type Database = {
         }
         Update: {
           address?: string | null
+          canonical_url?: string | null
           category_id?: string | null
           cep?: string | null
           city_id?: string
@@ -398,10 +481,14 @@ export type Database = {
           logo_url?: string | null
           name?: string
           neighborhood_id?: string | null
+          noindex?: boolean
           number?: string | null
+          og_image_url?: string | null
           owner_id?: string | null
           phone?: string | null
           search_tsv?: unknown
+          seo_description?: string | null
+          seo_title?: string | null
           slug?: string | null
           status?: Database["public"]["Enums"]["company_status"]
           updated_at?: string
@@ -1079,27 +1166,48 @@ export type Database = {
       }
       site_pages: {
         Row: {
+          canonical_url: string | null
           city_id: string | null
           content_html: string
           is_published: boolean
+          noindex: boolean
+          og_description: string | null
+          og_image_url: string | null
+          og_title: string | null
+          seo_description: string | null
+          seo_title: string | null
           slug: string
           title: string
           updated_at: string
           updated_by: string | null
         }
         Insert: {
+          canonical_url?: string | null
           city_id?: string | null
           content_html: string
           is_published?: boolean
+          noindex?: boolean
+          og_description?: string | null
+          og_image_url?: string | null
+          og_title?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
           slug: string
           title: string
           updated_at?: string
           updated_by?: string | null
         }
         Update: {
+          canonical_url?: string | null
           city_id?: string | null
           content_html?: string
           is_published?: boolean
+          noindex?: boolean
+          og_description?: string | null
+          og_image_url?: string | null
+          og_title?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
           slug?: string
           title?: string
           updated_at?: string
@@ -1152,6 +1260,60 @@ export type Database = {
             referencedColumns: ["slug"]
           },
         ]
+      }
+      site_seo_settings: {
+        Row: {
+          bing_site_verification: string | null
+          default_description: string
+          default_og_image_url: string | null
+          google_site_verification: string | null
+          id: number
+          org_logo_url: string | null
+          org_name: string | null
+          org_social_urls: Json
+          site_name: string
+          templates: Json
+          title_base: string
+          title_separator: string
+          twitter_handle: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          bing_site_verification?: string | null
+          default_description?: string
+          default_og_image_url?: string | null
+          google_site_verification?: string | null
+          id?: number
+          org_logo_url?: string | null
+          org_name?: string | null
+          org_social_urls?: Json
+          site_name?: string
+          templates?: Json
+          title_base?: string
+          title_separator?: string
+          twitter_handle?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          bing_site_verification?: string | null
+          default_description?: string
+          default_og_image_url?: string | null
+          google_site_verification?: string | null
+          id?: number
+          org_logo_url?: string | null
+          org_name?: string | null
+          org_social_urls?: Json
+          site_name?: string
+          templates?: Json
+          title_base?: string
+          title_separator?: string
+          twitter_handle?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
       }
       suppressed_emails: {
         Row: {

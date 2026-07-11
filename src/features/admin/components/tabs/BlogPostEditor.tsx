@@ -213,6 +213,26 @@ export function BlogPostEditor({ postId, onClose }: Props) {
               minHeight={480}
             />
           </div>
+
+          <details className="rounded-xl border border-border bg-card p-4" open>
+            <summary className="cursor-pointer font-medium">SEO</summary>
+            <div className="mt-4 space-y-4">
+              <SeoFieldsSection
+                value={seo}
+                onChange={(p) => setSeo((prev) => ({ ...prev, ...p }))}
+                uploadImage={(f) => uploadBlogImage("cover", f)}
+                fields={{ ogTitle: false, ogDescription: false }}
+                helperFor={{ title }}
+              />
+              <SeoPreview
+                title={seo.seo_title || title}
+                description={seo.seo_description || excerpt || ""}
+                url={`https://www.temnaminhacidade.com.br/blog/${slug || "post"}`}
+                image={seo.og_image_url || cover}
+              />
+            </div>
+          </details>
+
         </div>
 
         {/* Sidebar de metadados */}

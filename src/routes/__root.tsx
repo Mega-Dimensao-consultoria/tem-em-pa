@@ -109,6 +109,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             "https://www.instagram.com/temnaminhacidade",
             "https://www.facebook.com/temnaminhacidade",
             "https://www.tiktok.com/temnaminhacidade",
+            "https://www.threads.com/@temnaminhacidade",
           ],
         }),
       },

@@ -39,7 +39,7 @@ export function Header() {
       className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur-md"
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
-        <Link to="/" className="shrink-0" aria-label="Página inicial do Tem na cidade">
+        <Link to="/" className="shrink-0" aria-label="Página inicial do Tem na minha cidade">
           <Logo />
         </Link>
 

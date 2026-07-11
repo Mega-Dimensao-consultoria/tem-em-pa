@@ -16,8 +16,8 @@ import { useMyCompanies } from "@/features/owner/hooks/useMyCompanies";
 export const Route = createFileRoute("/_authenticated/painel/")({
   head: () => ({
     meta: [
-      { title: "Visão geral do painel — Tem na cidade" },
-      { name: "description", content: "Atalhos para suas empresas cadastradas, avaliações, favoritos, notificações, segurança e configurações da conta no Tem na cidade." },
+      { title: "Visão geral do painel — Tem na minha cidade" },
+      { name: "description", content: "Atalhos para suas empresas cadastradas, avaliações, favoritos, notificações, segurança e configurações da conta no Tem na minha cidade." },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

@@ -12,8 +12,8 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
     meta: [
-      { title: "Redefinir senha da conta — Tem na cidade" },
-      { name: "description", content: "Crie uma nova senha para sua conta no Tem na cidade e recupere o acesso ao painel de usuário e às suas empresas." },
+      { title: "Redefinir senha da conta — Tem na minha cidade" },
+      { name: "description", content: "Crie uma nova senha para sua conta no Tem na minha cidade e recupere o acesso ao painel de usuário e às suas empresas." },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

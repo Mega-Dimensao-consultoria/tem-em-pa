@@ -10,15 +10,15 @@ interface Props {
 
 const Email = ({
   companyName = 'sua empresa',
-  appUrl = 'https://temnacidade.com',
+  appUrl = 'https://www.temnaminhacidade.com.br',
 }: Props) => (
   <EmailLayout
-    previewText={`A empresa ${companyName} voltou a ser exibida no Tem na cidade.`}
+    previewText={`A empresa ${companyName} voltou a ser exibida no Tem na minha cidade.`}
     title="Empresa republicada 🎉"
     intro={
       <>
         Boas notícias! Após revisão, a empresa <strong>{companyName}</strong> voltou
-        a ser publicada no diretório Tem na cidade. e já está visível novamente para
+        a ser publicada no diretório Tem na minha cidade. e já está visível novamente para
         todos os visitantes da plataforma.
       </>
     }
@@ -52,7 +52,7 @@ const Email = ({
     }
     ctaLabel="Abrir painel do dono"
     ctaUrl={`${appUrl}/owner`}
-    footnote="Você está recebendo este e-mail porque é o responsável cadastrado por esta empresa no Tem na cidade."
+    footnote="Você está recebendo este e-mail porque é o responsável cadastrado por esta empresa no Tem na minha cidade."
   />
 )
 

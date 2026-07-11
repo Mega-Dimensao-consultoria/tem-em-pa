@@ -11,9 +11,9 @@ import { ErrorState } from "@/components/feedback/ErrorState";
 export const Route = createFileRoute("/u/$handle")({
   head: ({ params }) => ({
     meta: [
-      { title: `@${params.handle} — Perfil no Tem na cidade` },
-      { name: "description", content: `Perfil público de @${params.handle} com avaliações no diretório Tem na cidade.` },
-      { property: "og:title", content: `@${params.handle} — Tem na cidade` },
+      { title: `@${params.handle} — Perfil no Tem na minha cidade` },
+      { name: "description", content: `Perfil público de @${params.handle} com avaliações no diretório Tem na minha cidade.` },
+      { property: "og:title", content: `@${params.handle} — Tem na minha cidade` },
       { property: "og:description", content: `Avaliações públicas de @${params.handle}.` },
       { property: "og:type", content: "profile" },
     ],

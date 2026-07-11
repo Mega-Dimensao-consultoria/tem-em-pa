@@ -10,7 +10,7 @@ interface Props {
 
 const Email = ({
   companyName = 'sua empresa',
-  appUrl = 'https://temnacidade.com',
+  appUrl = 'https://www.temnaminhacidade.com.br',
 }: Props) => (
   <EmailLayout
     previewText={`O cadastro de ${companyName} não foi aprovado — veja como ajustar e reenviar.`}
@@ -18,7 +18,7 @@ const Email = ({
     intro={
       <>
         Olá! Analisamos o cadastro da empresa <strong>{companyName}</strong> e, neste
-        momento, não conseguimos aprová-lo para publicação no Tem na cidade. Não se
+        momento, não conseguimos aprová-lo para publicação no Tem na minha cidade. Não se
         preocupe: isso não é uma decisão permanente — basta ajustar alguns pontos e
         reenviar para nova análise.
       </>
@@ -26,7 +26,7 @@ const Email = ({
     body={
       <>
         <Text style={text}>
-          O Tem na cidade. é um diretório voltado à comunidade da região de Pouso
+          O Tem na minha cidade. é um diretório voltado à comunidade da região de Pouso
           Alegre, e por isso a nossa moderação verifica todos os cadastros antes da
           publicação. Os motivos mais comuns para uma recusa são: informações
           incompletas ou contraditórias, categoria inadequada ao negócio, descrição
@@ -57,7 +57,7 @@ const Email = ({
     }
     ctaLabel="Revisar e reenviar cadastro"
     ctaUrl={`${appUrl}/owner`}
-    footnote="Você está recebendo este e-mail porque cadastrou esta empresa no Tem na cidade."
+    footnote="Você está recebendo este e-mail porque cadastrou esta empresa no Tem na minha cidade."
   />
 )
 

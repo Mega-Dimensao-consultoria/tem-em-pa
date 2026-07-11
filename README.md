@@ -1,10 +1,10 @@
-# Tem na cidade
+# Tem na minha cidade
 
 Guia digital de comércios, serviços e profissionais organizado por cidade. Um lugar feito para aproximar quem mora na cidade de quem trabalha nela.
 
 ## A ideia por trás do projeto
 
-Toda cidade tem a mesma dúvida: onde encontrar aquela padaria boa do bairro vizinho, o eletricista de confiança, o restaurante novo que o pessoal anda comentando? As respostas costumam estar espalhadas — uma parte no grupo do WhatsApp da família, outra no Instagram, mais um pedaço só no boca a boca. O **Tem na cidade** nasceu para juntar tudo num lugar só, organizado, com cara de cidade e fácil de usar.
+Toda cidade tem a mesma dúvida: onde encontrar aquela padaria boa do bairro vizinho, o eletricista de confiança, o restaurante novo que o pessoal anda comentando? As respostas costumam estar espalhadas — uma parte no grupo do WhatsApp da família, outra no Instagram, mais um pedaço só no boca a boca. O **Tem na minha cidade** nasceu para juntar tudo num lugar só, organizado, com cara de cidade e fácil de usar.
 
 A proposta é simples: dar visibilidade ao pequeno negócio local e, ao mesmo tempo, facilitar a vida de quem mora na região na hora de descobrir o que ela oferece. Em vez de competir com gigantes nacionais, o foco está no que acontece dentro de cada município — do empreendedor que começou ontem no quintal de casa até a empresa tradicional que já atende várias gerações.
 
@@ -32,4 +32,4 @@ Cada página tem título único, descrição própria e marcação estruturada c
 
 ## O nome
 
-**Tem na cidade** é a pergunta que muita gente faz no dia a dia — "tem na cidade um lugar que faz isso?". A resposta, daqui pra frente, fica aqui.
+**Tem na minha cidade** é a pergunta que muita gente faz no dia a dia — "tem na minha cidade um lugar que faz isso?". A resposta, daqui pra frente, fica aqui.

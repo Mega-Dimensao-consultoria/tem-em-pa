@@ -6,7 +6,7 @@ export const Route = createFileRoute("/blog")({
   head: () => ({
     meta: [
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "Tem na cidade" },
+      { property: "og:site_name", content: "Tem na minha cidade" },
     ],
     links: [],
   }),

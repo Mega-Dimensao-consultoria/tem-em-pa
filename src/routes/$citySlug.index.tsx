@@ -11,7 +11,7 @@ import { listCategories } from "@/features/companies/functions/categories";
 import { listFeaturedCompanies, listRecentCompaniesByCity } from "@/features/companies/functions";
 import { cityBySlugQO } from "./$citySlug";
 
-const BASE = "https://temnacidade.com";
+const BASE = "https://www.temnaminhacidade.com.br";
 const PAGE_SIZE = 15;
 
 const categoriesQO = queryOptions({
@@ -54,7 +54,7 @@ export const Route = createFileRoute("/$citySlug/")({
     const state = loaderData?.state ?? "";
     const title =
       loaderData?.hero_headline ??
-      `Tem na cidade — o guia local de ${cityName}${state ? "/" + state : ""}`;
+      `Tem na minha cidade — o guia local de ${cityName}${state ? "/" + state : ""}`;
     const desc =
       loaderData?.hero_subheadline ??
       `Restaurantes, mercados, serviços e comércio local em ${cityName}. Avaliações reais e contato direto.`;

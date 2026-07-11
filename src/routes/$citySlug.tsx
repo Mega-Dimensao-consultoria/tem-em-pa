@@ -23,7 +23,7 @@ export const Route = createFileRoute("/$citySlug")({
       <div className="mx-auto max-w-xl px-4 py-20 text-center">
         <h1 className="font-display text-2xl font-bold">Cidade não encontrada</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Ainda não temos essa cidade no Tem na cidade.
+          Ainda não temos essa cidade no Tem na minha cidade.
         </p>
         <Button asChild className="mt-6">
           <Link to="/">Ver todas as cidades</Link>

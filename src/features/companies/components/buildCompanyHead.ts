@@ -1,6 +1,6 @@
 import { breadcrumbJsonLd } from "@/components/Breadcrumbs";
 
-const BASE = "https://temnacidade.com";
+const BASE = "https://www.temnaminhacidade.com.br";
 const DAY_MAP = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 type AnyCompany = Record<string, unknown> | null | undefined;
@@ -34,7 +34,7 @@ export function buildCompanyHead(loaderData: AnyCompany, params: CompanyHeadPara
   const cityLabel = [cityName, stateUf].filter(Boolean).join("/");
   const desc =
     asString(loaderData?.description) ??
-    (cityLabel ? `Empresa em ${cityLabel}` : "Empresa no Tem na cidade");
+    (cityLabel ? `Empresa em ${cityLabel}` : "Empresa no Tem na minha cidade");
   const img = asString(loaderData?.cover_url) ?? asString(loaderData?.logo_url);
   const reviews = (Array.isArray(loaderData?.reviews) ? loaderData?.reviews : []) as Array<{
     rating: number;
@@ -109,9 +109,9 @@ export function buildCompanyHead(loaderData: AnyCompany, params: CompanyHeadPara
 
   return {
     meta: [
-      { title: `${name}${cityLabel ? " — " + cityLabel : ""} | Tem na cidade` },
+      { title: `${name}${cityLabel ? " — " + cityLabel : ""} | Tem na minha cidade` },
       { name: "description", content: desc },
-      { property: "og:title", content: `${name}${cityLabel ? " — " + cityLabel : ""} | Tem na cidade` },
+      { property: "og:title", content: `${name}${cityLabel ? " — " + cityLabel : ""} | Tem na minha cidade` },
       { property: "og:description", content: desc },
       { property: "og:url", content: url },
       { property: "og:type", content: "website" },

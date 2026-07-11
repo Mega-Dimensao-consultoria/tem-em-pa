@@ -8,7 +8,7 @@ import { NotFoundState } from "@/components/feedback/NotFoundState";
 import { listCompaniesByNeighborhood } from "@/features/companies/functions";
 import { titleCase } from "@/lib/safe";
 
-const BASE = "https://temnacidade.com";
+const BASE = "https://www.temnaminhacidade.com.br";
 
 const neighborhoodQO = (citySlug: string, slug: string) =>
   queryOptions({
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/$citySlug/bairro/$bairroSlug")({
   head: ({ params, loaderData }) => {
     const name = loaderData?.neighborhood ?? titleCase(params.bairroSlug.replace(/-/g, " "));
     const city = loaderData?.city ?? params.citySlug;
-    const title = `Empresas no bairro ${name} — ${city} | Tem na cidade`;
+    const title = `Empresas no bairro ${name} — ${city} | Tem na minha cidade`;
     const desc = `Veja restaurantes, mercados, serviços e profissionais no bairro ${name}, em ${city}.`;
     const url = `${BASE}/${params.citySlug}/bairro/${params.bairroSlug}`;
     const crumbLd = breadcrumbJsonLd(BASE, [

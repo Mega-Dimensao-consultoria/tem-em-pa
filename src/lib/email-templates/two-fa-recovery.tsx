@@ -19,13 +19,13 @@ interface Props {
 const Email = ({ code = '000000', minutes = 10 }: Props) => (
   <Html lang="pt-BR" dir="ltr">
     <Head />
-    <Preview>Seu código de recuperação 2FA do Tem na cidade.: {code}</Preview>
+    <Preview>Seu código de recuperação 2FA do Tem na minha cidade.: {code}</Preview>
     <Body style={main}>
       <Container style={container}>
         <Heading style={h1}>Código de recuperação 2FA 🔐</Heading>
         <Text style={text}>
           Você (ou alguém usando sua conta) solicitou a desativação da verificação em
-          duas etapas no Tem na cidade. — provavelmente porque está sem acesso ao
+          duas etapas no Tem na minha cidade. — provavelmente porque está sem acesso ao
           aplicativo autenticador ou ao dispositivo cadastrado. Para concluir esse
           processo com segurança, use o código abaixo na tela de confirmação:
         </Text>
@@ -42,7 +42,7 @@ const Email = ({ code = '000000', minutes = 10 }: Props) => (
         </Text>
         <Text style={text}>
           <strong>Importante:</strong> nunca compartilhe este código com ninguém,
-          mesmo que a pessoa diga ser do nosso suporte. A equipe do Tem na cidade.
+          mesmo que a pessoa diga ser do nosso suporte. A equipe do Tem na minha cidade.
           jamais vai te pedir códigos de verificação por telefone, WhatsApp, redes
           sociais ou qualquer outro canal. Se alguém pedir, é tentativa de golpe —
           ignore e nos avise.
@@ -54,7 +54,7 @@ const Email = ({ code = '000000', minutes = 10 }: Props) => (
           recentes na sua conta, já que o pedido pode indicar uma tentativa de
           acesso indevido.
         </Text>
-        <Text style={footer}>Tem na cidade — Megadimensão</Text>
+        <Text style={footer}>Tem na minha cidade — Megadimensão</Text>
       </Container>
     </Body>
   </Html>

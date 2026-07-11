@@ -10,15 +10,15 @@ interface Props {
 
 const Email = ({
   companyName = 'sua empresa',
-  appUrl = 'https://temnacidade.com',
+  appUrl = 'https://www.temnaminhacidade.com.br',
 }: Props) => (
   <EmailLayout
-    previewText={`A empresa ${companyName} foi removida do diretório Tem na cidade.`}
+    previewText={`A empresa ${companyName} foi removida do diretório Tem na minha cidade.`}
     title="Empresa removida do diretório"
     intro={
       <>
         Olá. Estamos te avisando que a empresa <strong>{companyName}</strong> foi
-        removida do diretório Tem na cidade. A partir deste momento ela deixa de
+        removida do diretório Tem na minha cidade. A partir deste momento ela deixa de
         aparecer nas buscas, nas listagens por categoria e nos resultados públicos do
         site.
       </>
@@ -56,7 +56,7 @@ const Email = ({
     }
     ctaLabel="Falar com o suporte"
     ctaUrl={`${appUrl}/contato`}
-    footnote="Você está recebendo este e-mail porque era o responsável cadastrado por esta empresa no Tem na cidade."
+    footnote="Você está recebendo este e-mail porque era o responsável cadastrado por esta empresa no Tem na minha cidade."
   />
 )
 

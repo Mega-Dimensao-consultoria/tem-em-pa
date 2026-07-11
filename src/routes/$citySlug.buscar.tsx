@@ -25,7 +25,7 @@ const searchSchema = z.object({
 });
 type SearchValues = z.infer<typeof searchSchema>;
 
-const BASE = "https://temnacidade.com";
+const BASE = "https://www.temnaminhacidade.com.br";
 
 export const Route = createFileRoute("/$citySlug/buscar")({
   validateSearch: searchSchema,
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/$citySlug/buscar")({
     context.queryClient.ensureQueryData(cityBySlugQO(params.citySlug)),
   head: ({ params, loaderData }) => {
     const cityName = loaderData?.name ?? params.citySlug;
-    const title = `Buscar empresas em ${cityName} — Tem na cidade`;
+    const title = `Buscar empresas em ${cityName} — Tem na minha cidade`;
     const desc = `Busque empresas, restaurantes, serviços e produtos em ${cityName}. Filtre por categoria e encontre o que está mais perto de você.`;
     const url = `${BASE}/${params.citySlug}/buscar`;
     return {

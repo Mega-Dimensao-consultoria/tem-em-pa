@@ -7,7 +7,7 @@ import { searchCompanies, getCategoryBySlug } from "@/features/companies/functio
 import { NoCompanies } from "@/components/feedback/EmptyState";
 import { cityBySlugQO } from "./$citySlug";
 
-const BASE = "https://temnacidade.com";
+const BASE = "https://www.temnaminhacidade.com.br";
 
 const listQo = (cityId: string, slug: string) =>
   queryOptions({
@@ -35,7 +35,7 @@ export const Route = createFileRoute("/$citySlug/categoria/$catSlug")({
     const cityName = loaderData?.city?.name ?? params.citySlug;
     const name = loaderData?.cat?.name ?? params.catSlug.replace(/-/g, " ");
     const label = name.charAt(0).toUpperCase() + name.slice(1);
-    const title = `${label} em ${cityName} — Tem na cidade`;
+    const title = `${label} em ${cityName} — Tem na minha cidade`;
     const desc = `Encontre as melhores empresas de ${name} em ${cityName}. Endereços, contatos, avaliações e horário de funcionamento.`;
     const url = `${BASE}/${params.citySlug}/categoria/${params.catSlug}`;
     const crumbLd = breadcrumbJsonLd(BASE, [

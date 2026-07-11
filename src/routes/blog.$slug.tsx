@@ -21,17 +21,17 @@ export const Route = createFileRoute("/blog/$slug")({
     if (!loaderData?.post) {
       return {
         meta: [
-          { title: "Post não encontrado — Tem na cidade" },
+          { title: "Post não encontrado — Tem na minha cidade" },
           { name: "robots", content: "noindex" },
         ],
       };
     }
     const p = loaderData.post;
-    const description = p.excerpt || truncateWords(p.content_html, 30) || "Post do blog Tem na cidade.";
+    const description = p.excerpt || truncateWords(p.content_html, 30) || "Post do blog Tem na minha cidade.";
     const url = `${SITE_URL}/blog/${params.slug}`;
     const image = p.cover_image_url ?? undefined;
     const meta: Array<Record<string, string>> = [
-      { title: `${p.title} — Blog Tem na cidade` },
+      { title: `${p.title} — Blog Tem na minha cidade` },
       { name: "description", content: description },
       { property: "og:title", content: p.title },
       { property: "og:description", content: description },
@@ -65,10 +65,10 @@ export const Route = createFileRoute("/blog/$slug")({
             mainEntityOfPage: url,
             author: p.author?.full_name
               ? { "@type": "Person", name: p.author.full_name }
-              : { "@type": "Organization", name: "Tem na cidade" },
+              : { "@type": "Organization", name: "Tem na minha cidade" },
             publisher: {
               "@type": "Organization",
-              name: "Tem na cidade",
+              name: "Tem na minha cidade",
               url: SITE_URL,
             },
             articleSection: p.category?.name,

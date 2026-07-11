@@ -21,13 +21,13 @@ export const Route = createFileRoute("/blog/")({
   },
   head: () => ({
     meta: [
-      { title: "Blog — Tem na cidade" },
+      { title: "Blog — Tem na minha cidade" },
       {
         name: "description",
         content:
           "Dicas, novidades e histórias do comércio local. Explore os melhores conteúdos sobre cidades, empresas e serviços.",
       },
-      { property: "og:title", content: "Blog — Tem na cidade" },
+      { property: "og:title", content: "Blog — Tem na minha cidade" },
       { property: "og:description", content: "Dicas, novidades e histórias do comércio local." },
       { property: "og:url", content: `${SITE_URL}/blog` },
       { property: "og:type", content: "website" },

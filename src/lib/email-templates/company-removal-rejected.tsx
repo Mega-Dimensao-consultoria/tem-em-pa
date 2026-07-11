@@ -10,7 +10,7 @@ interface Props {
 
 const Email = ({
   companyName = 'sua empresa',
-  appUrl = 'https://temnacidade.com',
+  appUrl = 'https://www.temnaminhacidade.com.br',
 }: Props) => (
   <EmailLayout
     previewText={`Sua solicitação de remoção de ${companyName} não foi aprovada.`}
@@ -18,7 +18,7 @@ const Email = ({
     intro={
       <>
         Olá. Analisamos com atenção o seu pedido para remover o cadastro da empresa{' '}
-        <strong>{companyName}</strong> do diretório Tem na cidade. e, após a análise,
+        <strong>{companyName}</strong> do diretório Tem na minha cidade. e, após a análise,
         decidimos <strong>manter</strong> a empresa publicada por enquanto. Abaixo
         explicamos como funciona o processo e como você pode reforçar a sua
         solicitação, se ainda fizer sentido.
@@ -51,14 +51,14 @@ const Email = ({
           fica a análise.
         </Text>
         <Text style={text}>
-          Obrigado por colaborar com a qualidade do Tem na cidade. Estamos sempre
+          Obrigado por colaborar com a qualidade do Tem na minha cidade. Estamos sempre
           disponíveis pelo formulário de contato caso queira conversar sobre o caso.
         </Text>
       </>
     }
     ctaLabel="Abrir empresa no diretório"
     ctaUrl={appUrl}
-    footnote="Você está recebendo este e-mail porque enviou um pedido de remoção no Tem na cidade."
+    footnote="Você está recebendo este e-mail porque enviou um pedido de remoção no Tem na minha cidade."
   />
 )
 

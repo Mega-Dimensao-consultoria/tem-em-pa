@@ -45,7 +45,7 @@ export const Route = createFileRoute("/api/public/push/dispatch")({
         }
 
         const vapid = {
-          subject: process.env.VAPID_SUBJECT ?? "mailto:contato@tem-em-pa.app",
+          subject: process.env.VAPID_SUBJECT ?? "mailto:contato@temnaminhacidade.com.br",
           publicKey: VAPID_PUBLIC_KEY,
           privateKey: process.env.VAPID_PRIVATE_KEY,
         };

@@ -136,7 +136,7 @@ export function OnboardingDialog() {
     <Dialog open={open} onOpenChange={(v) => { if (!v && !submitting) handleSkip(); }}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Bem-vindo(a) ao Tem na cidade</DialogTitle>
+          <DialogTitle>Bem-vindo(a) ao Tem na minha cidade</DialogTitle>
           <DialogDescription>
             Confirme seu nome e, se quiser, crie uma senha para também entrar
             com e-mail sem precisar do {hasEmailIdentity ? "provedor social" : "Google ou Apple"}.

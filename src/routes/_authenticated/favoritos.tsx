@@ -11,8 +11,8 @@ export const Route = createFileRoute("/_authenticated/favoritos")({
   component: FavoritosPage,
   head: () => ({
     meta: [
-      { title: "Meus favoritos — Tem na cidade" },
-      { name: "description", content: "Acesse rapidamente as empresas, restaurantes e serviços que você salvou como favoritos no Tem na cidade." },
+      { title: "Meus favoritos — Tem na minha cidade" },
+      { name: "description", content: "Acesse rapidamente as empresas, restaurantes e serviços que você salvou como favoritos no Tem na minha cidade." },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

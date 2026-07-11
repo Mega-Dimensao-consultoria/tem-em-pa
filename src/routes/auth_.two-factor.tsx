@@ -17,8 +17,8 @@ export const Route = createFileRoute("/auth_/two-factor")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Verificação em duas etapas — Tem na cidade" },
-      { name: "description", content: "Informe o código do aplicativo autenticador para concluir o login com 2FA no Tem na cidade." },
+      { title: "Verificação em duas etapas — Tem na minha cidade" },
+      { name: "description", content: "Informe o código do aplicativo autenticador para concluir o login com 2FA no Tem na minha cidade." },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

@@ -127,6 +127,18 @@ export function RichEditor({
         onImageClick={() => fileInputRef.current?.click()}
         onLinkClick={toggleLink}
         uploading={uploading}
+        sourceMode={sourceMode}
+        onToggleSource={() => {
+          if (!sourceMode) {
+            setSourceDraft(editor?.getHTML() ?? value ?? "");
+            setSourceMode(true);
+          } else {
+            const clean = sanitizeHtml(sourceDraft);
+            editor?.commands.setContent(clean, { emitUpdate: false });
+            onChange(clean);
+            setSourceMode(false);
+          }
+        }}
       />
       <input
         ref={fileInputRef}
@@ -140,8 +152,20 @@ export function RichEditor({
         }}
       />
       <div style={{ minHeight }}>
-        <EditorContent editor={editor} />
+        {sourceMode ? (
+          <textarea
+            value={sourceDraft}
+            onChange={(e) => setSourceDraft(e.target.value)}
+            spellCheck={false}
+            className="block w-full resize-y border-0 bg-background px-4 py-3 font-mono text-sm outline-none"
+            style={{ minHeight }}
+            aria-label="Código HTML"
+          />
+        ) : (
+          <EditorContent editor={editor} />
+        )}
       </div>
+
     </div>
   );
 }

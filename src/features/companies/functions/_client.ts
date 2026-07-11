@@ -51,6 +51,11 @@ export type NormalizedCompany = {
   facebook_url?: string | null;
   hours?: Json;
   gallery_urls?: string[] | null;
+  seo_title?: string | null;
+  seo_description?: string | null;
+  og_image_url?: string | null;
+  canonical_url?: string | null;
+  noindex?: boolean | null;
   categories: { name: string | null; slug: string | null; icon: string | null } | null;
   city: string | null;
   city_slug: string | null;

@@ -17,6 +17,10 @@ import { uploadBlogImage } from "@/features/blog/lib/uploadImage";
 import { useAdminBlogCategories, useAdminPost, useSavePost } from "@/features/blog/hooks/useBlogAdmin";
 import type { BlogStatus } from "@/features/blog/lib/types";
 import { slugify } from "../admin-ui";
+import { SeoFieldsSection } from "@/features/seo/components/SeoFieldsSection";
+import { SeoPreview } from "@/features/seo/components/SeoPreview";
+import type { SeoOverride } from "@/lib/seo/types";
+
 
 type Props = {
   postId: string | null; // null = novo post

@@ -634,6 +634,65 @@ export type Database = {
           },
         ]
       }
+      company_promotions: {
+        Row: {
+          amount_cents: number | null
+          company_id: string
+          created_at: string
+          created_by: string | null
+          days_purchased: number | null
+          ends_at: string
+          id: string
+          plan_code: string | null
+          source: Database["public"]["Enums"]["promotion_source"]
+          starts_at: string
+          status: Database["public"]["Enums"]["promotion_status"]
+          stripe_environment: string | null
+          stripe_session_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount_cents?: number | null
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          days_purchased?: number | null
+          ends_at: string
+          id?: string
+          plan_code?: string | null
+          source: Database["public"]["Enums"]["promotion_source"]
+          starts_at: string
+          status?: Database["public"]["Enums"]["promotion_status"]
+          stripe_environment?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount_cents?: number | null
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          days_purchased?: number | null
+          ends_at?: string
+          id?: string
+          plan_code?: string | null
+          source?: Database["public"]["Enums"]["promotion_source"]
+          starts_at?: string
+          status?: Database["public"]["Enums"]["promotion_status"]
+          stripe_environment?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_promotions_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       company_removal_requests: {
         Row: {
           company_id: string
@@ -1519,6 +1578,14 @@ export type Database = {
       }
     }
     Functions: {
+      admin_cancel_promotion: {
+        Args: { _promotion_id: string }
+        Returns: undefined
+      }
+      admin_grant_promotion: {
+        Args: { _company_id: string; _ends_at: string; _starts_at: string }
+        Returns: string
+      }
       admin_merge_companies: {
         Args: { _source_id: string; _target_id: string }
         Returns: undefined
@@ -1526,6 +1593,19 @@ export type Database = {
       admin_resolve_review_report: {
         Args: { _action: string; _report_id: string }
         Returns: undefined
+      }
+      company_promotion_eligibility: {
+        Args: { _company_id: string }
+        Returns: {
+          eligible: boolean
+          has_active_product: boolean
+          has_address: boolean
+          has_contact: boolean
+          has_cover: boolean
+          has_description: boolean
+          has_hours: boolean
+          has_logo: boolean
+        }[]
       }
       create_notification: {
         Args: {
@@ -1547,6 +1627,7 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      expire_company_promotions: { Args: never; Returns: number }
       get_company_reviews_for_owner: {
         Args: { _company_id: string }
         Returns: {
@@ -1645,6 +1726,28 @@ export type Database = {
           uf: string
         }[]
       }
+      list_promoted_companies: {
+        Args: { _city_id?: string; _limit?: number }
+        Returns: {
+          category_id: string
+          category_name: string
+          city_id: string
+          city_name: string
+          city_slug: string
+          cover_url: string
+          description: string
+          hours: Json
+          id: string
+          is_featured: boolean
+          logo_url: string
+          name: string
+          neighborhood_id: string
+          neighborhood_name: string
+          neighborhood_slug: string
+          promotion_ends_at: string
+          slug: string
+        }[]
+      }
       move_to_dlq: {
         Args: {
           dlq_name: string
@@ -1683,6 +1786,8 @@ export type Database = {
       app_role: "admin" | "owner" | "user"
       claim_status: "pending" | "approved" | "rejected"
       company_status: "pending" | "approved" | "rejected" | "claimed_pending"
+      promotion_source: "paid" | "admin"
+      promotion_status: "pending" | "active" | "expired" | "canceled"
       removal_reason:
         | "closed"
         | "incorrect"
@@ -1821,6 +1926,8 @@ export const Constants = {
       app_role: ["admin", "owner", "user"],
       claim_status: ["pending", "approved", "rejected"],
       company_status: ["pending", "approved", "rejected", "claimed_pending"],
+      promotion_source: ["paid", "admin"],
+      promotion_status: ["pending", "active", "expired", "canceled"],
       removal_reason: [
         "closed",
         "incorrect",

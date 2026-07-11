@@ -10,6 +10,8 @@ import { NoCompanies } from "@/components/feedback/EmptyState";
 import { listCategories } from "@/features/companies/functions/categories";
 import { listFeaturedCompanies, listRecentCompaniesByCity } from "@/features/companies/functions";
 import { cityBySlugQO } from "./$citySlug";
+import { seoGlobalsServerQO } from "@/features/seo/functions/getGlobals";
+import { resolveSeo, buildSeoHead } from "@/lib/seo/render";
 
 const BASE = "https://www.temnaminhacidade.com.br";
 const PAGE_SIZE = 15;

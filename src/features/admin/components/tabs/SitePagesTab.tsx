@@ -158,6 +158,9 @@ function PageEditor({ page }: { page: AdminSitePage }) {
           <TabsTrigger value="preview">
             <Eye className="mr-1 h-4 w-4" /> Visualizar
           </TabsTrigger>
+          <TabsTrigger value="seo">
+            <Search className="mr-1 h-4 w-4" /> SEO
+          </TabsTrigger>
           <TabsTrigger value="history">
             <History className="mr-1 h-4 w-4" /> Histórico
           </TabsTrigger>
@@ -183,6 +186,21 @@ function PageEditor({ page }: { page: AdminSitePage }) {
           </div>
         </TabsContent>
 
+        <TabsContent value="seo" className="mt-3 space-y-4">
+          <SeoFieldsSection
+            value={seo}
+            onChange={(p) => setSeo((prev) => ({ ...prev, ...p }))}
+            uploadImage={(f) => uploadSitePageImage(page.slug, f)}
+            helperFor={{ title, description: '' }}
+          />
+          <SeoPreview
+            title={seo.seo_title || title}
+            description={seo.seo_description || ''}
+            url={`https://www.temnaminhacidade.com.br/${page.slug}`}
+            image={seo.og_image_url}
+          />
+        </TabsContent>
+
         <TabsContent value="history" className="mt-3">
           <VersionHistory
             slug={page.slug}
@@ -193,6 +211,7 @@ function PageEditor({ page }: { page: AdminSitePage }) {
           />
         </TabsContent>
       </Tabs>
+
     </section>
   )
 }

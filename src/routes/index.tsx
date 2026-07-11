@@ -164,6 +164,11 @@ function Hub() {
         </div>
       </section>
 
+      <PromotedCompaniesSection
+        title="Empresas em destaque agora"
+        subtitle="Selecionadas em tempo real entre as empresas com destaque ativo."
+      />
+
       <section className="mx-auto max-w-6xl px-4 pb-20 pt-8">
         <div className="overflow-hidden rounded-3xl bg-hero-gradient p-8 text-center text-white shadow-elegant md:p-12">
           <h2 className="font-display text-2xl font-bold md:text-3xl">Tem um negócio?</h2>

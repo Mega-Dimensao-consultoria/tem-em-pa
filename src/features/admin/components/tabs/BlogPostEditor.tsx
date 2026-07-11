@@ -49,6 +49,8 @@ export function BlogPostEditor({ postId, onClose }: Props) {
   const [seo, setSeo] = useState<SeoOverride>({
     seo_title: null,
     seo_description: null,
+    seo_keywords: null,
+    schema_type: null,
     og_image_url: null,
     canonical_url: null,
     noindex: false,

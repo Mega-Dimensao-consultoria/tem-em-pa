@@ -59,6 +59,8 @@ export function SeoOverrideDialog({
       const patch = {
         seo_title: value.seo_title || null,
         seo_description: value.seo_description || null,
+        seo_keywords: value.seo_keywords || null,
+        schema_type: value.schema_type || null,
         og_image_url: value.og_image_url || null,
         canonical_url: value.canonical_url || null,
         noindex: !!value.noindex,

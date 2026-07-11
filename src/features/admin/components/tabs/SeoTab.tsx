@@ -108,7 +108,17 @@ function GlobalsEditor({ initial }: { initial: SeoGlobals }) {
           </div>
         </div>
         <div className="mt-4">
-          <Label htmlFor="desc">Descrição padrão do site</Label>
+          <Label htmlFor="tagline">Slogan / descrição curta do site</Label>
+          <Input
+            id="tagline"
+            value={g.site_tagline ?? ""}
+            onChange={(e) => patch("site_tagline", e.target.value || null)}
+            placeholder="Aparece no rodapé e como texto institucional em todo o site."
+            maxLength={180}
+          />
+        </div>
+        <div className="mt-4">
+          <Label htmlFor="desc">Descrição padrão do site (meta description)</Label>
           <Textarea
             id="desc"
             rows={2}
@@ -116,6 +126,20 @@ function GlobalsEditor({ initial }: { initial: SeoGlobals }) {
             onChange={(e) => patch("default_description", e.target.value)}
             maxLength={320}
           />
+        </div>
+        <div className="mt-4">
+          <Label htmlFor="kws">Palavras-chave padrão</Label>
+          <Textarea
+            id="kws"
+            rows={2}
+            value={g.default_keywords ?? ""}
+            onChange={(e) => patch("default_keywords", e.target.value || null)}
+            placeholder="Separadas por vírgula. Ex.: guia local, empresas, serviços"
+            maxLength={320}
+          />
+          <p className="mt-1 text-xs text-muted-foreground">
+            Usadas quando uma página não tem palavras-chave próprias.
+          </p>
         </div>
         <div className="mt-4">
           <Label htmlFor="og-default">Imagem social padrão (og:image fallback)</Label>

@@ -5,6 +5,8 @@ import { MapPin, Sparkles, ShieldCheck, Store, Mail as MailIcon, Loader2 } from 
 import { PageShell } from "@/components/PageShell";
 import { ContactDialog } from "@/features/contact/ContactDialog";
 import { listStates, listCitiesByState } from "@/features/companies/functions";
+import { seoGlobalsServerQO } from "@/features/seo/functions/getGlobals";
+import { resolveSeo, buildSeoHead } from "@/lib/seo/render";
 
 const BASE = "https://www.temnaminhacidade.com.br";
 

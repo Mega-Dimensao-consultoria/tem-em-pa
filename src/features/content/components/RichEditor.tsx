@@ -20,7 +20,9 @@ import {
   Image as ImageIcon,
   Loader2,
   Unlink,
+  Code2,
 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";

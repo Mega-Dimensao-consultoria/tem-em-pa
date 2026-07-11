@@ -4,6 +4,8 @@ import { PageShell } from '@/components/PageShell'
 import { supabase } from '@/integrations/supabase/client'
 import { EventCalendarButtons } from '@/features/events/components/EventCalendarButtons'
 import { ShareButton } from '@/components/ShareButton'
+import { seoGlobalsServerQO } from '@/features/seo/functions/getGlobals'
+import { resolveSeo, buildSeoHead } from '@/lib/seo/render'
 
 type LoadedEvent = {
   id: string

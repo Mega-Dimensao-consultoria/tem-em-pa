@@ -12,7 +12,7 @@ function publicClient() {
 }
 
 const CITY_COLS =
-  "id, name, slug, state, lat, lng, timezone, is_active, hero_headline, hero_subheadline, search_placeholder, og_image_url" as const;
+  "id, name, slug, state, lat, lng, timezone, is_active, hero_headline, hero_subheadline, search_placeholder, og_image_url, seo_title, seo_description, canonical_url, noindex" as const;
 
 export type City = {
   id: string;
@@ -27,6 +27,10 @@ export type City = {
   hero_subheadline: string | null;
   search_placeholder: string | null;
   og_image_url: string | null;
+  seo_title: string | null;
+  seo_description: string | null;
+  canonical_url: string | null;
+  noindex: boolean | null;
 };
 
 export type Neighborhood = {

@@ -50,7 +50,9 @@ export function AllCompaniesTab() {
   const [cityId, setCityId] = useState<string>("all");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [seoForId, setSeoForId] = useState<string | null>(null);
+  const [promoForId, setPromoForId] = useState<string | null>(null);
   const seoCompany = seoForId ? data.find((c) => c.id === seoForId) ?? null : null;
+  const promoCompany = promoForId ? data.find((c) => c.id === promoForId) ?? null : null;
 
   const filtered = useMemo(() => {
     return data.filter((c) => {

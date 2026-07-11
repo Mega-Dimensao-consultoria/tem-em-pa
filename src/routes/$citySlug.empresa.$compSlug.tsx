@@ -20,6 +20,7 @@ import { getCompanyBySlug } from "@/features/companies/functions";
 import { getCompanyContact } from "@/features/companies/functions/contact";
 import { CompanyDetailSkeleton } from "@/components/feedback/Skeletons";
 import { supabase } from "@/integrations/supabase/client";
+import { seoGlobalsServerQO } from "@/features/seo/functions/getGlobals";
 
 type SlugParams = { citySlug: string; compSlug: string };
 

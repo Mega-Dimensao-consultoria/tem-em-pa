@@ -8,9 +8,19 @@ export type AdminSitePage = {
   title: string
   content_html: string
   updated_at: string
+  seo_title: string | null
+  seo_description: string | null
+  og_title: string | null
+  og_description: string | null
+  og_image_url: string | null
+  canonical_url: string | null
+  noindex: boolean
 }
 
 const KEY = ['admin', 'site-pages'] as const
+
+const SELECT =
+  'slug, title, content_html, updated_at, seo_title, seo_description, og_title, og_description, og_image_url, canonical_url, noindex'
 
 export function useAdminSitePages() {
   return useQuery({
@@ -18,22 +28,36 @@ export function useAdminSitePages() {
     queryFn: async (): Promise<AdminSitePage[]> => {
       const { data, error } = await supabase
         .from('site_pages')
-        .select('slug, title, content_html, updated_at')
+        .select(SELECT)
         .order('slug', { ascending: true })
       if (error) throw error
-      return (data ?? []) as AdminSitePage[]
+      return (data ?? []) as unknown as AdminSitePage[]
     },
   })
+}
+
+export type UpdateSitePageInput = {
+  slug: string
+  title: string
+  content_html: string
+  seo_title?: string | null
+  seo_description?: string | null
+  og_title?: string | null
+  og_description?: string | null
+  og_image_url?: string | null
+  canonical_url?: string | null
+  noindex?: boolean
 }
 
 export function useUpdateSitePage() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: async (input: { slug: string; title: string; content_html: string }) => {
+    mutationFn: async (input: UpdateSitePageInput) => {
+      const { slug, ...rest } = input
       const { error } = await supabase
         .from('site_pages')
-        .update({ title: input.title, content_html: input.content_html })
-        .eq('slug', input.slug)
+        .update(rest as never)
+        .eq('slug', slug)
       if (error) throw error
     },
     onSuccess: (_d, vars) => {

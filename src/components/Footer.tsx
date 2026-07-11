@@ -1,8 +1,15 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Facebook } from "lucide-react";
 import { Logo } from "./Logo";
+import { useSeoGlobals } from "@/features/seo/functions/settings";
+import { DEFAULT_GLOBALS } from "@/lib/seo/types";
 
 export function Footer() {
+  const { data: globals } = useSeoGlobals();
+  const g = globals ?? DEFAULT_GLOBALS;
+  const tagline =
+    g.site_tagline ??
+    "O guia local por cidade. Descubra empresas, produtos e serviços perto de você.";
   return (
     <footer
       role="contentinfo"
@@ -11,10 +18,10 @@ export function Footer() {
     >
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-3">
         <section aria-labelledby="footer-brand">
-          <h2 id="footer-brand" className="sr-only">Sobre o Tem na minha cidade</h2>
+          <h2 id="footer-brand" className="sr-only">Sobre o {g.site_name}</h2>
           <Logo />
           <p className="mt-3 max-w-xs text-sm text-muted-foreground">
-            O guia local por cidade. Descubra empresas, produtos e serviços perto de você em várias cidades.
+            {tagline}
           </p>
           <ul className="mt-4 flex items-center gap-3" aria-label="Redes sociais">
             <li>

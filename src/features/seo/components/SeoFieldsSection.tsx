@@ -183,7 +183,7 @@ export function SeoFieldsSection({
           <Label>Imagem social (og:image)</Label>
           <div className="mt-1">
             <AttachmentPicker
-              value={value.og_image_url}
+              value={value.og_image_url ?? null}
               onChange={(url) => onChange({ og_image_url: url })}
               upload={doUpload}
               remove={doRemove}

@@ -238,6 +238,25 @@ function EditarEmpresa() {
           />
         </div>
       </section>
+
+      {company ? (
+        <SeoOverrideDialog
+          table="companies"
+          id={id}
+          open={seoOpen}
+          onOpenChange={setSeoOpen}
+          title={(company.name as string) ?? ""}
+          previewUrl={`https://www.temnaminhacidade.com.br/empresa/${id}`}
+          initial={{
+            seo_title: (company as { seo_title?: string | null }).seo_title ?? null,
+            seo_description: (company as { seo_description?: string | null }).seo_description ?? null,
+            og_image_url: (company as { og_image_url?: string | null }).og_image_url ?? null,
+            canonical_url: (company as { canonical_url?: string | null }).canonical_url ?? null,
+            noindex: (company as { noindex?: boolean | null }).noindex ?? null,
+          }}
+          invalidateKeys={[["company-edit", id], ["company"]]}
+        />
+      ) : null}
     </PageShell>
   );
 }

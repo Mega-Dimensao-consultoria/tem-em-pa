@@ -106,9 +106,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           url: "https://www.temnaminhacidade.com.br",
           description: "Guia local por cidade — restaurantes, mercados, serviços e comércio.",
           sameAs: [
-            "https://www.instagram.com/temnacidadebr",
-            "https://www.facebook.com/temnacidade",
-            "https://www.tiktok.com/temnacidade",
+            "https://www.instagram.com/temnaminhacidade",
+            "https://www.facebook.com/temnaminhacidade",
+            "https://www.tiktok.com/temnaminhacidade",
           ],
         }),
       },

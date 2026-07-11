@@ -19,7 +19,7 @@ export function Footer() {
           <ul className="mt-4 flex items-center gap-3" aria-label="Redes sociais">
             <li>
               <a
-                href="https://www.instagram.com/temnacidadebr"
+                href="https://www.instagram.com/temnaminhacidade"
                 target="_blank"
                 rel="noopener noreferrer me"
                 aria-label="Instagram do Tem na minha cidade"
@@ -30,7 +30,7 @@ export function Footer() {
             </li>
             <li>
               <a
-                href="https://www.facebook.com/temnacidade"
+                href="https://www.facebook.com/temnaminhacidade"
                 target="_blank"
                 rel="noopener noreferrer me"
                 aria-label="Facebook do Tem na minha cidade"
@@ -41,7 +41,7 @@ export function Footer() {
             </li>
             <li>
               <a
-                href="https://www.tiktok.com/temnacidade"
+                href="https://www.tiktok.com/temnaminhacidade"
                 target="_blank"
                 rel="noopener noreferrer me"
                 aria-label="TikTok do Tem na minha cidade"

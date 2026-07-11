@@ -29,7 +29,7 @@ export function Footer() {
                 href="https://www.instagram.com/temnaminhacidade"
                 target="_blank"
                 rel="noopener noreferrer me"
-                aria-label="Instagram do Tem na minha cidade"
+                aria-label={`Instagram do ${g.site_name}`}
                 className="text-muted-foreground transition hover:text-foreground"
               >
                 <Instagram className="h-5 w-5" aria-hidden="true" />
@@ -40,7 +40,7 @@ export function Footer() {
                 href="https://www.facebook.com/temnaminhacidade"
                 target="_blank"
                 rel="noopener noreferrer me"
-                aria-label="Facebook do Tem na minha cidade"
+                aria-label={`Facebook do ${g.site_name}`}
                 className="text-muted-foreground transition hover:text-foreground"
               >
                 <Facebook className="h-5 w-5" aria-hidden="true" />
@@ -51,7 +51,7 @@ export function Footer() {
                 href="https://www.tiktok.com/temnaminhacidade"
                 target="_blank"
                 rel="noopener noreferrer me"
-                aria-label="TikTok do Tem na minha cidade"
+                aria-label={`TikTok do ${g.site_name}`}
                 className="text-muted-foreground transition hover:text-foreground"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -64,7 +64,7 @@ export function Footer() {
                 href="https://www.threads.com/@temnaminhacidade"
                 target="_blank"
                 rel="noopener noreferrer me"
-                aria-label="Threads do Tem na minha cidade"
+                aria-label={`Threads do ${g.site_name}`}
                 className="text-muted-foreground transition hover:text-foreground"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -96,7 +96,7 @@ export function Footer() {
         </nav>
       </div>
       <div className="border-t border-border/60 py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Tem na minha cidade — Todos os direitos reservados.
+        © {new Date().getFullYear()} {g.site_name} — Todos os direitos reservados.
       </div>
     </footer>
   );

@@ -11,7 +11,7 @@ export function Logo({ className = "" }: { className?: string }) {
         className="h-9 w-9 shrink-0"
       />
       <span className="text-lg tracking-tight">
-        Tem na <span className="text-secondary">cidade</span>
+        Tem na minha <span className="text-secondary">cidade</span>
       </span>
     </span>
   );

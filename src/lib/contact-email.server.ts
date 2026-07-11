@@ -83,4 +83,4 @@ export async function enqueueContactEmail(args: {
   return { queued: true as const }
 }
 
-export const ADMIN_CONTACT_EMAIL = 'contato@www.temnaminhacidade.com.br'
+export const ADMIN_CONTACT_EMAIL = 'contato@temnaminhacidade.com.br'

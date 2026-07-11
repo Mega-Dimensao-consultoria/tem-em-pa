@@ -50,7 +50,10 @@ export function RichEditor({
   minHeight = 360,
 }: Props) {
   const [uploading, setUploading] = useState(false);
+  const [sourceMode, setSourceMode] = useState(false);
+  const [sourceDraft, setSourceDraft] = useState(value || "");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
 
   const editor = useEditor({
     // Evita mismatch de hidratação no SSR do TanStack Start.

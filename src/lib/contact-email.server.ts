@@ -8,8 +8,8 @@ import { render } from '@react-email/components'
 import { TEMPLATES } from '@/lib/email-templates/registry'
 
 const SITE_NAME = 'Tem na minha cidade'
-const SENDER_DOMAIN = 'notificacoes.www.temnaminhacidade.com.br'
-const FROM_DOMAIN = 'notificacoes.www.temnaminhacidade.com.br'
+const SENDER_DOMAIN = 'notificacoes.temnaminhacidade.com.br'
+const FROM_DOMAIN = 'notificacoes.temnaminhacidade.com.br'
 
 export async function enqueueContactEmail(args: {
   supabase: any

@@ -8,8 +8,8 @@ import {
 } from '@/lib/email-templates/registry'
 
 const SITE_NAME = 'Tem na minha cidade'
-const SENDER_DOMAIN = 'notificacoes.www.temnaminhacidade.com.br'
-const FROM_DOMAIN = 'notificacoes.www.temnaminhacidade.com.br'
+const SENDER_DOMAIN = 'notificacoes.temnaminhacidade.com.br'
+const FROM_DOMAIN = 'notificacoes.temnaminhacidade.com.br'
 const APP_URL = 'https://www.temnaminhacidade.com.br'
 
 function generateToken(): string {

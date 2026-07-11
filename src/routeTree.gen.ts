@@ -53,6 +53,7 @@ import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lova
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as ApiPublicPushDispatchRouteImport } from './routes/api/public/push.dispatch'
+import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 import { Route as ApiPublicHooksRetryEmailDlqRouteImport } from './routes/api/public/hooks/retry-email-dlq'
 import { Route as ApiPublicHooksNotificationEmailRouteImport } from './routes/api/public/hooks/notification-email'
 import { Route as ApiPublicOgEventIdRouteImport } from './routes/api/public/og.event.$id'
@@ -291,6 +292,12 @@ const ApiPublicPushDispatchRoute = ApiPublicPushDispatchRouteImport.update({
   path: '/api/public/push/dispatch',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPaymentsWebhookRoute =
+  ApiPublicPaymentsWebhookRouteImport.update({
+    id: '/api/public/payments/webhook',
+    path: '/api/public/payments/webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksRetryEmailDlqRoute =
   ApiPublicHooksRetryEmailDlqRouteImport.update({
     id: '/api/public/hooks/retry-email-dlq',
@@ -375,6 +382,7 @@ export interface FileRoutesByFullPath {
   '/painel/': typeof AuthenticatedPainelIndexRoute
   '/api/public/hooks/notification-email': typeof ApiPublicHooksNotificationEmailRoute
   '/api/public/hooks/retry-email-dlq': typeof ApiPublicHooksRetryEmailDlqRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/api/public/push/dispatch': typeof ApiPublicPushDispatchRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -424,6 +432,7 @@ export interface FileRoutesByTo {
   '/painel': typeof AuthenticatedPainelIndexRoute
   '/api/public/hooks/notification-email': typeof ApiPublicHooksNotificationEmailRoute
   '/api/public/hooks/retry-email-dlq': typeof ApiPublicHooksRetryEmailDlqRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/api/public/push/dispatch': typeof ApiPublicPushDispatchRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -478,6 +487,7 @@ export interface FileRoutesById {
   '/_authenticated/painel/': typeof AuthenticatedPainelIndexRoute
   '/api/public/hooks/notification-email': typeof ApiPublicHooksNotificationEmailRoute
   '/api/public/hooks/retry-email-dlq': typeof ApiPublicHooksRetryEmailDlqRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/api/public/push/dispatch': typeof ApiPublicPushDispatchRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -532,6 +542,7 @@ export interface FileRouteTypes {
     | '/painel/'
     | '/api/public/hooks/notification-email'
     | '/api/public/hooks/retry-email-dlq'
+    | '/api/public/payments/webhook'
     | '/api/public/push/dispatch'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
@@ -581,6 +592,7 @@ export interface FileRouteTypes {
     | '/painel'
     | '/api/public/hooks/notification-email'
     | '/api/public/hooks/retry-email-dlq'
+    | '/api/public/payments/webhook'
     | '/api/public/push/dispatch'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
@@ -634,6 +646,7 @@ export interface FileRouteTypes {
     | '/_authenticated/painel/'
     | '/api/public/hooks/notification-email'
     | '/api/public/hooks/retry-email-dlq'
+    | '/api/public/payments/webhook'
     | '/api/public/push/dispatch'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
@@ -669,6 +682,7 @@ export interface RootRouteChildren {
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiPublicHooksNotificationEmailRoute: typeof ApiPublicHooksNotificationEmailRoute
   ApiPublicHooksRetryEmailDlqRoute: typeof ApiPublicHooksRetryEmailDlqRoute
+  ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   ApiPublicPushDispatchRoute: typeof ApiPublicPushDispatchRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
@@ -986,6 +1000,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPushDispatchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/payments/webhook': {
+      id: '/api/public/payments/webhook'
+      path: '/api/public/payments/webhook'
+      fullPath: '/api/public/payments/webhook'
+      preLoaderRoute: typeof ApiPublicPaymentsWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/retry-email-dlq': {
       id: '/api/public/hooks/retry-email-dlq'
       path: '/api/public/hooks/retry-email-dlq'
@@ -1148,6 +1169,7 @@ const rootRouteChildren: RootRouteChildren = {
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiPublicHooksNotificationEmailRoute: ApiPublicHooksNotificationEmailRoute,
   ApiPublicHooksRetryEmailDlqRoute: ApiPublicHooksRetryEmailDlqRoute,
+  ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   ApiPublicPushDispatchRoute: ApiPublicPushDispatchRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,

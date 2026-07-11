@@ -8,7 +8,7 @@ export const getCategoryBySlug = createServerFn({ method: "GET" })
     const sb = publicClient();
     const { data: cat, error } = await sb
       .from("categories")
-      .select("id, name, slug, icon")
+      .select("id, name, slug, icon, seo_title, seo_description, og_image_url, canonical_url, noindex")
       .eq("slug", data.slug)
       .maybeSingle();
     if (error) throw new Error(error.message);

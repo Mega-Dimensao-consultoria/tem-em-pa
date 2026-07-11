@@ -194,6 +194,25 @@ function EventosOwnerPage() {
           event={editing}
         />
       ) : null}
+
+      {seoFor ? (
+        <SeoOverrideDialog
+          table="city_events"
+          id={seoFor.id}
+          open={!!seoFor}
+          onOpenChange={(v) => (v ? null : setSeoFor(null))}
+          title={seoFor.title}
+          previewUrl={`https://www.temnaminhacidade.com.br/eventos/${seoFor.id}`}
+          initial={{
+            seo_title: seoFor.seo_title ?? null,
+            seo_description: seoFor.seo_description ?? null,
+            og_image_url: seoFor.og_image_url ?? null,
+            canonical_url: seoFor.canonical_url ?? null,
+            noindex: seoFor.noindex ?? null,
+          }}
+          invalidateKeys={[cityEventsKeys.ownerList(id), cityEventsKeys.byCompany(id)]}
+        />
+      ) : null}
     </PageShell>
   )
 }

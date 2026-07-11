@@ -84,7 +84,15 @@ export function BlogPostEditor({ postId, onClose }: Props) {
     setCoverUploading(true);
     try {
       const url = await uploadBlogImage("cover", file);
+      const prev = cover;
       setCover(url);
+      if (prev) {
+        try {
+          await removeFromBucket("blog-images", prev);
+        } catch {
+          /* ignora falha de cleanup */
+        }
+      }
       toast.success("Capa atualizada");
     } catch (e) {
       toast.error((e as Error).message);
@@ -92,6 +100,19 @@ export function BlogPostEditor({ postId, onClose }: Props) {
       setCoverUploading(false);
     }
   }
+
+  async function handleCoverRemove() {
+    const prev = cover;
+    setCover(null);
+    if (prev) {
+      try {
+        await removeFromBucket("blog-images", prev);
+      } catch {
+        /* ignora falha de cleanup */
+      }
+    }
+  }
+
 
   function handleSave(overrideStatus?: BlogStatus) {
     if (!title.trim()) {

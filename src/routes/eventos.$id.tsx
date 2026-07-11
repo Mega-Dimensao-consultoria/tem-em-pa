@@ -174,7 +174,7 @@ export const Route = createFileRoute('/eventos/$id')({
 })
 
 function EventDetailPage() {
-  const ev = Route.useLoaderData()
+  const { event: ev } = Route.useLoaderData()
   const when = new Date(ev.starts_at).toLocaleString('pt-BR', {
     day: '2-digit',
     month: 'long',

@@ -229,9 +229,11 @@ export function BlogPostEditor({ postId, onClose }: Props) {
                 value={seo}
                 onChange={(p) => setSeo((prev) => ({ ...prev, ...p }))}
                 uploadImage={(f) => uploadBlogImage("cover", f)}
+                removeImage={(url) => removeFromBucket("blog-images", url)}
                 fields={{ ogTitle: false, ogDescription: false }}
                 helperFor={{ title }}
               />
+
               <SeoPreview
                 title={seo.seo_title || title}
                 description={seo.seo_description || excerpt || ""}

@@ -400,6 +400,15 @@ export function AllCompaniesTab() {
           invalidateKeys={[[...adminKeys.all, "all-companies"], ["company"]]}
         />
       ) : null}
+
+      {promoCompany ? (
+        <AdminGrantPromotionDialog
+          open={!!promoForId}
+          onOpenChange={(v) => (v ? null : setPromoForId(null))}
+          companyId={promoCompany.id}
+          companyName={promoCompany.name}
+        />
+      ) : null}
     </section>
   );
 }

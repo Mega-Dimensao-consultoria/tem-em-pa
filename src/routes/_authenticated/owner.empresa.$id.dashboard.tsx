@@ -197,6 +197,11 @@ function DashboardPage() {
                 Eventos
               </Link>
             </Button>
+            <Button asChild size="sm" className="bg-gradient-to-r from-primary to-purple-600 text-primary-foreground">
+              <Link to="/owner/empresa/$id/destaque" params={{ id }}>
+                ✨ Destacar
+              </Link>
+            </Button>
             <RemovalRequestDialog companyId={id} userId={user?.id ?? null} ownerMode />
           </div>
         </div>

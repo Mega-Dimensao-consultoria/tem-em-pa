@@ -29,6 +29,7 @@ import { Route as PreviewTokenRouteImport } from './routes/preview.$token'
 import { Route as EventosIdRouteImport } from './routes/eventos.$id'
 import { Route as EmpresaIdRouteImport } from './routes/empresa.$id'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
+import { Route as CheckoutRetornoRouteImport } from './routes/checkout.retorno'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthTwoFactorRouteImport } from './routes/auth_.two-factor'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
@@ -53,12 +54,14 @@ import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lova
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as ApiPublicPushDispatchRouteImport } from './routes/api/public/push.dispatch'
+import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 import { Route as ApiPublicHooksRetryEmailDlqRouteImport } from './routes/api/public/hooks/retry-email-dlq'
 import { Route as ApiPublicHooksNotificationEmailRouteImport } from './routes/api/public/hooks/notification-email'
 import { Route as ApiPublicOgEventIdRouteImport } from './routes/api/public/og.event.$id'
 import { Route as AuthenticatedOwnerEmpresaIdProdutosRouteImport } from './routes/_authenticated/owner.empresa.$id.produtos'
 import { Route as AuthenticatedOwnerEmpresaIdEventosRouteImport } from './routes/_authenticated/owner.empresa.$id.eventos'
 import { Route as AuthenticatedOwnerEmpresaIdEditarRouteImport } from './routes/_authenticated/owner.empresa.$id.editar'
+import { Route as AuthenticatedOwnerEmpresaIdDestaqueRouteImport } from './routes/_authenticated/owner.empresa.$id.destaque'
 import { Route as AuthenticatedOwnerEmpresaIdDashboardRouteImport } from './routes/_authenticated/owner.empresa.$id.dashboard'
 
 const TermosRoute = TermosRouteImport.update({
@@ -158,6 +161,11 @@ const EmpresaIdRoute = EmpresaIdRouteImport.update({
 const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
   id: '/email/unsubscribe',
   path: '/email/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRetornoRoute = CheckoutRetornoRouteImport.update({
+  id: '/checkout/retorno',
+  path: '/checkout/retorno',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
@@ -291,6 +299,12 @@ const ApiPublicPushDispatchRoute = ApiPublicPushDispatchRouteImport.update({
   path: '/api/public/push/dispatch',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPaymentsWebhookRoute =
+  ApiPublicPaymentsWebhookRouteImport.update({
+    id: '/api/public/payments/webhook',
+    path: '/api/public/payments/webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksRetryEmailDlqRoute =
   ApiPublicHooksRetryEmailDlqRouteImport.update({
     id: '/api/public/hooks/retry-email-dlq',
@@ -326,6 +340,12 @@ const AuthenticatedOwnerEmpresaIdEditarRoute =
     path: '/owner/empresa/$id/editar',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedOwnerEmpresaIdDestaqueRoute =
+  AuthenticatedOwnerEmpresaIdDestaqueRouteImport.update({
+    id: '/owner/empresa/$id/destaque',
+    path: '/owner/empresa/$id/destaque',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedOwnerEmpresaIdDashboardRoute =
   AuthenticatedOwnerEmpresaIdDashboardRouteImport.update({
     id: '/owner/empresa/$id/dashboard',
@@ -354,6 +374,7 @@ export interface FileRoutesByFullPath {
   '/painel': typeof AuthenticatedPainelRouteWithChildren
   '/auth/two-factor': typeof AuthTwoFactorRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/checkout/retorno': typeof CheckoutRetornoRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
@@ -375,11 +396,13 @@ export interface FileRoutesByFullPath {
   '/painel/': typeof AuthenticatedPainelIndexRoute
   '/api/public/hooks/notification-email': typeof ApiPublicHooksNotificationEmailRoute
   '/api/public/hooks/retry-email-dlq': typeof ApiPublicHooksRetryEmailDlqRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/api/public/push/dispatch': typeof ApiPublicPushDispatchRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
   '/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
+  '/owner/empresa/$id/destaque': typeof AuthenticatedOwnerEmpresaIdDestaqueRoute
   '/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/owner/empresa/$id/eventos': typeof AuthenticatedOwnerEmpresaIdEventosRoute
   '/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
@@ -403,6 +426,7 @@ export interface FileRoutesByTo {
   '/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/auth/two-factor': typeof AuthTwoFactorRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/checkout/retorno': typeof CheckoutRetornoRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
@@ -424,11 +448,13 @@ export interface FileRoutesByTo {
   '/painel': typeof AuthenticatedPainelIndexRoute
   '/api/public/hooks/notification-email': typeof ApiPublicHooksNotificationEmailRoute
   '/api/public/hooks/retry-email-dlq': typeof ApiPublicHooksRetryEmailDlqRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/api/public/push/dispatch': typeof ApiPublicPushDispatchRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
   '/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
+  '/owner/empresa/$id/destaque': typeof AuthenticatedOwnerEmpresaIdDestaqueRoute
   '/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/owner/empresa/$id/eventos': typeof AuthenticatedOwnerEmpresaIdEventosRoute
   '/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
@@ -457,6 +483,7 @@ export interface FileRoutesById {
   '/_authenticated/painel': typeof AuthenticatedPainelRouteWithChildren
   '/auth_/two-factor': typeof AuthTwoFactorRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/checkout/retorno': typeof CheckoutRetornoRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
@@ -478,11 +505,13 @@ export interface FileRoutesById {
   '/_authenticated/painel/': typeof AuthenticatedPainelIndexRoute
   '/api/public/hooks/notification-email': typeof ApiPublicHooksNotificationEmailRoute
   '/api/public/hooks/retry-email-dlq': typeof ApiPublicHooksRetryEmailDlqRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/api/public/push/dispatch': typeof ApiPublicPushDispatchRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
   '/_authenticated/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
+  '/_authenticated/owner/empresa/$id/destaque': typeof AuthenticatedOwnerEmpresaIdDestaqueRoute
   '/_authenticated/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/_authenticated/owner/empresa/$id/eventos': typeof AuthenticatedOwnerEmpresaIdEventosRoute
   '/_authenticated/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
@@ -511,6 +540,7 @@ export interface FileRouteTypes {
     | '/painel'
     | '/auth/two-factor'
     | '/blog/$slug'
+    | '/checkout/retorno'
     | '/email/unsubscribe'
     | '/empresa/$id'
     | '/eventos/$id'
@@ -532,11 +562,13 @@ export interface FileRouteTypes {
     | '/painel/'
     | '/api/public/hooks/notification-email'
     | '/api/public/hooks/retry-email-dlq'
+    | '/api/public/payments/webhook'
     | '/api/public/push/dispatch'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
     | '/owner/empresa/$id/dashboard'
+    | '/owner/empresa/$id/destaque'
     | '/owner/empresa/$id/editar'
     | '/owner/empresa/$id/eventos'
     | '/owner/empresa/$id/produtos'
@@ -560,6 +592,7 @@ export interface FileRouteTypes {
     | '/notificacoes'
     | '/auth/two-factor'
     | '/blog/$slug'
+    | '/checkout/retorno'
     | '/email/unsubscribe'
     | '/empresa/$id'
     | '/eventos/$id'
@@ -581,11 +614,13 @@ export interface FileRouteTypes {
     | '/painel'
     | '/api/public/hooks/notification-email'
     | '/api/public/hooks/retry-email-dlq'
+    | '/api/public/payments/webhook'
     | '/api/public/push/dispatch'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
     | '/owner/empresa/$id/dashboard'
+    | '/owner/empresa/$id/destaque'
     | '/owner/empresa/$id/editar'
     | '/owner/empresa/$id/eventos'
     | '/owner/empresa/$id/produtos'
@@ -613,6 +648,7 @@ export interface FileRouteTypes {
     | '/_authenticated/painel'
     | '/auth_/two-factor'
     | '/blog/$slug'
+    | '/checkout/retorno'
     | '/email/unsubscribe'
     | '/empresa/$id'
     | '/eventos/$id'
@@ -634,11 +670,13 @@ export interface FileRouteTypes {
     | '/_authenticated/painel/'
     | '/api/public/hooks/notification-email'
     | '/api/public/hooks/retry-email-dlq'
+    | '/api/public/payments/webhook'
     | '/api/public/push/dispatch'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
     | '/_authenticated/owner/empresa/$id/dashboard'
+    | '/_authenticated/owner/empresa/$id/destaque'
     | '/_authenticated/owner/empresa/$id/editar'
     | '/_authenticated/owner/empresa/$id/eventos'
     | '/_authenticated/owner/empresa/$id/produtos'
@@ -659,6 +697,7 @@ export interface RootRouteChildren {
   SobreRoute: typeof SobreRoute
   TermosRoute: typeof TermosRoute
   AuthTwoFactorRoute: typeof AuthTwoFactorRoute
+  CheckoutRetornoRoute: typeof CheckoutRetornoRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   EmpresaIdRoute: typeof EmpresaIdRoute
   EventosIdRoute: typeof EventosIdRoute
@@ -669,6 +708,7 @@ export interface RootRouteChildren {
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiPublicHooksNotificationEmailRoute: typeof ApiPublicHooksNotificationEmailRoute
   ApiPublicHooksRetryEmailDlqRoute: typeof ApiPublicHooksRetryEmailDlqRoute
+  ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   ApiPublicPushDispatchRoute: typeof ApiPublicPushDispatchRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
@@ -816,6 +856,13 @@ declare module '@tanstack/react-router' {
       path: '/email/unsubscribe'
       fullPath: '/email/unsubscribe'
       preLoaderRoute: typeof EmailUnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout/retorno': {
+      id: '/checkout/retorno'
+      path: '/checkout/retorno'
+      fullPath: '/checkout/retorno'
+      preLoaderRoute: typeof CheckoutRetornoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/$slug': {
@@ -986,6 +1033,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPushDispatchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/payments/webhook': {
+      id: '/api/public/payments/webhook'
+      path: '/api/public/payments/webhook'
+      fullPath: '/api/public/payments/webhook'
+      preLoaderRoute: typeof ApiPublicPaymentsWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/retry-email-dlq': {
       id: '/api/public/hooks/retry-email-dlq'
       path: '/api/public/hooks/retry-email-dlq'
@@ -1028,6 +1082,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdEditarRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/owner/empresa/$id/destaque': {
+      id: '/_authenticated/owner/empresa/$id/destaque'
+      path: '/owner/empresa/$id/destaque'
+      fullPath: '/owner/empresa/$id/destaque'
+      preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdDestaqueRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/owner/empresa/$id/dashboard': {
       id: '/_authenticated/owner/empresa/$id/dashboard'
       path: '/owner/empresa/$id/dashboard'
@@ -1063,6 +1124,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRouteWithChildren
   AuthenticatedOwnerIndexRoute: typeof AuthenticatedOwnerIndexRoute
   AuthenticatedOwnerEmpresaIdDashboardRoute: typeof AuthenticatedOwnerEmpresaIdDashboardRoute
+  AuthenticatedOwnerEmpresaIdDestaqueRoute: typeof AuthenticatedOwnerEmpresaIdDestaqueRoute
   AuthenticatedOwnerEmpresaIdEditarRoute: typeof AuthenticatedOwnerEmpresaIdEditarRoute
   AuthenticatedOwnerEmpresaIdEventosRoute: typeof AuthenticatedOwnerEmpresaIdEventosRoute
   AuthenticatedOwnerEmpresaIdProdutosRoute: typeof AuthenticatedOwnerEmpresaIdProdutosRoute
@@ -1077,6 +1139,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedOwnerIndexRoute: AuthenticatedOwnerIndexRoute,
   AuthenticatedOwnerEmpresaIdDashboardRoute:
     AuthenticatedOwnerEmpresaIdDashboardRoute,
+  AuthenticatedOwnerEmpresaIdDestaqueRoute:
+    AuthenticatedOwnerEmpresaIdDestaqueRoute,
   AuthenticatedOwnerEmpresaIdEditarRoute:
     AuthenticatedOwnerEmpresaIdEditarRoute,
   AuthenticatedOwnerEmpresaIdEventosRoute:
@@ -1138,6 +1202,7 @@ const rootRouteChildren: RootRouteChildren = {
   SobreRoute: SobreRoute,
   TermosRoute: TermosRoute,
   AuthTwoFactorRoute: AuthTwoFactorRoute,
+  CheckoutRetornoRoute: CheckoutRetornoRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   EmpresaIdRoute: EmpresaIdRoute,
   EventosIdRoute: EventosIdRoute,
@@ -1148,6 +1213,7 @@ const rootRouteChildren: RootRouteChildren = {
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiPublicHooksNotificationEmailRoute: ApiPublicHooksNotificationEmailRoute,
   ApiPublicHooksRetryEmailDlqRoute: ApiPublicHooksRetryEmailDlqRoute,
+  ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   ApiPublicPushDispatchRoute: ApiPublicPushDispatchRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,

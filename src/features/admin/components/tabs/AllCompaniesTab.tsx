@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Check, CheckSquare, ExternalLink, EyeOff, Pencil, Plus, RotateCcw, Search, Square, Trash2, X } from "lucide-react";
+import { Check, CheckSquare, ExternalLink, EyeOff, Pencil, Plus, RotateCcw, Search, Sparkles, Square, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
@@ -15,6 +15,7 @@ import { useBulkCompanyAction, type BulkAction } from "@/features/admin/function
 import { CityFilterSelect } from "./CityFilterSelect";
 import { Empty, Loading } from "../admin-ui";
 import { SeoOverrideDialog } from "@/features/seo/components/SeoOverrideDialog";
+import { AdminGrantPromotionDialog } from "@/features/promotions/components/AdminGrantPromotionDialog";
 import { adminKeys } from "@/features/admin/functions/keys";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -49,7 +50,9 @@ export function AllCompaniesTab() {
   const [cityId, setCityId] = useState<string>("all");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [seoForId, setSeoForId] = useState<string | null>(null);
+  const [promoForId, setPromoForId] = useState<string | null>(null);
   const seoCompany = seoForId ? data.find((c) => c.id === seoForId) ?? null : null;
+  const promoCompany = promoForId ? data.find((c) => c.id === promoForId) ?? null : null;
 
   const filtered = useMemo(() => {
     return data.filter((c) => {
@@ -333,6 +336,16 @@ export function AllCompaniesTab() {
                           <Search className="mr-1 h-4 w-4" aria-hidden="true" />
                           SEO
                         </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setPromoForId(c.id)}
+                          aria-label={`Destacar ${c.name}`}
+                          className="text-primary hover:bg-primary/10"
+                        >
+                          <Sparkles className="mr-1 h-4 w-4" aria-hidden="true" />
+                          Destacar
+                        </Button>
                         <ConfirmDestructive
                           trigger={
                             <Button
@@ -385,6 +398,15 @@ export function AllCompaniesTab() {
             noindex: seoCompany.noindex,
           }}
           invalidateKeys={[[...adminKeys.all, "all-companies"], ["company"]]}
+        />
+      ) : null}
+
+      {promoCompany ? (
+        <AdminGrantPromotionDialog
+          open={!!promoForId}
+          onOpenChange={(v) => (v ? null : setPromoForId(null))}
+          companyId={promoCompany.id}
+          companyName={promoCompany.name}
         />
       ) : null}
     </section>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { MapPin, Sparkles, ShieldCheck, Store, Mail as MailIcon, Loader2 } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { ContactDialog } from "@/features/contact/ContactDialog";
+import { PromotedCompaniesSection } from "@/features/promotions/components/PromotedCompaniesSection";
 import { listStates, listCitiesByState } from "@/features/companies/functions";
 import { seoGlobalsServerQO } from "@/features/seo/functions/getGlobals";
 import { resolveSeo, buildSeoHead } from "@/lib/seo/render";
@@ -162,6 +163,11 @@ function Hub() {
           </div>
         </div>
       </section>
+
+      <PromotedCompaniesSection
+        title="Empresas em destaque agora"
+        subtitle="Selecionadas em tempo real entre as empresas com destaque ativo."
+      />
 
       <section className="mx-auto max-w-6xl px-4 pb-20 pt-8">
         <div className="overflow-hidden rounded-3xl bg-hero-gradient p-8 text-center text-white shadow-elegant md:p-12">

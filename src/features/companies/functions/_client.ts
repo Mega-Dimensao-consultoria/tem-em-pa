@@ -16,7 +16,7 @@ export const CARD_COLS =
 
 /** Colunas para a página de detalhe. */
 export const DETAIL_COLS =
-  "id, name, slug, description, cep, address, number, complement, city_id, neighborhood_id, lat, lng, phone, whatsapp, email, website, instagram_url, facebook_url, hours, gallery_urls, logo_url, cover_url, status, owner_id, is_featured, category_id, categories:category_id(name, slug, icon), cities:city_id(name, slug, state), neighborhoods:neighborhood_id(name, slug)" as const;
+  "id, name, slug, description, cep, address, number, complement, city_id, neighborhood_id, lat, lng, phone, whatsapp, email, website, instagram_url, facebook_url, hours, gallery_urls, logo_url, cover_url, status, owner_id, is_featured, category_id, seo_title, seo_description, og_image_url, canonical_url, noindex, categories:category_id(name, slug, icon), cities:city_id(name, slug, state), neighborhoods:neighborhood_id(name, slug)" as const;
 
 type JsonPrimitive = string | number | boolean | null;
 type Json = JsonPrimitive | Json[] | { [key: string]: Json };
@@ -51,6 +51,11 @@ export type NormalizedCompany = {
   facebook_url?: string | null;
   hours?: Json;
   gallery_urls?: string[] | null;
+  seo_title?: string | null;
+  seo_description?: string | null;
+  og_image_url?: string | null;
+  canonical_url?: string | null;
+  noindex?: boolean | null;
   categories: { name: string | null; slug: string | null; icon: string | null } | null;
   city: string | null;
   city_slug: string | null;

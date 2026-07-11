@@ -4,6 +4,8 @@ import { PageShell } from '@/components/PageShell'
 import { supabase } from '@/integrations/supabase/client'
 import { EventCalendarButtons } from '@/features/events/components/EventCalendarButtons'
 import { ShareButton } from '@/components/ShareButton'
+import { seoGlobalsServerQO } from '@/features/seo/functions/getGlobals'
+import { resolveSeo, buildSeoHead } from '@/lib/seo/render'
 
 type LoadedEvent = {
   id: string
@@ -16,11 +18,11 @@ type LoadedEvent = {
   company: { id: string; name: string; logo_url: string | null } | null
 }
 
-async function loadEvent(id: string): Promise<LoadedEvent> {
+async function loadEvent(id: string): Promise<LoadedEvent & { seo_title: string | null; seo_description: string | null; og_image_url: string | null; canonical_url: string | null; noindex: boolean | null }> {
   const { data, error } = await supabase
     .from('city_events')
     .select(
-      'id, title, description, starts_at, ends_at, location, image_url, is_active, companies:company_id(id, name, logo_url, status)',
+      'id, title, description, starts_at, ends_at, location, image_url, is_active, seo_title, seo_description, og_image_url, canonical_url, noindex, companies:company_id(id, name, logo_url, status, cities:city_id(name, state))',
     )
     .eq('id', id)
     .maybeSingle()
@@ -35,7 +37,12 @@ async function loadEvent(id: string): Promise<LoadedEvent> {
         location: string | null
         image_url: string | null
         is_active: boolean
-        companies: { id: string; name: string; logo_url: string | null; status: string } | null
+        seo_title: string | null
+        seo_description: string | null
+        og_image_url: string | null
+        canonical_url: string | null
+        noindex: boolean | null
+        companies: { id: string; name: string; logo_url: string | null; status: string; cities: { name: string | null; state: string | null } | null } | null
       }
     | null
   if (!row || !row.is_active || row.companies?.status !== 'approved') {
@@ -49,68 +56,89 @@ async function loadEvent(id: string): Promise<LoadedEvent> {
     ends_at: row.ends_at,
     location: row.location,
     image_url: row.image_url,
+    seo_title: row.seo_title,
+    seo_description: row.seo_description,
+    og_image_url: row.og_image_url,
+    canonical_url: row.canonical_url,
+    noindex: row.noindex,
     company: row.companies
-      ? { id: row.companies.id, name: row.companies.name, logo_url: row.companies.logo_url }
+      ? { id: row.companies.id, name: row.companies.name, logo_url: row.companies.logo_url, cityName: row.companies.cities?.name ?? null, state: row.companies.cities?.state ?? null } as never
       : null,
   }
 }
 
 export const Route = createFileRoute('/eventos/$id')({
-  loader: ({ params }) => loadEvent(params.id),
+  loader: async ({ params, context }) => {
+    const [event, globals] = await Promise.all([
+      loadEvent(params.id),
+      context.queryClient.ensureQueryData(seoGlobalsServerQO),
+    ])
+    return { event, globals }
+  },
   head: ({ params, loaderData }) => {
     const base = 'https://www.temnaminhacidade.com.br'
     const url = `${base}/eventos/${params.id}`
-    const title = loaderData?.title
-      ? `${loaderData.title} — Eventos — Tem na minha cidade`
-      : 'Evento — Tem na minha cidade'
-    const when = loaderData
-      ? new Date(loaderData.starts_at).toLocaleString('pt-BR', {
+    const ev = loaderData?.event
+    const company = ev?.company as unknown as { name: string; cityName?: string | null; state?: string | null } | null | undefined
+    const cityName = company?.cityName ?? ''
+    const state = company?.state ?? ''
+    const when = ev
+      ? new Date(ev.starts_at).toLocaleString('pt-BR', {
           day: '2-digit',
           month: 'long',
           hour: '2-digit',
           minute: '2-digit',
         })
       : ''
-    const description = loaderData
-      ? [when, loaderData.location, loaderData.company?.name]
-          .filter(Boolean)
-          .join(' · ')
-          .slice(0, 160)
+    const fallbackTitle = ev?.title
+      ? `${ev.title} — Eventos — Tem na minha cidade`
+      : 'Evento — Tem na minha cidade'
+    const fallbackDesc = ev
+      ? [when, ev.location, company?.name].filter(Boolean).join(' · ').slice(0, 160)
       : 'Agenda de eventos das cidades atendidas.'
-    const ogImage =
-      loaderData?.image_url ?? `${base}/api/public/og/event/${params.id}`
+    const ogImage = ev?.og_image_url ?? ev?.image_url ?? `${base}/api/public/og/event/${params.id}`
+    const seo = resolveSeo({
+      url,
+      fallbackTitle,
+      fallbackDescription: fallbackDesc,
+      override: {
+        seo_title: ev?.seo_title ?? null,
+        seo_description: ev?.seo_description ?? null,
+        og_image_url: ogImage,
+        canonical_url: ev?.canonical_url ?? null,
+        noindex: ev?.noindex ?? null,
+      },
+      templateKind: 'event',
+      templateVars: {
+        nome: ev?.title ?? '',
+        cidade: cityName,
+        estado: state,
+        data: when,
+      },
+      globals: loaderData?.globals ?? null,
+    })
+    const head = buildSeoHead({ seo, ogType: 'article' })
     return {
-      meta: [
-        { title },
-        { name: 'description', content: description },
-        { property: 'og:title', content: title },
-        { property: 'og:description', content: description },
-        { property: 'og:url', content: url },
-        { property: 'og:type', content: 'article' },
-        { property: 'og:image', content: ogImage },
-        { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:image', content: ogImage },
-      ],
-      links: [{ rel: 'canonical', href: url }],
-      scripts: loaderData
+      meta: head.meta,
+      links: head.links,
+      scripts: ev
         ? [
             {
               type: 'application/ld+json',
               children: JSON.stringify({
                 '@context': 'https://schema.org',
                 '@type': 'Event',
-                name: loaderData.title,
-                startDate: loaderData.starts_at,
-                endDate: loaderData.ends_at ?? undefined,
+                name: ev.title,
+                startDate: ev.starts_at,
+                endDate: ev.ends_at ?? undefined,
                 eventStatus: 'https://schema.org/EventScheduled',
-                eventAttendanceMode:
-                  'https://schema.org/OfflineEventAttendanceMode',
-                location: loaderData.location
-                  ? { '@type': 'Place', name: loaderData.location }
+                eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+                location: ev.location
+                  ? { '@type': 'Place', name: ev.location }
                   : undefined,
                 image: ogImage,
-                organizer: loaderData.company
-                  ? { '@type': 'Organization', name: loaderData.company.name }
+                organizer: company
+                  ? { '@type': 'Organization', name: company.name }
                   : undefined,
               }),
             },
@@ -146,7 +174,7 @@ export const Route = createFileRoute('/eventos/$id')({
 })
 
 function EventDetailPage() {
-  const ev = Route.useLoaderData()
+  const { event: ev } = Route.useLoaderData()
   const when = new Date(ev.starts_at).toLocaleString('pt-BR', {
     day: '2-digit',
     month: 'long',

@@ -26,7 +26,7 @@ const citiesByStateQO = (uf: string) =>
   });
 
 export const Route = createFileRoute("/")({
-  head: (ctx: { loaderData?: { globals: Awaited<ReturnType<typeof seoGlobalsServerQO.queryFn>> } }) => {
+  head: (ctx: { loaderData?: { globals: SeoGlobals } }) => {
     const globals = ctx.loaderData?.globals ?? null;
     const siteName = globals?.site_name ?? "Tem na minha cidade";
     const tagline = globals?.site_tagline ?? "o guia local por cidade";

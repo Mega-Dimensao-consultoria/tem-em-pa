@@ -214,6 +214,14 @@ function CityHome() {
         )}
       </section>
 
+      <PromotedCompaniesSection
+        cityId={city!.id}
+        title={`Empresas em destaque em ${city!.name}`}
+        subtitle="Empresas promovidas agora — sorteadas em tempo real."
+      />
+
+
+
 
       <section className="mx-auto max-w-6xl px-4 pb-20 pt-8">
         <div className="overflow-hidden rounded-3xl bg-hero-gradient p-8 text-center text-white shadow-elegant md:p-12">

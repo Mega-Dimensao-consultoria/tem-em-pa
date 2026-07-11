@@ -217,6 +217,12 @@ function EditarEmpresa() {
           Mantenha os dados do seu negócio sempre atualizados.
         </p>
 
+        <div className="mt-4">
+          <Button variant="outline" size="sm" onClick={() => setSeoOpen(true)}>
+            <Search className="mr-1 h-4 w-4" /> Editar SEO da página
+          </Button>
+        </div>
+
         <div className="mt-8">
           <CompanyForm
             mode="edit"

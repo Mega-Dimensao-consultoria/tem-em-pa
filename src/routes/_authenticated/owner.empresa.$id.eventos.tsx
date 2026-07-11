@@ -34,6 +34,7 @@ function EventosOwnerPage() {
   const { user } = useAuth()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editing, setEditing] = useState<CityEvent | null>(null)
+  const [seoFor, setSeoFor] = useState<CityEvent | null>(null)
 
   const company = useQuery({
     queryKey: queryKeys.owner.companyAny(id),

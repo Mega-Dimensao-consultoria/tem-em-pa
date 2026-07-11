@@ -333,13 +333,28 @@ function Toolbar({
           variant={b.isActive ? "default" : "ghost"}
           className="h-8 w-8"
           onClick={b.onClick}
-          disabled={b.disabled}
+          disabled={b.disabled || sourceMode}
           aria-label={b.label}
           title={b.label}
         >
           {b.icon}
         </Button>
       ))}
+      <div className="ml-auto">
+        <Button
+          type="button"
+          size="sm"
+          variant={sourceMode ? "default" : "ghost"}
+          className="h-8"
+          onClick={onToggleSource}
+          aria-label={sourceMode ? "Voltar para editor visual" : "Editar HTML"}
+          title={sourceMode ? "Voltar para editor visual" : "Editar HTML"}
+        >
+          <Code2 className="mr-1 h-4 w-4" />
+          {sourceMode ? "Visual" : "HTML"}
+        </Button>
+      </div>
     </div>
   );
 }
+

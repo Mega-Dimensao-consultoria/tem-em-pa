@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Mail, Send, Loader2, CheckCircle2 } from "lucide-react";
@@ -17,15 +17,20 @@ const Schema = z.object({
 
 type ContactDialogProps = {
   trigger?: React.ReactNode;
+  defaultOpen?: boolean;
 };
 
-export function ContactDialog({ trigger }: ContactDialogProps) {
-  const [open, setOpen] = useState(false);
+export function ContactDialog({ trigger, defaultOpen = false }: ContactDialogProps) {
+  const [open, setOpen] = useState(defaultOpen);
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
   const [form, setForm] = useState({ full_name: "", email: "", subject: "", message: "" });
   const [website, setWebsite] = useState(""); // honeypot
   const [errors, setErrors] = useState<Partial<Record<keyof typeof form, string>>>({});
+
+  useEffect(() => {
+    if (defaultOpen) setOpen(true);
+  }, [defaultOpen]);
 
   function reset() {
     setForm({ full_name: "", email: "", subject: "", message: "" });

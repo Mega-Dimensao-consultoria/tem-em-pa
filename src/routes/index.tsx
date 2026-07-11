@@ -4,6 +4,7 @@ import { useState } from "react";
 import { MapPin, Sparkles, ShieldCheck, Store, Mail as MailIcon, Loader2 } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { ContactDialog } from "@/features/contact/ContactDialog";
+import { PromotedCompaniesSection } from "@/features/promotions/components/PromotedCompaniesSection";
 import { listStates, listCitiesByState } from "@/features/companies/functions";
 import { seoGlobalsServerQO } from "@/features/seo/functions/getGlobals";
 import { resolveSeo, buildSeoHead } from "@/lib/seo/render";

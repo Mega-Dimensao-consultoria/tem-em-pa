@@ -29,6 +29,7 @@ import { Route as PreviewTokenRouteImport } from './routes/preview.$token'
 import { Route as EventosIdRouteImport } from './routes/eventos.$id'
 import { Route as EmpresaIdRouteImport } from './routes/empresa.$id'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
+import { Route as CheckoutRetornoRouteImport } from './routes/checkout.retorno'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthTwoFactorRouteImport } from './routes/auth_.two-factor'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
@@ -159,6 +160,11 @@ const EmpresaIdRoute = EmpresaIdRouteImport.update({
 const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
   id: '/email/unsubscribe',
   path: '/email/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRetornoRoute = CheckoutRetornoRouteImport.update({
+  id: '/checkout/retorno',
+  path: '/checkout/retorno',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
@@ -361,6 +367,7 @@ export interface FileRoutesByFullPath {
   '/painel': typeof AuthenticatedPainelRouteWithChildren
   '/auth/two-factor': typeof AuthTwoFactorRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/checkout/retorno': typeof CheckoutRetornoRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
@@ -411,6 +418,7 @@ export interface FileRoutesByTo {
   '/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/auth/two-factor': typeof AuthTwoFactorRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/checkout/retorno': typeof CheckoutRetornoRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
@@ -466,6 +474,7 @@ export interface FileRoutesById {
   '/_authenticated/painel': typeof AuthenticatedPainelRouteWithChildren
   '/auth_/two-factor': typeof AuthTwoFactorRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/checkout/retorno': typeof CheckoutRetornoRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
@@ -521,6 +530,7 @@ export interface FileRouteTypes {
     | '/painel'
     | '/auth/two-factor'
     | '/blog/$slug'
+    | '/checkout/retorno'
     | '/email/unsubscribe'
     | '/empresa/$id'
     | '/eventos/$id'
@@ -571,6 +581,7 @@ export interface FileRouteTypes {
     | '/notificacoes'
     | '/auth/two-factor'
     | '/blog/$slug'
+    | '/checkout/retorno'
     | '/email/unsubscribe'
     | '/empresa/$id'
     | '/eventos/$id'
@@ -625,6 +636,7 @@ export interface FileRouteTypes {
     | '/_authenticated/painel'
     | '/auth_/two-factor'
     | '/blog/$slug'
+    | '/checkout/retorno'
     | '/email/unsubscribe'
     | '/empresa/$id'
     | '/eventos/$id'
@@ -672,6 +684,7 @@ export interface RootRouteChildren {
   SobreRoute: typeof SobreRoute
   TermosRoute: typeof TermosRoute
   AuthTwoFactorRoute: typeof AuthTwoFactorRoute
+  CheckoutRetornoRoute: typeof CheckoutRetornoRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   EmpresaIdRoute: typeof EmpresaIdRoute
   EventosIdRoute: typeof EventosIdRoute
@@ -830,6 +843,13 @@ declare module '@tanstack/react-router' {
       path: '/email/unsubscribe'
       fullPath: '/email/unsubscribe'
       preLoaderRoute: typeof EmailUnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout/retorno': {
+      id: '/checkout/retorno'
+      path: '/checkout/retorno'
+      fullPath: '/checkout/retorno'
+      preLoaderRoute: typeof CheckoutRetornoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/$slug': {
@@ -1159,6 +1179,7 @@ const rootRouteChildren: RootRouteChildren = {
   SobreRoute: SobreRoute,
   TermosRoute: TermosRoute,
   AuthTwoFactorRoute: AuthTwoFactorRoute,
+  CheckoutRetornoRoute: CheckoutRetornoRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   EmpresaIdRoute: EmpresaIdRoute,
   EventosIdRoute: EventosIdRoute,

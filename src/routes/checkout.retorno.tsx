@@ -42,12 +42,12 @@ function CheckoutReturnPage() {
         if ("error" in res) {
           setStatus("error"); setMessage(res.error); return;
         }
-        if (res.status === "not_paid") {
+        if (res.status === "not_paid" || res.status === "pending") {
           setStatus("pending"); setMessage("O pagamento ainda não foi confirmado. Tente novamente em alguns instantes.");
           return;
         }
         setStatus("ok");
-        setEndsAt(res.endsAt);
+        setEndsAt(res.endsAt ?? null);
         setMessage(res.status === "already_active"
           ? "Este destaque já estava ativo."
           : "Destaque ativado com sucesso!");

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useRouterState } from "@tanstack/react-router";
 
-const GA_ID = "G-8F135T6RZ1";
+const GA_ID = "G-FV2VH1Q9BJ";
 
 const EXCLUDED_PREFIXES = ["/admin"];
 

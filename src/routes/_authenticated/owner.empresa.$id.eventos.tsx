@@ -159,6 +159,15 @@ function EventosOwnerPage() {
                     <Pencil className="mr-1 h-3.5 w-3.5" />
                     Editar
                   </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSeoFor(ev)}
+                    aria-label={`Editar SEO do evento ${ev.title}`}
+                  >
+                    <Search className="mr-1 h-3.5 w-3.5" />
+                    SEO
+                  </Button>
                   <ConfirmDestructive
                     trigger={
                       <Button variant="ghost" size="sm">

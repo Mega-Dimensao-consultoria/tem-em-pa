@@ -10,6 +10,8 @@ export type AdminSitePage = {
   updated_at: string
   seo_title: string | null
   seo_description: string | null
+  seo_keywords: string | null
+  schema_type: string | null
   og_title: string | null
   og_description: string | null
   og_image_url: string | null
@@ -20,7 +22,7 @@ export type AdminSitePage = {
 const KEY = ['admin', 'site-pages'] as const
 
 const SELECT =
-  'slug, title, content_html, updated_at, seo_title, seo_description, og_title, og_description, og_image_url, canonical_url, noindex'
+  'slug, title, content_html, updated_at, seo_title, seo_description, seo_keywords, schema_type, og_title, og_description, og_image_url, canonical_url, noindex'
 
 export function useAdminSitePages() {
   return useQuery({
@@ -42,6 +44,8 @@ export type UpdateSitePageInput = {
   content_html: string
   seo_title?: string | null
   seo_description?: string | null
+  seo_keywords?: string | null
+  schema_type?: string | null
   og_title?: string | null
   og_description?: string | null
   og_image_url?: string | null

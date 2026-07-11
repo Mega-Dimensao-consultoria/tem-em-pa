@@ -8,6 +8,8 @@ export type BlogCategory = {
   is_active: boolean;
   seo_title: string | null;
   seo_description: string | null;
+  seo_keywords: string | null;
+  schema_type: string | null;
   og_image_url: string | null;
   canonical_url: string | null;
   noindex: boolean | null;
@@ -29,6 +31,8 @@ export type BlogPost = {
   updated_at: string;
   seo_title: string | null;
   seo_description: string | null;
+  seo_keywords: string | null;
+  schema_type: string | null;
   og_image_url: string | null;
   canonical_url: string | null;
   noindex: boolean;

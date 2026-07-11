@@ -13,6 +13,7 @@ export const Route = createFileRoute('/sobre')({
       fallbackTitle: `${loaderData?.title ?? 'Sobre'} — Tem na minha cidade`,
       fallbackDescription:
         'Conheça o Tem na minha cidade, o catálogo digital de empresas, comércios e profissionais liberais das cidades atendidas.',
+      fallbackSchemaType: 'AboutPage',
       override: loaderData ?? undefined,
     })
     return buildSeoHead({ seo })

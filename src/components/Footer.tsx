@@ -1,8 +1,15 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Facebook } from "lucide-react";
 import { Logo } from "./Logo";
+import { useSeoGlobals } from "@/features/seo/functions/settings";
+import { DEFAULT_GLOBALS } from "@/lib/seo/types";
 
 export function Footer() {
+  const { data: globals } = useSeoGlobals();
+  const g = globals ?? DEFAULT_GLOBALS;
+  const tagline =
+    g.site_tagline ??
+    "O guia local por cidade. Descubra empresas, produtos e serviços perto de você.";
   return (
     <footer
       role="contentinfo"
@@ -11,10 +18,10 @@ export function Footer() {
     >
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-3">
         <section aria-labelledby="footer-brand">
-          <h2 id="footer-brand" className="sr-only">Sobre o Tem na minha cidade</h2>
+          <h2 id="footer-brand" className="sr-only">Sobre o {g.site_name}</h2>
           <Logo />
           <p className="mt-3 max-w-xs text-sm text-muted-foreground">
-            O guia local por cidade. Descubra empresas, produtos e serviços perto de você em várias cidades.
+            {tagline}
           </p>
           <ul className="mt-4 flex items-center gap-3" aria-label="Redes sociais">
             <li>
@@ -22,7 +29,7 @@ export function Footer() {
                 href="https://www.instagram.com/temnaminhacidade"
                 target="_blank"
                 rel="noopener noreferrer me"
-                aria-label="Instagram do Tem na minha cidade"
+                aria-label={`Instagram do ${g.site_name}`}
                 className="text-muted-foreground transition hover:text-foreground"
               >
                 <Instagram className="h-5 w-5" aria-hidden="true" />
@@ -33,7 +40,7 @@ export function Footer() {
                 href="https://www.facebook.com/temnaminhacidade"
                 target="_blank"
                 rel="noopener noreferrer me"
-                aria-label="Facebook do Tem na minha cidade"
+                aria-label={`Facebook do ${g.site_name}`}
                 className="text-muted-foreground transition hover:text-foreground"
               >
                 <Facebook className="h-5 w-5" aria-hidden="true" />
@@ -44,7 +51,7 @@ export function Footer() {
                 href="https://www.tiktok.com/temnaminhacidade"
                 target="_blank"
                 rel="noopener noreferrer me"
-                aria-label="TikTok do Tem na minha cidade"
+                aria-label={`TikTok do ${g.site_name}`}
                 className="text-muted-foreground transition hover:text-foreground"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -57,7 +64,7 @@ export function Footer() {
                 href="https://www.threads.com/@temnaminhacidade"
                 target="_blank"
                 rel="noopener noreferrer me"
-                aria-label="Threads do Tem na minha cidade"
+                aria-label={`Threads do ${g.site_name}`}
                 className="text-muted-foreground transition hover:text-foreground"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -89,7 +96,7 @@ export function Footer() {
         </nav>
       </div>
       <div className="border-t border-border/60 py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Tem na minha cidade — Todos os direitos reservados.
+        © {new Date().getFullYear()} {g.site_name} — Todos os direitos reservados.
       </div>
     </footer>
   );

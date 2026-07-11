@@ -34,6 +34,7 @@ export const Route = createFileRoute("/blog/$slug")({
     const description = p.seo_description || fallbackDesc;
     const canonical = p.canonical_url || url;
     const image = p.og_image_url || p.cover_image_url || undefined;
+    const schemaType = (p.schema_type as string | null) || "BlogPosting";
     const meta: Array<Record<string, string>> = [
       { title },
       { name: "description", content: description },
@@ -47,6 +48,9 @@ export const Route = createFileRoute("/blog/$slug")({
       { name: "twitter:title", content: title },
       { name: "twitter:description", content: description },
     ];
+    if (p.seo_keywords) {
+      meta.push({ name: "keywords", content: p.seo_keywords });
+    }
     if (image) {
       meta.push({ property: "og:image", content: image });
       meta.push({ name: "twitter:image", content: image });
@@ -65,13 +69,14 @@ export const Route = createFileRoute("/blog/$slug")({
           type: "application/ld+json",
           children: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "BlogPosting",
+            "@type": schemaType,
             headline: p.title,
             description,
             image: image ? [image] : undefined,
             datePublished: p.published_at ?? undefined,
             dateModified: p.updated_at,
             mainEntityOfPage: canonical,
+            keywords: p.seo_keywords || undefined,
             author: p.author?.full_name
               ? { "@type": "Person", name: p.author.full_name }
               : { "@type": "Organization", name: "Tem na minha cidade" },

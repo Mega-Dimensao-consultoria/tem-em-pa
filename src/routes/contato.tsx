@@ -13,6 +13,7 @@ export const Route = createFileRoute('/contato')({
       fallbackTitle: `${loaderData?.title ?? 'Contato'} — Tem na minha cidade`,
       fallbackDescription:
         'Fale com a equipe do Tem na minha cidade. Tire dúvidas, envie sugestões ou reporte problemas.',
+      fallbackSchemaType: 'ContactPage',
       override: loaderData ?? undefined,
     })
     return buildSeoHead({ seo })

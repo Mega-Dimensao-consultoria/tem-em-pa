@@ -80,6 +80,8 @@ function PageEditor({ page }: { page: AdminSitePage }) {
   const [seo, setSeo] = useState<SeoOverride>({
     seo_title: page.seo_title,
     seo_description: page.seo_description,
+    seo_keywords: page.seo_keywords,
+    schema_type: page.schema_type,
     og_title: page.og_title,
     og_description: page.og_description,
     og_image_url: page.og_image_url,
@@ -93,6 +95,8 @@ function PageEditor({ page }: { page: AdminSitePage }) {
     content !== page.content_html ||
     seo.seo_title !== page.seo_title ||
     seo.seo_description !== page.seo_description ||
+    seo.seo_keywords !== page.seo_keywords ||
+    seo.schema_type !== page.schema_type ||
     seo.og_title !== page.og_title ||
     seo.og_description !== page.og_description ||
     seo.og_image_url !== page.og_image_url ||
@@ -121,6 +125,8 @@ function PageEditor({ page }: { page: AdminSitePage }) {
               content_html: content,
               seo_title: seo.seo_title ?? null,
               seo_description: seo.seo_description ?? null,
+              seo_keywords: seo.seo_keywords ?? null,
+              schema_type: (seo.schema_type as string | null) ?? null,
               og_title: seo.og_title ?? null,
               og_description: seo.og_description ?? null,
               og_image_url: seo.og_image_url ?? null,

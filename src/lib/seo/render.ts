@@ -1,4 +1,10 @@
-import type { SeoGlobals, SeoOverride, SeoTemplateKind, SeoTemplateVars } from "./types";
+import type {
+  SchemaType,
+  SeoGlobals,
+  SeoOverride,
+  SeoTemplateKind,
+  SeoTemplateVars,
+} from "./types";
 import { DEFAULT_GLOBALS } from "./types";
 
 const SITE_URL = "https://www.temnaminhacidade.com.br";
@@ -25,6 +31,8 @@ export function coalesce<T>(...values: Array<T | null | undefined | "">): T | un
 export type ResolvedSeo = {
   title: string;
   description: string;
+  keywords: string | null;
+  schemaType: SchemaType | string | null;
   ogTitle: string;
   ogDescription: string;
   ogImage: string | undefined;
@@ -38,6 +46,8 @@ export type ResolveArgs = {
   url: string;
   fallbackTitle: string;
   fallbackDescription?: string;
+  fallbackKeywords?: string;
+  fallbackSchemaType?: SchemaType | string;
   override?: SeoOverride | null;
   templateKind?: SeoTemplateKind;
   templateVars?: SeoTemplateVars;
@@ -70,9 +80,19 @@ export function resolveSeo(args: ResolveArgs): ResolvedSeo {
       g.default_description,
     ) ?? "";
 
+  const keywords =
+    coalesce(
+      args.override?.seo_keywords,
+      args.fallbackKeywords,
+      g.default_keywords ?? undefined,
+    ) ?? null;
+
   return {
     title,
     description,
+    keywords,
+    schemaType:
+      coalesce(args.override?.schema_type, args.fallbackSchemaType) ?? null,
     ogTitle: coalesce(args.override?.og_title, title) ?? title,
     ogDescription: coalesce(args.override?.og_description, description) ?? description,
     ogImage:
@@ -89,16 +109,20 @@ export function resolveSeo(args: ResolveArgs): ResolvedSeo {
 }
 
 type MetaEntry = Record<string, string>;
+type ScriptEntry = { type: string; children: string };
 
 /**
- * Monta o array `meta` + `links` no formato aceito pelo `head()` do TanStack.
- * Use em rotas leaf. O canonical é adicionado como link.
+ * Monta o array `meta` + `links` + `scripts` no formato aceito pelo `head()`.
+ * Se `seo.schemaType` estiver preenchido, emite JSON-LD básico. Rotas podem
+ * passar `extraSchema` para acrescentar campos específicos.
  */
 export function buildSeoHead(input: {
   seo: ResolvedSeo;
   ogType?: "website" | "article" | "product" | "profile";
-}): { meta: MetaEntry[]; links: MetaEntry[] } {
-  const { seo, ogType = "website" } = input;
+  /** Merge de campos extras no JSON-LD (ex.: author/datePublished p/ BlogPosting). */
+  extraSchema?: Record<string, unknown>;
+}): { meta: MetaEntry[]; links: MetaEntry[]; scripts: ScriptEntry[] } {
+  const { seo, ogType = "website", extraSchema } = input;
   const meta: MetaEntry[] = [
     { title: seo.title },
     { name: "description", content: seo.description },
@@ -111,6 +135,9 @@ export function buildSeoHead(input: {
     { name: "twitter:title", content: seo.ogTitle },
     { name: "twitter:description", content: seo.ogDescription },
   ];
+  if (seo.keywords) {
+    meta.push({ name: "keywords", content: seo.keywords });
+  }
   if (seo.ogImage) {
     meta.push({ property: "og:image", content: seo.ogImage });
     meta.push({ name: "twitter:image", content: seo.ogImage });
@@ -122,9 +149,26 @@ export function buildSeoHead(input: {
   if (seo.noindex) {
     meta.push({ name: "robots", content: "noindex, nofollow" });
   }
+
+  const scripts: ScriptEntry[] = [];
+  if (seo.schemaType) {
+    const ld: Record<string, unknown> = {
+      "@context": "https://schema.org",
+      "@type": seo.schemaType,
+      name: seo.title,
+      headline: seo.title,
+      description: seo.description,
+      url: seo.canonical,
+      ...(seo.ogImage ? { image: seo.ogImage } : {}),
+      ...(extraSchema ?? {}),
+    };
+    scripts.push({ type: "application/ld+json", children: JSON.stringify(ld) });
+  }
+
   return {
     meta,
     links: [{ rel: "canonical", href: seo.canonical }],
+    scripts,
   };
 }
 

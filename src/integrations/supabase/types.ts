@@ -90,7 +90,9 @@ export type Database = {
           name: string
           noindex: boolean
           og_image_url: string | null
+          schema_type: string | null
           seo_description: string | null
+          seo_keywords: string | null
           seo_title: string | null
           slug: string
           updated_at: string
@@ -104,7 +106,9 @@ export type Database = {
           name: string
           noindex?: boolean
           og_image_url?: string | null
+          schema_type?: string | null
           seo_description?: string | null
+          seo_keywords?: string | null
           seo_title?: string | null
           slug: string
           updated_at?: string
@@ -118,7 +122,9 @@ export type Database = {
           name?: string
           noindex?: boolean
           og_image_url?: string | null
+          schema_type?: string | null
           seo_description?: string | null
+          seo_keywords?: string | null
           seo_title?: string | null
           slug?: string
           updated_at?: string
@@ -139,7 +145,9 @@ export type Database = {
           og_image_url: string | null
           published_at: string | null
           reading_minutes: number
+          schema_type: string | null
           seo_description: string | null
+          seo_keywords: string | null
           seo_title: string | null
           slug: string
           status: string
@@ -159,7 +167,9 @@ export type Database = {
           og_image_url?: string | null
           published_at?: string | null
           reading_minutes?: number
+          schema_type?: string | null
           seo_description?: string | null
+          seo_keywords?: string | null
           seo_title?: string | null
           slug: string
           status?: string
@@ -179,7 +189,9 @@ export type Database = {
           og_image_url?: string | null
           published_at?: string | null
           reading_minutes?: number
+          schema_type?: string | null
           seo_description?: string | null
+          seo_keywords?: string | null
           seo_title?: string | null
           slug?: string
           status?: string
@@ -212,7 +224,9 @@ export type Database = {
           name: string
           noindex: boolean
           og_image_url: string | null
+          schema_type: string | null
           seo_description: string | null
+          seo_keywords: string | null
           seo_title: string | null
           slug: string
           sort_order: number
@@ -226,7 +240,9 @@ export type Database = {
           name: string
           noindex?: boolean
           og_image_url?: string | null
+          schema_type?: string | null
           seo_description?: string | null
+          seo_keywords?: string | null
           seo_title?: string | null
           slug: string
           sort_order?: number
@@ -240,7 +256,9 @@ export type Database = {
           name?: string
           noindex?: boolean
           og_image_url?: string | null
+          schema_type?: string | null
           seo_description?: string | null
+          seo_keywords?: string | null
           seo_title?: string | null
           slug?: string
           sort_order?: number
@@ -261,8 +279,10 @@ export type Database = {
           name: string
           noindex: boolean
           og_image_url: string | null
+          schema_type: string | null
           search_placeholder: string | null
           seo_description: string | null
+          seo_keywords: string | null
           seo_title: string | null
           slug: string
           state: string
@@ -281,8 +301,10 @@ export type Database = {
           name: string
           noindex?: boolean
           og_image_url?: string | null
+          schema_type?: string | null
           search_placeholder?: string | null
           seo_description?: string | null
+          seo_keywords?: string | null
           seo_title?: string | null
           slug: string
           state: string
@@ -301,8 +323,10 @@ export type Database = {
           name?: string
           noindex?: boolean
           og_image_url?: string | null
+          schema_type?: string | null
           search_placeholder?: string | null
           seo_description?: string | null
+          seo_keywords?: string | null
           seo_title?: string | null
           slug?: string
           state?: string
@@ -325,7 +349,9 @@ export type Database = {
           location: string | null
           noindex: boolean
           og_image_url: string | null
+          schema_type: string | null
           seo_description: string | null
+          seo_keywords: string | null
           seo_title: string | null
           starts_at: string
           title: string
@@ -344,7 +370,9 @@ export type Database = {
           location?: string | null
           noindex?: boolean
           og_image_url?: string | null
+          schema_type?: string | null
           seo_description?: string | null
+          seo_keywords?: string | null
           seo_title?: string | null
           starts_at: string
           title: string
@@ -363,7 +391,9 @@ export type Database = {
           location?: string | null
           noindex?: boolean
           og_image_url?: string | null
+          schema_type?: string | null
           seo_description?: string | null
+          seo_keywords?: string | null
           seo_title?: string | null
           starts_at?: string
           title?: string
@@ -414,8 +444,10 @@ export type Database = {
           og_image_url: string | null
           owner_id: string | null
           phone: string | null
+          schema_type: string | null
           search_tsv: unknown
           seo_description: string | null
+          seo_keywords: string | null
           seo_title: string | null
           slug: string | null
           status: Database["public"]["Enums"]["company_status"]
@@ -450,8 +482,10 @@ export type Database = {
           og_image_url?: string | null
           owner_id?: string | null
           phone?: string | null
+          schema_type?: string | null
           search_tsv?: unknown
           seo_description?: string | null
+          seo_keywords?: string | null
           seo_title?: string | null
           slug?: string | null
           status?: Database["public"]["Enums"]["company_status"]
@@ -486,8 +520,10 @@ export type Database = {
           og_image_url?: string | null
           owner_id?: string | null
           phone?: string | null
+          schema_type?: string | null
           search_tsv?: unknown
           seo_description?: string | null
+          seo_keywords?: string | null
           seo_title?: string | null
           slug?: string | null
           status?: Database["public"]["Enums"]["company_status"]
@@ -1174,7 +1210,9 @@ export type Database = {
           og_description: string | null
           og_image_url: string | null
           og_title: string | null
+          schema_type: string | null
           seo_description: string | null
+          seo_keywords: string | null
           seo_title: string | null
           slug: string
           title: string
@@ -1190,7 +1228,9 @@ export type Database = {
           og_description?: string | null
           og_image_url?: string | null
           og_title?: string | null
+          schema_type?: string | null
           seo_description?: string | null
+          seo_keywords?: string | null
           seo_title?: string | null
           slug: string
           title: string
@@ -1206,7 +1246,9 @@ export type Database = {
           og_description?: string | null
           og_image_url?: string | null
           og_title?: string | null
+          schema_type?: string | null
           seo_description?: string | null
+          seo_keywords?: string | null
           seo_title?: string | null
           slug?: string
           title?: string
@@ -1265,6 +1307,7 @@ export type Database = {
         Row: {
           bing_site_verification: string | null
           default_description: string
+          default_keywords: string | null
           default_og_image_url: string | null
           google_site_verification: string | null
           id: number
@@ -1272,6 +1315,7 @@ export type Database = {
           org_name: string | null
           org_social_urls: Json
           site_name: string
+          site_tagline: string | null
           templates: Json
           title_base: string
           title_separator: string
@@ -1282,6 +1326,7 @@ export type Database = {
         Insert: {
           bing_site_verification?: string | null
           default_description?: string
+          default_keywords?: string | null
           default_og_image_url?: string | null
           google_site_verification?: string | null
           id?: number
@@ -1289,6 +1334,7 @@ export type Database = {
           org_name?: string | null
           org_social_urls?: Json
           site_name?: string
+          site_tagline?: string | null
           templates?: Json
           title_base?: string
           title_separator?: string
@@ -1299,6 +1345,7 @@ export type Database = {
         Update: {
           bing_site_verification?: string | null
           default_description?: string
+          default_keywords?: string | null
           default_og_image_url?: string | null
           google_site_verification?: string | null
           id?: number
@@ -1306,6 +1353,7 @@ export type Database = {
           org_name?: string | null
           org_social_urls?: Json
           site_name?: string
+          site_tagline?: string | null
           templates?: Json
           title_base?: string
           title_separator?: string

@@ -8,7 +8,7 @@ const SELECT = `
   id, title, slug, excerpt, content_html, cover_image_url,
   author_id, category_id, status, published_at, reading_minutes,
   created_at, updated_at,
-  seo_title, seo_description, og_image_url, canonical_url, noindex,
+  seo_title, seo_description, seo_keywords, schema_type, og_image_url, canonical_url, noindex,
   category:blog_categories(id, name, slug),
   author:profiles(id, full_name, avatar_url)
 `;
@@ -45,7 +45,7 @@ async function fetchPostBySlug(slug: string): Promise<BlogPostWithCategory | nul
 async function fetchActiveCategories(): Promise<BlogCategory[]> {
   const { data, error } = await supabase
     .from("blog_categories")
-    .select("id, name, slug, description, is_active, seo_title, seo_description, og_image_url, canonical_url, noindex")
+    .select("id, name, slug, description, is_active, seo_title, seo_description, seo_keywords, schema_type, og_image_url, canonical_url, noindex")
     .eq("is_active", true)
     .order("name", { ascending: true });
   if (error) throw error;
@@ -55,7 +55,7 @@ async function fetchActiveCategories(): Promise<BlogCategory[]> {
 async function fetchCategoryBySlug(slug: string): Promise<BlogCategory | null> {
   const { data, error } = await supabase
     .from("blog_categories")
-    .select("id, name, slug, description, is_active, seo_title, seo_description, og_image_url, canonical_url, noindex")
+    .select("id, name, slug, description, is_active, seo_title, seo_description, seo_keywords, schema_type, og_image_url, canonical_url, noindex")
     .eq("slug", slug)
     .eq("is_active", true)
     .maybeSingle();

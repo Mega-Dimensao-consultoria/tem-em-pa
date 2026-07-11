@@ -115,8 +115,20 @@ function PageEditor({ page }: { page: AdminSitePage }) {
         </div>
         <Button
           onClick={() =>
-            update.mutate({ slug: page.slug, title, content_html: content, ...seo })
+            update.mutate({
+              slug: page.slug,
+              title,
+              content_html: content,
+              seo_title: seo.seo_title ?? null,
+              seo_description: seo.seo_description ?? null,
+              og_title: seo.og_title ?? null,
+              og_description: seo.og_description ?? null,
+              og_image_url: seo.og_image_url ?? null,
+              canonical_url: seo.canonical_url ?? null,
+              noindex: !!seo.noindex,
+            })
           }
+
           disabled={!dirty || update.isPending}
           size="sm"
         >

@@ -5,6 +5,9 @@ import { MapPin, Sparkles, ShieldCheck, Store, Mail as MailIcon, Loader2 } from 
 import { PageShell } from "@/components/PageShell";
 import { ContactDialog } from "@/features/contact/ContactDialog";
 import { listStates, listCitiesByState } from "@/features/companies/functions";
+import { seoGlobalsServerQO } from "@/features/seo/functions/getGlobals";
+import { resolveSeo, buildSeoHead } from "@/lib/seo/render";
+import type { SeoGlobals } from "@/lib/seo/types";
 
 const BASE = "https://www.temnaminhacidade.com.br";
 
@@ -23,41 +26,35 @@ const citiesByStateQO = (uf: string) =>
   });
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Tem na minha cidade — o guia local por cidade" },
-      {
-        name: "description",
-        content:
-          "Descubra restaurantes, mercados, serviços e comércio local em qualquer cidade do Brasil. Avaliações reais e contato direto.",
-      },
-      { property: "og:title", content: "Tem na minha cidade — o guia local por cidade" },
-      {
-        property: "og:description",
-        content:
-          "Descubra restaurantes, mercados, serviços e comércio local em qualquer cidade do Brasil.",
-      },
-      { property: "og:url", content: `${BASE}/` },
-      { property: "og:type", content: "website" },
-      { property: "og:image", content: `${BASE}/og-default.jpg` },
-      { property: "og:image:width", content: "1200" },
-      { property: "og:image:height", content: "630" },
-      { name: "twitter:image", content: `${BASE}/og-default.jpg` },
-    ],
-    links: [{ rel: "canonical", href: `${BASE}/` }],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          name: "Tem na minha cidade",
-          url: `${BASE}/`,
-        }),
-      },
-    ],
-  }),
-  loader: ({ context }) => context.queryClient.ensureQueryData(statesQO),
+  head: (ctx: { loaderData?: { globals: SeoGlobals } }) => {
+    const globals = ctx.loaderData?.globals ?? null;
+    const siteName = globals?.site_name ?? "Tem na minha cidade";
+    const tagline = globals?.site_tagline ?? "o guia local por cidade";
+    const fallbackTitle = `${siteName} — ${tagline}`;
+    const fallbackDesc =
+      globals?.default_description ??
+      "Descubra restaurantes, mercados, serviços e comércio local em qualquer cidade do Brasil. Avaliações reais e contato direto.";
+    const seo = resolveSeo({
+      url: `${BASE}/`,
+      fallbackTitle,
+      fallbackDescription: fallbackDesc,
+      fallbackSchemaType: "WebSite",
+      globals,
+    });
+    const head = buildSeoHead({ seo, ogType: "website" });
+    return {
+      meta: head.meta,
+      links: head.links,
+      scripts: head.scripts,
+    };
+  },
+  loader: async ({ context }) => {
+    const [globals] = await Promise.all([
+      context.queryClient.ensureQueryData(seoGlobalsServerQO),
+      context.queryClient.ensureQueryData(statesQO),
+    ]);
+    return { globals };
+  },
   component: Hub,
   errorComponent: ({ error }) => (
     <PageShell>

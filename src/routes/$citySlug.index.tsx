@@ -38,7 +38,10 @@ const recentByCityQO = (cityId: string, limit: number) =>
 
 export const Route = createFileRoute("/$citySlug/")({
   loader: async ({ context, params }) => {
-    const city = await context.queryClient.ensureQueryData(cityBySlugQO(params.citySlug));
+    const [city, globals] = await Promise.all([
+      context.queryClient.ensureQueryData(cityBySlugQO(params.citySlug)),
+      context.queryClient.ensureQueryData(seoGlobalsServerQO),
+    ]);
     if (!city) return null;
     const [, featured] = await Promise.all([
       context.queryClient.ensureQueryData(categoriesQO),
@@ -49,34 +52,35 @@ export const Route = createFileRoute("/$citySlug/")({
       const recent = await context.queryClient.ensureQueryData(recentByCityQO(city.id, 1));
       hasCompanies = (recent?.total ?? 0) > 0;
     }
-    return { ...city, hasCompanies };
+    return { ...city, hasCompanies, globals };
   },
   head: ({ params, loaderData }) => {
     const cityName = loaderData?.name ?? params.citySlug;
     const state = loaderData?.state ?? "";
-    const title =
+    const url = `${BASE}/${params.citySlug}`;
+    const fallbackTitle =
       loaderData?.hero_headline ??
       `Tem na minha cidade — o guia local de ${cityName}${state ? "/" + state : ""}`;
-    const desc =
+    const fallbackDesc =
       loaderData?.hero_subheadline ??
       `Restaurantes, mercados, serviços e comércio local em ${cityName}. Avaliações reais e contato direto.`;
-    const url = `${BASE}/${params.citySlug}`;
-    const noindex = loaderData && loaderData.hasCompanies === false;
-    return {
-      meta: [
-        { title },
-        { name: "description", content: desc },
-        ...(noindex ? [{ name: "robots", content: "noindex, follow" }] : []),
-        { property: "og:title", content: title },
-        { property: "og:description", content: desc },
-        { property: "og:url", content: url },
-        { property: "og:type", content: "website" },
-        ...(loaderData?.og_image_url
-          ? [{ property: "og:image", content: loaderData.og_image_url }]
-          : []),
-      ],
-      links: [{ rel: "canonical", href: url }],
-    };
+    const noindexAuto = loaderData && loaderData.hasCompanies === false;
+    const seo = resolveSeo({
+      url,
+      fallbackTitle,
+      fallbackDescription: fallbackDesc,
+      override: {
+        seo_title: loaderData?.seo_title ?? null,
+        seo_description: loaderData?.seo_description ?? null,
+        og_image_url: loaderData?.og_image_url ?? null,
+        canonical_url: loaderData?.canonical_url ?? null,
+        noindex: loaderData?.noindex || noindexAuto || null,
+      },
+      templateKind: "city",
+      templateVars: { cidade: cityName, estado: state },
+      globals: loaderData?.globals ?? null,
+    });
+    return buildSeoHead({ seo, ogType: "website" });
   },
   component: CityHome,
 });

@@ -174,7 +174,7 @@ export function useAdminBlogCategories() {
     queryFn: async (): Promise<BlogCategory[]> => {
       const { data, error } = await supabase
         .from("blog_categories")
-        .select("id, name, slug, description, is_active, seo_title, seo_description, og_image_url, canonical_url, noindex")
+        .select("id, name, slug, description, is_active, seo_title, seo_description, seo_keywords, schema_type, og_image_url, canonical_url, noindex")
         .order("name", { ascending: true });
       if (error) throw error;
       return (data ?? []) as BlogCategory[];

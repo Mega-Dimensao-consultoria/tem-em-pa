@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Check, CheckSquare, ExternalLink, EyeOff, Pencil, Plus, RotateCcw, Square, Trash2, X } from "lucide-react";
+import { Check, CheckSquare, ExternalLink, EyeOff, Pencil, Plus, RotateCcw, Search, Square, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
@@ -14,6 +14,8 @@ import {
 import { useBulkCompanyAction, type BulkAction } from "@/features/admin/functions/bulk";
 import { CityFilterSelect } from "./CityFilterSelect";
 import { Empty, Loading } from "../admin-ui";
+import { SeoOverrideDialog } from "@/features/seo/components/SeoOverrideDialog";
+import { adminKeys } from "@/features/admin/functions/keys";
 
 const STATUS_LABEL: Record<string, string> = {
   approved: "Aprovada",
@@ -46,6 +48,8 @@ export function AllCompaniesTab() {
   const [status, setStatus] = useState<string>("all");
   const [cityId, setCityId] = useState<string>("all");
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [seoForId, setSeoForId] = useState<string | null>(null);
+  const seoCompany = seoForId ? data.find((c) => c.id === seoForId) ?? null : null;
 
   const filtered = useMemo(() => {
     return data.filter((c) => {
@@ -320,6 +324,15 @@ export function AllCompaniesTab() {
                             Editar
                           </Link>
                         </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setSeoForId(c.id)}
+                          aria-label={`Editar SEO de ${c.name}`}
+                        >
+                          <Search className="mr-1 h-4 w-4" aria-hidden="true" />
+                          SEO
+                        </Button>
                         <ConfirmDestructive
                           trigger={
                             <Button
@@ -351,6 +364,29 @@ export function AllCompaniesTab() {
           </table>
         </div>
       )}
+
+      {seoCompany ? (
+        <SeoOverrideDialog
+          table="companies"
+          id={seoCompany.id}
+          open={!!seoForId}
+          onOpenChange={(v) => (v ? null : setSeoForId(null))}
+          title={seoCompany.name}
+          previewUrl={
+            seoCompany.city_slug && seoCompany.slug
+              ? `https://www.temnaminhacidade.com.br/${seoCompany.city_slug}/empresa/${seoCompany.slug}`
+              : `https://www.temnaminhacidade.com.br/empresa/${seoCompany.id}`
+          }
+          initial={{
+            seo_title: seoCompany.seo_title,
+            seo_description: seoCompany.seo_description,
+            og_image_url: seoCompany.og_image_url,
+            canonical_url: seoCompany.canonical_url,
+            noindex: seoCompany.noindex,
+          }}
+          invalidateKeys={[[...adminKeys.all, "all-companies"], ["company"]]}
+        />
+      ) : null}
     </section>
   );
 }

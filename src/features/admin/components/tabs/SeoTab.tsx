@@ -16,6 +16,7 @@ import {
 import { renderTemplate } from "@/lib/seo/render";
 import { SeoPreview } from "@/features/seo/components/SeoPreview";
 import { Loading } from "../admin-ui";
+import { CitiesSeoTab } from "./CitiesSeoTab";
 
 export function SeoTab() {
   const { data, isLoading } = useSeoGlobals();
@@ -24,13 +25,17 @@ export function SeoTab() {
     <Tabs defaultValue="globals" className="mt-4">
       <TabsList>
         <TabsTrigger value="globals">Padrões globais</TabsTrigger>
-        <TabsTrigger value="templates">Templates de páginas dinâmicas</TabsTrigger>
+        <TabsTrigger value="templates">Templates dinâmicos</TabsTrigger>
+        <TabsTrigger value="cidades">Cidades</TabsTrigger>
       </TabsList>
       <TabsContent value="globals" className="mt-4">
         <GlobalsEditor initial={data} />
       </TabsContent>
       <TabsContent value="templates" className="mt-4">
         <TemplatesEditor initial={data} />
+      </TabsContent>
+      <TabsContent value="cidades" className="mt-4">
+        <CitiesSeoTab />
       </TabsContent>
     </Tabs>
   );

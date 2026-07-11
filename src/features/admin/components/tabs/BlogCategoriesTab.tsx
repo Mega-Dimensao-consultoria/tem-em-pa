@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -21,14 +21,17 @@ import {
   type BlogCategoryInput,
 } from "@/features/blog/hooks/useBlogAdmin";
 import type { BlogCategory } from "@/features/blog/lib/types";
+import { SeoOverrideDialog } from "@/features/seo/components/SeoOverrideDialog";
 
 const EMPTY: BlogCategoryInput = { name: "", slug: "", description: "", is_active: true };
 
 export function BlogCategoriesTab() {
   const { data = [], isLoading } = useAdminBlogCategories();
   const [editing, setEditing] = useState<BlogCategoryInput | null>(null);
+  const [seoForId, setSeoForId] = useState<string | null>(null);
   const save = useSaveBlogCategory();
   const remove = useDeleteBlogCategory();
+  const seoCat = seoForId ? data.find((c) => c.id === seoForId) ?? null : null;
 
   return (
     <div className="mt-4">
@@ -85,6 +88,14 @@ export function BlogCategoriesTab() {
                         }
                       >
                         <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        aria-label={`Editar SEO de ${c.name}`}
+                        onClick={() => setSeoForId(c.id)}
+                      >
+                        <Search className="h-4 w-4" />
                       </Button>
                       <ConfirmDestructive
                         title="Excluir categoria?"
@@ -169,6 +180,25 @@ export function BlogCategoriesTab() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+      ) : null}
+
+      {seoCat ? (
+        <SeoOverrideDialog
+          table="blog_categories"
+          id={seoCat.id}
+          open={!!seoForId}
+          onOpenChange={(v) => (v ? null : setSeoForId(null))}
+          title={seoCat.name}
+          previewUrl={`https://www.temnaminhacidade.com.br/blog/categoria/${seoCat.slug}`}
+          initial={{
+            seo_title: seoCat.seo_title,
+            seo_description: seoCat.seo_description,
+            og_image_url: seoCat.og_image_url,
+            canonical_url: seoCat.canonical_url,
+            noindex: seoCat.noindex,
+          }}
+          invalidateKeys={[["admin", "blog", "categories"], ["blog", "categories"]]}
+        />
       ) : null}
     </div>
   );

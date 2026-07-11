@@ -10,8 +10,14 @@ export type AdminCompany = {
   city: string | null;
   city_id: string | null;
   city_slug: string | null;
+  slug: string | null;
   status: string;
   created_at: string;
+  seo_title: string | null;
+  seo_description: string | null;
+  og_image_url: string | null;
+  canonical_url: string | null;
+  noindex: boolean | null;
 };
 
 export type PendingCompany = AdminCompany;
@@ -28,6 +34,12 @@ type RawAdminRow = {
   status: string;
   created_at: string;
   city_id: string | null;
+  slug: string | null;
+  seo_title: string | null;
+  seo_description: string | null;
+  og_image_url: string | null;
+  canonical_url: string | null;
+  noindex: boolean | null;
   cities: { name: string | null; slug: string | null } | null;
 };
 
@@ -39,13 +51,19 @@ function toAdmin(rows: RawAdminRow[]): AdminCompany[] {
     city: r.cities?.name ?? null,
     city_id: r.city_id,
     city_slug: r.cities?.slug ?? null,
+    slug: r.slug ?? null,
     status: r.status,
     created_at: r.created_at,
+    seo_title: r.seo_title,
+    seo_description: r.seo_description,
+    og_image_url: r.og_image_url,
+    canonical_url: r.canonical_url,
+    noindex: r.noindex,
   }));
 }
 
 const ADMIN_SELECT =
-  "id, name, description, status, created_at, city_id, cities:city_id(name, slug)" as const;
+  "id, name, description, status, created_at, city_id, slug, seo_title, seo_description, og_image_url, canonical_url, noindex, cities:city_id(name, slug)" as const;
 
 export function usePendingCompanies() {
   return useQuery({

@@ -16,6 +16,11 @@ export type CityEvent = {
   is_active: boolean
   created_at: string
   updated_at: string
+  seo_title?: string | null
+  seo_description?: string | null
+  og_image_url?: string | null
+  canonical_url?: string | null
+  noindex?: boolean | null
 }
 
 export type CityEventWithCompany = CityEvent & {
@@ -97,7 +102,7 @@ export function useOwnerCityEvents(companyId: string, enabled: boolean) {
       const { data, error } = await supabase
         .from('city_events')
         .select(
-          'id, company_id, city_id, title, description, starts_at, ends_at, location, image_url, is_active, created_at, updated_at',
+          'id, company_id, city_id, title, description, starts_at, ends_at, location, image_url, is_active, created_at, updated_at, seo_title, seo_description, og_image_url, canonical_url, noindex',
         )
         .eq('company_id', companyId)
         .order('starts_at', { ascending: false })

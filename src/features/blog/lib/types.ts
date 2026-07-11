@@ -6,6 +6,11 @@ export type BlogCategory = {
   slug: string;
   description: string | null;
   is_active: boolean;
+  seo_title: string | null;
+  seo_description: string | null;
+  og_image_url: string | null;
+  canonical_url: string | null;
+  noindex: boolean | null;
 };
 
 export type BlogPost = {

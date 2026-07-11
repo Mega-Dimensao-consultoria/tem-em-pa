@@ -45,7 +45,7 @@ async function fetchPostBySlug(slug: string): Promise<BlogPostWithCategory | nul
 async function fetchActiveCategories(): Promise<BlogCategory[]> {
   const { data, error } = await supabase
     .from("blog_categories")
-    .select("id, name, slug, description, is_active")
+    .select("id, name, slug, description, is_active, seo_title, seo_description, og_image_url, canonical_url, noindex")
     .eq("is_active", true)
     .order("name", { ascending: true });
   if (error) throw error;
@@ -55,7 +55,7 @@ async function fetchActiveCategories(): Promise<BlogCategory[]> {
 async function fetchCategoryBySlug(slug: string): Promise<BlogCategory | null> {
   const { data, error } = await supabase
     .from("blog_categories")
-    .select("id, name, slug, description, is_active")
+    .select("id, name, slug, description, is_active, seo_title, seo_description, og_image_url, canonical_url, noindex")
     .eq("slug", slug)
     .eq("is_active", true)
     .maybeSingle();

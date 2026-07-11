@@ -29,10 +29,12 @@ function normalize(row: Record<string, unknown> | null): SeoGlobals {
     : [];
   return {
     site_name: (row.site_name as string) ?? DEFAULT_GLOBALS.site_name,
+    site_tagline: (row.site_tagline as string | null) ?? DEFAULT_GLOBALS.site_tagline,
     title_base: (row.title_base as string) ?? DEFAULT_GLOBALS.title_base,
     title_separator: (row.title_separator as string) ?? DEFAULT_GLOBALS.title_separator,
     default_description:
       (row.default_description as string) ?? DEFAULT_GLOBALS.default_description,
+    default_keywords: (row.default_keywords as string | null) ?? DEFAULT_GLOBALS.default_keywords,
     default_og_image_url: (row.default_og_image_url as string | null) ?? null,
     twitter_handle: (row.twitter_handle as string | null) ?? null,
     org_name: (row.org_name as string | null) ?? null,

@@ -65,6 +65,8 @@ export type PostInput = {
   published_at?: string | null;
   seo_title?: string | null;
   seo_description?: string | null;
+  seo_keywords?: string | null;
+  schema_type?: string | null;
   og_image_url?: string | null;
   canonical_url?: string | null;
   noindex?: boolean;
@@ -90,6 +92,8 @@ export function useSavePost() {
         published_at: input.published_at || null,
         seo_title: input.seo_title || null,
         seo_description: input.seo_description || null,
+        seo_keywords: input.seo_keywords || null,
+        schema_type: input.schema_type || null,
         og_image_url: input.og_image_url || null,
         canonical_url: input.canonical_url || null,
         noindex: !!input.noindex,

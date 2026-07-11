@@ -17,6 +17,13 @@ import { renderTemplate } from "@/lib/seo/render";
 import { SeoPreview } from "@/features/seo/components/SeoPreview";
 import { Loading } from "../admin-ui";
 import { CitiesSeoTab } from "./CitiesSeoTab";
+import { AttachmentPicker } from "@/components/upload/AttachmentPicker";
+import { uploadSitePageImage } from "@/features/content/functions/sitePageVersions";
+import { removeFromBucket } from "@/lib/storage/uploadFile";
+
+const uploadSeoImage = (file: File) => uploadSitePageImage("seo", file);
+const removeSeoImage = (url: string) => removeFromBucket("site-pages-images", url);
+
 
 export function SeoTab() {
   const { data, isLoading } = useSeoGlobals();
@@ -142,14 +149,18 @@ function GlobalsEditor({ initial }: { initial: SeoGlobals }) {
           </p>
         </div>
         <div className="mt-4">
-          <Label htmlFor="og-default">Imagem social padrão (og:image fallback)</Label>
-          <Input
-            id="og-default"
-            value={g.default_og_image_url ?? ""}
-            onChange={(e) => patch("default_og_image_url", e.target.value || null)}
-            placeholder="https://..."
-          />
+          <Label>Imagem social padrão (og:image fallback)</Label>
+          <div className="mt-1">
+            <AttachmentPicker
+              value={g.default_og_image_url ?? null}
+              onChange={(url) => patch("default_og_image_url", url)}
+              upload={uploadSeoImage}
+              remove={removeSeoImage}
+              label="Enviar imagem padrão"
+            />
+          </div>
         </div>
+
       </section>
 
       <section className="rounded-2xl border border-border bg-card p-5 shadow-soft">
@@ -167,15 +178,19 @@ function GlobalsEditor({ initial }: { initial: SeoGlobals }) {
             />
           </div>
           <div>
-            <Label htmlFor="org-logo">Logo (URL)</Label>
-            <Input
-              id="org-logo"
-              value={g.org_logo_url ?? ""}
-              onChange={(e) => patch("org_logo_url", e.target.value || null)}
-              placeholder="https://..."
-            />
+            <Label>Logo da organização</Label>
+            <div className="mt-1">
+              <AttachmentPicker
+                value={g.org_logo_url ?? null}
+                onChange={(url) => patch("org_logo_url", url)}
+                upload={uploadSeoImage}
+                remove={removeSeoImage}
+                label="Enviar logo"
+              />
+            </div>
           </div>
         </div>
+
         <div className="mt-4">
           <Label>Redes sociais (sameAs)</Label>
           <div className="mt-2 space-y-2">
@@ -307,14 +322,18 @@ function TemplatesEditor({ initial }: { initial: SeoGlobals }) {
               </div>
               <div>
                 <Label>Imagem social padrão para este tipo</Label>
-                <Input
-                  value={tpl.og_image_url ?? ""}
-                  onChange={(e) =>
-                    patchTpl(k, { og_image_url: e.target.value || null })
-                  }
-                  placeholder="Opcional — usa a imagem global se vazio"
+                <p className="mb-1 text-xs text-muted-foreground">
+                  Opcional — usa a imagem global se vazio.
+                </p>
+                <AttachmentPicker
+                  value={tpl.og_image_url ?? null}
+                  onChange={(url) => patchTpl(k, { og_image_url: url })}
+                  upload={uploadSeoImage}
+                  remove={removeSeoImage}
+                  label="Enviar imagem"
                 />
               </div>
+
             </div>
             <div className="mt-4">
               <div className="mb-1 text-xs text-muted-foreground">Prévia com dados de exemplo</div>

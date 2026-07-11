@@ -14,6 +14,8 @@ import {
 import { toast } from "sonner";
 import { RichEditor } from "@/features/content/components/RichEditor";
 import { uploadBlogImage } from "@/features/blog/lib/uploadImage";
+import { removeFromBucket } from "@/lib/storage/uploadFile";
+
 import { useAdminBlogCategories, useAdminPost, useSavePost } from "@/features/blog/hooks/useBlogAdmin";
 import type { BlogStatus } from "@/features/blog/lib/types";
 import { slugify } from "../admin-ui";
@@ -82,7 +84,15 @@ export function BlogPostEditor({ postId, onClose }: Props) {
     setCoverUploading(true);
     try {
       const url = await uploadBlogImage("cover", file);
+      const prev = cover;
       setCover(url);
+      if (prev) {
+        try {
+          await removeFromBucket("blog-images", prev);
+        } catch {
+          /* ignora falha de cleanup */
+        }
+      }
       toast.success("Capa atualizada");
     } catch (e) {
       toast.error((e as Error).message);
@@ -90,6 +100,19 @@ export function BlogPostEditor({ postId, onClose }: Props) {
       setCoverUploading(false);
     }
   }
+
+  async function handleCoverRemove() {
+    const prev = cover;
+    setCover(null);
+    if (prev) {
+      try {
+        await removeFromBucket("blog-images", prev);
+      } catch {
+        /* ignora falha de cleanup */
+      }
+    }
+  }
+
 
   function handleSave(overrideStatus?: BlogStatus) {
     if (!title.trim()) {
@@ -227,9 +250,11 @@ export function BlogPostEditor({ postId, onClose }: Props) {
                 value={seo}
                 onChange={(p) => setSeo((prev) => ({ ...prev, ...p }))}
                 uploadImage={(f) => uploadBlogImage("cover", f)}
+                removeImage={(url) => removeFromBucket("blog-images", url)}
                 fields={{ ogTitle: false, ogDescription: false }}
                 helperFor={{ title }}
               />
+
               <SeoPreview
                 title={seo.seo_title || title}
                 description={seo.seo_description || excerpt || ""}
@@ -322,7 +347,7 @@ export function BlogPostEditor({ postId, onClose }: Props) {
                 />
               </label>
               {cover ? (
-                <Button variant="outline" size="sm" onClick={() => setCover(null)}>
+                <Button variant="outline" size="sm" onClick={() => void handleCoverRemove()}>
                   Remover
                 </Button>
               ) : null}

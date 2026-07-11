@@ -1,10 +1,7 @@
-import { useRef, useState } from "react";
-import { Loader2, Upload, X, Image as ImageIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -12,14 +9,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { toast } from "sonner";
 import type { SeoOverride, SchemaType } from "@/lib/seo/types";
 import { SCHEMA_TYPE_OPTIONS } from "@/lib/seo/types";
+import { AttachmentPicker } from "@/components/upload/AttachmentPicker";
+import { uploadSitePageImage } from "@/features/content/functions/sitePageVersions";
+import { removeFromBucket } from "@/lib/storage/uploadFile";
 
 type Props = {
   value: SeoOverride;
   onChange: (patch: Partial<SeoOverride>) => void;
+  /** Faz upload da imagem OG. Padrão: bucket `site-pages-images`. */
   uploadImage?: (file: File) => Promise<string>;
+  /** Remove a imagem OG anterior. Padrão: bucket `site-pages-images`. */
+  removeImage?: (url: string) => Promise<void>;
   fields?: {
     ogTitle?: boolean;
     ogDescription?: boolean;
@@ -51,27 +53,16 @@ export function SeoFieldsSection({
   value,
   onChange,
   uploadImage,
+  removeImage,
   fields,
   schemaOptions,
   helperFor,
 }: Props) {
   const f = { ...DEFAULT_FIELDS, ...(fields ?? {}) };
-  const fileRef = useRef<HTMLInputElement | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const doUpload = uploadImage ?? ((file: File) => uploadSitePageImage("seo", file));
+  const doRemove =
+    removeImage ?? ((url: string) => removeFromBucket("site-pages-images", url));
 
-  async function handleFile(file: File) {
-    if (!uploadImage) return;
-    setUploading(true);
-    try {
-      const url = await uploadImage(file);
-      onChange({ og_image_url: url });
-      toast.success("Imagem enviada");
-    } catch (e) {
-      toast.error((e as Error).message);
-    } finally {
-      setUploading(false);
-    }
-  }
 
   const titleLen = (value.seo_title ?? "").length;
   const descLen = (value.seo_description ?? "").length;
@@ -190,67 +181,18 @@ export function SeoFieldsSection({
       {f.ogImage && (
         <div>
           <Label>Imagem social (og:image)</Label>
-          <div className="mt-1 flex flex-wrap items-start gap-3">
-            {value.og_image_url ? (
-              <div className="relative">
-                <img
-                  src={value.og_image_url}
-                  alt="Prévia og:image"
-                  className="h-24 w-40 rounded-md border border-border object-cover"
-                />
-                <button
-                  type="button"
-                  onClick={() => onChange({ og_image_url: null })}
-                  className="absolute -right-2 -top-2 rounded-full bg-background p-1 shadow ring-1 ring-border"
-                  aria-label="Remover imagem"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </div>
-            ) : (
-              <div className="flex h-24 w-40 items-center justify-center rounded-md border border-dashed border-border text-muted-foreground">
-                <ImageIcon className="h-6 w-6" />
-              </div>
-            )}
-            <div className="flex flex-1 flex-col gap-2">
-              <Input
-                value={value.og_image_url ?? ""}
-                onChange={(e) => onChange({ og_image_url: e.target.value || null })}
-                placeholder="Cole uma URL ou envie um arquivo"
-              />
-              {uploadImage && (
-                <>
-                  <input
-                    ref={fileRef}
-                    type="file"
-                    accept="image/*"
-                    hidden
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) void handleFile(file);
-                      e.target.value = "";
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => fileRef.current?.click()}
-                    disabled={uploading}
-                  >
-                    {uploading ? (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    ) : (
-                      <Upload className="mr-2 h-4 w-4" />
-                    )}
-                    Enviar imagem
-                  </Button>
-                </>
-              )}
-            </div>
+          <div className="mt-1">
+            <AttachmentPicker
+              value={value.og_image_url ?? null}
+              onChange={(url) => onChange({ og_image_url: url })}
+              upload={doUpload}
+              remove={doRemove}
+              label="Enviar imagem"
+            />
           </div>
         </div>
       )}
+
 
       {f.canonical && (
         <div>

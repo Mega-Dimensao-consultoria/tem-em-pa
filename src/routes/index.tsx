@@ -7,6 +7,7 @@ import { ContactDialog } from "@/features/contact/ContactDialog";
 import { listStates, listCitiesByState } from "@/features/companies/functions";
 import { seoGlobalsServerQO } from "@/features/seo/functions/getGlobals";
 import { resolveSeo, buildSeoHead } from "@/lib/seo/render";
+import type { SeoGlobals } from "@/lib/seo/types";
 
 const BASE = "https://www.temnaminhacidade.com.br";
 

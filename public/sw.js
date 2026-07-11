@@ -9,16 +9,12 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
-      // Faxina de caches antigos deixados pelo service worker anterior
-      // (v1/v2 do app-shell). Cache Storage é escopado à origem — só apaga
-      // o que este worker criou.
+      // Faxina de qualquer cache legado deixado por versões anteriores do
+      // service worker. Cache Storage é escopado à origem — só apaga o que
+      // este worker criou.
       try {
         const names = await caches.keys();
-        await Promise.all(
-          names
-            .filter((n) => n.startsWith("tem-em-pa-") || n.startsWith("tnmc-"))
-            .map((n) => caches.delete(n)),
-        );
+        await Promise.all(names.map((n) => caches.delete(n)));
       } catch {
         /* ignore */
       }
@@ -26,6 +22,7 @@ self.addEventListener("activate", (event) => {
     })(),
   );
 });
+
 
 // ============== PUSH ==============
 self.addEventListener("push", (event) => {

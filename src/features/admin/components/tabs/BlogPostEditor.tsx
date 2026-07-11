@@ -14,6 +14,8 @@ import {
 import { toast } from "sonner";
 import { RichEditor } from "@/features/content/components/RichEditor";
 import { uploadBlogImage } from "@/features/blog/lib/uploadImage";
+import { removeFromBucket } from "@/lib/storage/uploadFile";
+
 import { useAdminBlogCategories, useAdminPost, useSavePost } from "@/features/blog/hooks/useBlogAdmin";
 import type { BlogStatus } from "@/features/blog/lib/types";
 import { slugify } from "../admin-ui";

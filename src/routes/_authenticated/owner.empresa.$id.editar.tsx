@@ -41,6 +41,7 @@ function EditarEmpresa() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [submitting, setSubmitting] = useState(false);
+  const [seoOpen, setSeoOpen] = useState(false);
 
   const { data: company, isLoading } = useQuery({
     queryKey: ["company-edit", id],

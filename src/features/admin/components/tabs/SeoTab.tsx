@@ -178,15 +178,19 @@ function GlobalsEditor({ initial }: { initial: SeoGlobals }) {
             />
           </div>
           <div>
-            <Label htmlFor="org-logo">Logo (URL)</Label>
-            <Input
-              id="org-logo"
-              value={g.org_logo_url ?? ""}
-              onChange={(e) => patch("org_logo_url", e.target.value || null)}
-              placeholder="https://..."
-            />
+            <Label>Logo da organização</Label>
+            <div className="mt-1">
+              <AttachmentPicker
+                value={g.org_logo_url ?? null}
+                onChange={(url) => patch("org_logo_url", url)}
+                upload={uploadSeoImage}
+                remove={removeSeoImage}
+                label="Enviar logo"
+              />
+            </div>
           </div>
         </div>
+
         <div className="mt-4">
           <Label>Redes sociais (sameAs)</Label>
           <div className="mt-2 space-y-2">

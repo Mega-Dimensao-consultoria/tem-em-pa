@@ -347,7 +347,7 @@ export function BlogPostEditor({ postId, onClose }: Props) {
                 />
               </label>
               {cover ? (
-                <Button variant="outline" size="sm" onClick={() => setCover(null)}>
+                <Button variant="outline" size="sm" onClick={() => void handleCoverRemove()}>
                   Remover
                 </Button>
               ) : null}

@@ -149,14 +149,18 @@ function GlobalsEditor({ initial }: { initial: SeoGlobals }) {
           </p>
         </div>
         <div className="mt-4">
-          <Label htmlFor="og-default">Imagem social padrão (og:image fallback)</Label>
-          <Input
-            id="og-default"
-            value={g.default_og_image_url ?? ""}
-            onChange={(e) => patch("default_og_image_url", e.target.value || null)}
-            placeholder="https://..."
-          />
+          <Label>Imagem social padrão (og:image fallback)</Label>
+          <div className="mt-1">
+            <AttachmentPicker
+              value={g.default_og_image_url ?? null}
+              onChange={(url) => patch("default_og_image_url", url)}
+              upload={uploadSeoImage}
+              remove={removeSeoImage}
+              label="Enviar imagem padrão"
+            />
+          </div>
         </div>
+
       </section>
 
       <section className="rounded-2xl border border-border bg-card p-5 shadow-soft">

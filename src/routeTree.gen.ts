@@ -61,6 +61,7 @@ import { Route as ApiPublicOgEventIdRouteImport } from './routes/api/public/og.e
 import { Route as AuthenticatedOwnerEmpresaIdProdutosRouteImport } from './routes/_authenticated/owner.empresa.$id.produtos'
 import { Route as AuthenticatedOwnerEmpresaIdEventosRouteImport } from './routes/_authenticated/owner.empresa.$id.eventos'
 import { Route as AuthenticatedOwnerEmpresaIdEditarRouteImport } from './routes/_authenticated/owner.empresa.$id.editar'
+import { Route as AuthenticatedOwnerEmpresaIdDestaqueRouteImport } from './routes/_authenticated/owner.empresa.$id.destaque'
 import { Route as AuthenticatedOwnerEmpresaIdDashboardRouteImport } from './routes/_authenticated/owner.empresa.$id.dashboard'
 
 const TermosRoute = TermosRouteImport.update({
@@ -339,6 +340,12 @@ const AuthenticatedOwnerEmpresaIdEditarRoute =
     path: '/owner/empresa/$id/editar',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedOwnerEmpresaIdDestaqueRoute =
+  AuthenticatedOwnerEmpresaIdDestaqueRouteImport.update({
+    id: '/owner/empresa/$id/destaque',
+    path: '/owner/empresa/$id/destaque',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedOwnerEmpresaIdDashboardRoute =
   AuthenticatedOwnerEmpresaIdDashboardRouteImport.update({
     id: '/owner/empresa/$id/dashboard',
@@ -395,6 +402,7 @@ export interface FileRoutesByFullPath {
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
   '/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
+  '/owner/empresa/$id/destaque': typeof AuthenticatedOwnerEmpresaIdDestaqueRoute
   '/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/owner/empresa/$id/eventos': typeof AuthenticatedOwnerEmpresaIdEventosRoute
   '/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
@@ -446,6 +454,7 @@ export interface FileRoutesByTo {
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
   '/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
+  '/owner/empresa/$id/destaque': typeof AuthenticatedOwnerEmpresaIdDestaqueRoute
   '/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/owner/empresa/$id/eventos': typeof AuthenticatedOwnerEmpresaIdEventosRoute
   '/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
@@ -502,6 +511,7 @@ export interface FileRoutesById {
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
   '/_authenticated/owner/empresa/$id/dashboard': typeof AuthenticatedOwnerEmpresaIdDashboardRoute
+  '/_authenticated/owner/empresa/$id/destaque': typeof AuthenticatedOwnerEmpresaIdDestaqueRoute
   '/_authenticated/owner/empresa/$id/editar': typeof AuthenticatedOwnerEmpresaIdEditarRoute
   '/_authenticated/owner/empresa/$id/eventos': typeof AuthenticatedOwnerEmpresaIdEventosRoute
   '/_authenticated/owner/empresa/$id/produtos': typeof AuthenticatedOwnerEmpresaIdProdutosRoute
@@ -558,6 +568,7 @@ export interface FileRouteTypes {
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
     | '/owner/empresa/$id/dashboard'
+    | '/owner/empresa/$id/destaque'
     | '/owner/empresa/$id/editar'
     | '/owner/empresa/$id/eventos'
     | '/owner/empresa/$id/produtos'
@@ -609,6 +620,7 @@ export interface FileRouteTypes {
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
     | '/owner/empresa/$id/dashboard'
+    | '/owner/empresa/$id/destaque'
     | '/owner/empresa/$id/editar'
     | '/owner/empresa/$id/eventos'
     | '/owner/empresa/$id/produtos'
@@ -664,6 +676,7 @@ export interface FileRouteTypes {
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
     | '/_authenticated/owner/empresa/$id/dashboard'
+    | '/_authenticated/owner/empresa/$id/destaque'
     | '/_authenticated/owner/empresa/$id/editar'
     | '/_authenticated/owner/empresa/$id/eventos'
     | '/_authenticated/owner/empresa/$id/produtos'
@@ -1069,6 +1082,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdEditarRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/owner/empresa/$id/destaque': {
+      id: '/_authenticated/owner/empresa/$id/destaque'
+      path: '/owner/empresa/$id/destaque'
+      fullPath: '/owner/empresa/$id/destaque'
+      preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdDestaqueRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/owner/empresa/$id/dashboard': {
       id: '/_authenticated/owner/empresa/$id/dashboard'
       path: '/owner/empresa/$id/dashboard'
@@ -1104,6 +1124,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRouteWithChildren
   AuthenticatedOwnerIndexRoute: typeof AuthenticatedOwnerIndexRoute
   AuthenticatedOwnerEmpresaIdDashboardRoute: typeof AuthenticatedOwnerEmpresaIdDashboardRoute
+  AuthenticatedOwnerEmpresaIdDestaqueRoute: typeof AuthenticatedOwnerEmpresaIdDestaqueRoute
   AuthenticatedOwnerEmpresaIdEditarRoute: typeof AuthenticatedOwnerEmpresaIdEditarRoute
   AuthenticatedOwnerEmpresaIdEventosRoute: typeof AuthenticatedOwnerEmpresaIdEventosRoute
   AuthenticatedOwnerEmpresaIdProdutosRoute: typeof AuthenticatedOwnerEmpresaIdProdutosRoute
@@ -1118,6 +1139,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedOwnerIndexRoute: AuthenticatedOwnerIndexRoute,
   AuthenticatedOwnerEmpresaIdDashboardRoute:
     AuthenticatedOwnerEmpresaIdDashboardRoute,
+  AuthenticatedOwnerEmpresaIdDestaqueRoute:
+    AuthenticatedOwnerEmpresaIdDestaqueRoute,
   AuthenticatedOwnerEmpresaIdEditarRoute:
     AuthenticatedOwnerEmpresaIdEditarRoute,
   AuthenticatedOwnerEmpresaIdEventosRoute:

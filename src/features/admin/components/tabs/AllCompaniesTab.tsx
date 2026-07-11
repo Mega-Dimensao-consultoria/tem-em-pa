@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Check, CheckSquare, ExternalLink, EyeOff, Pencil, Plus, RotateCcw, Search, Square, Trash2, X } from "lucide-react";
+import { Check, CheckSquare, ExternalLink, EyeOff, Pencil, Plus, RotateCcw, Search, Sparkles, Square, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";

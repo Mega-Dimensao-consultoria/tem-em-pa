@@ -20,7 +20,9 @@ import {
   Image as ImageIcon,
   Loader2,
   Unlink,
+  Code2,
 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -48,7 +50,10 @@ export function RichEditor({
   minHeight = 360,
 }: Props) {
   const [uploading, setUploading] = useState(false);
+  const [sourceMode, setSourceMode] = useState(false);
+  const [sourceDraft, setSourceDraft] = useState(value || "");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
 
   const editor = useEditor({
     // Evita mismatch de hidratação no SSR do TanStack Start.
@@ -122,6 +127,18 @@ export function RichEditor({
         onImageClick={() => fileInputRef.current?.click()}
         onLinkClick={toggleLink}
         uploading={uploading}
+        sourceMode={sourceMode}
+        onToggleSource={() => {
+          if (!sourceMode) {
+            setSourceDraft(editor?.getHTML() ?? value ?? "");
+            setSourceMode(true);
+          } else {
+            const clean = sanitizeHtml(sourceDraft);
+            editor?.commands.setContent(clean, { emitUpdate: false });
+            onChange(clean);
+            setSourceMode(false);
+          }
+        }}
       />
       <input
         ref={fileInputRef}
@@ -135,8 +152,20 @@ export function RichEditor({
         }}
       />
       <div style={{ minHeight }}>
-        <EditorContent editor={editor} />
+        {sourceMode ? (
+          <textarea
+            value={sourceDraft}
+            onChange={(e) => setSourceDraft(e.target.value)}
+            spellCheck={false}
+            className="block w-full resize-y border-0 bg-background px-4 py-3 font-mono text-sm outline-none"
+            style={{ minHeight }}
+            aria-label="Código HTML"
+          />
+        ) : (
+          <EditorContent editor={editor} />
+        )}
       </div>
+
     </div>
   );
 }
@@ -151,13 +180,32 @@ function Toolbar({
   onImageClick,
   onLinkClick,
   uploading,
+  sourceMode,
+  onToggleSource,
 }: {
   editor: Editor | null;
   onImageClick: () => void;
   onLinkClick: () => void;
   uploading: boolean;
+  sourceMode: boolean;
+  onToggleSource: () => void;
 }) {
-  if (!editor) return <div className="h-11 border-b border-border bg-muted/40" />;
+  if (!editor)
+    return (
+      <div className="flex h-11 items-center justify-end border-b border-border bg-muted/40 px-1.5">
+        <Button
+          type="button"
+          size="sm"
+          variant={sourceMode ? "default" : "ghost"}
+          className="h-8"
+          onClick={onToggleSource}
+        >
+          <Code2 className="mr-1 h-4 w-4" />
+          {sourceMode ? "Visual" : "HTML"}
+        </Button>
+      </div>
+    );
+
 
   const buttons: Array<{
     key: string;
@@ -285,13 +333,28 @@ function Toolbar({
           variant={b.isActive ? "default" : "ghost"}
           className="h-8 w-8"
           onClick={b.onClick}
-          disabled={b.disabled}
+          disabled={b.disabled || sourceMode}
           aria-label={b.label}
           title={b.label}
         >
           {b.icon}
         </Button>
       ))}
+      <div className="ml-auto">
+        <Button
+          type="button"
+          size="sm"
+          variant={sourceMode ? "default" : "ghost"}
+          className="h-8"
+          onClick={onToggleSource}
+          aria-label={sourceMode ? "Voltar para editor visual" : "Editar HTML"}
+          title={sourceMode ? "Voltar para editor visual" : "Editar HTML"}
+        >
+          <Code2 className="mr-1 h-4 w-4" />
+          {sourceMode ? "Visual" : "HTML"}
+        </Button>
+      </div>
     </div>
   );
 }
+

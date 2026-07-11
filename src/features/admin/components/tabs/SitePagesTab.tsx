@@ -17,6 +17,11 @@ import {
 import { HtmlContent } from '@/features/content/components/HtmlContent'
 import { RichEditor } from '@/features/content/components/RichEditor'
 import { Empty, Loading } from '../admin-ui'
+import { SeoFieldsSection } from '@/features/seo/components/SeoFieldsSection'
+import { SeoPreview } from '@/features/seo/components/SeoPreview'
+import { Search } from 'lucide-react'
+import type { SeoOverride } from '@/lib/seo/types'
+
 
 const SLUG_LABELS: Record<string, string> = {
   sobre: 'Sobre',
@@ -72,9 +77,27 @@ export function SitePagesTab() {
 function PageEditor({ page }: { page: AdminSitePage }) {
   const [title, setTitle] = useState(page.title)
   const [content, setContent] = useState(page.content_html)
+  const [seo, setSeo] = useState<SeoOverride>({
+    seo_title: page.seo_title,
+    seo_description: page.seo_description,
+    og_title: page.og_title,
+    og_description: page.og_description,
+    og_image_url: page.og_image_url,
+    canonical_url: page.canonical_url,
+    noindex: page.noindex,
+  })
   const update = useUpdateSitePage()
 
-  const dirty = title !== page.title || content !== page.content_html
+  const dirty =
+    title !== page.title ||
+    content !== page.content_html ||
+    seo.seo_title !== page.seo_title ||
+    seo.seo_description !== page.seo_description ||
+    seo.og_title !== page.og_title ||
+    seo.og_description !== page.og_description ||
+    seo.og_image_url !== page.og_image_url ||
+    seo.canonical_url !== page.canonical_url ||
+    !!seo.noindex !== page.noindex
 
   return (
     <section
@@ -91,7 +114,9 @@ function PageEditor({ page }: { page: AdminSitePage }) {
           </p>
         </div>
         <Button
-          onClick={() => update.mutate({ slug: page.slug, title, content_html: content })}
+          onClick={() =>
+            update.mutate({ slug: page.slug, title, content_html: content, ...seo })
+          }
           disabled={!dirty || update.isPending}
           size="sm"
         >
@@ -103,6 +128,7 @@ function PageEditor({ page }: { page: AdminSitePage }) {
           Salvar
         </Button>
       </header>
+
 
       <label className="mb-1 block text-xs font-medium text-muted-foreground">Título</label>
       <Input

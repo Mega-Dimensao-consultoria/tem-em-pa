@@ -118,18 +118,8 @@ function GlobalsEditor({ initial }: { initial: SeoGlobals }) {
               placeholder="@temnaminhacidade"
             />
           </div>
-          <div>
-
-            <Label htmlFor="linkedin">URL do LinkedIn</Label>
-            <Input
-              id="linkedin"
-              type="url"
-              value={linkedinUrl}
-              onChange={(e) => setLinkedin(e.target.value)}
-              placeholder="https://www.linkedin.com/company/temnaminhacidade"
-            />
-          </div>
         </div>
+
 
         <div className="mt-4">
           <Label htmlFor="tagline">Slogan / descrição curta do site</Label>

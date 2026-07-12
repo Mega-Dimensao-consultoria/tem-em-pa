@@ -74,6 +74,21 @@ function GlobalsEditor({ initial }: { initial: SeoGlobals }) {
     }));
   }
 
+  const linkedinUrl =
+    g.org_social_urls.find((u) => /linkedin\.com/i.test(u)) ?? "";
+  function setLinkedin(v: string) {
+    setG((prev) => {
+      const others = prev.org_social_urls.filter((u) => !/linkedin\.com/i.test(u));
+      const trimmed = v.trim();
+      return {
+        ...prev,
+        org_social_urls: trimmed ? [trimmed, ...others] : others,
+      };
+    });
+  }
+
+
+
   return (
     <div className="space-y-6">
       <section className="rounded-2xl border border-border bg-card p-5 shadow-soft">

@@ -128,7 +128,9 @@ function GlobalsEditor({ initial }: { initial: SeoGlobals }) {
               onChange={(e) => patch("twitter_handle", e.target.value || null)}
               placeholder="@temnaminhacidade"
             />
+          </div>
           <div>
+
             <Label htmlFor="linkedin">URL do LinkedIn</Label>
             <Input
               id="linkedin"

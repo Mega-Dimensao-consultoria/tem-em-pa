@@ -74,6 +74,21 @@ function GlobalsEditor({ initial }: { initial: SeoGlobals }) {
     }));
   }
 
+  const linkedinUrl =
+    g.org_social_urls.find((u) => /linkedin\.com/i.test(u)) ?? "";
+  function setLinkedin(v: string) {
+    setG((prev) => {
+      const others = prev.org_social_urls.filter((u) => !/linkedin\.com/i.test(u));
+      const trimmed = v.trim();
+      return {
+        ...prev,
+        org_social_urls: trimmed ? [trimmed, ...others] : others,
+      };
+    });
+  }
+
+
+
   return (
     <div className="space-y-6">
       <section className="rounded-2xl border border-border bg-card p-5 shadow-soft">
@@ -105,6 +120,7 @@ function GlobalsEditor({ initial }: { initial: SeoGlobals }) {
             />
           </div>
           <div>
+
             <Label htmlFor="tw">Handle do Twitter/X (com @)</Label>
             <Input
               id="tw"
@@ -113,7 +129,19 @@ function GlobalsEditor({ initial }: { initial: SeoGlobals }) {
               placeholder="@temnaminhacidade"
             />
           </div>
+          <div>
+
+            <Label htmlFor="linkedin">URL do LinkedIn</Label>
+            <Input
+              id="linkedin"
+              type="url"
+              value={linkedinUrl}
+              onChange={(e) => setLinkedin(e.target.value)}
+              placeholder="https://www.linkedin.com/company/temnaminhacidade"
+            />
+          </div>
         </div>
+
         <div className="mt-4">
           <Label htmlFor="tagline">Slogan / descrição curta do site</Label>
           <Input

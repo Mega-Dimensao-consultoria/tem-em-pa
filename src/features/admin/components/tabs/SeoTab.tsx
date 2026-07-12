@@ -74,18 +74,7 @@ function GlobalsEditor({ initial }: { initial: SeoGlobals }) {
     }));
   }
 
-  const linkedinUrl =
-    g.org_social_urls.find((u) => /linkedin\.com/i.test(u)) ?? "";
-  function setLinkedin(v: string) {
-    setG((prev) => {
-      const others = prev.org_social_urls.filter((u) => !/linkedin\.com/i.test(u));
-      const trimmed = v.trim();
-      return {
-        ...prev,
-        org_social_urls: trimmed ? [trimmed, ...others] : others,
-      };
-    });
-  }
+
 
 
 

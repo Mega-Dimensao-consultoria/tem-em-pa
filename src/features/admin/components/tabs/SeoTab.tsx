@@ -120,6 +120,7 @@ function GlobalsEditor({ initial }: { initial: SeoGlobals }) {
             />
           </div>
           <div>
+
             <Label htmlFor="tw">Handle do Twitter/X (com @)</Label>
             <Input
               id="tw"

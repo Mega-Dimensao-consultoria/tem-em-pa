@@ -63,6 +63,13 @@ export function CompanyHeader({
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-2">
+        {canEdit ? (
+          <Button asChild size="sm" className="rounded-full">
+            <Link to="/owner/empresa/$id/editar" params={{ id: company.id }}>
+              <Pencil className="mr-1 h-3 w-3" /> Editar página
+            </Link>
+          </Button>
+        ) : null}
         {!isPending ? <FavoriteButton companyId={company.id} variant="button" /> : null}
         {!isPending ? (
           <ShareButton

@@ -9,7 +9,17 @@ import { ImageUpload } from "@/components/upload/ImageUpload";
 import { Flag, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
-export function ClaimDialog({ companyId, userId }: { companyId: string; userId: string }) {
+export function ClaimDialog({
+  companyId,
+  userId,
+  triggerLabel = "Reivindicar empresa",
+  triggerVariant = "outline",
+}: {
+  companyId: string;
+  userId: string;
+  triggerLabel?: string;
+  triggerVariant?: "outline" | "ghost";
+}) {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [docPath, setDocPath] = useState<string | null>(null);
@@ -33,7 +43,15 @@ export function ClaimDialog({ companyId, userId }: { companyId: string; userId: 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="rounded-full"><Flag className="mr-2 h-4 w-4" /> Reivindicar empresa</Button>
+        {triggerVariant === "ghost" ? (
+          <Button variant="ghost" size="sm" className="text-muted-foreground">
+            <Flag className="mr-1 h-3.5 w-3.5" /> {triggerLabel}
+          </Button>
+        ) : (
+          <Button variant="outline" className="rounded-full">
+            <Flag className="mr-2 h-4 w-4" /> {triggerLabel}
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

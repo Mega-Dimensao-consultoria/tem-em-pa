@@ -87,6 +87,14 @@ export function CompanyHeader({
             <Link to="/auth">Entrar para reivindicar</Link>
           </Button>
         ) : null}
+        {!canClaim && !canEdit && !isPending && user ? (
+          <ClaimDialog
+            companyId={company.id}
+            userId={user.id}
+            triggerLabel="Sou o verdadeiro dono desta empresa"
+            triggerVariant="ghost"
+          />
+        ) : null}
         {!isPending ? (
           <RemovalRequestDialog companyId={company.id} userId={user?.id ?? null} />
         ) : null}

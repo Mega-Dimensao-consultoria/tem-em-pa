@@ -23,6 +23,7 @@ export function CompanyHeader({
   isPending,
   canClaim,
   user,
+  canEdit = false,
 }: {
   company: Company;
   avg: number;
@@ -30,6 +31,7 @@ export function CompanyHeader({
   isPending: boolean;
   canClaim: boolean;
   user: User | null;
+  canEdit?: boolean;
 }) {
   return (
     <div className="mt-4 flex flex-col gap-4 rounded-3xl border border-border bg-card p-6 shadow-soft md:flex-row md:items-end">

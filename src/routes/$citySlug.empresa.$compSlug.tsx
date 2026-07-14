@@ -287,6 +287,12 @@ function CompanyPage() {
               address={fullAddress}
               isPending={isPending}
             />
+            {!isPending ? (
+              <QrCodeCard
+                url={`https://www.temnaminhacidade.com.br/${params.citySlug}/empresa/${params.compSlug}`}
+                companyName={company.name}
+              />
+            ) : null}
           </aside>
         </div>
 

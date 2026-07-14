@@ -242,6 +242,7 @@ function CompanyPage() {
           isPending={isPending}
           canClaim={canClaim}
           user={user}
+          canEdit={isOwner || isAdmin}
         />
 
         <div className="mt-8 grid gap-8 md:grid-cols-3">

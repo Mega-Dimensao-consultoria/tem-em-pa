@@ -1,5 +1,6 @@
 import type { User } from "@supabase/supabase-js";
 import { Link } from "@tanstack/react-router";
+import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RatingStars } from "@/features/reviews/components/RatingStars";
 import { FavoriteButton } from "@/features/companies/components/FavoriteButton";

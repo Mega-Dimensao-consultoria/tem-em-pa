@@ -31,7 +31,7 @@ export function QrCodeCard({ url, companyName }: { url: string; companyName: str
         <h3 className="font-display text-base font-semibold">QR Code da página</h3>
       </div>
       <p className="mb-4 text-xs text-muted-foreground">
-        Imprima e cole no balcão, vitrine ou cardápio. Quem escanear cai direto na sua página no Tem na minha cidade.
+        Quer compartilhar esta empresa? Então salve o QR code dela e compartilhe com todos! Escaneou? Caiu na página da empresa na hora!
       </p>
       <div ref={wrapRef} className="flex flex-col items-center gap-3">
         <div className="rounded-xl bg-white p-3">

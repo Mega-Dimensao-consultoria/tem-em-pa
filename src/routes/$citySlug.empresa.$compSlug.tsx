@@ -13,6 +13,7 @@ import { CompanyGalleryBlock } from "@/features/companies/components/CompanyGall
 import { CompanyProductsBlock } from "@/features/companies/components/CompanyProductsBlock";
 import { CompanyMapCard } from "@/features/companies/components/CompanyMapCard";
 import { CompanyEventsBlock } from "@/features/events/components/CompanyEventsBlock";
+import { QrCodeCard } from "@/components/QrCodeCard";
 import { buildCompanyHead } from "@/features/companies/components/buildCompanyHead";
 import { useAuth, useRoles } from "@/features/auth/use-auth";
 import { trackEvent } from "@/lib/track";

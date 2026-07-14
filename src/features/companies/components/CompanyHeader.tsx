@@ -1,5 +1,6 @@
 import type { User } from "@supabase/supabase-js";
 import { Link } from "@tanstack/react-router";
+import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RatingStars } from "@/features/reviews/components/RatingStars";
 import { FavoriteButton } from "@/features/companies/components/FavoriteButton";
@@ -22,6 +23,7 @@ export function CompanyHeader({
   isPending,
   canClaim,
   user,
+  canEdit = false,
 }: {
   company: Company;
   avg: number;
@@ -29,6 +31,7 @@ export function CompanyHeader({
   isPending: boolean;
   canClaim: boolean;
   user: User | null;
+  canEdit?: boolean;
 }) {
   return (
     <div className="mt-4 flex flex-col gap-4 rounded-3xl border border-border bg-card p-6 shadow-soft md:flex-row md:items-end">
@@ -60,6 +63,13 @@ export function CompanyHeader({
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-2">
+        {canEdit ? (
+          <Button asChild size="sm" className="rounded-full">
+            <Link to="/owner/empresa/$id/editar" params={{ id: company.id }}>
+              <Pencil className="mr-1 h-3 w-3" /> Editar página
+            </Link>
+          </Button>
+        ) : null}
         {!isPending ? <FavoriteButton companyId={company.id} variant="button" /> : null}
         {!isPending ? (
           <ShareButton

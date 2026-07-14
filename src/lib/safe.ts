@@ -181,10 +181,6 @@ function translateAuthMessage(message: string): string {
   if (/unsupported provider|provider is not enabled/i.test(message)) {
     return "Este método de login não está disponível no momento.";
   }
-  // Captcha
-  if (/captcha (verification )?(failed|protection)/i.test(message)) {
-    return "Verificação de captcha falhou. Tente novamente.";
-  }
   return "";
 }
 

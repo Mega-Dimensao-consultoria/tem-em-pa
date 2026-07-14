@@ -8,13 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { emailSchema, passwordSchema } from "../schemas";
-import { TurnstileWidget, isCaptchaEnabled } from "./TurnstileWidget";
-import { verifyTurnstileToken } from "@/lib/turnstile.functions";
 
 export function SignUpForm({ onSuccess }: { onSuccess: () => void }) {
   const [loading, setLoading] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const captchaRequired = isCaptchaEnabled();
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -34,22 +30,7 @@ export function SignUpForm({ onSuccess }: { onSuccess: () => void }) {
       toast.error(parsed.error.issues[0].message);
       return;
     }
-    if (captchaRequired && !captchaToken) {
-      toast.error("Confirme o captcha antes de continuar.");
-      return;
-    }
     setLoading(true);
-
-    // Valida o token do captcha no servidor antes de criar a conta.
-    if (captchaRequired && captchaToken) {
-      const verify = await verifyTurnstileToken({ data: { token: captchaToken } });
-      if (!verify.ok) {
-        setLoading(false);
-        setCaptchaToken(null);
-        toast.error("Verificação de captcha falhou. Tente novamente.");
-        return;
-      }
-    }
 
     const { error } = await supabase.auth.signUp({
       email: parsed.data.email,
@@ -61,7 +42,6 @@ export function SignUpForm({ onSuccess }: { onSuccess: () => void }) {
     });
     setLoading(false);
     if (error) {
-      setCaptchaToken(null);
       toastError(error);
       return;
     }
@@ -90,20 +70,7 @@ export function SignUpForm({ onSuccess }: { onSuccess: () => void }) {
         />
         <p className="text-xs text-muted-foreground">Mínimo 8 caracteres.</p>
       </div>
-      {captchaRequired && (
-        <div className="pt-1">
-          <TurnstileWidget
-            onVerify={(token) => setCaptchaToken(token)}
-            onExpire={() => setCaptchaToken(null)}
-            onError={() => setCaptchaToken(null)}
-          />
-        </div>
-      )}
-      <Button
-        type="submit"
-        className="w-full"
-        disabled={loading || (captchaRequired && !captchaToken)}
-      >
+      <Button type="submit" className="w-full" disabled={loading}>
         {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Criar conta"}
       </Button>
     </form>

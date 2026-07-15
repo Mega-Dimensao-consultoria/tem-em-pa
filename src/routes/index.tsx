@@ -1,11 +1,11 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useSuspenseQuery, useQuery, queryOptions } from "@tanstack/react-query";
-import { useState } from "react";
-import { MapPin, Sparkles, ShieldCheck, Store, Mail as MailIcon, Loader2 } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { queryOptions } from "@tanstack/react-query";
+import { Sparkles, ShieldCheck, Store, Mail as MailIcon } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
+import { CityAutocomplete } from "@/components/CityAutocomplete";
 import { ContactDialog } from "@/features/contact/ContactDialog";
 import { PromotedCompaniesSection } from "@/features/promotions/components/PromotedCompaniesSection";
-import { listStates, listCitiesByState } from "@/features/companies/functions";
+import { listActiveCities } from "@/features/cities/functions/list";
 import { seoGlobalsServerQO } from "@/features/seo/functions/getGlobals";
 import { resolveSeo, buildSeoHead } from "@/lib/seo/render";
 import type { SeoGlobals } from "@/lib/seo/types";

@@ -1,30 +1,22 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useSuspenseQuery, useQuery, queryOptions } from "@tanstack/react-query";
-import { useState } from "react";
-import { MapPin, Sparkles, ShieldCheck, Store, Mail as MailIcon, Loader2 } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { queryOptions } from "@tanstack/react-query";
+import { Sparkles, ShieldCheck, Store, Mail as MailIcon } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
+import { CityAutocomplete } from "@/components/CityAutocomplete";
 import { ContactDialog } from "@/features/contact/ContactDialog";
 import { PromotedCompaniesSection } from "@/features/promotions/components/PromotedCompaniesSection";
-import { listStates, listCitiesByState } from "@/features/companies/functions";
+import { listActiveCities } from "@/features/cities/functions/list";
 import { seoGlobalsServerQO } from "@/features/seo/functions/getGlobals";
 import { resolveSeo, buildSeoHead } from "@/lib/seo/render";
 import type { SeoGlobals } from "@/lib/seo/types";
 
 const BASE = "https://www.temnaminhacidade.com.br";
 
-const statesQO = queryOptions({
-  queryKey: ["hub", "states"],
-  queryFn: () => listStates(),
+const citiesQO = queryOptions({
+  queryKey: ["cities", "all-active"],
+  queryFn: () => listActiveCities(),
   staleTime: 5 * 60_000,
 });
-
-const citiesByStateQO = (uf: string) =>
-  queryOptions({
-    queryKey: ["hub", "cities-by-state", uf],
-    queryFn: () => listCitiesByState({ data: { uf } }),
-    staleTime: 5 * 60_000,
-    enabled: !!uf,
-  });
 
 export const Route = createFileRoute("/")({
   head: (ctx: { loaderData?: { globals: SeoGlobals } }) => {
@@ -52,7 +44,7 @@ export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
     const [globals] = await Promise.all([
       context.queryClient.ensureQueryData(seoGlobalsServerQO),
-      context.queryClient.ensureQueryData(statesQO),
+      context.queryClient.ensureQueryData(citiesQO),
     ]);
     return { globals };
   },
@@ -69,19 +61,6 @@ export const Route = createFileRoute("/")({
 });
 
 function Hub() {
-  const navigate = useNavigate();
-  const { data: states } = useSuspenseQuery(statesQO);
-  const [uf, setUf] = useState<string>("");
-  const [citySlug, setCitySlug] = useState<string>("");
-
-  const { data: cities, isFetching: loadingCities } = useQuery(citiesByStateQO(uf));
-
-  function handleGo(e: React.FormEvent) {
-    e.preventDefault();
-    if (!citySlug) return;
-    navigate({ to: "/$citySlug", params: { citySlug } });
-  }
-
   return (
     <PageShell>
       <section className="relative overflow-hidden">
@@ -95,62 +74,13 @@ function Hub() {
             <br className="hidden md:block" /> num só lugar.
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-pretty text-base text-muted-foreground md:text-lg">
-            Escolha seu estado e cidade para ver as empresas cadastradas na sua região.
+            Digite o nome da sua cidade e encontre o comércio local pertinho de você.
           </p>
 
-          <form
-            onSubmit={handleGo}
-            className="mx-auto mt-8 flex max-w-2xl flex-col gap-3 rounded-2xl border border-border bg-card p-4 shadow-soft sm:flex-row"
-          >
-            <label className="sr-only" htmlFor="uf">Estado</label>
-            <select
-              id="uf"
-              value={uf}
-              onChange={(e) => {
-                setUf(e.target.value);
-                setCitySlug("");
-              }}
-              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm sm:w-40"
-            >
-              <option value="">UF</option>
-              {states.map((s) => (
-                <option key={s.uf} value={s.uf}>
-                  {s.uf}
-                </option>
-              ))}
-            </select>
+          <div className="mx-auto mt-8 max-w-2xl">
+            <CityAutocomplete />
+          </div>
 
-            <label className="sr-only" htmlFor="city">Cidade</label>
-            <select
-              id="city"
-              value={citySlug}
-              onChange={(e) => setCitySlug(e.target.value)}
-              disabled={!uf || loadingCities}
-              className="w-full flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm disabled:opacity-60"
-            >
-              <option value="">
-                {!uf
-                  ? "Selecione um estado primeiro"
-                  : loadingCities
-                    ? "Carregando cidades…"
-                    : "Escolha a cidade"}
-              </option>
-              {(cities ?? []).map((c) => (
-                <option key={c.id} value={c.slug}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-
-            <button
-              type="submit"
-              disabled={!citySlug}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:opacity-50"
-            >
-              {loadingCities ? <Loader2 className="h-4 w-4 animate-spin" /> : <MapPin className="h-4 w-4" />}
-              Ver empresas
-            </button>
-          </form>
 
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground">
             <span className="inline-flex items-center gap-1.5">

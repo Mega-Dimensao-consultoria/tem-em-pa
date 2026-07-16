@@ -155,7 +155,7 @@ function AgeVerificationPage() {
         successHandlerRef.current = null;
       }
     };
-  }, [handleSuccess]);
+  }, [handleSuccess, publicKey]);
 
   async function handleStart() {
     if (!publicKey) {

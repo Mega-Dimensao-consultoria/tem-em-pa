@@ -110,7 +110,7 @@ function AgeVerificationPage() {
 
   // Load the AgeVerif checker.js script once.
   useEffect(() => {
-    if (!PUBLIC_KEY) return;
+    if (!publicKey) return;
     const w = window as AgeVerifWindow;
 
     function bindSuccess() {
@@ -143,7 +143,7 @@ function AgeVerificationPage() {
     script.id = SCRIPT_ID;
     script.async = true;
     script.defer = true;
-    script.src = `https://www.ageverif.com/checker.js?key=${encodeURIComponent(PUBLIC_KEY)}&nostart`;
+    script.src = `https://www.ageverif.com/checker.js?key=${encodeURIComponent(publicKey)}&nostart`;
     script.onload = bindSuccess;
     script.onerror = () => toast.error("Não foi possível carregar o AgeVerif.");
     document.head.appendChild(script);
@@ -158,7 +158,7 @@ function AgeVerificationPage() {
   }, [handleSuccess]);
 
   async function handleStart() {
-    if (!PUBLIC_KEY) {
+    if (!publicKey) {
       toast.error("A chave pública do AgeVerif ainda não foi configurada.");
       return;
     }
@@ -222,7 +222,7 @@ function AgeVerificationPage() {
             </Button>
           </div>
 
-          {!PUBLIC_KEY ? (
+          {!publicKey ? (
             <p className="mt-4 text-xs text-amber-700">
               A chave pública do AgeVerif ainda não foi configurada. Contate o administrador.
             </p>

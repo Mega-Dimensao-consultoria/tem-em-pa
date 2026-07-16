@@ -152,7 +152,7 @@ export function CityAutocomplete({
           maxLength={80}
           enterKeyHint="go"
         />
-        {isLoading ? (
+        {hydrated && isLoading ? (
           <Loader2 className="mr-2 h-5 w-5 animate-spin text-muted-foreground" aria-hidden />
         ) : null}
         <button

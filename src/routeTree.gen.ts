@@ -44,7 +44,6 @@ import { Route as AuthenticatedOwnerIndexRouteImport } from './routes/_authentic
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as BlogCategoriaSlugRouteImport } from './routes/blog.categoria.$slug'
 import { Route as ApiPublicContactSubmitRouteImport } from './routes/api/public/contact-submit'
-import { Route as AuthenticatedPainelVerificacaoIdadeRouteImport } from './routes/_authenticated/painel.verificacao-idade'
 import { Route as AuthenticatedPainelSegurancaRouteImport } from './routes/_authenticated/painel.seguranca'
 import { Route as AuthenticatedPainelConfiguracoesRouteImport } from './routes/_authenticated/painel.configuracoes'
 import { Route as AuthenticatedPainelAvaliacoesRouteImport } from './routes/_authenticated/painel.avaliacoes'
@@ -244,12 +243,6 @@ const ApiPublicContactSubmitRoute = ApiPublicContactSubmitRouteImport.update({
   path: '/api/public/contact-submit',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedPainelVerificacaoIdadeRoute =
-  AuthenticatedPainelVerificacaoIdadeRouteImport.update({
-    id: '/verificacao-idade',
-    path: '/verificacao-idade',
-    getParentRoute: () => AuthenticatedPainelRoute,
-  } as any)
 const AuthenticatedPainelSegurancaRoute =
   AuthenticatedPainelSegurancaRouteImport.update({
     id: '/seguranca',
@@ -408,7 +401,6 @@ export interface FileRoutesByFullPath {
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
-  '/painel/verificacao-idade': typeof AuthenticatedPainelVerificacaoIdadeRoute
   '/api/public/contact-submit': typeof ApiPublicContactSubmitRoute
   '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
@@ -463,7 +455,6 @@ export interface FileRoutesByTo {
   '/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
-  '/painel/verificacao-idade': typeof AuthenticatedPainelVerificacaoIdadeRoute
   '/api/public/contact-submit': typeof ApiPublicContactSubmitRoute
   '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
@@ -523,7 +514,6 @@ export interface FileRoutesById {
   '/_authenticated/painel/avaliacoes': typeof AuthenticatedPainelAvaliacoesRoute
   '/_authenticated/painel/configuracoes': typeof AuthenticatedPainelConfiguracoesRoute
   '/_authenticated/painel/seguranca': typeof AuthenticatedPainelSegurancaRoute
-  '/_authenticated/painel/verificacao-idade': typeof AuthenticatedPainelVerificacaoIdadeRoute
   '/api/public/contact-submit': typeof ApiPublicContactSubmitRoute
   '/blog/categoria/$slug': typeof BlogCategoriaSlugRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
@@ -583,7 +573,6 @@ export interface FileRouteTypes {
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
     | '/painel/seguranca'
-    | '/painel/verificacao-idade'
     | '/api/public/contact-submit'
     | '/blog/categoria/$slug'
     | '/lovable/email/suppression'
@@ -638,7 +627,6 @@ export interface FileRouteTypes {
     | '/painel/avaliacoes'
     | '/painel/configuracoes'
     | '/painel/seguranca'
-    | '/painel/verificacao-idade'
     | '/api/public/contact-submit'
     | '/blog/categoria/$slug'
     | '/lovable/email/suppression'
@@ -697,7 +685,6 @@ export interface FileRouteTypes {
     | '/_authenticated/painel/avaliacoes'
     | '/_authenticated/painel/configuracoes'
     | '/_authenticated/painel/seguranca'
-    | '/_authenticated/painel/verificacao-idade'
     | '/api/public/contact-submit'
     | '/blog/categoria/$slug'
     | '/lovable/email/suppression'
@@ -1002,13 +989,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicContactSubmitRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/painel/verificacao-idade': {
-      id: '/_authenticated/painel/verificacao-idade'
-      path: '/verificacao-idade'
-      fullPath: '/painel/verificacao-idade'
-      preLoaderRoute: typeof AuthenticatedPainelVerificacaoIdadeRouteImport
-      parentRoute: typeof AuthenticatedPainelRoute
-    }
     '/_authenticated/painel/seguranca': {
       id: '/_authenticated/painel/seguranca'
       path: '/seguranca'
@@ -1163,7 +1143,6 @@ interface AuthenticatedPainelRouteChildren {
   AuthenticatedPainelAvaliacoesRoute: typeof AuthenticatedPainelAvaliacoesRoute
   AuthenticatedPainelConfiguracoesRoute: typeof AuthenticatedPainelConfiguracoesRoute
   AuthenticatedPainelSegurancaRoute: typeof AuthenticatedPainelSegurancaRoute
-  AuthenticatedPainelVerificacaoIdadeRoute: typeof AuthenticatedPainelVerificacaoIdadeRoute
   AuthenticatedPainelIndexRoute: typeof AuthenticatedPainelIndexRoute
 }
 
@@ -1171,8 +1150,6 @@ const AuthenticatedPainelRouteChildren: AuthenticatedPainelRouteChildren = {
   AuthenticatedPainelAvaliacoesRoute: AuthenticatedPainelAvaliacoesRoute,
   AuthenticatedPainelConfiguracoesRoute: AuthenticatedPainelConfiguracoesRoute,
   AuthenticatedPainelSegurancaRoute: AuthenticatedPainelSegurancaRoute,
-  AuthenticatedPainelVerificacaoIdadeRoute:
-    AuthenticatedPainelVerificacaoIdadeRoute,
   AuthenticatedPainelIndexRoute: AuthenticatedPainelIndexRoute,
 }
 

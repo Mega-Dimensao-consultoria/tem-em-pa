@@ -153,8 +153,31 @@ export function CityAutocomplete({
           enterKeyHint="go"
         />
         {isLoading ? (
-          <Loader2 className="mr-4 h-5 w-5 animate-spin text-muted-foreground" aria-hidden />
+          <Loader2 className="mr-2 h-5 w-5 animate-spin text-muted-foreground" aria-hidden />
         ) : null}
+        <button
+          type="button"
+          onClick={() => {
+            if (activeItem) {
+              go(activeItem);
+            } else if (results.length > 0) {
+              go(results[0]);
+            } else {
+              setOpen(true);
+            }
+          }}
+          disabled={isLoading || trimmed.length < 1 || results.length === 0}
+          className="mr-2 inline-flex h-11 items-center gap-1.5 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+          aria-label={
+            activeItem
+              ? `Acessar empresas de ${activeItem.name}, ${activeItem.state}`
+              : "Acessar empresas da cidade"
+          }
+        >
+          <span className="hidden sm:inline">Acessar empresas</span>
+          <span className="sm:hidden">Acessar</span>
+          <ArrowRight className="h-4 w-4" aria-hidden />
+        </button>
       </div>
 
       {showList ? (

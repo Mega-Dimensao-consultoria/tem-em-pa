@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, Facebook } from "lucide-react";
+import { Instagram, Facebook, Youtube } from "lucide-react";
 import { Logo } from "./Logo";
 import { useSeoGlobals } from "@/features/seo/functions/settings";
 import { DEFAULT_GLOBALS } from "@/lib/seo/types";

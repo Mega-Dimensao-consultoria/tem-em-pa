@@ -44,6 +44,45 @@ export type Database = {
         }
         Relationships: []
       }
+      age_verifications: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          provider: string
+          provider_reference: string | null
+          rejection_reason: string | null
+          status: Database["public"]["Enums"]["age_verification_status"]
+          updated_at: string
+          user_id: string
+          verified_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          provider?: string
+          provider_reference?: string | null
+          rejection_reason?: string | null
+          status?: Database["public"]["Enums"]["age_verification_status"]
+          updated_at?: string
+          user_id: string
+          verified_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          provider?: string
+          provider_reference?: string | null
+          rejection_reason?: string | null
+          status?: Database["public"]["Enums"]["age_verification_status"]
+          updated_at?: string
+          user_id?: string
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
       app_settings: {
         Row: {
           key: string
@@ -1783,6 +1822,7 @@ export type Database = {
       slugify: { Args: { input: string }; Returns: string }
     }
     Enums: {
+      age_verification_status: "pending" | "approved" | "rejected" | "expired"
       app_role: "admin" | "owner" | "user"
       claim_status: "pending" | "approved" | "rejected"
       company_status: "pending" | "approved" | "rejected" | "claimed_pending"
@@ -1923,6 +1963,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      age_verification_status: ["pending", "approved", "rejected", "expired"],
       app_role: ["admin", "owner", "user"],
       claim_status: ["pending", "approved", "rejected"],
       company_status: ["pending", "approved", "rejected", "claimed_pending"],

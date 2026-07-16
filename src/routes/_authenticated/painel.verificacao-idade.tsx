@@ -1,18 +1,48 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { ArrowLeft, ShieldCheck, ShieldAlert, ShieldQuestion, Loader2, ExternalLink } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  ArrowLeft,
+  ShieldCheck,
+  ShieldAlert,
+  ShieldQuestion,
+  Loader2,
+  BadgeCheck,
+} from "lucide-react";
 import { toast } from "sonner";
 import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   getMyAgeVerification,
-  startAgeVerification,
+  recordAgeVerification,
   type AgeVerification,
 } from "@/features/age-verification/functions/status.functions";
 import { toastError } from "@/lib/safe";
+
+type AgeVerifVerification = {
+  uid: string;
+  expiresAt: number;
+  ageThreshold?: number;
+  assuranceLevel?: "STANDARD" | "ENHANCED" | "STRICT";
+  token: string;
+};
+
+type AgeVerifWindow = Window & {
+  ageverif?: {
+    start: (opts?: {
+      forceVerification?: boolean;
+      closable?: boolean;
+      target?: "popup" | "tab" | "redirect";
+    }) => Promise<{ verified: boolean; verification: AgeVerifVerification | null }>;
+    on: (event: string, listener: (payload: { verification?: AgeVerifVerification }) => void) => void;
+    off: (event: string, listener: (...args: unknown[]) => unknown) => void;
+  };
+};
+
+const PUBLIC_KEY = import.meta.env.VITE_AGEVERIF_PUBLIC_KEY as string | undefined;
+const SCRIPT_ID = "ageverif-checker-script";
 
 export const Route = createFileRoute("/_authenticated/painel/verificacao-idade")({
   head: () => ({
@@ -31,20 +61,111 @@ export const Route = createFileRoute("/_authenticated/painel/verificacao-idade")
 
 function AgeVerificationPage() {
   const fetchStatus = useServerFn(getMyAgeVerification);
-  const start = useServerFn(startAgeVerification);
+  const record = useServerFn(recordAgeVerification);
   const [starting, setStarting] = useState(false);
+  const [widgetLoaded, setWidgetLoaded] = useState(false);
+  const successHandlerRef = useRef<((p: { verification?: AgeVerifVerification }) => void) | null>(null);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["age-verification", "me"],
     queryFn: () => fetchStatus(),
   });
 
+  const handleSuccess = useCallback(
+    async (payload: { verification?: AgeVerifVerification }) => {
+      const v = payload?.verification;
+      if (!v?.token || !v.uid || !v.expiresAt) {
+        toast.error("A verificação foi concluída mas os dados não vieram completos. Tente novamente.");
+        setStarting(false);
+        return;
+      }
+      try {
+        await record({
+          data: {
+            token: v.token,
+            uid: v.uid,
+            expiresAt: v.expiresAt,
+            ageThreshold: v.ageThreshold,
+            assuranceLevel: v.assuranceLevel,
+          },
+        });
+        toast.success("Idade verificada com sucesso!");
+        await refetch();
+      } catch (err) {
+        toastError(err);
+      } finally {
+        setStarting(false);
+      }
+    },
+    [record, refetch],
+  );
+
+  // Load the AgeVerif checker.js script once.
+  useEffect(() => {
+    if (!PUBLIC_KEY) return;
+    const w = window as AgeVerifWindow;
+
+    function bindSuccess() {
+      if (!w.ageverif) return;
+      const listener = (p: { verification?: AgeVerifVerification }) => {
+        void handleSuccess(p);
+      };
+      successHandlerRef.current = listener;
+      w.ageverif.on("success", listener);
+      setWidgetLoaded(true);
+    }
+
+    if (w.ageverif) {
+      bindSuccess();
+      return;
+    }
+
+    if (document.getElementById(SCRIPT_ID)) {
+      // Script already added; poll briefly for readiness.
+      const iv = window.setInterval(() => {
+        if (w.ageverif) {
+          window.clearInterval(iv);
+          bindSuccess();
+        }
+      }, 100);
+      return () => window.clearInterval(iv);
+    }
+
+    const script = document.createElement("script");
+    script.id = SCRIPT_ID;
+    script.async = true;
+    script.defer = true;
+    script.src = `https://www.ageverif.com/checker.js?key=${encodeURIComponent(PUBLIC_KEY)}&nostart`;
+    script.onload = bindSuccess;
+    script.onerror = () => toast.error("Não foi possível carregar o AgeVerif.");
+    document.head.appendChild(script);
+
+    return () => {
+      const av = (window as AgeVerifWindow).ageverif;
+      if (av && successHandlerRef.current) {
+        av.off("success", successHandlerRef.current as (...args: unknown[]) => unknown);
+        successHandlerRef.current = null;
+      }
+    };
+  }, [handleSuccess]);
+
   async function handleStart() {
+    if (!PUBLIC_KEY) {
+      toast.error("A chave pública do AgeVerif ainda não foi configurada.");
+      return;
+    }
+    const av = (window as AgeVerifWindow).ageverif;
+    if (!av) {
+      toast.error("O widget do AgeVerif ainda está carregando. Tente novamente em instantes.");
+      return;
+    }
     setStarting(true);
     try {
-      const returnUrl = `${window.location.origin}/painel/verificacao-idade`;
-      const { redirectUrl } = await start({ data: { returnUrl } });
-      window.location.href = redirectUrl;
+      await av.start({
+        forceVerification: data?.status !== "approved",
+        closable: true,
+        target: "popup",
+      });
     } catch (err) {
       toastError(err);
       setStarting(false);
@@ -62,8 +183,8 @@ function AgeVerificationPage() {
         </Link>
         <h1 className="mt-3 font-display text-3xl font-bold">Verificação de idade</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Confirme sua idade através do nosso parceiro AgeVerif. Após aprovado, um selo de idade
-          verificada será exibido no seu perfil.
+          Confirme sua idade através do nosso parceiro AgeVerif. Após aprovado, o selo de idade
+          verificada fica ativo no seu perfil.
         </p>
 
         <div className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-soft">
@@ -76,14 +197,14 @@ function AgeVerificationPage() {
           )}
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <Button onClick={handleStart} disabled={starting || isLoading}>
+            <Button onClick={handleStart} disabled={starting || isLoading || !widgetLoaded}>
               {starting ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Iniciando…
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Aguardando verificação…
                 </>
               ) : (
                 <>
-                  <ExternalLink className="mr-2 h-4 w-4" />
+                  <BadgeCheck className="mr-2 h-4 w-4" />
                   {data?.status === "approved" ? "Renovar verificação" : "Iniciar verificação"}
                 </>
               )}
@@ -93,10 +214,18 @@ function AgeVerificationPage() {
             </Button>
           </div>
 
-          <p className="mt-4 text-xs text-muted-foreground">
-            Você será direcionado ao ambiente seguro do AgeVerif para concluir a validação. Nenhum
-            documento é armazenado nos servidores do Tem na minha cidade.
-          </p>
+          {!PUBLIC_KEY ? (
+            <p className="mt-4 text-xs text-amber-700">
+              A chave pública do AgeVerif ainda não foi configurada. Contate o administrador.
+            </p>
+          ) : !widgetLoaded ? (
+            <p className="mt-4 text-xs text-muted-foreground">Carregando widget do AgeVerif…</p>
+          ) : (
+            <p className="mt-4 text-xs text-muted-foreground">
+              Você será direcionado ao ambiente seguro do AgeVerif. Nenhum documento é armazenado
+              nos servidores do Tem na minha cidade.
+            </p>
+          )}
         </div>
       </section>
     </PageShell>
@@ -153,7 +282,7 @@ function StatusBlock({ data }: { data: AgeVerification }) {
         <div>
           <h2 className="font-display text-lg font-semibold">Verificação em andamento</h2>
           <p className="text-sm text-muted-foreground">
-            Estamos aguardando o resultado do AgeVerif. Assim que concluído o selo aparece aqui.
+            Complete o processo no widget do AgeVerif para receber o selo.
           </p>
         </div>
       </div>
@@ -188,6 +317,3 @@ function StatusBlock({ data }: { data: AgeVerification }) {
     </div>
   );
 }
-
-// avoid unused import warning
-void toast;

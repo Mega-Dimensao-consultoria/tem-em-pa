@@ -60,7 +60,6 @@ import { Route as ApiPublicPushDispatchRouteImport } from './routes/api/public/p
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 import { Route as ApiPublicHooksRetryEmailDlqRouteImport } from './routes/api/public/hooks/retry-email-dlq'
 import { Route as ApiPublicHooksNotificationEmailRouteImport } from './routes/api/public/hooks/notification-email'
-import { Route as ApiPublicAgeverifCallbackRouteImport } from './routes/api/public/ageverif/callback'
 import { Route as ApiPublicOgEventIdRouteImport } from './routes/api/public/og.event.$id'
 import { Route as AuthenticatedOwnerEmpresaIdProdutosRouteImport } from './routes/_authenticated/owner.empresa.$id.produtos'
 import { Route as AuthenticatedOwnerEmpresaIdEventosRouteImport } from './routes/_authenticated/owner.empresa.$id.eventos'
@@ -337,12 +336,6 @@ const ApiPublicHooksNotificationEmailRoute =
     path: '/api/public/hooks/notification-email',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicAgeverifCallbackRoute =
-  ApiPublicAgeverifCallbackRouteImport.update({
-    id: '/api/public/ageverif/callback',
-    path: '/api/public/ageverif/callback',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const ApiPublicOgEventIdRoute = ApiPublicOgEventIdRouteImport.update({
   id: '/api/public/og/event/$id',
   path: '/api/public/og/event/$id',
@@ -421,7 +414,6 @@ export interface FileRoutesByFullPath {
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/owner/': typeof AuthenticatedOwnerIndexRoute
   '/painel/': typeof AuthenticatedPainelIndexRoute
-  '/api/public/ageverif/callback': typeof ApiPublicAgeverifCallbackRoute
   '/api/public/hooks/notification-email': typeof ApiPublicHooksNotificationEmailRoute
   '/api/public/hooks/retry-email-dlq': typeof ApiPublicHooksRetryEmailDlqRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -477,7 +469,6 @@ export interface FileRoutesByTo {
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/owner': typeof AuthenticatedOwnerIndexRoute
   '/painel': typeof AuthenticatedPainelIndexRoute
-  '/api/public/ageverif/callback': typeof ApiPublicAgeverifCallbackRoute
   '/api/public/hooks/notification-email': typeof ApiPublicHooksNotificationEmailRoute
   '/api/public/hooks/retry-email-dlq': typeof ApiPublicHooksRetryEmailDlqRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -538,7 +529,6 @@ export interface FileRoutesById {
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/_authenticated/owner/': typeof AuthenticatedOwnerIndexRoute
   '/_authenticated/painel/': typeof AuthenticatedPainelIndexRoute
-  '/api/public/ageverif/callback': typeof ApiPublicAgeverifCallbackRoute
   '/api/public/hooks/notification-email': typeof ApiPublicHooksNotificationEmailRoute
   '/api/public/hooks/retry-email-dlq': typeof ApiPublicHooksRetryEmailDlqRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -599,7 +589,6 @@ export interface FileRouteTypes {
     | '/lovable/email/suppression'
     | '/owner/'
     | '/painel/'
-    | '/api/public/ageverif/callback'
     | '/api/public/hooks/notification-email'
     | '/api/public/hooks/retry-email-dlq'
     | '/api/public/payments/webhook'
@@ -655,7 +644,6 @@ export interface FileRouteTypes {
     | '/lovable/email/suppression'
     | '/owner'
     | '/painel'
-    | '/api/public/ageverif/callback'
     | '/api/public/hooks/notification-email'
     | '/api/public/hooks/retry-email-dlq'
     | '/api/public/payments/webhook'
@@ -715,7 +703,6 @@ export interface FileRouteTypes {
     | '/lovable/email/suppression'
     | '/_authenticated/owner/'
     | '/_authenticated/painel/'
-    | '/api/public/ageverif/callback'
     | '/api/public/hooks/notification-email'
     | '/api/public/hooks/retry-email-dlq'
     | '/api/public/payments/webhook'
@@ -756,7 +743,6 @@ export interface RootRouteChildren {
   UHandleRoute: typeof UHandleRoute
   ApiPublicContactSubmitRoute: typeof ApiPublicContactSubmitRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
-  ApiPublicAgeverifCallbackRoute: typeof ApiPublicAgeverifCallbackRoute
   ApiPublicHooksNotificationEmailRoute: typeof ApiPublicHooksNotificationEmailRoute
   ApiPublicHooksRetryEmailDlqRoute: typeof ApiPublicHooksRetryEmailDlqRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
@@ -1128,13 +1114,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksNotificationEmailRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/ageverif/callback': {
-      id: '/api/public/ageverif/callback'
-      path: '/api/public/ageverif/callback'
-      fullPath: '/api/public/ageverif/callback'
-      preLoaderRoute: typeof ApiPublicAgeverifCallbackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/public/og/event/$id': {
       id: '/api/public/og/event/$id'
       path: '/api/public/og/event/$id'
@@ -1295,7 +1274,6 @@ const rootRouteChildren: RootRouteChildren = {
   UHandleRoute: UHandleRoute,
   ApiPublicContactSubmitRoute: ApiPublicContactSubmitRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
-  ApiPublicAgeverifCallbackRoute: ApiPublicAgeverifCallbackRoute,
   ApiPublicHooksNotificationEmailRoute: ApiPublicHooksNotificationEmailRoute,
   ApiPublicHooksRetryEmailDlqRoute: ApiPublicHooksRetryEmailDlqRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,

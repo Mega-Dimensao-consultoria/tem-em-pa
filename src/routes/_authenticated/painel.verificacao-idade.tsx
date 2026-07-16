@@ -15,6 +15,7 @@ import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
+  getAgeVerifPublicKey,
   getMyAgeVerification,
   recordAgeVerification,
   type AgeVerification,
@@ -41,7 +42,6 @@ type AgeVerifWindow = Window & {
   };
 };
 
-const PUBLIC_KEY = import.meta.env.VITE_AGEVERIF_PUBLIC_KEY as string | undefined;
 const SCRIPT_ID = "ageverif-checker-script";
 
 export const Route = createFileRoute("/_authenticated/painel/verificacao-idade")({
@@ -61,6 +61,7 @@ export const Route = createFileRoute("/_authenticated/painel/verificacao-idade")
 
 function AgeVerificationPage() {
   const fetchStatus = useServerFn(getMyAgeVerification);
+  const fetchKey = useServerFn(getAgeVerifPublicKey);
   const record = useServerFn(recordAgeVerification);
   const [starting, setStarting] = useState(false);
   const [widgetLoaded, setWidgetLoaded] = useState(false);
@@ -70,6 +71,13 @@ function AgeVerificationPage() {
     queryKey: ["age-verification", "me"],
     queryFn: () => fetchStatus(),
   });
+
+  const { data: keyData } = useQuery({
+    queryKey: ["ageverif-public-key"],
+    queryFn: () => fetchKey(),
+    staleTime: Infinity,
+  });
+  const publicKey = keyData?.publicKey ?? null;
 
   const handleSuccess = useCallback(
     async (payload: { verification?: AgeVerifVerification }) => {
@@ -102,7 +110,7 @@ function AgeVerificationPage() {
 
   // Load the AgeVerif checker.js script once.
   useEffect(() => {
-    if (!PUBLIC_KEY) return;
+    if (!publicKey) return;
     const w = window as AgeVerifWindow;
 
     function bindSuccess() {
@@ -135,7 +143,7 @@ function AgeVerificationPage() {
     script.id = SCRIPT_ID;
     script.async = true;
     script.defer = true;
-    script.src = `https://www.ageverif.com/checker.js?key=${encodeURIComponent(PUBLIC_KEY)}&nostart`;
+    script.src = `https://www.ageverif.com/checker.js?key=${encodeURIComponent(publicKey)}&nostart`;
     script.onload = bindSuccess;
     script.onerror = () => toast.error("Não foi possível carregar o AgeVerif.");
     document.head.appendChild(script);
@@ -147,10 +155,10 @@ function AgeVerificationPage() {
         successHandlerRef.current = null;
       }
     };
-  }, [handleSuccess]);
+  }, [handleSuccess, publicKey]);
 
   async function handleStart() {
-    if (!PUBLIC_KEY) {
+    if (!publicKey) {
       toast.error("A chave pública do AgeVerif ainda não foi configurada.");
       return;
     }
@@ -214,7 +222,7 @@ function AgeVerificationPage() {
             </Button>
           </div>
 
-          {!PUBLIC_KEY ? (
+          {!publicKey ? (
             <p className="mt-4 text-xs text-amber-700">
               A chave pública do AgeVerif ainda não foi configurada. Contate o administrador.
             </p>

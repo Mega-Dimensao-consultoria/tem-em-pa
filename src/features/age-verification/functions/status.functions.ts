@@ -2,6 +2,12 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
+/** Returns the public AgeVerif key so the browser can load checker.js. */
+export const getAgeVerifPublicKey = createServerFn({ method: "GET" }).handler(async () => {
+  return { publicKey: process.env.AGEVERIF_PUBLIC_KEY ?? null };
+});
+
+
 export type AgeVerificationStatus = "not_started" | "pending" | "approved" | "rejected" | "expired";
 
 export type AgeVerification = {

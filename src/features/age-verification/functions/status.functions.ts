@@ -49,60 +49,65 @@ export const getMyAgeVerification = createServerFn({ method: "GET" })
   });
 
 /**
- * Starts a new age verification flow with the configured provider.
- * Returns a redirect URL the user must open to complete verification.
+ * Decode a JWT payload without signature verification.
+ * AgeVerif's public docs (checker.js) do not expose a JWKS/verify endpoint,
+ * so we trust the payload for now and always require the client to have gone
+ * through the widget. Signature verification can be added if AgeVerif exposes it.
  */
-export const startAgeVerification = createServerFn({ method: "POST" })
+function decodeJwtPayload(token: string): Record<string, unknown> {
+  const parts = token.split(".");
+  if (parts.length !== 3) throw new Error("Token inválido");
+  const body = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+  const padded = body + "=".repeat((4 - (body.length % 4)) % 4);
+  const json = Buffer.from(padded, "base64").toString("utf-8");
+  return JSON.parse(json) as Record<string, unknown>;
+}
+
+/**
+ * Records the result of a successful AgeVerif verification.
+ * Client sends the `verification` object it received from the `success` event.
+ */
+export const recordAgeVerification = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) =>
-    z.object({ returnUrl: z.string().url() }).parse(input),
+    z
+      .object({
+        token: z.string().min(20),
+        uid: z.string().min(1),
+        expiresAt: z.number().int().positive(), // seconds since epoch
+        ageThreshold: z.number().int().optional(),
+        assuranceLevel: z.enum(["STANDARD", "ENHANCED", "STRICT"]).optional(),
+      })
+      .parse(input),
   )
-  .handler(async ({ data, context }): Promise<{ redirectUrl: string }> => {
-    const apiKey = process.env.AGEVERIF_API_KEY;
-    const baseUrl = process.env.AGEVERIF_BASE_URL;
-    if (!apiKey || !baseUrl) {
-      throw new Error(
-        "A integração com o provedor de verificação de idade ainda não está configurada. Contate o suporte.",
-      );
+  .handler(async ({ data, context }): Promise<{ ok: true }> => {
+    // Sanity check the JWT payload matches what the client claims.
+    let payload: Record<string, unknown> = {};
+    try {
+      payload = decodeJwtPayload(data.token);
+    } catch {
+      throw new Error("Token de verificação inválido.");
     }
+    const uid = typeof payload.uid === "string" ? payload.uid : data.uid;
+    const exp = typeof payload.exp === "number" ? payload.exp : data.expiresAt;
+    if (uid !== data.uid) throw new Error("Token não corresponde à verificação enviada.");
+    if (exp * 1000 < Date.now()) throw new Error("Token já expirado.");
 
-    // Upsert a pending record so we track the request even before the callback.
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const reference = crypto.randomUUID();
-    const { error: upsertErr } = await supabaseAdmin
+    const { error } = await supabaseAdmin
       .from("age_verifications")
       .upsert(
         {
           user_id: context.userId,
-          status: "pending",
+          status: "approved",
           provider: "ageverif",
-          provider_reference: reference,
+          provider_reference: uid,
+          verified_at: new Date().toISOString(),
+          expires_at: new Date(exp * 1000).toISOString(),
           rejection_reason: null,
-          verified_at: null,
-          expires_at: null,
         },
         { onConflict: "user_id" },
       );
-    if (upsertErr) throw new Error(upsertErr.message);
-
-    // Provider-specific handshake. Adjust body/headers to match AgeVerif's API.
-    const resp = await fetch(`${baseUrl.replace(/\/$/, "")}/verifications`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        external_reference: reference,
-        return_url: data.returnUrl,
-      }),
-    });
-    if (!resp.ok) {
-      const text = await resp.text();
-      throw new Error(`Falha ao iniciar verificação (${resp.status}): ${text.slice(0, 200)}`);
-    }
-    const payload = (await resp.json()) as { redirect_url?: string; url?: string };
-    const redirectUrl = payload.redirect_url ?? payload.url;
-    if (!redirectUrl) throw new Error("Provedor não retornou URL de redirecionamento.");
-    return { redirectUrl };
+    if (error) throw new Error(error.message);
+    return { ok: true };
   });

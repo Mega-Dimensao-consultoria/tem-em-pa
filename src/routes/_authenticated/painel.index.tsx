@@ -156,7 +156,7 @@ type DashboardCardProps = {
     | "/painel/avaliacoes"
     | "/painel/configuracoes"
     | "/painel/seguranca"
-    | "/painel/verificacao-idade"
+    
     | "/favoritos"
     | "/notificacoes"
     | "/owner";

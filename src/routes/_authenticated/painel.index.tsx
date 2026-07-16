@@ -7,6 +7,7 @@ import {
   Bell,
   Building2,
   ShieldCheck,
+  BadgeCheck,
 } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
@@ -135,6 +136,13 @@ function PainelIndex() {
             cta="Gerenciar"
           />
           <DashboardCard
+            icon={<BadgeCheck className="h-5 w-5" />}
+            title="Verificação de idade"
+            desc="Confirme sua idade via AgeVerif e receba o selo no seu perfil."
+            to="/painel/verificacao-idade"
+            cta="Verificar"
+          />
+          <DashboardCard
             icon={<Settings className="h-5 w-5" />}
             title="Configurações"
             desc="Atualize seus dados, e-mail e senha."
@@ -156,6 +164,7 @@ type DashboardCardProps = {
     | "/painel/avaliacoes"
     | "/painel/configuracoes"
     | "/painel/seguranca"
+    | "/painel/verificacao-idade"
     | "/favoritos"
     | "/notificacoes"
     | "/owner";

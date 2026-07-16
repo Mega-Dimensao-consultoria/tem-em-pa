@@ -61,6 +61,17 @@ export function Footer() {
             </li>
             <li>
               <a
+                href="https://www.youtube.com/@temnaminhacidade.oficial"
+                target="_blank"
+                rel="noopener noreferrer me"
+                aria-label={`YouTube do ${g.site_name}`}
+                className="text-muted-foreground transition hover:text-foreground"
+              >
+                <Youtube className="h-5 w-5" aria-hidden="true" />
+              </a>
+            </li>
+            <li>
+              <a
                 href="https://www.threads.com/@temnaminhacidade"
                 target="_blank"
                 rel="noopener noreferrer me"

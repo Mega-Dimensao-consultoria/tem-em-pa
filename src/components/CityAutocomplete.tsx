@@ -41,6 +41,8 @@ export function CityAutocomplete({
   const listboxId = useId();
   const optionIdPrefix = useId();
   const statusId = useId();
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
 
   const trimmed = q.trim();
   const results: City[] = useMemo(() => {

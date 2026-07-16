@@ -15,6 +15,7 @@ import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
+  getAgeVerifPublicKey,
   getMyAgeVerification,
   recordAgeVerification,
   type AgeVerification,
@@ -41,7 +42,6 @@ type AgeVerifWindow = Window & {
   };
 };
 
-const PUBLIC_KEY = import.meta.env.VITE_AGEVERIF_PUBLIC_KEY as string | undefined;
 const SCRIPT_ID = "ageverif-checker-script";
 
 export const Route = createFileRoute("/_authenticated/painel/verificacao-idade")({

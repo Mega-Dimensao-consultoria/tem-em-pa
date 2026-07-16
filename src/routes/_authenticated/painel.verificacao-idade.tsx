@@ -61,6 +61,7 @@ export const Route = createFileRoute("/_authenticated/painel/verificacao-idade")
 
 function AgeVerificationPage() {
   const fetchStatus = useServerFn(getMyAgeVerification);
+  const fetchKey = useServerFn(getAgeVerifPublicKey);
   const record = useServerFn(recordAgeVerification);
   const [starting, setStarting] = useState(false);
   const [widgetLoaded, setWidgetLoaded] = useState(false);
@@ -70,6 +71,13 @@ function AgeVerificationPage() {
     queryKey: ["age-verification", "me"],
     queryFn: () => fetchStatus(),
   });
+
+  const { data: keyData } = useQuery({
+    queryKey: ["ageverif-public-key"],
+    queryFn: () => fetchKey(),
+    staleTime: Infinity,
+  });
+  const publicKey = keyData?.publicKey ?? null;
 
   const handleSuccess = useCallback(
     async (payload: { verification?: AgeVerifVerification }) => {

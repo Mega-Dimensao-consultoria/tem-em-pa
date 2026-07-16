@@ -43,13 +43,21 @@ export type Neighborhood = {
 
 export const listActiveCities = createServerFn({ method: "GET" }).handler(async () => {
   const sb = publicClient();
-  const { data, error } = await sb
-    .from("cities")
-    .select(CITY_COLS)
-    .eq("is_active", true)
-    .order("name", { ascending: true });
-  if (error) throw new Error(error.message);
-  return (data ?? []) as City[];
+  const PAGE = 1000;
+  const all: City[] = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await sb
+      .from("cities")
+      .select(CITY_COLS)
+      .eq("is_active", true)
+      .order("name", { ascending: true })
+      .range(from, from + PAGE - 1);
+    if (error) throw new Error(error.message);
+    const rows = (data ?? []) as City[];
+    all.push(...rows);
+    if (rows.length < PAGE) break;
+  }
+  return all;
 });
 
 export const getCityBySlug = createServerFn({ method: "GET" })

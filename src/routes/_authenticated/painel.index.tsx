@@ -7,7 +7,6 @@ import {
   Bell,
   Building2,
   ShieldCheck,
-  BadgeCheck,
 } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";

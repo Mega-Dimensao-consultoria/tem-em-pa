@@ -30,6 +30,7 @@ import { Route as EventosIdRouteImport } from './routes/eventos.$id'
 import { Route as EmpresaIdRouteImport } from './routes/empresa.$id'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as CheckoutRetornoRouteImport } from './routes/checkout.retorno'
+import { Route as BlogRssDotxmlRouteImport } from './routes/blog.rss[.]xml'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthTwoFactorRouteImport } from './routes/auth_.two-factor'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
@@ -169,6 +170,11 @@ const CheckoutRetornoRoute = CheckoutRetornoRouteImport.update({
   id: '/checkout/retorno',
   path: '/checkout/retorno',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRssDotxmlRoute = BlogRssDotxmlRouteImport.update({
+  id: '/rss.xml',
+  path: '/rss.xml',
+  getParentRoute: () => BlogRoute,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/$slug',
@@ -386,6 +392,7 @@ export interface FileRoutesByFullPath {
   '/painel': typeof AuthenticatedPainelRouteWithChildren
   '/auth/two-factor': typeof AuthTwoFactorRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/checkout/retorno': typeof CheckoutRetornoRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
@@ -440,6 +447,7 @@ export interface FileRoutesByTo {
   '/notificacoes': typeof AuthenticatedNotificacoesRoute
   '/auth/two-factor': typeof AuthTwoFactorRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/checkout/retorno': typeof CheckoutRetornoRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
@@ -499,6 +507,7 @@ export interface FileRoutesById {
   '/_authenticated/painel': typeof AuthenticatedPainelRouteWithChildren
   '/auth_/two-factor': typeof AuthTwoFactorRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/checkout/retorno': typeof CheckoutRetornoRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/empresa/$id': typeof EmpresaIdRoute
@@ -558,6 +567,7 @@ export interface FileRouteTypes {
     | '/painel'
     | '/auth/two-factor'
     | '/blog/$slug'
+    | '/blog/rss.xml'
     | '/checkout/retorno'
     | '/email/unsubscribe'
     | '/empresa/$id'
@@ -612,6 +622,7 @@ export interface FileRouteTypes {
     | '/notificacoes'
     | '/auth/two-factor'
     | '/blog/$slug'
+    | '/blog/rss.xml'
     | '/checkout/retorno'
     | '/email/unsubscribe'
     | '/empresa/$id'
@@ -670,6 +681,7 @@ export interface FileRouteTypes {
     | '/_authenticated/painel'
     | '/auth_/two-factor'
     | '/blog/$slug'
+    | '/blog/rss.xml'
     | '/checkout/retorno'
     | '/email/unsubscribe'
     | '/empresa/$id'
@@ -890,6 +902,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/checkout/retorno'
       preLoaderRoute: typeof CheckoutRetornoRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/blog/rss.xml': {
+      id: '/blog/rss.xml'
+      path: '/rss.xml'
+      fullPath: '/blog/rss.xml'
+      preLoaderRoute: typeof BlogRssDotxmlRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/blog/$slug': {
       id: '/blog/$slug'
@@ -1216,12 +1235,14 @@ const CitySlugRouteWithChildren = CitySlugRoute._addFileChildren(
 
 interface BlogRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
+  BlogRssDotxmlRoute: typeof BlogRssDotxmlRoute
   BlogIndexRoute: typeof BlogIndexRoute
   BlogCategoriaSlugRoute: typeof BlogCategoriaSlugRoute
 }
 
 const BlogRouteChildren: BlogRouteChildren = {
   BlogSlugRoute: BlogSlugRoute,
+  BlogRssDotxmlRoute: BlogRssDotxmlRoute,
   BlogIndexRoute: BlogIndexRoute,
   BlogCategoriaSlugRoute: BlogCategoriaSlugRoute,
 }
@@ -1265,13 +1286,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

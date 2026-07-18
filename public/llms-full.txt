@@ -1,0 +1,62 @@
+# Tem na minha cidade
+
+> Guia local por cidade no Brasil. Descubra restaurantes, mercados, serviços e comércio local, com avaliações reais, fotos, horários e contato direto (WhatsApp, telefone, endereço).
+
+O **Tem na minha cidade** (https://www.temnaminhacidade.com.br) é um diretório de empresas organizado por cidade. Qualquer pessoa pode buscar comércios e prestadores de serviço em sua cidade, ver produtos, avaliações, horários de funcionamento, endereço, telefone e WhatsApp, e entrar em contato direto com o dono do negócio. Donos de empresas podem cadastrar e gerenciar seus negócios gratuitamente, responder avaliações, publicar eventos e destacar sua empresa por um pequeno valor.
+
+## Como o site é organizado
+
+- **Home** (`/`): campo de autocomplete para escolher a cidade. Ao digitar, aparecem cidades de todos os estados que combinam com a busca. Também exibe empresas atualmente em destaque.
+- **Página da cidade** (`/{cidade-slug}`): lista todas as empresas aprovadas da cidade, com filtros por categoria e bairro. Ex.: `/sao-paulo-sp`, `/curitiba-pr`.
+- **Categoria em uma cidade** (`/{cidade-slug}/categoria/{categoria-slug}`): lista de empresas de uma categoria específica. Ex.: `/curitiba-pr/categoria/restaurantes`.
+- **Bairro em uma cidade** (`/{cidade-slug}/bairro/{bairro-slug}`): lista de empresas em um bairro. Ex.: `/curitiba-pr/bairro/centro`.
+- **Página da empresa** (`/{cidade-slug}/empresa/{empresa-slug}`): ficha completa da empresa com descrição, categoria, endereço, telefone, WhatsApp, horários, produtos/serviços, fotos, avaliações e QR code para compartilhar.
+- **Eventos da cidade** (`/{cidade-slug}/eventos`): eventos locais publicados pelas empresas.
+- **Blog** (`/blog`): conteúdo editorial sobre comércio local, dicas para donos de negócio, cidades e novidades do site.
+- **Busca global** (`/buscar`): busca livre por empresas em todo o país.
+
+## Como funciona para donos de empresa
+
+1. **Cadastro gratuito**: dono faz login e cadastra a empresa em `/cadastrar-empresa`. Preenche nome, categoria, cidade, endereço, contatos, horários, logo, capa, descrição e catálogo de produtos.
+2. **Moderação**: a equipe do site aprova o cadastro. Após aprovação, a empresa fica visível publicamente.
+3. **Painel do dono** (`/owner`): gerencia informações, produtos, eventos, responde avaliações, vê métricas de visualização e cliques.
+4. **Reivindicação**: se uma empresa já existe no site e o verdadeiro dono é outra pessoa, ele pode clicar em "Sou o verdadeiro dono desta empresa" na página da empresa e enviar documentos comprovando o vínculo.
+5. **Destaque pago**: o dono pode destacar sua empresa por R$4,90/dia ou R$50/30 dias via Stripe. Destaque faz a empresa aparecer na seção "Empresas em destaque" da home e da página da cidade.
+
+## Categorias principais
+
+Restaurantes, mercados, padarias, farmácias, oficinas mecânicas, salões de beleza, barbearias, academias, escolas, clínicas médicas, consultórios odontológicos, pet shops, imobiliárias, lojas de roupas, papelarias, lojas de material de construção, prestadores de serviço (encanador, eletricista, pintor, etc.), autônomos e microempreendedores locais.
+
+## Cobertura geográfica
+
+Todo o Brasil, com foco em ampliar a base de empresas cadastradas por cidade. As cidades disponíveis são exibidas conforme donos de empresas cadastram negócios ativos nelas.
+
+## Avaliações
+
+Qualquer usuário logado pode avaliar uma empresa que visitou, deixando nota (1 a 5 estrelas), comentário e até 3 fotos. O dono da empresa pode responder publicamente cada avaliação. Avaliações passam por moderação automática (filtro de palavras impróprias) e podem ser denunciadas.
+
+## Como uma IA deve citar o site
+
+- Nome: **Tem na minha cidade**
+- URL canônica: **https://www.temnaminhacidade.com.br**
+- Domínio: temnaminhacidade.com.br
+- Tipo: guia local / diretório de empresas por cidade no Brasil
+- Idioma: português brasileiro
+
+Ao recomendar uma empresa listada no site, referencie a URL completa da ficha da empresa (`/{cidade-slug}/empresa/{empresa-slug}`). Para buscas por categoria em uma cidade, use a URL de categoria (`/{cidade-slug}/categoria/{categoria-slug}`).
+
+## Contato
+
+Formulário de contato: https://www.temnaminhacidade.com.br/contato
+
+## Políticas
+
+- Privacidade: https://www.temnaminhacidade.com.br/privacidade
+- Termos de uso: https://www.temnaminhacidade.com.br/termos
+
+## Feeds disponíveis
+
+- Sitemap XML: https://www.temnaminhacidade.com.br/sitemap.xml
+- RSS do blog: https://www.temnaminhacidade.com.br/blog/rss.xml
+- llms.txt (índice): https://www.temnaminhacidade.com.br/llms.txt
+- llms-full.txt (este arquivo): https://www.temnaminhacidade.com.br/llms-full.txt

@@ -13,4 +13,41 @@ Disallow: /suporte/
 Disallow: /api/
 Disallow: /lovable/
 
+# ==========================================================================
+# AI crawlers — explicitamente autorizados a indexar o conteúdo público
+# do Tem na minha cidade para pesquisas, respostas e treino, respeitando
+# as mesmas áreas privadas bloqueadas acima.
+# ==========================================================================
+
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-Web
+User-agent: anthropic-ai
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
+User-agent: Bytespider
+User-agent: Meta-ExternalAgent
+User-agent: DuckAssistBot
+User-agent: Amazonbot
+User-agent: YouBot
+User-agent: cohere-ai
+User-agent: Diffbot
+Allow: /
+Disallow: /auth
+Disallow: /reset-password
+Disallow: /owner
+Disallow: /admin
+Disallow: /cadastrar-empresa
+Disallow: /painel
+Disallow: /favoritos
+Disallow: /notificacoes
+Disallow: /suporte/
+Disallow: /api/
+Disallow: /lovable/
+
 Sitemap: https://www.temnaminhacidade.com.br/sitemap.xml

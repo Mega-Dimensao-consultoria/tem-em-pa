@@ -32,7 +32,7 @@ export const Route = createFileRoute("/blog/rss.xml")({
         const nowIso = new Date().toISOString();
         const { data } = await sb
           .from("blog_posts")
-          .select("slug, title, excerpt, content_html, published_at, updated_at, cover_url, noindex")
+          .select("slug, title, excerpt, content_html, published_at, updated_at, cover_image_url, noindex")
           .eq("status", "published")
           .eq("noindex", false)
           .lte("published_at", nowIso)

@@ -54,8 +54,8 @@ export const Route = createFileRoute("/blog/rss.xml")({
               `    <guid isPermaLink="true">${url}</guid>`,
               pub ? `    <pubDate>${pub}</pubDate>` : "",
               `    <description>${escapeXml(desc)}</description>`,
-              p.cover_url
-                ? `    <enclosure url="${escapeXml(p.cover_url)}" type="image/jpeg" />`
+              p.cover_image_url
+                ? `    <enclosure url="${escapeXml(p.cover_image_url)}" type="image/jpeg" />`
                 : "",
               "  </item>",
             ]

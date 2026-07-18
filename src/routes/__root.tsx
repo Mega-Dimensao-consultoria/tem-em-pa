@@ -121,6 +121,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     if (g.org_logo_url) orgLd.logo = g.org_logo_url;
     if (g.org_social_urls?.length) orgLd.sameAs = g.org_social_urls;
 
+    const websiteLd: Record<string, unknown> = {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: g.site_name,
+      url: "https://www.temnaminhacidade.com.br",
+      description: g.site_tagline ?? g.default_description,
+      inLanguage: "pt-BR",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: "https://www.temnaminhacidade.com.br/buscar?q={search_term_string}",
+        },
+        "query-input": "required name=search_term_string",
+      },
+    };
+
     return {
       meta,
       scripts: [
@@ -129,12 +146,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           type: "application/ld+json",
           children: JSON.stringify(orgLd),
         },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(websiteLd),
+        },
       ],
       links: [
         { rel: "stylesheet", href: appCss },
         { rel: "icon", type: "image/png", href: "/favicon.png" },
         { rel: "apple-touch-icon", href: "/favicon.png" },
         { rel: "manifest", href: "/manifest.webmanifest" },
+        {
+          rel: "alternate",
+          type: "application/rss+xml",
+          title: "Blog — Tem na minha cidade",
+          href: "https://www.temnaminhacidade.com.br/blog/rss.xml",
+        },
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
         {

@@ -111,6 +111,19 @@ export function FlaggedCompaniesTab() {
         </table>
       </div>
 
+      <AdminPagination
+        page={pg.page}
+        totalPages={pg.totalPages}
+        total={pg.total}
+        pageSize={pg.pageSize}
+        firstItem={pg.firstItem}
+        lastItem={pg.lastItem}
+        onPageChange={pg.setPage}
+        onPageSizeChange={pg.setPageSize}
+        label="empresas"
+      />
+
+
       <p className="text-xs text-muted-foreground">
         Para resolver, use as abas <strong>Reivindicações</strong> e{" "}
         <strong>Denúncias</strong>.

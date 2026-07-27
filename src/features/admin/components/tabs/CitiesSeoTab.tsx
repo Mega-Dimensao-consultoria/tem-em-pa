@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Empty } from "../admin-ui";
 import { SeoOverrideDialog } from "@/features/seo/components/SeoOverrideDialog";
+import { AdminPagination, usePagination } from "../AdminPagination";
 
 type CityRow = {
   id: string;

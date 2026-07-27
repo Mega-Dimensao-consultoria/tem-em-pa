@@ -208,12 +208,34 @@ export const importPublicBatch = createServerFn({ method: "POST" })
       if (error) {
         // Fallback: tenta uma-a-uma para não perder o lote inteiro
         for (const row of toInsert) {
+          const r = row as { external_id: string; name: string };
+          const meta = {
+            external_id: r.external_id,
+            name: r.name,
+            city_name: "",
+            state: "",
+          };
           const { error: e2 } = await supabase.from("companies").insert(row as never);
-          if (e2) result.errors++;
-          else result.inserted++;
+          if (e2) {
+            result.errors++;
+            result.logs.push({ level: "error", ...meta, reason: e2.message });
+          } else {
+            result.inserted++;
+            result.logs.push({ level: "ok", ...meta });
+          }
         }
       } else {
         result.inserted = count ?? toInsert.length;
+        for (const row of toInsert) {
+          const r = row as { external_id: string; name: string };
+          result.logs.push({
+            level: "ok",
+            external_id: r.external_id,
+            name: r.name,
+            city_name: "",
+            state: "",
+          });
+        }
       }
     }
 

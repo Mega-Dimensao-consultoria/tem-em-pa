@@ -131,6 +131,7 @@ function CadastrarPage() {
         city_id,
         neighborhood_id,
         phone: v.phone || null,
+        phone_ddd: v.phone_ddd || null,
         whatsapp: v.whatsapp || null,
         email: v.email || null,
         website: v.website || null,

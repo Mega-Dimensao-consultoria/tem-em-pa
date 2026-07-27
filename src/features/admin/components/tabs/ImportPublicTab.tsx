@@ -211,14 +211,14 @@ const PRESETS: Record<Source, Preset> = {
     },
     templateHeaders: [
       "CO_UNIDADE","NO_FANTASIA","NO_MUNICIPIO","SG_UF",
-      "NO_LOGRADOURO","NU_ENDERECO","NO_BAIRRO","NU_TELEFONE",
+      "NO_LOGRADOURO","NU_ENDERECO","NO_BAIRRO","NU_DDD","NU_TELEFONE",
     ],
     templateSample: [
       {
         CO_UNIDADE: "2270021", NO_FANTASIA: "UBS Vila Exemplo",
         NO_MUNICIPIO: "São Paulo", SG_UF: "SP",
         NO_LOGRADOURO: "Rua das Flores", NU_ENDERECO: "123",
-        NO_BAIRRO: "Vila Exemplo", NU_TELEFONE: "1130001000",
+        NO_BAIRRO: "Vila Exemplo", NU_DDD: "11", NU_TELEFONE: "30001000",
       },
     ],
     templateFields: [

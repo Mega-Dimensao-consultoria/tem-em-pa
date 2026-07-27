@@ -199,11 +199,13 @@ const PRESETS: Record<Source, Preset> = {
       const address = [
         r.NO_LOGRADOURO ?? r.no_logradouro ?? r.DS_ENDERECO ?? r.ds_endereco,
         r.NU_ENDERECO ?? r.nu_endereco,
-        r.NO_BAIRRO ?? r.no_bairro,
       ].filter(Boolean).join(", ").trim() || null;
+      const neighborhood = (r.NO_BAIRRO ?? r.no_bairro ?? "").toString().trim() || null;
+      const ddd = String(r.NU_DDD ?? r.nu_ddd ?? "").trim() || null;
       const phone = String(r.NU_TELEFONE ?? r.nu_telefone ?? "").trim() || null;
       return {
-        external_id: code, name, city_name: city, state: uf, address, phone,
+        external_id: code, name, city_name: city, state: uf,
+        address, neighborhood, phone_ddd: ddd, phone,
         description: `Estabelecimento de saúde cadastrado no CNES (${code}).`,
       };
     },

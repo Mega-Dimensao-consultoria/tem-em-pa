@@ -20,6 +20,7 @@ import { SeoTab } from "@/features/admin/components/tabs/SeoTab";
 
 import { BlogSection } from "@/features/admin/components/tabs/BlogSection";
 import { AdminOverviewTab } from "@/features/admin/components/tabs/AdminOverviewTab";
+import { ImportPublicTab } from "@/features/admin/components/tabs/ImportPublicTab";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -87,6 +88,7 @@ function AdminPage() {
             <TabsTrigger value="blog">Blog</TabsTrigger>
             <TabsTrigger value="reset2fa">Reset 2FA</TabsTrigger>
             <TabsTrigger value="seo">SEO</TabsTrigger>
+            <TabsTrigger value="importar">Importar</TabsTrigger>
             <TabsTrigger value="auditoria">Auditoria</TabsTrigger>
           </TabsList>
 
@@ -105,6 +107,7 @@ function AdminPage() {
           <TabsContent value="blog"><BlogSection /></TabsContent>
           <TabsContent value="reset2fa"><TwoFaResetRequestsTab /></TabsContent>
           <TabsContent value="seo"><SeoTab /></TabsContent>
+          <TabsContent value="importar"><ImportPublicTab /></TabsContent>
           <TabsContent value="auditoria"><AuditLogTab /></TabsContent>
 
         </Tabs>

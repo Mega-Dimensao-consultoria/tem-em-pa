@@ -314,7 +314,8 @@ export function ImportPublicTab() {
         }));
       } catch (e) {
         setStats((s) => ({ ...s, processed: s.processed + batch.length, errors: s.errors + batch.length }));
-        toastError(e, "Falha ao processar lote");
+        const msg = describeBatchError(e, i);
+        toast.error("Falha ao processar lote", { description: msg });
       }
     }
 

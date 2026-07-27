@@ -49,6 +49,7 @@ export const emptyCompanyForm = (): CompanyFormValues => ({
   name: "",
   category_id: "",
   description: "",
+  phone_ddd: "",
   phone: "",
   whatsapp: "",
   email: "",

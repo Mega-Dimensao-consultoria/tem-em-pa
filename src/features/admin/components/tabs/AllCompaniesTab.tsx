@@ -381,6 +381,20 @@ export function AllCompaniesTab() {
         </div>
       )}
 
+      {filtered.length > 0 ? (
+        <AdminPagination
+          page={pg.page}
+          totalPages={pg.totalPages}
+          total={pg.total}
+          pageSize={pg.pageSize}
+          firstItem={pg.firstItem}
+          lastItem={pg.lastItem}
+          onPageChange={pg.setPage}
+          onPageSizeChange={pg.setPageSize}
+          label="empresas"
+        />
+      ) : null}
+
       {seoCompany ? (
         <SeoOverrideDialog
           table="companies"

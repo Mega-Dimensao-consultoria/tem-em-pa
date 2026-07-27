@@ -15,6 +15,31 @@ import {
 import { toastError } from "@/lib/safe";
 import { downloadCsv, toCsv } from "@/lib/csv";
 
+/** Traduz erros do lote (Zod / servidor) em uma linha legível. */
+function describeBatchError(e: unknown, batchStart: number): string {
+  const raw = (e as { message?: string } | null)?.message ?? String(e);
+  try {
+    const issues = JSON.parse(raw) as Array<{
+      path?: (string | number)[];
+      message?: string;
+      maximum?: number;
+    }>;
+    if (Array.isArray(issues) && issues.length > 0) {
+      const first = issues[0];
+      const path = first.path ?? [];
+      const rowIdx = typeof path[1] === "number" ? path[1] : null;
+      const field = path.slice(2).join(".") || "(campo)";
+      const line = rowIdx !== null ? batchStart + rowIdx + 2 : null; // +header +1-index
+      const where = line ? `linha ~${line}, coluna "${field}"` : `coluna "${field}"`;
+      const extra = issues.length > 1 ? ` (+${issues.length - 1} outros)` : "";
+      return `${where}: ${first.message ?? "valor inválido"}${extra}`;
+    }
+  } catch {
+    /* não é JSON — usa mensagem crua */
+  }
+  return raw.slice(0, 300);
+}
+
 type Source = "inep_escolas" | "cnes_saude" | "empresas";
 
 type Preset = {

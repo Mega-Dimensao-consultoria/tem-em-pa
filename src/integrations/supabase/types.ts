@@ -428,6 +428,7 @@ export type Database = {
           created_at: string
           description: string | null
           email: string | null
+          external_id: string | null
           facebook_url: string | null
           gallery_urls: string[] | null
           hours: Json | null
@@ -467,6 +468,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           email?: string | null
+          external_id?: string | null
           facebook_url?: string | null
           gallery_urls?: string[] | null
           hours?: Json | null
@@ -506,6 +508,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           email?: string | null
+          external_id?: string | null
           facebook_url?: string | null
           gallery_urls?: string[] | null
           hours?: Json | null

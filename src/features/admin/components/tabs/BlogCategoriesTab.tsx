@@ -118,6 +118,20 @@ export function BlogCategoriesTab() {
           </table>
         </div>
       )}
+      {data.length > 0 ? (
+        <AdminPagination
+          page={pg.page}
+          totalPages={pg.totalPages}
+          total={pg.total}
+          pageSize={pg.pageSize}
+          firstItem={pg.firstItem}
+          lastItem={pg.lastItem}
+          onPageChange={pg.setPage}
+          onPageSizeChange={pg.setPageSize}
+          label="categorias"
+        />
+      ) : null}
+
 
       {editing ? (
         <Dialog open onOpenChange={(o) => (o ? null : setEditing(null))}>

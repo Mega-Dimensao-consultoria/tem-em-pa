@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useFlaggedCompanies } from "@/features/admin/functions/companies";
 import { CityFilterSelect } from "./CityFilterSelect";
 import { Empty, Loading } from "../admin-ui";
+import { AdminPagination, usePagination } from "../AdminPagination";
 
 export function FlaggedCompaniesTab() {
   const { data = [], isLoading } = useFlaggedCompanies();
@@ -13,6 +14,7 @@ export function FlaggedCompaniesTab() {
     () => (cityId === "all" ? data : data.filter((c) => c.city_id === cityId)),
     [data, cityId],
   );
+  const pg = usePagination(filtered);
 
   if (isLoading) return <Loading />;
   if (data.length === 0)

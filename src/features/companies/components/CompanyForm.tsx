@@ -104,7 +104,7 @@ export function CompanyForm({
 
   const sections = {
     socials: showSections?.socials ?? mode === "edit",
-    complement: showSections?.complement ?? mode === "edit",
+    complement: showSections?.complement ?? true,
     hours: showSections?.hours ?? mode === "edit",
     gallery: showSections?.gallery ?? mode === "edit",
   };

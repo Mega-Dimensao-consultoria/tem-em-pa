@@ -12,6 +12,7 @@ import {
 } from "@/features/admin/functions/users";
 import { Empty, Loading } from "../admin-ui";
 import { UserEditDialog } from "../UserEditDialog";
+import { AdminPagination, usePagination } from "../AdminPagination";
 
 export function UsersTab() {
   const { data = [], isLoading } = useAdminUsers();
@@ -28,6 +29,8 @@ export function UsersTab() {
       (u.full_name ?? "").toLowerCase().includes(filter.toLowerCase()) ||
       u.id.includes(filter),
   );
+
+  const pg = usePagination(filtered);
 
   return (
     <section className="mt-4 space-y-4" aria-labelledby="users-heading">

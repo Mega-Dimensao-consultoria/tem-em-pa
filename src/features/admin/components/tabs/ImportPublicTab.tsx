@@ -51,7 +51,9 @@ const PRESETS: Record<Source, Preset> = {
         address: r.address?.trim() || null,
         number: r.number?.trim() || null,
         complement: r.complement?.trim() || null,
+        neighborhood: r.neighborhood?.trim() || null,
         cep: r.cep?.trim() || null,
+        phone_ddd: r.phone_ddd?.trim() || null,
         phone: r.phone?.trim() || null,
         whatsapp: r.whatsapp?.trim() || null,
         email: r.email?.trim() || null,
@@ -62,8 +64,8 @@ const PRESETS: Record<Source, Preset> = {
     },
     templateHeaders: [
       "external_id","name","category_slug","city_name","state",
-      "description","address","number","complement","cep",
-      "phone","whatsapp","email","website","instagram_url","facebook_url",
+      "description","address","number","complement","neighborhood","cep",
+      "phone_ddd","phone","whatsapp","email","website","instagram_url","facebook_url",
     ],
     templateSample: [
       {
@@ -76,8 +78,10 @@ const PRESETS: Record<Source, Preset> = {
         address: "Rua XV de Novembro",
         number: "1234",
         complement: "Loja 2",
+        neighborhood: "Centro",
         cep: "80020-310",
-        phone: "(41) 3222-1234",
+        phone_ddd: "41",
+        phone: "3222-1234",
         whatsapp: "(41) 99999-1234",
         email: "contato@padariacentral.com.br",
         website: "https://padariacentral.com.br",
@@ -94,8 +98,10 @@ const PRESETS: Record<Source, Preset> = {
         address: "Av. Paulista",
         number: "900",
         complement: "",
+        neighborhood: "Bela Vista",
         cep: "01310-100",
-        phone: "(11) 3555-0000",
+        phone_ddd: "11",
+        phone: "3555-0000",
         whatsapp: "(11) 98888-0000",
         email: "",
         website: "",
@@ -113,8 +119,10 @@ const PRESETS: Record<Source, Preset> = {
       { name: "address", required: false, description: "Logradouro (Rua/Avenida)." },
       { name: "number", required: false, description: "Número do endereço." },
       { name: "complement", required: false, description: "Sala, andar, referência etc." },
+      { name: "neighborhood", required: false, description: "Nome do bairro. Se o bairro ainda não existir na cidade, é criado automaticamente." },
       { name: "cep", required: false, description: "CEP no formato 00000-000." },
-      { name: "phone", required: false, description: "Telefone fixo." },
+      { name: "phone_ddd", required: false, description: "Código DDD do telefone (2 dígitos, ex.: 11, 41). Armazenado separado do número." },
+      { name: "phone", required: false, description: "Telefone fixo (sem DDD se você informou phone_ddd)." },
       { name: "whatsapp", required: false, description: "Número de WhatsApp." },
       { name: "email", required: false, description: "E-mail de contato." },
       { name: "website", required: false, description: "URL do site oficial (com https://)." },
@@ -137,17 +145,17 @@ const PRESETS: Record<Source, Preset> = {
       const address = [
         r.DS_ENDERECO ?? r.ds_endereco,
         r.NU_ENDERECO ?? r.nu_endereco,
-        r.NO_BAIRRO ?? r.no_bairro,
       ].filter(Boolean).join(", ").trim() || null;
-      const ddd = String(r.NU_DDD ?? r.nu_ddd ?? "").trim();
-      const tel = String(r.NU_TELEFONE ?? r.nu_telefone ?? "").trim();
-      const phone = ddd && tel ? `(${ddd}) ${tel}` : null;
+      const neighborhood = (r.NO_BAIRRO ?? r.no_bairro ?? "").toString().trim() || null;
+      const ddd = String(r.NU_DDD ?? r.nu_ddd ?? "").trim() || null;
+      const tel = String(r.NU_TELEFONE ?? r.nu_telefone ?? "").trim() || null;
       const depLabel =
         dep === "1" ? "Escola federal" :
         dep === "2" ? "Escola estadual" :
         dep === "3" ? "Escola municipal" : "Escola pública";
       return {
-        external_id: code, name, city_name: city, state: uf, address, phone,
+        external_id: code, name, city_name: city, state: uf,
+        address, neighborhood, phone_ddd: ddd, phone: tel,
         description: `${depLabel} cadastrada no Censo Escolar (INEP ${code}).`,
       };
     },
@@ -191,24 +199,26 @@ const PRESETS: Record<Source, Preset> = {
       const address = [
         r.NO_LOGRADOURO ?? r.no_logradouro ?? r.DS_ENDERECO ?? r.ds_endereco,
         r.NU_ENDERECO ?? r.nu_endereco,
-        r.NO_BAIRRO ?? r.no_bairro,
       ].filter(Boolean).join(", ").trim() || null;
+      const neighborhood = (r.NO_BAIRRO ?? r.no_bairro ?? "").toString().trim() || null;
+      const ddd = String(r.NU_DDD ?? r.nu_ddd ?? "").trim() || null;
       const phone = String(r.NU_TELEFONE ?? r.nu_telefone ?? "").trim() || null;
       return {
-        external_id: code, name, city_name: city, state: uf, address, phone,
+        external_id: code, name, city_name: city, state: uf,
+        address, neighborhood, phone_ddd: ddd, phone,
         description: `Estabelecimento de saúde cadastrado no CNES (${code}).`,
       };
     },
     templateHeaders: [
       "CO_UNIDADE","NO_FANTASIA","NO_MUNICIPIO","SG_UF",
-      "NO_LOGRADOURO","NU_ENDERECO","NO_BAIRRO","NU_TELEFONE",
+      "NO_LOGRADOURO","NU_ENDERECO","NO_BAIRRO","NU_DDD","NU_TELEFONE",
     ],
     templateSample: [
       {
         CO_UNIDADE: "2270021", NO_FANTASIA: "UBS Vila Exemplo",
         NO_MUNICIPIO: "São Paulo", SG_UF: "SP",
         NO_LOGRADOURO: "Rua das Flores", NU_ENDERECO: "123",
-        NO_BAIRRO: "Vila Exemplo", NU_TELEFONE: "1130001000",
+        NO_BAIRRO: "Vila Exemplo", NU_DDD: "11", NU_TELEFONE: "30001000",
       },
     ],
     templateFields: [
@@ -218,8 +228,9 @@ const PRESETS: Record<Source, Preset> = {
       { name: "SG_UF", required: true, description: "UF com 2 letras." },
       { name: "NO_LOGRADOURO", required: false, description: "Logradouro." },
       { name: "NU_ENDERECO", required: false, description: "Número." },
-      { name: "NO_BAIRRO", required: false, description: "Bairro." },
-      { name: "NU_TELEFONE", required: false, description: "Telefone." },
+      { name: "NO_BAIRRO", required: false, description: "Bairro (armazenado em coluna própria — cria o bairro se não existir)." },
+      { name: "NU_DDD", required: false, description: "DDD do telefone (2 dígitos), armazenado separado." },
+      { name: "NU_TELEFONE", required: false, description: "Telefone sem DDD." },
     ],
   },
 };

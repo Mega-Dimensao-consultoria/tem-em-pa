@@ -22,7 +22,9 @@ const rowInputSchema = z.object({
   state: z.string().length(2),
   address: z.string().max(240).nullable().optional(),
   phone: z.string().max(40).nullable().optional(),
+  phone_ddd: z.string().max(4).nullable().optional(),
   description: z.string().max(600).nullable().optional(),
+  neighborhood: z.string().max(80).nullable().optional(),
   // Campos ricos (opcionais) — usados principalmente pelo preset "empresas"
   category_slug: z.string().max(80).nullable().optional(),
   cep: z.string().max(12).nullable().optional(),
@@ -107,6 +109,9 @@ export const importPublicBatch = createServerFn({ method: "POST" })
 
     const toInsert: Array<Record<string, unknown>> = [];
 
+    // Cache de neighborhood_id por (city_id|slug)
+    const neighborhoodCache = new Map<string, string>();
+
     for (const row of data.rows) {
       if (existingSet.has(row.external_id)) {
         result.skipped_duplicate++;
@@ -130,11 +135,25 @@ export const importPublicBatch = createServerFn({ method: "POST" })
         continue;
       }
 
-      // Compõe endereço completo se veio quebrado
-      const fullAddress =
-        row.address?.trim() ||
-        [row.number, row.complement].filter(Boolean).join(" ") ||
-        null;
+      // Bairro: resolve (ou cria) via RPC
+      let neighborhoodId: string | null = null;
+      if (row.neighborhood && row.neighborhood.trim().length >= 2) {
+        const nName = row.neighborhood.trim();
+        const nKey = `${cityId}|${slugify(nName)}`;
+        const cached = neighborhoodCache.get(nKey);
+        if (cached) {
+          neighborhoodId = cached;
+        } else {
+          const { data: nid, error: nErr } = await supabase.rpc("get_or_create_neighborhood", {
+            _city_id: cityId,
+            _name: nName,
+          });
+          if (!nErr && nid) {
+            neighborhoodId = nid as string;
+            neighborhoodCache.set(nKey, neighborhoodId);
+          }
+        }
+      }
 
       const baseSlug = `${slugify(row.name)}-${row.state.toLowerCase()}-${row.external_id}`.slice(0, 100);
 
@@ -142,16 +161,18 @@ export const importPublicBatch = createServerFn({ method: "POST" })
         name: row.name.trim(),
         slug: baseSlug,
         city_id: cityId,
+        neighborhood_id: neighborhoodId,
         category_id: categoryId,
         status: "approved",
         source: data.source,
         external_id: row.external_id,
         description: row.description?.trim() || null,
-        address: fullAddress,
+        address: row.address?.trim() || null,
         number: row.number?.trim() || null,
         complement: row.complement?.trim() || null,
         cep: row.cep?.trim() || null,
         phone: row.phone?.trim() || null,
+        phone_ddd: row.phone_ddd?.trim() || null,
         whatsapp: row.whatsapp?.trim() || null,
         email: row.email?.trim() || null,
         website: row.website?.trim() || null,

@@ -80,13 +80,26 @@ export function CategoriesTab() {
               </tr>
             </thead>
             <tbody>
-              {data.map((c) => (
+              {pg.paged.map((c) => (
                 <CategoryRow key={c.id} category={c} onEdit={setEditing} />
               ))}
             </tbody>
           </table>
         </div>
       )}
+      {data.length > 0 ? (
+        <AdminPagination
+          page={pg.page}
+          totalPages={pg.totalPages}
+          total={pg.total}
+          pageSize={pg.pageSize}
+          firstItem={pg.firstItem}
+          lastItem={pg.lastItem}
+          onPageChange={pg.setPage}
+          onPageSizeChange={pg.setPageSize}
+          label="categorias"
+        />
+      ) : null}
     </section>
   );
 }

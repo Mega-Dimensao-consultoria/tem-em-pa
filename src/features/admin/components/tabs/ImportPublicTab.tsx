@@ -202,16 +202,18 @@ export function ImportPublicTab() {
 
   return (
     <div className="space-y-6 pt-6">
-      <Alert>
-        <Info className="h-4 w-4" />
-        <AlertTitle>Importação de dados públicos</AlertTitle>
-        <AlertDescription>
-          Faça upload de um CSV oficial (INEP ou CNES) para popular a categoria
-          <strong> Utilidade Pública</strong>. O processamento acontece em lotes
-          de {IMPORT_BATCH_SIZE} linhas. Registros com o mesmo código INEP/CNES
-          já importado são ignorados automaticamente.
-        </AlertDescription>
-      </Alert>
+      <div className="flex gap-3 rounded-md border border-border bg-muted/30 p-4">
+        <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+        <div className="text-sm">
+          <p className="font-semibold">Importação de dados públicos</p>
+          <p className="mt-1 text-muted-foreground">
+            Faça upload de um CSV oficial (INEP ou CNES) para popular a categoria
+            <strong> Utilidade Pública</strong>. O processamento acontece em lotes
+            de {IMPORT_BATCH_SIZE} linhas. Registros com o mesmo código INEP/CNES
+            já importado são ignorados automaticamente.
+          </p>
+        </div>
+      </div>
 
       <Card>
         <CardHeader>

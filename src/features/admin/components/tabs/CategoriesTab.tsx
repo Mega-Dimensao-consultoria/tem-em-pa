@@ -8,10 +8,12 @@ import {
   type EditingCategory,
 } from "./categories/CategoryFormCard";
 import { CategoryRow } from "./categories/CategoryRow";
+import { AdminPagination, usePagination } from "../AdminPagination";
 
 export function CategoriesTab() {
   const { data = [], isLoading } = useAdminCategories();
   const [editing, setEditing] = useState<EditingCategory | null>(null);
+  const pg = usePagination(data);
 
   return (
     <section className="mt-4 space-y-4" aria-labelledby="categories-heading">

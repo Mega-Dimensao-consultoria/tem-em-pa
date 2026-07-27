@@ -445,6 +445,7 @@ export type Database = {
           og_image_url: string | null
           owner_id: string | null
           phone: string | null
+          phone_ddd: string | null
           schema_type: string | null
           search_tsv: unknown
           seo_description: string | null
@@ -485,6 +486,7 @@ export type Database = {
           og_image_url?: string | null
           owner_id?: string | null
           phone?: string | null
+          phone_ddd?: string | null
           schema_type?: string | null
           search_tsv?: unknown
           seo_description?: string | null
@@ -525,6 +527,7 @@ export type Database = {
           og_image_url?: string | null
           owner_id?: string | null
           phone?: string | null
+          phone_ddd?: string | null
           schema_type?: string | null
           search_tsv?: unknown
           seo_description?: string | null

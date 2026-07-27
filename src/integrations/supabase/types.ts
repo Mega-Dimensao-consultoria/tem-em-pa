@@ -450,6 +450,7 @@ export type Database = {
           seo_keywords: string | null
           seo_title: string | null
           slug: string | null
+          source: string
           status: Database["public"]["Enums"]["company_status"]
           updated_at: string
           website: string | null
@@ -488,6 +489,7 @@ export type Database = {
           seo_keywords?: string | null
           seo_title?: string | null
           slug?: string | null
+          source?: string
           status?: Database["public"]["Enums"]["company_status"]
           updated_at?: string
           website?: string | null
@@ -526,6 +528,7 @@ export type Database = {
           seo_keywords?: string | null
           seo_title?: string | null
           slug?: string | null
+          source?: string
           status?: Database["public"]["Enums"]["company_status"]
           updated_at?: string
           website?: string | null

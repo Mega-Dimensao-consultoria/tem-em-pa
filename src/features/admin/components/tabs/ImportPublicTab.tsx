@@ -228,8 +228,9 @@ const PRESETS: Record<Source, Preset> = {
       { name: "SG_UF", required: true, description: "UF com 2 letras." },
       { name: "NO_LOGRADOURO", required: false, description: "Logradouro." },
       { name: "NU_ENDERECO", required: false, description: "Número." },
-      { name: "NO_BAIRRO", required: false, description: "Bairro." },
-      { name: "NU_TELEFONE", required: false, description: "Telefone." },
+      { name: "NO_BAIRRO", required: false, description: "Bairro (armazenado em coluna própria — cria o bairro se não existir)." },
+      { name: "NU_DDD", required: false, description: "DDD do telefone (2 dígitos), armazenado separado." },
+      { name: "NU_TELEFONE", required: false, description: "Telefone sem DDD." },
     ],
   },
 };

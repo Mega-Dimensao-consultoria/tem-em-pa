@@ -20,6 +20,7 @@ import {
   useSetPostStatus,
 } from "@/features/blog/hooks/useBlogAdmin";
 import type { BlogStatus } from "@/features/blog/lib/types";
+import { AdminPagination, usePagination } from "../AdminPagination";
 
 const STATUS_LABEL: Record<BlogStatus | "all", string> = {
   all: "Todos",
@@ -42,6 +43,7 @@ export function BlogPostsTab() {
   });
   const setStatusMut = useSetPostStatus();
   const remove = useDeletePost();
+  const pg = usePagination(posts);
 
   return (
     <div className="mt-4 space-y-4">
@@ -99,7 +101,7 @@ export function BlogPostsTab() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {posts.map((p) => (
+              {pg.paged.map((p) => (
                 <tr key={p.id}>
                   <td className="max-w-md px-4 py-3">
                     <div className="font-medium">{p.title}</div>
@@ -188,6 +190,20 @@ export function BlogPostsTab() {
           </table>
         </div>
       )}
+      {posts.length > 0 ? (
+        <AdminPagination
+          page={pg.page}
+          totalPages={pg.totalPages}
+          total={pg.total}
+          pageSize={pg.pageSize}
+          firstItem={pg.firstItem}
+          lastItem={pg.lastItem}
+          onPageChange={pg.setPage}
+          onPageSizeChange={pg.setPageSize}
+          label="posts"
+        />
+      ) : null}
+
 
       {editing ? (
         <Dialog open onOpenChange={(o) => (o ? null : setEditing(null))}>

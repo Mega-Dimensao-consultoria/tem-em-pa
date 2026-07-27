@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useFlaggedCompanies } from "@/features/admin/functions/companies";
 import { CityFilterSelect } from "./CityFilterSelect";
 import { Empty, Loading } from "../admin-ui";
+import { AdminPagination, usePagination } from "../AdminPagination";
 
 export function FlaggedCompaniesTab() {
   const { data = [], isLoading } = useFlaggedCompanies();
@@ -13,6 +14,7 @@ export function FlaggedCompaniesTab() {
     () => (cityId === "all" ? data : data.filter((c) => c.city_id === cityId)),
     [data, cityId],
   );
+  const pg = usePagination(filtered);
 
   if (isLoading) return <Loading />;
   if (data.length === 0)
@@ -45,7 +47,7 @@ export function FlaggedCompaniesTab() {
             </tr>
           </thead>
           <tbody>
-            {filtered.map((c) => (
+            {pg.paged.map((c) => (
               <tr key={c.id} className="border-t border-border transition hover:bg-muted/40">
                 <td className="px-4 py-3">
                   <p className="font-medium text-foreground">{c.name}</p>
@@ -108,6 +110,19 @@ export function FlaggedCompaniesTab() {
           </tbody>
         </table>
       </div>
+
+      <AdminPagination
+        page={pg.page}
+        totalPages={pg.totalPages}
+        total={pg.total}
+        pageSize={pg.pageSize}
+        firstItem={pg.firstItem}
+        lastItem={pg.lastItem}
+        onPageChange={pg.setPage}
+        onPageSizeChange={pg.setPageSize}
+        label="empresas"
+      />
+
 
       <p className="text-xs text-muted-foreground">
         Para resolver, use as abas <strong>Reivindicações</strong> e{" "}

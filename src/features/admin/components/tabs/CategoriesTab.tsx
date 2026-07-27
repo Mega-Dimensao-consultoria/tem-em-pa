@@ -8,10 +8,12 @@ import {
   type EditingCategory,
 } from "./categories/CategoryFormCard";
 import { CategoryRow } from "./categories/CategoryRow";
+import { AdminPagination, usePagination } from "../AdminPagination";
 
 export function CategoriesTab() {
   const { data = [], isLoading } = useAdminCategories();
   const [editing, setEditing] = useState<EditingCategory | null>(null);
+  const pg = usePagination(data);
 
   return (
     <section className="mt-4 space-y-4" aria-labelledby="categories-heading">
@@ -78,13 +80,26 @@ export function CategoriesTab() {
               </tr>
             </thead>
             <tbody>
-              {data.map((c) => (
+              {pg.paged.map((c) => (
                 <CategoryRow key={c.id} category={c} onEdit={setEditing} />
               ))}
             </tbody>
           </table>
         </div>
       )}
+      {data.length > 0 ? (
+        <AdminPagination
+          page={pg.page}
+          totalPages={pg.totalPages}
+          total={pg.total}
+          pageSize={pg.pageSize}
+          firstItem={pg.firstItem}
+          lastItem={pg.lastItem}
+          onPageChange={pg.setPage}
+          onPageSizeChange={pg.setPageSize}
+          label="categorias"
+        />
+      ) : null}
     </section>
   );
 }

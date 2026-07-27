@@ -17,6 +17,7 @@ import { Empty, Loading } from "../admin-ui";
 import { SeoOverrideDialog } from "@/features/seo/components/SeoOverrideDialog";
 import { AdminGrantPromotionDialog } from "@/features/promotions/components/AdminGrantPromotionDialog";
 import { adminKeys } from "@/features/admin/functions/keys";
+import { AdminPagination, usePagination } from "../AdminPagination";
 
 const STATUS_LABEL: Record<string, string> = {
   approved: "Aprovada",
@@ -67,6 +68,8 @@ export function AllCompaniesTab() {
       );
     });
   }, [data, filter, status, cityId]);
+
+  const pg = usePagination(filtered);
 
   const allSelected = filtered.length > 0 && filtered.every((c) => selected.has(c.id));
   const toggleAll = () => {
@@ -204,7 +207,7 @@ export function AllCompaniesTab() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((c) => {
+              {pg.paged.map((c) => {
                 const checked = selected.has(c.id);
                 return (
                   <tr key={c.id} className="border-t border-border transition hover:bg-muted/40">
@@ -377,6 +380,20 @@ export function AllCompaniesTab() {
           </table>
         </div>
       )}
+
+      {filtered.length > 0 ? (
+        <AdminPagination
+          page={pg.page}
+          totalPages={pg.totalPages}
+          total={pg.total}
+          pageSize={pg.pageSize}
+          firstItem={pg.firstItem}
+          lastItem={pg.lastItem}
+          onPageChange={pg.setPage}
+          onPageSizeChange={pg.setPageSize}
+          label="empresas"
+        />
+      ) : null}
 
       {seoCompany ? (
         <SeoOverrideDialog

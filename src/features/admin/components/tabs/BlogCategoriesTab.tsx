@@ -22,6 +22,7 @@ import {
 } from "@/features/blog/hooks/useBlogAdmin";
 import type { BlogCategory } from "@/features/blog/lib/types";
 import { SeoOverrideDialog } from "@/features/seo/components/SeoOverrideDialog";
+import { AdminPagination, usePagination } from "../AdminPagination";
 
 const EMPTY: BlogCategoryInput = { name: "", slug: "", description: "", is_active: true };
 
@@ -32,6 +33,7 @@ export function BlogCategoriesTab() {
   const save = useSaveBlogCategory();
   const remove = useDeleteBlogCategory();
   const seoCat = seoForId ? data.find((c) => c.id === seoForId) ?? null : null;
+  const pg = usePagination(data);
 
   return (
     <div className="mt-4">
@@ -58,7 +60,7 @@ export function BlogCategoriesTab() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {data.map((c: BlogCategory) => (
+              {pg.paged.map((c: BlogCategory) => (
                 <tr key={c.id}>
                   <td className="px-4 py-3 font-medium">{c.name}</td>
                   <td className="px-4 py-3 text-muted-foreground">/blog/categoria/{c.slug}</td>
@@ -116,6 +118,20 @@ export function BlogCategoriesTab() {
           </table>
         </div>
       )}
+      {data.length > 0 ? (
+        <AdminPagination
+          page={pg.page}
+          totalPages={pg.totalPages}
+          total={pg.total}
+          pageSize={pg.pageSize}
+          firstItem={pg.firstItem}
+          lastItem={pg.lastItem}
+          onPageChange={pg.setPage}
+          onPageSizeChange={pg.setPageSize}
+          label="categorias"
+        />
+      ) : null}
+
 
       {editing ? (
         <Dialog open onOpenChange={(o) => (o ? null : setEditing(null))}>

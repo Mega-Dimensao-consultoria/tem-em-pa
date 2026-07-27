@@ -290,7 +290,12 @@ export function ImportPublicTab() {
                 </span>
                 <span>{progress.toFixed(1)}%</span>
               </div>
-              <Progress value={progress} />
+              <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+                <div
+                  className="h-full bg-primary transition-all"
+                  style={{ width: `${Math.min(100, progress)}%` }}
+                />
+              </div>
             </div>
             <dl className="grid grid-cols-2 gap-3 text-sm md:grid-cols-5">
               <Stat label="Cadastradas" value={stats.inserted} tone="ok" />

@@ -25,6 +25,7 @@ export type CompanyFormValues = {
   name: string;
   category_id: string;
   description: string;
+  phone_ddd: string;
   phone: string;
   whatsapp: string;
   email: string;

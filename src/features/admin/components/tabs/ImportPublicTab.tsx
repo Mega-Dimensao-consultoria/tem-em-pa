@@ -275,6 +275,8 @@ export function ImportPublicTab() {
   const [source, setSource] = useState<Source>("empresas");
   const [file, setFile] = useState<File | null>(null);
   const [stats, setStats] = useState<Stats>(EMPTY_STATS);
+  const [logs, setLogs] = useState<ImportRowLog[]>([]);
+  const [logFilter, setLogFilter] = useState<"all" | "error" | "no_city" | "duplicate" | "ok">("error");
   const [running, setRunning] = useState(false);
   const cancelRef = useRef(false);
   const qc = useQueryClient();
@@ -285,6 +287,7 @@ export function ImportPublicTab() {
   const handlePickFile = (f: File | null) => {
     setFile(f);
     setStats(EMPTY_STATS);
+    setLogs([]);
   };
 
   const downloadTemplate = () => {

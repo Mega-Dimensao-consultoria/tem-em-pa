@@ -44,11 +44,21 @@ const batchSchema = z.object({
   rows: z.array(rowInputSchema).min(1).max(500),
 });
 
+export type ImportRowLog = {
+  level: "ok" | "duplicate" | "no_city" | "error";
+  external_id: string;
+  name: string;
+  city_name: string;
+  state: string;
+  reason?: string;
+};
+
 export type ImportBatchResult = {
   inserted: number;
   skipped_no_city: number;
   skipped_duplicate: number;
   errors: number;
+  logs: ImportRowLog[];
 };
 
 function slugify(input: string): string {

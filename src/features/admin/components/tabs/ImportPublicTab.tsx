@@ -12,7 +12,7 @@ import {
   IMPORT_BATCH_SIZE,
   type RowInput,
 } from "@/features/admin/functions/importPublic.functions";
-import { toastError } from "@/lib/safe";
+
 import { downloadCsv, toCsv } from "@/lib/csv";
 
 /** Traduz erros do lote (Zod / servidor) em uma linha legível. */

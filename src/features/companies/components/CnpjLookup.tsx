@@ -81,7 +81,8 @@ function toPrefill(r: CnpjLookupResult): Partial<CompanyFormValues> {
     neighborhood: r.neighborhood,
     city: r.city,
     state: r.state,
-    phone: r.phone ? maskPhone(r.phone) : "",
+    phone_ddd: r.phone ? r.phone.slice(0, 2) : "",
+    phone: r.phone ? maskPhone(r.phone.slice(2)) : "",
     email: r.email,
   };
 }

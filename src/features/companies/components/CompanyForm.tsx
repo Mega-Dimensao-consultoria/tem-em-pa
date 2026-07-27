@@ -104,7 +104,7 @@ export function CompanyForm({
 
   const sections = {
     socials: showSections?.socials ?? mode === "edit",
-    complement: showSections?.complement ?? mode === "edit",
+    complement: showSections?.complement ?? true,
     hours: showSections?.hours ?? mode === "edit",
     gallery: showSections?.gallery ?? mode === "edit",
   };
@@ -134,6 +134,7 @@ export function CompanyForm({
       setForm((f) => ({
         ...f,
         address: res.address,
+        complement: f.complement || res.complement || "",
         neighborhood: res.neighborhood,
         city: res.city || f.city,
         state: res.state || f.state,

@@ -12,6 +12,7 @@ export const lookupCep = createServerFn({ method: "GET" })
     const json = (await res.json()) as {
       erro?: boolean;
       logradouro?: string;
+      complemento?: string;
       bairro?: string;
       localidade?: string;
       uf?: string;
@@ -19,6 +20,7 @@ export const lookupCep = createServerFn({ method: "GET" })
     if (json.erro) throw new Error("CEP não encontrado");
     return {
       address: json.logradouro ?? "",
+      complement: json.complemento ?? "",
       neighborhood: json.bairro ?? "",
       city: json.localidade ?? "",
       state: json.uf ?? "",

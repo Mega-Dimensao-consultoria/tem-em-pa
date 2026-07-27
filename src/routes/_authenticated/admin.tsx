@@ -20,6 +20,7 @@ import { SeoTab } from "@/features/admin/components/tabs/SeoTab";
 
 import { BlogSection } from "@/features/admin/components/tabs/BlogSection";
 import { AdminOverviewTab } from "@/features/admin/components/tabs/AdminOverviewTab";
+import { ImportPublicTab } from "@/features/admin/components/tabs/ImportPublicTab";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/_authenticated/admin")({

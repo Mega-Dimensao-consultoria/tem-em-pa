@@ -47,6 +47,8 @@ export function CitiesSeoTab() {
       c.state.toLowerCase() === filter.toLowerCase(),
   );
   const seoCity = seoForId ? data.find((c) => c.id === seoForId) ?? null : null;
+  const pg = usePagination(filtered);
+
 
   return (
     <section className="mt-4 space-y-3">

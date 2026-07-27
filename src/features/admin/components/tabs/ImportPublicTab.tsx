@@ -145,17 +145,17 @@ const PRESETS: Record<Source, Preset> = {
       const address = [
         r.DS_ENDERECO ?? r.ds_endereco,
         r.NU_ENDERECO ?? r.nu_endereco,
-        r.NO_BAIRRO ?? r.no_bairro,
       ].filter(Boolean).join(", ").trim() || null;
-      const ddd = String(r.NU_DDD ?? r.nu_ddd ?? "").trim();
-      const tel = String(r.NU_TELEFONE ?? r.nu_telefone ?? "").trim();
-      const phone = ddd && tel ? `(${ddd}) ${tel}` : null;
+      const neighborhood = (r.NO_BAIRRO ?? r.no_bairro ?? "").toString().trim() || null;
+      const ddd = String(r.NU_DDD ?? r.nu_ddd ?? "").trim() || null;
+      const tel = String(r.NU_TELEFONE ?? r.nu_telefone ?? "").trim() || null;
       const depLabel =
         dep === "1" ? "Escola federal" :
         dep === "2" ? "Escola estadual" :
         dep === "3" ? "Escola municipal" : "Escola pública";
       return {
-        external_id: code, name, city_name: city, state: uf, address, phone,
+        external_id: code, name, city_name: city, state: uf,
+        address, neighborhood, phone_ddd: ddd, phone: tel,
         description: `${depLabel} cadastrada no Censo Escolar (INEP ${code}).`,
       };
     },

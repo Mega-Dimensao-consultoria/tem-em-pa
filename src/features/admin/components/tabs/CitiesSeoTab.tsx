@@ -87,7 +87,7 @@ export function CitiesSeoTab() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {filtered.map((c) => {
+              {pg.paged.map((c) => {
                 const hasCustom = !!(c.seo_title || c.seo_description || c.og_image_url);
                 return (
                   <tr key={c.id}>
@@ -129,6 +129,20 @@ export function CitiesSeoTab() {
           </table>
         </div>
       )}
+      {filtered.length > 0 ? (
+        <AdminPagination
+          page={pg.page}
+          totalPages={pg.totalPages}
+          total={pg.total}
+          pageSize={pg.pageSize}
+          firstItem={pg.firstItem}
+          lastItem={pg.lastItem}
+          onPageChange={pg.setPage}
+          onPageSizeChange={pg.setPageSize}
+          label="cidades"
+        />
+      ) : null}
+
 
       {seoCity ? (
         <SeoOverrideDialog

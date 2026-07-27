@@ -22,7 +22,9 @@ const rowInputSchema = z.object({
   state: z.string().length(2),
   address: z.string().max(240).nullable().optional(),
   phone: z.string().max(40).nullable().optional(),
+  phone_ddd: z.string().max(4).nullable().optional(),
   description: z.string().max(600).nullable().optional(),
+  neighborhood: z.string().max(80).nullable().optional(),
   // Campos ricos (opcionais) — usados principalmente pelo preset "empresas"
   category_slug: z.string().max(80).nullable().optional(),
   cep: z.string().max(12).nullable().optional(),

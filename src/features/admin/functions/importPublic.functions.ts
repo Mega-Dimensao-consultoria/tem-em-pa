@@ -106,6 +106,7 @@ export const importPublicBatch = createServerFn({ method: "POST" })
       skipped_no_city: 0,
       skipped_duplicate: 0,
       errors: 0,
+      logs: [],
     };
 
     // Já registrados: consulta os external_ids do lote

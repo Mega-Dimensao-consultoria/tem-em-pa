@@ -300,9 +300,11 @@ export function ImportPublicTab() {
     setRunning(true);
     cancelRef.current = false;
     setStats(EMPTY_STATS);
+    setLogs([]);
 
     const rows: RowInput[] = [];
-    let invalid = 0;
+    const invalidLogs: ImportRowLog[] = [];
+    let rowIndex = 0; // 0-based row index across CSV (excluding header)
 
     await new Promise<void>((resolve, reject) => {
       Papa.parse<Record<string, string>>(file, {
@@ -311,16 +313,30 @@ export function ImportPublicTab() {
         delimiter: "",
         transformHeader: (h) => h.trim(),
         step: (result) => {
-          const mapped = preset.map(result.data);
-          if (mapped) rows.push(mapped);
-          else invalid++;
+          const csvLine = rowIndex + 2; // +header +1-index
+          const raw = result.data;
+          const mapped = preset.map(raw);
+          if (mapped) {
+            rows.push(mapped);
+          } else {
+            invalidLogs.push({
+              level: "error",
+              external_id: String(raw.external_id ?? raw.CO_ENTIDADE ?? raw.CO_UNIDADE ?? raw.CNES ?? `linha-${csvLine}`),
+              name: String(raw.name ?? raw.NO_ENTIDADE ?? raw.NO_FANTASIA ?? raw.NM_FANTASIA ?? "(sem nome)"),
+              city_name: String(raw.city_name ?? raw.NO_MUNICIPIO ?? raw.NM_MUNICIPIO ?? ""),
+              state: String(raw.state ?? raw.SG_UF ?? ""),
+              reason: `Linha ${csvLine}: campos obrigatórios ausentes/ inválidos (nome, cidade, UF ou identificador). Escolas privadas (TP_DEPENDENCIA=4) também são ignoradas.`,
+            });
+          }
+          rowIndex++;
         },
         complete: () => resolve(),
         error: (err) => reject(err),
       });
     });
 
-    setStats((s) => ({ ...s, totalRows: rows.length, invalid }));
+    setStats((s) => ({ ...s, totalRows: rows.length, invalid: invalidLogs.length }));
+    if (invalidLogs.length > 0) setLogs((l) => [...l, ...invalidLogs]);
 
     if (rows.length === 0) {
       toast.error("Nenhuma linha válida encontrada no arquivo. Verifique o formato/preset.");
@@ -341,10 +357,23 @@ export function ImportPublicTab() {
           noCity: s.noCity + res.skipped_no_city,
           errors: s.errors + res.errors,
         }));
+        if (res.logs && res.logs.length > 0) {
+          setLogs((l) => [...l, ...res.logs]);
+        }
       } catch (e) {
         setStats((s) => ({ ...s, processed: s.processed + batch.length, errors: s.errors + batch.length }));
         const msg = describeBatchError(e, i);
         toast.error("Falha ao processar lote", { description: msg });
+        // Registra no console cada linha do lote como erro para o admin ver quais falharam
+        const batchLogs: ImportRowLog[] = batch.map((r) => ({
+          level: "error",
+          external_id: r.external_id,
+          name: r.name,
+          city_name: r.city_name,
+          state: r.state,
+          reason: msg,
+        }));
+        setLogs((l) => [...l, ...batchLogs]);
       }
     }
 
@@ -352,6 +381,32 @@ export function ImportPublicTab() {
     qc.invalidateQueries({ queryKey: ["admin"] });
     toast.success("Importação concluída");
   };
+
+  const downloadLogs = () => {
+    const csv = toCsv(
+      logs.map((l) => ({
+        status: l.level,
+        external_id: l.external_id,
+        name: l.name,
+        city_name: l.city_name,
+        state: l.state,
+        reason: l.reason ?? "",
+      })),
+      ["status", "external_id", "name", "city_name", "state", "reason"],
+    );
+    downloadCsv(`log-importacao-${source}-${Date.now()}.csv`, csv);
+  };
+
+  const filteredLogs = logs.filter((l) => (logFilter === "all" ? true : l.level === logFilter));
+  const counts = {
+    all: logs.length,
+    error: logs.filter((l) => l.level === "error").length,
+    no_city: logs.filter((l) => l.level === "no_city").length,
+    duplicate: logs.filter((l) => l.level === "duplicate").length,
+    ok: logs.filter((l) => l.level === "ok").length,
+  };
+
+
 
   const progress = stats.totalRows > 0 ? (stats.processed / stats.totalRows) * 100 : 0;
 

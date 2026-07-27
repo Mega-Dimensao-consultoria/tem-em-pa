@@ -74,14 +74,19 @@ export const importPublicBatch = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => batchSchema.parse(input))
   .handler(async ({ data, context }): Promise<ImportBatchResult> => {
-    const { supabase, userId } = context;
+    const { supabase: userClient, userId } = context;
 
-    // Verifica admin no servidor
-    const { data: isAdmin } = await supabase.rpc("has_role", {
+    // Verifica admin no servidor (usa client do usuário para checar identidade)
+    const { data: isAdmin } = await userClient.rpc("has_role", {
       _user_id: userId,
       _role: "admin",
     });
     if (!isAdmin) throw new Error("forbidden");
+
+    // Import em lote precisa gravar registros aprovados sem owner — usa o
+    // service role (bypassa RLS) somente após a checagem de admin acima.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const supabase = supabaseAdmin;
 
     // Carrega categorias (para mapear por slug + fallback)
     const { data: catsRaw } = await supabase.from("categories").select("id, slug");

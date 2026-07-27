@@ -44,11 +44,21 @@ const batchSchema = z.object({
   rows: z.array(rowInputSchema).min(1).max(500),
 });
 
+export type ImportRowLog = {
+  level: "ok" | "duplicate" | "no_city" | "error";
+  external_id: string;
+  name: string;
+  city_name: string;
+  state: string;
+  reason?: string;
+};
+
 export type ImportBatchResult = {
   inserted: number;
   skipped_no_city: number;
   skipped_duplicate: number;
   errors: number;
+  logs: ImportRowLog[];
 };
 
 function slugify(input: string): string {
@@ -96,6 +106,7 @@ export const importPublicBatch = createServerFn({ method: "POST" })
       skipped_no_city: 0,
       skipped_duplicate: 0,
       errors: 0,
+      logs: [],
     };
 
     // Já registrados: consulta os external_ids do lote
@@ -113,14 +124,22 @@ export const importPublicBatch = createServerFn({ method: "POST" })
     const neighborhoodCache = new Map<string, string>();
 
     for (const row of data.rows) {
+      const meta = {
+        external_id: row.external_id,
+        name: row.name,
+        city_name: row.city_name,
+        state: row.state.toUpperCase(),
+      };
       if (existingSet.has(row.external_id)) {
         result.skipped_duplicate++;
+        result.logs.push({ level: "duplicate", ...meta, reason: "external_id já importado nesta fonte" });
         continue;
       }
       const key = `${slugify(row.city_name)}|${row.state.toUpperCase()}`;
       const cityId = cityIndex.get(key);
       if (!cityId) {
         result.skipped_no_city++;
+        result.logs.push({ level: "no_city", ...meta, reason: `Cidade "${row.city_name}/${row.state.toUpperCase()}" não existe na base` });
         continue;
       }
 
@@ -132,6 +151,7 @@ export const importPublicBatch = createServerFn({ method: "POST" })
       if (!categoryId) categoryId = fallbackCatId;
       if (!categoryId) {
         result.errors++;
+        result.logs.push({ level: "error", ...meta, reason: `Categoria não encontrada (slug="${row.category_slug ?? ""}") e sem fallback` });
         continue;
       }
 
@@ -188,12 +208,34 @@ export const importPublicBatch = createServerFn({ method: "POST" })
       if (error) {
         // Fallback: tenta uma-a-uma para não perder o lote inteiro
         for (const row of toInsert) {
+          const r = row as { external_id: string; name: string };
+          const meta = {
+            external_id: r.external_id,
+            name: r.name,
+            city_name: "",
+            state: "",
+          };
           const { error: e2 } = await supabase.from("companies").insert(row as never);
-          if (e2) result.errors++;
-          else result.inserted++;
+          if (e2) {
+            result.errors++;
+            result.logs.push({ level: "error", ...meta, reason: e2.message });
+          } else {
+            result.inserted++;
+            result.logs.push({ level: "ok", ...meta });
+          }
         }
       } else {
         result.inserted = count ?? toInsert.length;
+        for (const row of toInsert) {
+          const r = row as { external_id: string; name: string };
+          result.logs.push({
+            level: "ok",
+            external_id: r.external_id,
+            name: r.name,
+            city_name: "",
+            state: "",
+          });
+        }
       }
     }
 

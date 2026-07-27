@@ -11,6 +11,7 @@ import {
   importPublicBatch,
   IMPORT_BATCH_SIZE,
   type RowInput,
+  type ImportRowLog,
 } from "@/features/admin/functions/importPublic.functions";
 
 import { downloadCsv, toCsv } from "@/lib/csv";
@@ -274,6 +275,8 @@ export function ImportPublicTab() {
   const [source, setSource] = useState<Source>("empresas");
   const [file, setFile] = useState<File | null>(null);
   const [stats, setStats] = useState<Stats>(EMPTY_STATS);
+  const [logs, setLogs] = useState<ImportRowLog[]>([]);
+  const [logFilter, setLogFilter] = useState<"all" | "error" | "no_city" | "duplicate" | "ok">("error");
   const [running, setRunning] = useState(false);
   const cancelRef = useRef(false);
   const qc = useQueryClient();
@@ -284,6 +287,7 @@ export function ImportPublicTab() {
   const handlePickFile = (f: File | null) => {
     setFile(f);
     setStats(EMPTY_STATS);
+    setLogs([]);
   };
 
   const downloadTemplate = () => {
@@ -296,9 +300,11 @@ export function ImportPublicTab() {
     setRunning(true);
     cancelRef.current = false;
     setStats(EMPTY_STATS);
+    setLogs([]);
 
     const rows: RowInput[] = [];
-    let invalid = 0;
+    const invalidLogs: ImportRowLog[] = [];
+    let rowIndex = 0; // 0-based row index across CSV (excluding header)
 
     await new Promise<void>((resolve, reject) => {
       Papa.parse<Record<string, string>>(file, {
@@ -307,16 +313,30 @@ export function ImportPublicTab() {
         delimiter: "",
         transformHeader: (h) => h.trim(),
         step: (result) => {
-          const mapped = preset.map(result.data);
-          if (mapped) rows.push(mapped);
-          else invalid++;
+          const csvLine = rowIndex + 2; // +header +1-index
+          const raw = result.data;
+          const mapped = preset.map(raw);
+          if (mapped) {
+            rows.push(mapped);
+          } else {
+            invalidLogs.push({
+              level: "error",
+              external_id: String(raw.external_id ?? raw.CO_ENTIDADE ?? raw.CO_UNIDADE ?? raw.CNES ?? `linha-${csvLine}`),
+              name: String(raw.name ?? raw.NO_ENTIDADE ?? raw.NO_FANTASIA ?? raw.NM_FANTASIA ?? "(sem nome)"),
+              city_name: String(raw.city_name ?? raw.NO_MUNICIPIO ?? raw.NM_MUNICIPIO ?? ""),
+              state: String(raw.state ?? raw.SG_UF ?? ""),
+              reason: `Linha ${csvLine}: campos obrigatórios ausentes/ inválidos (nome, cidade, UF ou identificador). Escolas privadas (TP_DEPENDENCIA=4) também são ignoradas.`,
+            });
+          }
+          rowIndex++;
         },
         complete: () => resolve(),
         error: (err) => reject(err),
       });
     });
 
-    setStats((s) => ({ ...s, totalRows: rows.length, invalid }));
+    setStats((s) => ({ ...s, totalRows: rows.length, invalid: invalidLogs.length }));
+    if (invalidLogs.length > 0) setLogs((l) => [...l, ...invalidLogs]);
 
     if (rows.length === 0) {
       toast.error("Nenhuma linha válida encontrada no arquivo. Verifique o formato/preset.");
@@ -337,10 +357,23 @@ export function ImportPublicTab() {
           noCity: s.noCity + res.skipped_no_city,
           errors: s.errors + res.errors,
         }));
+        if (res.logs && res.logs.length > 0) {
+          setLogs((l) => [...l, ...res.logs]);
+        }
       } catch (e) {
         setStats((s) => ({ ...s, processed: s.processed + batch.length, errors: s.errors + batch.length }));
         const msg = describeBatchError(e, i);
         toast.error("Falha ao processar lote", { description: msg });
+        // Registra no console cada linha do lote como erro para o admin ver quais falharam
+        const batchLogs: ImportRowLog[] = batch.map((r) => ({
+          level: "error",
+          external_id: r.external_id,
+          name: r.name,
+          city_name: r.city_name,
+          state: r.state,
+          reason: msg,
+        }));
+        setLogs((l) => [...l, ...batchLogs]);
       }
     }
 
@@ -348,6 +381,32 @@ export function ImportPublicTab() {
     qc.invalidateQueries({ queryKey: ["admin"] });
     toast.success("Importação concluída");
   };
+
+  const downloadLogs = () => {
+    const csv = toCsv(
+      logs.map((l) => ({
+        status: l.level,
+        external_id: l.external_id,
+        name: l.name,
+        city_name: l.city_name,
+        state: l.state,
+        reason: l.reason ?? "",
+      })),
+      ["status", "external_id", "name", "city_name", "state", "reason"],
+    );
+    downloadCsv(`log-importacao-${source}-${Date.now()}.csv`, csv);
+  };
+
+  const filteredLogs = logs.filter((l) => (logFilter === "all" ? true : l.level === logFilter));
+  const counts = {
+    all: logs.length,
+    error: logs.filter((l) => l.level === "error").length,
+    no_city: logs.filter((l) => l.level === "no_city").length,
+    duplicate: logs.filter((l) => l.level === "duplicate").length,
+    ok: logs.filter((l) => l.level === "ok").length,
+  };
+
+
 
   const progress = stats.totalRows > 0 ? (stats.processed / stats.totalRows) * 100 : 0;
 
@@ -506,6 +565,93 @@ export function ImportPublicTab() {
               <Stat label="Linhas inválidas" value={stats.invalid} />
               <Stat label="Erros" value={stats.errors} tone={stats.errors > 0 ? "err" : undefined} />
             </dl>
+          </CardContent>
+        </Card>
+      )}
+
+      {logs.length > 0 && (
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between gap-2">
+            <CardTitle>Console de importação ({logs.length.toLocaleString("pt-BR")} eventos)</CardTitle>
+            <Button variant="outline" size="sm" type="button" onClick={downloadLogs}>
+              <Download className="mr-2 h-4 w-4" />
+              Baixar log CSV
+            </Button>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex flex-wrap gap-2">
+              {([
+                ["all", "Todos", counts.all],
+                ["error", "Erros", counts.error],
+                ["no_city", "Sem cidade", counts.no_city],
+                ["duplicate", "Duplicadas", counts.duplicate],
+                ["ok", "Cadastradas", counts.ok],
+              ] as const).map(([key, label, n]) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setLogFilter(key)}
+                  className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
+                    logFilter === key
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "border-border bg-background text-foreground hover:bg-muted"
+                  }`}
+                >
+                  {label} ({n.toLocaleString("pt-BR")})
+                </button>
+              ))}
+            </div>
+
+            <div className="max-h-96 overflow-auto rounded-md border border-border bg-background font-mono text-xs">
+              {filteredLogs.length === 0 ? (
+                <p className="p-4 text-muted-foreground">Nenhum evento para este filtro.</p>
+              ) : (
+                <table className="w-full">
+                  <thead className="sticky top-0 bg-muted/60 text-left uppercase text-[10px] text-muted-foreground">
+                    <tr>
+                      <th className="px-3 py-2">Status</th>
+                      <th className="px-3 py-2">external_id</th>
+                      <th className="px-3 py-2">Nome</th>
+                      <th className="px-3 py-2">Cidade/UF</th>
+                      <th className="px-3 py-2">Motivo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredLogs.slice(0, 500).map((l, idx) => (
+                      <tr key={idx} className="border-t border-border align-top">
+                        <td className="px-3 py-1.5">
+                          <span
+                            className={`rounded px-1.5 py-0.5 text-[10px] font-semibold ${
+                              l.level === "ok"
+                                ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200"
+                                : l.level === "error"
+                                ? "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-200"
+                                : l.level === "no_city"
+                                ? "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-200"
+                                : "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100"
+                            }`}
+                          >
+                            {l.level}
+                          </span>
+                        </td>
+                        <td className="px-3 py-1.5">{l.external_id}</td>
+                        <td className="px-3 py-1.5">{l.name}</td>
+                        <td className="px-3 py-1.5">
+                          {l.city_name}
+                          {l.state ? `/${l.state}` : ""}
+                        </td>
+                        <td className="px-3 py-1.5 text-muted-foreground">{l.reason ?? ""}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+            {filteredLogs.length > 500 && (
+              <p className="text-xs text-muted-foreground">
+                Exibindo os primeiros 500 eventos. Baixe o log CSV para ver todos ({filteredLogs.length.toLocaleString("pt-BR")}).
+              </p>
+            )}
           </CardContent>
         </Card>
       )}

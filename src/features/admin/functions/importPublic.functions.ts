@@ -124,14 +124,22 @@ export const importPublicBatch = createServerFn({ method: "POST" })
     const neighborhoodCache = new Map<string, string>();
 
     for (const row of data.rows) {
+      const meta = {
+        external_id: row.external_id,
+        name: row.name,
+        city_name: row.city_name,
+        state: row.state.toUpperCase(),
+      };
       if (existingSet.has(row.external_id)) {
         result.skipped_duplicate++;
+        result.logs.push({ level: "duplicate", ...meta, reason: "external_id já importado nesta fonte" });
         continue;
       }
       const key = `${slugify(row.city_name)}|${row.state.toUpperCase()}`;
       const cityId = cityIndex.get(key);
       if (!cityId) {
         result.skipped_no_city++;
+        result.logs.push({ level: "no_city", ...meta, reason: `Cidade "${row.city_name}/${row.state.toUpperCase()}" não existe na base` });
         continue;
       }
 
@@ -143,6 +151,7 @@ export const importPublicBatch = createServerFn({ method: "POST" })
       if (!categoryId) categoryId = fallbackCatId;
       if (!categoryId) {
         result.errors++;
+        result.logs.push({ level: "error", ...meta, reason: `Categoria não encontrada (slug="${row.category_slug ?? ""}") e sem fallback` });
         continue;
       }
 

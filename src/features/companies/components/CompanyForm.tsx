@@ -134,6 +134,7 @@ export function CompanyForm({
       setForm((f) => ({
         ...f,
         address: res.address,
+        complement: f.complement || res.complement || "",
         neighborhood: res.neighborhood,
         city: res.city || f.city,
         state: res.state || f.state,

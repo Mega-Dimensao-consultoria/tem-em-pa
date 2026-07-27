@@ -16,25 +16,25 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
  */
 
 const rowInputSchema = z.object({
-  external_id: z.string().min(1).max(64),
-  name: z.string().min(2).max(160),
-  city_name: z.string().min(2).max(120),
+  external_id: z.string().min(1).max(200),
+  name: z.string().min(2).max(240),
+  city_name: z.string().min(2).max(160),
   state: z.string().length(2),
-  address: z.string().max(240).nullable().optional(),
-  phone: z.string().max(40).nullable().optional(),
+  address: z.string().max(400).nullable().optional(),
+  phone: z.string().max(60).nullable().optional(),
   phone_ddd: z.string().max(4).nullable().optional(),
-  description: z.string().max(600).nullable().optional(),
-  neighborhood: z.string().max(80).nullable().optional(),
+  description: z.string().max(1000).nullable().optional(),
+  neighborhood: z.string().max(120).nullable().optional(),
   // Campos ricos (opcionais) — usados principalmente pelo preset "empresas"
-  category_slug: z.string().max(80).nullable().optional(),
+  category_slug: z.string().max(120).nullable().optional(),
   cep: z.string().max(12).nullable().optional(),
-  number: z.string().max(20).nullable().optional(),
-  complement: z.string().max(120).nullable().optional(),
-  whatsapp: z.string().max(40).nullable().optional(),
-  email: z.string().max(160).nullable().optional(),
-  website: z.string().max(240).nullable().optional(),
-  instagram_url: z.string().max(240).nullable().optional(),
-  facebook_url: z.string().max(240).nullable().optional(),
+  number: z.string().max(40).nullable().optional(),
+  complement: z.string().max(200).nullable().optional(),
+  whatsapp: z.string().max(60).nullable().optional(),
+  email: z.string().max(200).nullable().optional(),
+  website: z.string().max(400).nullable().optional(),
+  instagram_url: z.string().max(400).nullable().optional(),
+  facebook_url: z.string().max(400).nullable().optional(),
 });
 
 export type RowInput = z.infer<typeof rowInputSchema>;

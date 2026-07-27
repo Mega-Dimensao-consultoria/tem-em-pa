@@ -11,6 +11,7 @@ import {
   importPublicBatch,
   IMPORT_BATCH_SIZE,
   type RowInput,
+  type ImportRowLog,
 } from "@/features/admin/functions/importPublic.functions";
 
 import { downloadCsv, toCsv } from "@/lib/csv";

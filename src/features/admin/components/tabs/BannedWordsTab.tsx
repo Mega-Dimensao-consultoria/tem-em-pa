@@ -66,7 +66,6 @@ export function BannedWordsTab() {
               <thead className="bg-muted/50 text-left text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
                   <th scope="col" className="px-4 py-3 font-medium">Palavra</th>
-                  <th scope="col" className="px-4 py-3 font-medium">Adicionada em</th>
                   <th scope="col" className="px-4 py-3 text-right font-medium">Ações</th>
                 </tr>
               </thead>
@@ -74,9 +73,6 @@ export function BannedWordsTab() {
                 {pg.paged.map((b) => (
                   <tr key={b.id} className="border-t border-border transition hover:bg-muted/40">
                     <td className="px-4 py-3 font-mono text-xs">{b.word}</td>
-                    <td className="px-4 py-3 text-muted-foreground tabular-nums">
-                      {new Date(b.created_at).toLocaleDateString("pt-BR")}
-                    </td>
                     <td className="px-4 py-3 text-right">
                       <ConfirmDestructive
                         trigger={

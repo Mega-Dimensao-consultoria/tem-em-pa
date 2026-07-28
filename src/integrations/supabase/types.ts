@@ -1801,6 +1801,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      immutable_unaccent: { Args: { "": string }; Returns: string }
       list_active_cities_by_state: {
         Args: { _uf: string }
         Returns: {

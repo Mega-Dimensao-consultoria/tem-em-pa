@@ -106,6 +106,10 @@ export const DEFAULT_GLOBALS: SeoGlobals = {
   org_social_urls: [],
   google_site_verification: null,
   bing_site_verification: null,
+  adsense_enabled: false,
+  adsense_client_id: null,
+  adsense_head_snippet: null,
+  adsense_body_snippet: null,
   templates: {
     company: {
       title: "{{nome}} em {{cidade}} — {{categoria}} | {{siteName}}",

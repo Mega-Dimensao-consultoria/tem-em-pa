@@ -23,79 +23,77 @@ export type AdminStats = {
   categories: number;
 };
 
-// "estimated" returns exact count for small tables and planner estimate for
-// large ones (e.g. companies has ~200k rows; an exact count exceeds the 8s
-// statement timeout on the authenticated role and makes overview cards blank).
-const HEAD = { count: "estimated" as const, head: true };
+const KEY_MAP: Record<string, keyof AdminStats> = {
+  companies_total: "companiesTotal",
+  companies_approved: "companiesApproved",
+  companies_pending: "companiesPending",
+  companies_rejected: "companiesRejected",
+  claims_pending: "claimsPending",
+  removals_pending: "removalsPending",
+  reviews_total: "reviewsTotal",
+  reviews_pending: "reviewsPending",
+  reports_pending: "reportsPending",
+  users_total: "users",
+  contact_pending: "contactMessagesPending",
+  contact_total: "contactMessagesTotal",
+  blog_total: "blogPostsTotal",
+  blog_published: "blogPostsPublished",
+  pages_total: "sitePagesTotal",
+  cities_total: "cities",
+  neighborhoods_total: "neighborhoods",
+  categories_total: "categories",
+};
 
-async function unwrap(p: PromiseLike<{ count: number | null; error: unknown }>): Promise<number> {
-  const { count, error } = await p;
-  if (error) throw error;
-  return count ?? 0;
-}
-
-async function fetchAdminStats(): Promise<AdminStats> {
-  const [
-    companiesTotal,
-    companiesApproved,
-    companiesPending,
-    companiesRejected,
-    claimsPending,
-    removalsPending,
-    reviewsTotal,
-    reviewsPending,
-    reportsPending,
-    users,
-    contactMessagesPending,
-    contactMessagesTotal,
-    blogPostsTotal,
-    blogPostsPublished,
-    sitePagesTotal,
-    cities,
-    neighborhoods,
-    categories,
-  ] = await Promise.all([
-    unwrap(supabase.from("companies").select("id", HEAD)),
-    unwrap(supabase.from("companies").select("id", HEAD).eq("status", "approved")),
-    unwrap(supabase.from("companies").select("id", HEAD).in("status", ["pending", "claimed_pending"])),
-    unwrap(supabase.from("companies").select("id", HEAD).eq("status", "rejected")),
-    unwrap(supabase.from("company_claims").select("id", HEAD).eq("status", "pending")),
-    unwrap(supabase.from("company_removal_requests").select("id", HEAD).eq("status", "pending")),
-    unwrap(supabase.from("reviews").select("id", HEAD)),
-    unwrap(supabase.from("reviews").select("id", HEAD).in("status", ["pending_moderation", "flagged"])),
-    unwrap(supabase.from("review_reports").select("id", HEAD).eq("status", "pending")),
-    unwrap(supabase.from("profiles").select("id", HEAD)),
-    unwrap(supabase.from("contact_messages").select("id", HEAD).eq("status", "pending")),
-    unwrap(supabase.from("contact_messages").select("id", HEAD)),
-    unwrap(supabase.from("blog_posts").select("id", HEAD)),
-    unwrap(supabase.from("blog_posts").select("id", HEAD).eq("status", "published")),
-    unwrap(supabase.from("site_pages").select("slug", HEAD)),
-    unwrap(supabase.from("cities").select("id", HEAD)),
-    unwrap(supabase.from("neighborhoods").select("id", HEAD)),
-    unwrap(supabase.from("categories").select("id", HEAD)),
-  ]);
+function zeroStats(): AdminStats {
   return {
-    companiesTotal,
-    companiesApproved,
-    companiesPending,
-    companiesRejected,
-    claimsPending,
-    removalsPending,
-    reviewsTotal,
-    reviewsPending,
-    reportsPending,
-    users,
-    contactMessagesPending,
-    contactMessagesTotal,
-    blogPostsTotal,
-    blogPostsPublished,
-    sitePagesTotal,
-    cities,
-    neighborhoods,
-    categories,
+    companiesTotal: 0,
+    companiesApproved: 0,
+    companiesPending: 0,
+    companiesRejected: 0,
+    claimsPending: 0,
+    removalsPending: 0,
+    reviewsTotal: 0,
+    reviewsPending: 0,
+    reportsPending: 0,
+    users: 0,
+    contactMessagesPending: 0,
+    contactMessagesTotal: 0,
+    blogPostsTotal: 0,
+    blogPostsPublished: 0,
+    sitePagesTotal: 0,
+    cities: 0,
+    neighborhoods: 0,
+    categories: 0,
   };
 }
 
+async function fetchAdminStats(): Promise<AdminStats> {
+  // Reads from admin_stats_cache — exact counts kept in sync by triggers.
+  // Instant even at 200k+ rows.
+  const { data, error } = await supabase
+    .from("admin_stats_cache")
+    .select("key, value");
+  if (error) throw error;
+  const out = zeroStats();
+  for (const row of data ?? []) {
+    const field = KEY_MAP[row.key as string];
+    if (field) out[field] = Number(row.value) || 0;
+  }
+  return out;
+}
+
 export function useAdminStats() {
-  return useQuery({ queryKey: adminKeys.stats(), queryFn: fetchAdminStats });
+  return useQuery({
+    queryKey: adminKeys.stats(),
+    queryFn: fetchAdminStats,
+    // Refresh on window focus / every minute so the cards feel live after mutations.
+    staleTime: 30_000,
+    refetchOnWindowFocus: true,
+    refetchInterval: 60_000,
+  });
+}
+
+export async function reseedAdminStats(): Promise<void> {
+  const { error } = await supabase.rpc("admin_reseed_stats");
+  if (error) throw error;
 }

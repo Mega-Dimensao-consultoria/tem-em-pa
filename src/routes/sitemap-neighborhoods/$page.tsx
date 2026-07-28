@@ -9,7 +9,7 @@ import {
 } from "@/lib/sitemap";
 
 /** Sitemap paginado de bairros ativos. */
-export const Route = createFileRoute("/sitemap-neighborhoods/$page.xml")({
+export const Route = createFileRoute("/sitemap-neighborhoods/$page")({
   server: {
     handlers: {
       GET: async ({ params }) => {

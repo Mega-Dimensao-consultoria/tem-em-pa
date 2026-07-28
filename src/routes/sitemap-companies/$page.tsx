@@ -9,7 +9,7 @@ import {
 } from "@/lib/sitemap";
 
 /** Sitemap paginado de empresas aprovadas indexáveis. */
-export const Route = createFileRoute("/sitemap-companies/$page.xml")({
+export const Route = createFileRoute("/sitemap-companies/$page")({
   server: {
     handlers: {
       GET: async ({ params }) => {

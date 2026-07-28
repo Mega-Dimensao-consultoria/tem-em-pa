@@ -23,7 +23,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           Math.ceil(companyCount / SITEMAP_PAGE_SIZE),
         );
         for (let i = 1; i <= companyPages; i += 1) {
-          children.push({ path: `/sitemap-companies/${i}.xml` });
+          children.push({ path: `/sitemap-companies/${i}` });
         }
 
         const hoodPages = Math.max(
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           Math.ceil(neighborhoodCount / SITEMAP_PAGE_SIZE),
         );
         for (let i = 1; i <= hoodPages; i += 1) {
-          children.push({ path: `/sitemap-neighborhoods/${i}.xml` });
+          children.push({ path: `/sitemap-neighborhoods/${i}` });
         }
 
         return renderSitemapIndex(children);

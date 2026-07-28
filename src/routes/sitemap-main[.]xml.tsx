@@ -1,13 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-import {
-  fetchAll,
-  renderSitemap,
-  sitemapClient,
-  type SitemapEntry,
-} from "@/lib/sitemap";
+import { renderSitemap, sitemapClient, type SitemapEntry } from "@/lib/sitemap";
 
-/** Páginas estáticas + cidades + categorias + bairros (índice) + blog + eventos. */
+/**
+ * Sitemap principal: páginas estáticas + blog (categorias e posts) + eventos.
+ * Cidades, empresas e bairros vivem em sub-sitemaps paginados, listados no
+ * /sitemap.xml (index), porque combinados ultrapassam o teto de 50k URLs.
+ */
 export const Route = createFileRoute("/sitemap-main.xml")({
   server: {
     handlers: {
@@ -25,16 +24,7 @@ export const Route = createFileRoute("/sitemap-main.xml")({
           { path: "/privacidade", changefreq: "yearly", priority: "0.3" },
         ];
 
-        const [cats, cities, blogCats, blogPosts, events] = await Promise.all([
-          sb
-            .from("categories")
-            .select("slug, noindex")
-            .or("noindex.is.null,noindex.eq.false"),
-          sb
-            .from("cities")
-            .select("slug, noindex")
-            .eq("is_active", true)
-            .or("noindex.is.null,noindex.eq.false"),
+        const [blogCats, blogPosts, events] = await Promise.all([
           sb
             .from("blog_categories")
             .select("slug, noindex")
@@ -55,22 +45,6 @@ export const Route = createFileRoute("/sitemap-main.xml")({
             .gte("starts_at", nowIso)
             .limit(5000),
         ]);
-
-        for (const row of (cities.data ?? []) as Array<{ slug: string | null }>) {
-          const s = row.slug;
-          if (!s) continue;
-          entries.push({ path: `/${s}`, changefreq: "daily", priority: "0.9" });
-          entries.push({ path: `/${s}/buscar`, changefreq: "daily", priority: "0.8" });
-          entries.push({ path: `/${s}/eventos`, changefreq: "daily", priority: "0.7" });
-          for (const cat of (cats.data ?? []) as Array<{ slug: string | null }>) {
-            if (!cat.slug) continue;
-            entries.push({
-              path: `/${s}/categoria/${cat.slug}`,
-              changefreq: "weekly",
-              priority: "0.7",
-            });
-          }
-        }
 
         for (const row of (blogCats.data ?? []) as Array<{ slug: string | null }>) {
           if (!row.slug) continue;
@@ -107,9 +81,6 @@ export const Route = createFileRoute("/sitemap-main.xml")({
             priority: "0.6",
           });
         }
-
-        // Silencia lint de `fetchAll` não usado neste arquivo.
-        void fetchAll;
 
         return renderSitemap(entries);
       },

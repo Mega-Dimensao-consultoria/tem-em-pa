@@ -3,6 +3,8 @@ import type { Database } from "@/integrations/supabase/types";
 
 export const SITEMAP_BASE_URL = "https://www.temnaminhacidade.com.br";
 export const SITEMAP_PAGE_SIZE = 40000;
+/** Cidades por página em /sitemap-cities/$page — 2000 × ~16 URLs/cidade ≈ 32k URLs. */
+export const CITIES_PER_SITEMAP_PAGE = 2000;
 
 export type SitemapEntry = {
   path: string;
@@ -105,24 +107,28 @@ export async function getSitemapCounts() {
       .from("neighborhoods")
       .select("id", { count: "estimated", head: true })
       .eq("is_active", true),
-    sb
-      .from("cities")
-      .select("slug, id, noindex")
-      .eq("is_active", true),
+    fetchAll<{ id: string; slug: string | null; noindex: boolean | null }>(
+      async (from, to) => {
+        const res = await sb
+          .from("cities")
+          .select("id, slug, noindex")
+          .eq("is_active", true)
+          .order("id", { ascending: true })
+          .range(from, to);
+        return { data: res.data, error: res.error };
+      },
+    ),
   ]);
 
   const activeSlugsById = new Map<string, string>();
-  for (const c of (activeCities.data ?? []) as Array<{
-    id: string;
-    slug: string | null;
-    noindex: boolean | null;
-  }>) {
+  for (const c of activeCities) {
     if (c.slug && !c.noindex) activeSlugsById.set(c.id, c.slug);
   }
 
   return {
     companyCount: companiesHead.count ?? 0,
     neighborhoodCount: hoodsHead.count ?? 0,
+    cityCount: activeSlugsById.size,
     activeSlugsById,
   };
 }

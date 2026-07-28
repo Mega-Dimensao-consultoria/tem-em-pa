@@ -1873,6 +1873,27 @@ export type Database = {
           slug: string
         }[]
       }
+      sitemap_cities_page: {
+        Args: { _limit: number; _offset: number }
+        Returns: {
+          slug: string
+        }[]
+      }
+      sitemap_companies_page: {
+        Args: { _limit: number; _offset: number }
+        Returns: {
+          city_slug: string
+          slug: string
+          updated_at: string
+        }[]
+      }
+      sitemap_neighborhoods_page: {
+        Args: { _limit: number; _offset: number }
+        Returns: {
+          city_slug: string
+          slug: string
+        }[]
+      }
       slugify: { Args: { input: string }; Returns: string }
     }
     Enums: {

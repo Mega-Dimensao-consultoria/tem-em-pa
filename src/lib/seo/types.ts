@@ -65,6 +65,10 @@ export type SeoGlobals = {
   org_social_urls: string[];
   google_site_verification: string | null;
   bing_site_verification: string | null;
+  adsense_enabled: boolean;
+  adsense_client_id: string | null;
+  adsense_head_snippet: string | null;
+  adsense_body_snippet: string | null;
   templates: Record<SeoTemplateKind, SeoTemplate>;
 };
 

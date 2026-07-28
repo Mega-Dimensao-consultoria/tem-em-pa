@@ -1,11 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Check, CheckSquare, ExternalLink, EyeOff, Pencil, Plus, RotateCcw, Search, Sparkles, Square, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ConfirmDestructive } from "@/components/ConfirmDestructive";
 import {
-  useAllCompanies,
+  useCompaniesPage,
   useDecideCompany,
   useDeleteCompany,
   useRepublishCompany,
@@ -17,7 +17,7 @@ import { Empty, Loading } from "../admin-ui";
 import { SeoOverrideDialog } from "@/features/seo/components/SeoOverrideDialog";
 import { AdminGrantPromotionDialog } from "@/features/promotions/components/AdminGrantPromotionDialog";
 import { adminKeys } from "@/features/admin/functions/keys";
-import { AdminPagination, usePagination } from "../AdminPagination";
+import { AdminPagination, DEFAULT_PAGE_SIZE } from "../AdminPagination";
 
 const STATUS_LABEL: Record<string, string> = {
   approved: "Aprovada",
@@ -40,44 +40,50 @@ const BULK_LABEL: Record<BulkAction, string> = {
 };
 
 export function AllCompaniesTab() {
-  const { data = [], isLoading } = useAllCompanies();
+  const [filter, setFilter] = useState("");
+  const [debouncedFilter, setDebouncedFilter] = useState("");
+  const [status, setStatus] = useState<string>("all");
+  const [cityId, setCityId] = useState<string>("all");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [seoForId, setSeoForId] = useState<string | null>(null);
+  const [promoForId, setPromoForId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedFilter(filter.trim()), 300);
+    return () => clearTimeout(t);
+  }, [filter]);
+
+  useEffect(() => {
+    setPage(1);
+    setSelected(new Set());
+  }, [status, cityId, debouncedFilter, pageSize]);
+
+  const { data, isLoading, isFetching } = useCompaniesPage(
+    { status, cityId, q: debouncedFilter },
+    page,
+    pageSize,
+  );
+  const rows = data?.rows ?? [];
+  const total = data?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const firstItem = total === 0 ? 0 : (page - 1) * pageSize + 1;
+  const lastItem = Math.min(page * pageSize, total);
+
   const decide = useDecideCompany();
   const suspend = useSuspendCompany();
   const republish = useRepublishCompany();
   const remove = useDeleteCompany();
   const bulk = useBulkCompanyAction();
-  const [filter, setFilter] = useState("");
-  const [status, setStatus] = useState<string>("all");
-  const [cityId, setCityId] = useState<string>("all");
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [seoForId, setSeoForId] = useState<string | null>(null);
-  const [promoForId, setPromoForId] = useState<string | null>(null);
-  const seoCompany = seoForId ? data.find((c) => c.id === seoForId) ?? null : null;
-  const promoCompany = promoForId ? data.find((c) => c.id === promoForId) ?? null : null;
 
-  const filtered = useMemo(() => {
-    return data.filter((c) => {
-      if (status !== "all" && c.status !== status) return false;
-      if (cityId !== "all" && c.city_id !== cityId) return false;
-      if (!filter) return true;
-      const q = filter.toLowerCase();
-      return (
-        c.name.toLowerCase().includes(q) ||
-        (c.city ?? "").toLowerCase().includes(q) ||
-        c.id.includes(filter)
-      );
-    });
-  }, [data, filter, status, cityId]);
+  const seoCompany = seoForId ? rows.find((c) => c.id === seoForId) ?? null : null;
+  const promoCompany = promoForId ? rows.find((c) => c.id === promoForId) ?? null : null;
 
-  const pg = usePagination(filtered);
-
-  const allSelected = filtered.length > 0 && filtered.every((c) => selected.has(c.id));
+  const allSelected = rows.length > 0 && rows.every((c) => selected.has(c.id));
   const toggleAll = () => {
-    if (allSelected) {
-      setSelected(new Set());
-    } else {
-      setSelected(new Set(filtered.map((c) => c.id)));
-    }
+    if (allSelected) setSelected(new Set());
+    else setSelected(new Set(rows.map((c) => c.id)));
   };
   const toggleOne = (id: string) => {
     const next = new Set(selected);
@@ -86,7 +92,7 @@ export function AllCompaniesTab() {
     setSelected(next);
   };
 
-  const selectedItems = filtered.filter((c) => selected.has(c.id));
+  const selectedItems = rows.filter((c) => selected.has(c.id));
 
   const runBulk = (action: BulkAction) => {
     bulk.mutate(
@@ -109,7 +115,7 @@ export function AllCompaniesTab() {
         </label>
         <Input
           id="all-companies-filter"
-          placeholder="Filtrar por nome, cidade ou ID…"
+          placeholder="Filtrar por nome…"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
           className="max-w-sm"
@@ -140,8 +146,8 @@ export function AllCompaniesTab() {
 
       <div className="flex flex-wrap items-center gap-2">
         <p className="text-xs text-muted-foreground" aria-live="polite">
-          {filtered.length} de {data.length} empresa{data.length === 1 ? "" : "s"} ·{" "}
-          <strong>{selected.size}</strong> selecionada(s)
+          <strong>{total.toLocaleString("pt-BR")}</strong> empresa{total === 1 ? "" : "s"} encontrada{total === 1 ? "" : "s"}
+          {isFetching ? " · atualizando…" : ""} · <strong>{selected.size}</strong> selecionada(s) nesta página
         </p>
         {selected.size > 0 && (
           <div className="ml-auto flex flex-wrap gap-2">
@@ -179,7 +185,7 @@ export function AllCompaniesTab() {
         )}
       </div>
 
-      {filtered.length === 0 ? (
+      {rows.length === 0 ? (
         <Empty>Nenhuma empresa encontrada.</Empty>
       ) : (
         <div className="overflow-x-auto rounded-2xl border border-border bg-card shadow-soft">
@@ -207,7 +213,7 @@ export function AllCompaniesTab() {
               </tr>
             </thead>
             <tbody>
-              {pg.paged.map((c) => {
+              {rows.map((c) => {
                 const checked = selected.has(c.id);
                 return (
                   <tr key={c.id} className="border-t border-border transition hover:bg-muted/40">
@@ -381,16 +387,16 @@ export function AllCompaniesTab() {
         </div>
       )}
 
-      {filtered.length > 0 ? (
+      {total > 0 ? (
         <AdminPagination
-          page={pg.page}
-          totalPages={pg.totalPages}
-          total={pg.total}
-          pageSize={pg.pageSize}
-          firstItem={pg.firstItem}
-          lastItem={pg.lastItem}
-          onPageChange={pg.setPage}
-          onPageSizeChange={pg.setPageSize}
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          pageSize={pageSize}
+          firstItem={firstItem}
+          lastItem={lastItem}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
           label="empresas"
         />
       ) : null}

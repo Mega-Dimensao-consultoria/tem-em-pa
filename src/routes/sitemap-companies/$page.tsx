@@ -31,7 +31,12 @@ export const Route = createFileRoute("/sitemap-companies/$page")({
         )("sitemap_companies_page", { _offset: offset, _limit: SITEMAP_PAGE_SIZE });
         if (error) throw new Error(error.message);
 
-        const entries: SitemapEntry[] = (data ?? []).map((row) => ({
+        const rows = (data ?? []) as Array<{
+          slug: string;
+          updated_at: string | null;
+          city_slug: string;
+        }>;
+        const entries: SitemapEntry[] = rows.map((row) => ({
           path: `/${row.city_slug}/empresa/${row.slug}`,
           lastmod: row.updated_at
             ? new Date(row.updated_at).toISOString().slice(0, 10)

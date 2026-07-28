@@ -51,7 +51,7 @@
     "qrcode.react": "^4.2.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-email": "^6.6.3",
+    "react-email": "^6.9.1",
     "sonner": "^2.0.7",
     "stripe": "22.0.2",
     "tailwind-merge": "^3.5.0",
@@ -83,5 +83,13 @@
     "overrides": {
       "entities": "4.5.0"
     }
+  },
+  "overrides": {
+    "brace-expansion@<2": "^2.0.2",
+    "brace-expansion@>=2 <3": "^2.0.2",
+    "brace-expansion@>=3 <4": "^3.0.1",
+    "brace-expansion@>=4 <5": "^4.0.1",
+    "brace-expansion@>=5": "^5.0.8",
+    "fast-uri": "^4.1.1"
   }
 }

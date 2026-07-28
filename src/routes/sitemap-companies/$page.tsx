@@ -19,11 +19,12 @@ export const Route = createFileRoute("/sitemap-companies/$page")({
         const sb = sitemapClient();
         const offset = (pageNum - 1) * SITEMAP_PAGE_SIZE;
 
-        const rows = await fetchAll<{
+        type Row = {
           slug: string | null;
           updated_at: string | null;
           cities: { slug: string | null; is_active: boolean | null; noindex: boolean | null } | null;
-        }>(async (from, to) => {
+        };
+        const rows = await fetchAll<Row>(async (from, to) => {
           const absFrom = offset + from;
           const absTo = offset + to;
           if (absFrom >= offset + SITEMAP_PAGE_SIZE) return { data: [], error: null };
@@ -35,7 +36,7 @@ export const Route = createFileRoute("/sitemap-companies/$page")({
             .or("noindex.is.null,noindex.eq.false")
             .order("id", { ascending: true })
             .range(absFrom, cappedTo);
-          return { data: res.data as unknown as typeof rows | null, error: res.error };
+          return { data: res.data as unknown as Row[] | null, error: res.error };
         });
 
         const entries: SitemapEntry[] = [];

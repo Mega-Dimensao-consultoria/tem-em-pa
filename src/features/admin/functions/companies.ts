@@ -104,9 +104,12 @@ export function useCompaniesPage(
     queryFn: async (): Promise<{ rows: AdminCompany[]; total: number }> => {
       const from = (page - 1) * pageSize;
       const to = from + pageSize - 1;
+      // "estimated" avoids a full COUNT(*) scan on ~200k rows which times out
+      // (statement_timeout is 8s for authenticated). Planner estimate is instant
+      // and accurate enough for admin pagination on this table.
       let q = supabase
         .from("companies")
-        .select(ADMIN_SELECT, { count: "exact" })
+        .select(ADMIN_SELECT, { count: "estimated" })
         .order("created_at", { ascending: false })
         .range(from, to);
       if (filters.status && filters.status !== "all") {

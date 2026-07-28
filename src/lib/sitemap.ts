@@ -108,13 +108,15 @@ export async function getSitemapCounts() {
       .select("id", { count: "estimated", head: true })
       .eq("is_active", true),
     fetchAll<{ id: string; slug: string | null; noindex: boolean | null }>(
-      (from, to) =>
-        sb
+      async (from, to) => {
+        const res = await sb
           .from("cities")
           .select("id, slug, noindex")
           .eq("is_active", true)
           .order("id", { ascending: true })
-          .range(from, to),
+          .range(from, to);
+        return { data: res.data, error: res.error };
+      },
     ),
   ]);
 

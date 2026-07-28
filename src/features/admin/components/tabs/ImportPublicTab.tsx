@@ -9,10 +9,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Info, Upload, StopCircle, Download } from "lucide-react";
 import {
   importPublicBatch,
+} from "@/features/admin/functions/importPublic.functions";
+import {
   IMPORT_BATCH_SIZE,
   type RowInput,
   type ImportRowLog,
-} from "@/features/admin/functions/importPublic.functions";
+} from "@/features/admin/functions/importPublic.shared";
 
 import { downloadCsv, toCsv } from "@/lib/csv";
 

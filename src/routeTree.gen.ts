@@ -39,8 +39,8 @@ import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe
 import { Route as EmpresaIdRouteImport } from './routes/empresa.$id'
 import { Route as EventosIdRouteImport } from './routes/eventos.$id'
 import { Route as PreviewTokenRouteImport } from './routes/preview.$token'
-import { Route as SitemapCompaniesPageDotxmlRouteImport } from './routes/sitemap-companies.$page[.]xml'
-import { Route as SitemapNeighborhoodsPageDotxmlRouteImport } from './routes/sitemap-neighborhoods.$page[.]xml'
+import { Route as SitemapCompaniesPageDotxmlRouteImport } from './routes/sitemap-companies/$page[.]xml'
+import { Route as SitemapNeighborhoodsPageDotxmlRouteImport } from './routes/sitemap-neighborhoods/$page[.]xml'
 import { Route as SuporteRedefinir2faRouteImport } from './routes/suporte.redefinir-2fa'
 import { Route as UHandleRouteImport } from './routes/u.$handle'
 import { Route as CitySlugBairroBairroSlugRouteImport } from './routes/$citySlug.bairro.$bairroSlug'
@@ -1351,3 +1351,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

@@ -138,24 +138,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
     };
 
+    const scripts: Array<Record<string, unknown>> = [
+      { children: themeNoFlashScript },
+    ];
+    if (g.adsense_enabled && g.adsense_client_id) {
+      scripts.push({
+        async: true,
+        src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(g.adsense_client_id)}`,
+        crossOrigin: "anonymous",
+      });
+    }
+    if (g.adsense_enabled && g.adsense_head_snippet?.trim()) {
+      scripts.push({ children: g.adsense_head_snippet });
+    }
+    scripts.push(
+      { type: "application/ld+json", children: JSON.stringify(orgLd) },
+      { type: "application/ld+json", children: JSON.stringify(websiteLd) },
+    );
+
     return {
       meta,
-      scripts: [
-        { children: themeNoFlashScript },
-        {
-          async: true,
-          src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2966465320218096",
-          crossOrigin: "anonymous",
-        },
-        {
-          type: "application/ld+json",
-          children: JSON.stringify(orgLd),
-        },
-        {
-          type: "application/ld+json",
-          children: JSON.stringify(websiteLd),
-        },
-      ],
+      scripts,
       links: [
         { rel: "stylesheet", href: appCss },
         { rel: "icon", type: "image/png", href: "/favicon.png" },
@@ -203,6 +206,10 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const loaderData = Route.useLoaderData();
+  const adsenseBody = loaderData?.globals?.adsense_enabled
+    ? loaderData?.globals?.adsense_body_snippet ?? null
+    : null;
 
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange((event) => {
@@ -242,6 +249,13 @@ function RootComponent() {
           <Toaster richColors position="top-center" containerAriaLabel="Central de notificações" />
           <AccessibilityBar />
           <VLibrasWidget />
+          {adsenseBody ? (
+            <div
+              aria-hidden="true"
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{ __html: adsenseBody }}
+            />
+          ) : null}
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>

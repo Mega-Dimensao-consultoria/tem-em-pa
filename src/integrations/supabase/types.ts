@@ -1454,6 +1454,10 @@ export type Database = {
       }
       site_seo_settings: {
         Row: {
+          adsense_body_snippet: string | null
+          adsense_client_id: string | null
+          adsense_enabled: boolean
+          adsense_head_snippet: string | null
           bing_site_verification: string | null
           default_description: string
           default_keywords: string | null
@@ -1473,6 +1477,10 @@ export type Database = {
           updated_by: string | null
         }
         Insert: {
+          adsense_body_snippet?: string | null
+          adsense_client_id?: string | null
+          adsense_enabled?: boolean
+          adsense_head_snippet?: string | null
           bing_site_verification?: string | null
           default_description?: string
           default_keywords?: string | null
@@ -1492,6 +1500,10 @@ export type Database = {
           updated_by?: string | null
         }
         Update: {
+          adsense_body_snippet?: string | null
+          adsense_client_id?: string | null
+          adsense_enabled?: boolean
+          adsense_head_snippet?: string | null
           bing_site_verification?: string | null
           default_description?: string
           default_keywords?: string | null

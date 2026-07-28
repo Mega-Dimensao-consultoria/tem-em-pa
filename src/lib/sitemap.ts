@@ -98,12 +98,12 @@ export async function getSitemapCounts() {
   const [companiesHead, hoodsHead, activeCities] = await Promise.all([
     sb
       .from("companies")
-      .select("id", { count: "exact", head: true })
+      .select("id", { count: "estimated", head: true })
       .eq("status", "approved")
       .or("noindex.is.null,noindex.eq.false"),
     sb
       .from("neighborhoods")
-      .select("id", { count: "exact", head: true })
+      .select("id", { count: "estimated", head: true })
       .eq("is_active", true),
     sb
       .from("cities")

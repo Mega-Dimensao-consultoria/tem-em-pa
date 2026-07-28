@@ -83,5 +83,13 @@
     "overrides": {
       "entities": "4.5.0"
     }
+  },
+  "overrides": {
+    "brace-expansion@<2": "^2.0.2",
+    "brace-expansion@>=2 <3": "^2.0.2",
+    "brace-expansion@>=3 <4": "^3.0.1",
+    "brace-expansion@>=4 <5": "^4.0.1",
+    "brace-expansion@>=5": "^5.0.8",
+    "fast-uri": "^4.1.1"
   }
 }

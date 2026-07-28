@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      _stg_ddd: {
+        Row: {
+          city_slug: string | null
+          ddd: string | null
+          uf: string | null
+        }
+        Insert: {
+          city_slug?: string | null
+          ddd?: string | null
+          uf?: string | null
+        }
+        Update: {
+          city_slug?: string | null
+          ddd?: string | null
+          uf?: string | null
+        }
+        Relationships: []
+      }
       _stg_escolas: {
         Row: {
           address: string | null
@@ -1666,6 +1684,7 @@ export type Database = {
         Args: { _action: string; _report_id: string }
         Returns: undefined
       }
+      backfill_company_ddd: { Args: never; Returns: Json }
       company_promotion_eligibility: {
         Args: { _company_id: string }
         Returns: {

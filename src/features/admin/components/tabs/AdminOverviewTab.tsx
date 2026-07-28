@@ -171,15 +171,30 @@ export function AdminOverviewTab() {
   const totalViews = events.filter((e) => e.event_type === "view").length;
   const totalClicks = events.filter((e) => e.event_type !== "view").length;
 
+  const fmt = (n: number | undefined) =>
+    n === undefined ? "—" : n.toLocaleString("pt-BR");
+
   const kpis = [
-    { label: "Empresas ativas", value: stats?.companiesApproved ?? "—" },
-    { label: "Empresas pendentes", value: stats?.companiesPending ?? "—" },
-    { label: "Reivindicações", value: stats?.claimsPending ?? "—" },
-    { label: "Comentários p/ moderar", value: stats?.reviewsPending ?? "—" },
-    { label: "Denúncias abertas", value: stats?.reportsPending ?? "—" },
-    { label: "Usuários", value: stats?.users ?? "—" },
-    { label: "Visualizações (30d)", value: totalViews },
-    { label: "Cliques (30d)", value: totalClicks },
+    { label: "Empresas (total)", value: fmt(stats?.companiesTotal) },
+    { label: "Empresas ativas", value: fmt(stats?.companiesApproved) },
+    { label: "Empresas pendentes", value: fmt(stats?.companiesPending) },
+    { label: "Empresas rejeitadas", value: fmt(stats?.companiesRejected) },
+    { label: "Reivindicações pendentes", value: fmt(stats?.claimsPending) },
+    { label: "Pedidos de remoção", value: fmt(stats?.removalsPending) },
+    { label: "Avaliações (total)", value: fmt(stats?.reviewsTotal) },
+    { label: "Avaliações p/ moderar", value: fmt(stats?.reviewsPending) },
+    { label: "Denúncias abertas", value: fmt(stats?.reportsPending) },
+    { label: "Mensagens de contato", value: fmt(stats?.contactMessagesTotal) },
+    { label: "Contato pendente", value: fmt(stats?.contactMessagesPending) },
+    { label: "Usuários", value: fmt(stats?.users) },
+    { label: "Posts do blog", value: fmt(stats?.blogPostsTotal) },
+    { label: "Posts publicados", value: fmt(stats?.blogPostsPublished) },
+    { label: "Páginas do site", value: fmt(stats?.sitePagesTotal) },
+    { label: "Cidades cadastradas", value: fmt(stats?.cities) },
+    { label: "Bairros cadastrados", value: fmt(stats?.neighborhoods) },
+    { label: "Categorias", value: fmt(stats?.categories) },
+    { label: "Visualizações (30d)", value: totalViews.toLocaleString("pt-BR") },
+    { label: "Cliques (30d)", value: totalClicks.toLocaleString("pt-BR") },
   ];
 
   return (

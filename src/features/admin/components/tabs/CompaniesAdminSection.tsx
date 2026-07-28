@@ -3,7 +3,7 @@ import { AllCompaniesTab } from "./AllCompaniesTab";
 import { PendingCompaniesTab } from "./PendingCompaniesTab";
 import { FlaggedCompaniesTab } from "./FlaggedCompaniesTab";
 import { DuplicatesTab } from "./DuplicatesTab";
-import { ImportCompaniesTab } from "./ImportCompaniesTab";
+import { ImportPublicTab } from "./ImportPublicTab";
 
 export function CompaniesAdminSection() {
   return (
@@ -19,7 +19,7 @@ export function CompaniesAdminSection() {
       <TabsContent value="pendentes"><PendingCompaniesTab /></TabsContent>
       <TabsContent value="sinalizadas"><FlaggedCompaniesTab /></TabsContent>
       <TabsContent value="duplicadas"><DuplicatesTab /></TabsContent>
-      <TabsContent value="importar"><ImportCompaniesTab /></TabsContent>
+      <TabsContent value="importar"><ImportPublicTab /></TabsContent>
     </Tabs>
   );
 }

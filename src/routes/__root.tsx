@@ -206,6 +206,10 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const loaderData = Route.useLoaderData();
+  const adsenseBody = loaderData?.globals?.adsense_enabled
+    ? loaderData?.globals?.adsense_body_snippet ?? null
+    : null;
 
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange((event) => {

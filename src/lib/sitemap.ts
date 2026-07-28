@@ -107,24 +107,26 @@ export async function getSitemapCounts() {
       .from("neighborhoods")
       .select("id", { count: "estimated", head: true })
       .eq("is_active", true),
-    sb
-      .from("cities")
-      .select("slug, id, noindex")
-      .eq("is_active", true),
+    fetchAll<{ id: string; slug: string | null; noindex: boolean | null }>(
+      (from, to) =>
+        sb
+          .from("cities")
+          .select("id, slug, noindex")
+          .eq("is_active", true)
+          .order("id", { ascending: true })
+          .range(from, to),
+    ),
   ]);
 
   const activeSlugsById = new Map<string, string>();
-  for (const c of (activeCities.data ?? []) as Array<{
-    id: string;
-    slug: string | null;
-    noindex: boolean | null;
-  }>) {
+  for (const c of activeCities) {
     if (c.slug && !c.noindex) activeSlugsById.set(c.id, c.slug);
   }
 
   return {
     companyCount: companiesHead.count ?? 0,
     neighborhoodCount: hoodsHead.count ?? 0,
+    cityCount: activeSlugsById.size,
     activeSlugsById,
   };
 }

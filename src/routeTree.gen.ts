@@ -39,6 +39,7 @@ import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe
 import { Route as EmpresaIdRouteImport } from './routes/empresa.$id'
 import { Route as EventosIdRouteImport } from './routes/eventos.$id'
 import { Route as PreviewTokenRouteImport } from './routes/preview.$token'
+import { Route as SitemapCitiesPageRouteImport } from './routes/sitemap-cities/$page'
 import { Route as SitemapCompaniesPageRouteImport } from './routes/sitemap-companies/$page'
 import { Route as SitemapNeighborhoodsPageRouteImport } from './routes/sitemap-neighborhoods/$page'
 import { Route as SuporteRedefinir2faRouteImport } from './routes/suporte.redefinir-2fa'
@@ -219,6 +220,11 @@ const EventosIdRoute = EventosIdRouteImport.update({
 const PreviewTokenRoute = PreviewTokenRouteImport.update({
   id: '/preview/$token',
   path: '/preview/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapCitiesPageRoute = SitemapCitiesPageRouteImport.update({
+  id: '/sitemap-cities/$page',
+  path: '/sitemap-cities/$page',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapCompaniesPageRoute = SitemapCompaniesPageRouteImport.update({
@@ -418,6 +424,7 @@ export interface FileRoutesByFullPath {
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
   '/preview/$token': typeof PreviewTokenRoute
+  '/sitemap-cities/$page': typeof SitemapCitiesPageRoute
   '/sitemap-companies/$page': typeof SitemapCompaniesPageRoute
   '/sitemap-neighborhoods/$page': typeof SitemapNeighborhoodsPageRoute
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
@@ -476,6 +483,7 @@ export interface FileRoutesByTo {
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
   '/preview/$token': typeof PreviewTokenRoute
+  '/sitemap-cities/$page': typeof SitemapCitiesPageRoute
   '/sitemap-companies/$page': typeof SitemapCompaniesPageRoute
   '/sitemap-neighborhoods/$page': typeof SitemapNeighborhoodsPageRoute
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
@@ -539,6 +547,7 @@ export interface FileRoutesById {
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
   '/preview/$token': typeof PreviewTokenRoute
+  '/sitemap-cities/$page': typeof SitemapCitiesPageRoute
   '/sitemap-companies/$page': typeof SitemapCompaniesPageRoute
   '/sitemap-neighborhoods/$page': typeof SitemapNeighborhoodsPageRoute
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
@@ -602,6 +611,7 @@ export interface FileRouteTypes {
     | '/empresa/$id'
     | '/eventos/$id'
     | '/preview/$token'
+    | '/sitemap-cities/$page'
     | '/sitemap-companies/$page'
     | '/sitemap-neighborhoods/$page'
     | '/suporte/redefinir-2fa'
@@ -660,6 +670,7 @@ export interface FileRouteTypes {
     | '/empresa/$id'
     | '/eventos/$id'
     | '/preview/$token'
+    | '/sitemap-cities/$page'
     | '/sitemap-companies/$page'
     | '/sitemap-neighborhoods/$page'
     | '/suporte/redefinir-2fa'
@@ -722,6 +733,7 @@ export interface FileRouteTypes {
     | '/empresa/$id'
     | '/eventos/$id'
     | '/preview/$token'
+    | '/sitemap-cities/$page'
     | '/sitemap-companies/$page'
     | '/sitemap-neighborhoods/$page'
     | '/suporte/redefinir-2fa'
@@ -776,6 +788,7 @@ export interface RootRouteChildren {
   EmpresaIdRoute: typeof EmpresaIdRoute
   EventosIdRoute: typeof EventosIdRoute
   PreviewTokenRoute: typeof PreviewTokenRoute
+  SitemapCitiesPageRoute: typeof SitemapCitiesPageRoute
   SitemapCompaniesPageRoute: typeof SitemapCompaniesPageRoute
   SitemapNeighborhoodsPageRoute: typeof SitemapNeighborhoodsPageRoute
   SuporteRedefinir2faRoute: typeof SuporteRedefinir2faRoute
@@ -1004,6 +1017,13 @@ declare module '@tanstack/react-router' {
       path: '/preview/$token'
       fullPath: '/preview/$token'
       preLoaderRoute: typeof PreviewTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-cities/$page': {
+      id: '/sitemap-cities/$page'
+      path: '/sitemap-cities/$page'
+      fullPath: '/sitemap-cities/$page'
+      preLoaderRoute: typeof SitemapCitiesPageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap-companies/$page': {
@@ -1330,6 +1350,7 @@ const rootRouteChildren: RootRouteChildren = {
   EmpresaIdRoute: EmpresaIdRoute,
   EventosIdRoute: EventosIdRoute,
   PreviewTokenRoute: PreviewTokenRoute,
+  SitemapCitiesPageRoute: SitemapCitiesPageRoute,
   SitemapCompaniesPageRoute: SitemapCompaniesPageRoute,
   SitemapNeighborhoodsPageRoute: SitemapNeighborhoodsPageRoute,
   SuporteRedefinir2faRoute: SuporteRedefinir2faRoute,

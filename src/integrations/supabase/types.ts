@@ -125,6 +125,24 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_stats_cache: {
+        Row: {
+          key: string
+          updated_at: string
+          value: number
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value?: number
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: number
+        }
+        Relationships: []
+      }
       app_settings: {
         Row: {
           key: string
@@ -1692,8 +1710,13 @@ export type Database = {
         Args: { _source_id: string; _target_id: string }
         Returns: undefined
       }
+      admin_reseed_stats: { Args: never; Returns: undefined }
       admin_resolve_review_report: {
         Args: { _action: string; _report_id: string }
+        Returns: undefined
+      }
+      admin_stats_bump: {
+        Args: { _delta: number; _key: string }
         Returns: undefined
       }
       backfill_company_ddd: { Args: never; Returns: Json }

@@ -42,6 +42,10 @@ function normalize(row: Record<string, unknown> | null): SeoGlobals {
     org_social_urls: socials,
     google_site_verification: (row.google_site_verification as string | null) ?? null,
     bing_site_verification: (row.bing_site_verification as string | null) ?? null,
+    adsense_enabled: Boolean(row.adsense_enabled ?? false),
+    adsense_client_id: (row.adsense_client_id as string | null) ?? null,
+    adsense_head_snippet: (row.adsense_head_snippet as string | null) ?? null,
+    adsense_body_snippet: (row.adsense_body_snippet as string | null) ?? null,
     templates: {
       company: { ...DEFAULT_GLOBALS.templates.company, ...(templates.company ?? {}) },
       city: { ...DEFAULT_GLOBALS.templates.city, ...(templates.city ?? {}) },

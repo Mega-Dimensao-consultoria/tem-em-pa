@@ -20,17 +20,15 @@ export const Route = createFileRoute('/api/public/hooks/retry-email-dlq')({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        // Cron calls this hourly with the Supabase publishable key in `apikey`.
-        // Legacy callers may still use `x-dispatch-secret`; accept either.
-        const providedApiKey = request.headers.get('apikey')
-        const expectedApiKey = process.env.SUPABASE_PUBLISHABLE_KEY
+        // Requires a server-only shared secret. The Supabase publishable key
+        // ships in the client bundle and MUST NOT be accepted here.
         const providedSecret = request.headers.get('x-dispatch-secret')
         const expectedSecret = process.env.PUSH_DISPATCH_SECRET
-        const apiKeyOk = !!expectedApiKey && providedApiKey === expectedApiKey
-        const secretOk = !!expectedSecret && providedSecret === expectedSecret
-        if (!apiKeyOk && !secretOk) {
+        if (!expectedSecret || providedSecret !== expectedSecret) {
           return new Response('Unauthorized', { status: 401 })
         }
+
+
 
 
         const supabase = createClient(

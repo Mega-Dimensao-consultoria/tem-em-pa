@@ -55,16 +55,49 @@ export function useSearchCompanies({ q, cat, sort, userId, enabled, cityId }: Se
           .maybeSingle();
         catId = c?.id ?? null;
       }
-      let query = supabase
-        .from("companies")
-        .select(
-          "id, name, slug, description, city_id, neighborhood_id, lat, lng, hours, logo_url, cover_url, is_featured, status, owner_id, category_id, created_at, categories:category_id(name, slug, icon), cities:city_id(name, slug, state), neighborhoods:neighborhood_id(name, slug)",
-        )
-        .limit(120);
+
+      const cols =
+        "id, name, slug, description, city_id, neighborhood_id, lat, lng, hours, logo_url, cover_url, is_featured, status, owner_id, category_id, created_at, categories:category_id(name, slug, icon), cities:city_id(name, slug, state), neighborhoods:neighborhood_id(name, slug)";
+
+      const trimmedQ = (q ?? "").trim();
+      // Full-text/prefix/trigram search via indexed RPC (fast for popular terms).
+      if (trimmedQ.length >= 2) {
+        const { data: hits, error: rpcErr } = await supabase.rpc(
+          "search_companies_autocomplete",
+          { q: trimmedQ, _city_id: (cityId ?? null) as unknown as string, lim: 120 },
+        );
+        if (rpcErr) throw rpcErr;
+        const ids = ((hits ?? []) as Array<{ id: string }>).map((r) => r.id);
+        if (ids.length === 0) return [];
+        let byIds = supabase.from("companies").select(cols).in("id", ids);
+        if (catId) byIds = byIds.eq("category_id", catId);
+        const { data, error } = await byIds;
+        if (error) throw error;
+        const order = new Map(ids.map((id, i) => [id, i]));
+        const rows = ((data ?? []) as unknown as Array<
+          Omit<SearchedCompany, "city" | "city_slug" | "neighborhood" | "neighborhood_slug" | "state"> & {
+            cities: { name: string | null; slug: string | null; state: string | null } | null;
+            neighborhoods: { name: string | null; slug: string | null } | null;
+          }
+        >)
+          .map((row) => ({
+            ...row,
+            city: row.cities?.name ?? null,
+            city_slug: row.cities?.slug ?? null,
+            state: row.cities?.state ?? null,
+            neighborhood: row.neighborhoods?.name ?? null,
+            neighborhood_slug: row.neighborhoods?.slug ?? null,
+          }))
+          .sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0));
+        if (sort === "name") rows.sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
+        return rows as SearchedCompany[];
+      }
+
+      // No query text: browse mode.
+      let query = supabase.from("companies").select(cols).limit(120);
       if (cityId) query = query.eq("city_id", cityId);
       if (sort === "name") query = query.order("name", { ascending: true });
       else query = query.order("created_at", { ascending: false });
-      if (q) query = query.ilike("name", `%${q}%`);
       if (catId) query = query.eq("category_id", catId);
       const { data, error } = await query;
       if (error) throw error;
@@ -81,7 +114,6 @@ export function useSearchCompanies({ q, cat, sort, userId, enabled, cityId }: Se
         neighborhood: row.neighborhoods?.name ?? null,
         neighborhood_slug: row.neighborhoods?.slug ?? null,
       })) as SearchedCompany[];
-
     },
   });
 }

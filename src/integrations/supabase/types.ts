@@ -14,6 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
+      _stg_escolas: {
+        Row: {
+          address: string | null
+          category_slug: string | null
+          cep: string | null
+          city_name: string | null
+          complement: string | null
+          description: string | null
+          email: string | null
+          external_id: string | null
+          facebook_url: string | null
+          instagram_url: string | null
+          name: string | null
+          neighborhood: string | null
+          number: string | null
+          phone: string | null
+          phone_ddd: string | null
+          state: string | null
+          website: string | null
+          whatsapp: string | null
+        }
+        Insert: {
+          address?: string | null
+          category_slug?: string | null
+          cep?: string | null
+          city_name?: string | null
+          complement?: string | null
+          description?: string | null
+          email?: string | null
+          external_id?: string | null
+          facebook_url?: string | null
+          instagram_url?: string | null
+          name?: string | null
+          neighborhood?: string | null
+          number?: string | null
+          phone?: string | null
+          phone_ddd?: string | null
+          state?: string | null
+          website?: string | null
+          whatsapp?: string | null
+        }
+        Update: {
+          address?: string | null
+          category_slug?: string | null
+          cep?: string | null
+          city_name?: string | null
+          complement?: string | null
+          description?: string | null
+          email?: string | null
+          external_id?: string | null
+          facebook_url?: string | null
+          instagram_url?: string | null
+          name?: string | null
+          neighborhood?: string | null
+          number?: string | null
+          phone?: string | null
+          phone_ddd?: string | null
+          state?: string | null
+          website?: string | null
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
       admin_audit_log: {
         Row: {
           action: string
@@ -1766,6 +1829,7 @@ export type Database = {
         }
         Returns: number
       }
+      process_escolas_import: { Args: never; Returns: Json }
       read_email_batch: {
         Args: { batch_size: number; queue_name: string; vt: number }
         Returns: {

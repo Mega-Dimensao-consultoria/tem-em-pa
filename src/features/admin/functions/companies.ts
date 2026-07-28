@@ -80,18 +80,55 @@ export function usePendingCompanies() {
   });
 }
 
-export function useAllCompanies() {
+export type CompanyPageFilters = {
+  status: string;
+  cityId: string;
+  q: string;
+};
+
+export function useCompaniesPage(
+  filters: CompanyPageFilters,
+  page: number,
+  pageSize: number,
+) {
   return useQuery({
-    queryKey: [...adminKeys.all, "all-companies"] as const,
-    queryFn: async () => {
-      const { data, error } = await supabase
+    queryKey: [
+      ...adminKeys.all,
+      "companies-page",
+      filters.status,
+      filters.cityId,
+      filters.q,
+      page,
+      pageSize,
+    ] as const,
+    queryFn: async (): Promise<{ rows: AdminCompany[]; total: number }> => {
+      const from = (page - 1) * pageSize;
+      const to = from + pageSize - 1;
+      let q = supabase
         .from("companies")
-        .select(ADMIN_SELECT)
+        .select(ADMIN_SELECT, { count: "exact" })
         .order("created_at", { ascending: false })
-        .limit(500);
+        .range(from, to);
+      if (filters.status && filters.status !== "all") {
+        if (filters.status === "pending") {
+          q = q.in("status", ["pending", "claimed_pending"]);
+        } else {
+          q = q.eq("status", filters.status as "approved" | "rejected");
+        }
+      }
+      if (filters.cityId && filters.cityId !== "all") {
+        q = q.eq("city_id", filters.cityId);
+      }
+      const term = filters.q.trim();
+      if (term.length > 0) q = q.ilike("name", `%${term}%`);
+      const { data, error, count } = await q;
       if (error) throw error;
-      return toAdmin((data ?? []) as unknown as RawAdminRow[]);
+      return {
+        rows: toAdmin((data ?? []) as unknown as RawAdminRow[]),
+        total: count ?? 0,
+      };
     },
+    placeholderData: (prev) => prev,
   });
 }
 

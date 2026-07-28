@@ -34,7 +34,8 @@ export function CitiesSeoTab() {
         .select(
           "id, name, slug, state, is_active, seo_title, seo_description, og_image_url, canonical_url, noindex",
         )
-        .order("name");
+        .order("name")
+        .range(0, 19999);
       if (error) throw error;
       return data as CityRow[];
     },

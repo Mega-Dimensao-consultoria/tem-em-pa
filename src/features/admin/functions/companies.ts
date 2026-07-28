@@ -101,39 +101,72 @@ export function useCompaniesPage(
       page,
       pageSize,
     ] as const,
-    queryFn: async (): Promise<{ rows: AdminCompany[]; total: number }> => {
+    queryFn: async (): Promise<{ rows: AdminCompany[]; total: number; totalExact: boolean }> => {
       const from = (page - 1) * pageSize;
       const to = from + pageSize - 1;
-      // "estimated" avoids a full COUNT(*) scan on ~200k rows which times out
-      // (statement_timeout is 8s for authenticated). Planner estimate is instant
-      // and accurate enough for admin pagination on this table.
+
+      const hasStatus = filters.status && filters.status !== "all";
+      const hasCity = filters.cityId && filters.cityId !== "all";
+      const term = filters.q.trim();
+      const hasSearch = term.length > 0;
+      const hasAnyFilter = hasStatus || hasCity || hasSearch;
+
+      // No filter: read exact total from admin_stats_cache (kept in sync by triggers,
+      // instant even at 200k rows). Filtered: exact count would time out — use estimate.
+      let cachedTotal: number | null = null;
+      if (!hasAnyFilter) {
+        const { data: cache } = await supabase
+          .from("admin_stats_cache")
+          .select("value")
+          .eq("key", "companies_total")
+          .maybeSingle();
+        cachedTotal = cache ? Number(cache.value) : null;
+      } else if (hasStatus && !hasCity && !hasSearch) {
+        // Status-only filter also served from cache.
+        const cacheKey =
+          filters.status === "approved" ? "companies_approved"
+          : filters.status === "pending" ? "companies_pending"
+          : filters.status === "rejected" ? "companies_rejected"
+          : null;
+        if (cacheKey) {
+          const { data: cache } = await supabase
+            .from("admin_stats_cache")
+            .select("value")
+            .eq("key", cacheKey)
+            .maybeSingle();
+          cachedTotal = cache ? Number(cache.value) : null;
+        }
+      }
+
+      const useCountHead = cachedTotal === null;
       let q = supabase
         .from("companies")
-        .select(ADMIN_SELECT, { count: "estimated" })
+        .select(ADMIN_SELECT, useCountHead ? { count: "estimated" } : undefined)
         .order("created_at", { ascending: false })
         .range(from, to);
-      if (filters.status && filters.status !== "all") {
+      if (hasStatus) {
         if (filters.status === "pending") {
           q = q.in("status", ["pending", "claimed_pending"]);
         } else {
           q = q.eq("status", filters.status as "approved" | "rejected");
         }
       }
-      if (filters.cityId && filters.cityId !== "all") {
+      if (hasCity) {
         q = q.eq("city_id", filters.cityId);
       }
-      const term = filters.q.trim();
-      if (term.length > 0) q = q.ilike("name", `%${term}%`);
+      if (hasSearch) q = q.ilike("name", `%${term}%`);
       const { data, error, count } = await q;
       if (error) throw error;
       return {
         rows: toAdmin((data ?? []) as unknown as RawAdminRow[]),
-        total: count ?? 0,
+        total: cachedTotal ?? count ?? 0,
+        totalExact: cachedTotal !== null,
       };
     },
     placeholderData: (prev) => prev,
   });
 }
+
 
 export function useFlaggedCompanies() {
   return useQuery({

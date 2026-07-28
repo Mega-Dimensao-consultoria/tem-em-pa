@@ -138,24 +138,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
     };
 
+    const scripts: Array<Record<string, unknown>> = [
+      { children: themeNoFlashScript },
+    ];
+    if (g.adsense_enabled && g.adsense_client_id) {
+      scripts.push({
+        async: true,
+        src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(g.adsense_client_id)}`,
+        crossOrigin: "anonymous",
+      });
+    }
+    if (g.adsense_enabled && g.adsense_head_snippet?.trim()) {
+      scripts.push({ children: g.adsense_head_snippet });
+    }
+    scripts.push(
+      { type: "application/ld+json", children: JSON.stringify(orgLd) },
+      { type: "application/ld+json", children: JSON.stringify(websiteLd) },
+    );
+
     return {
       meta,
-      scripts: [
-        { children: themeNoFlashScript },
-        {
-          async: true,
-          src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2966465320218096",
-          crossOrigin: "anonymous",
-        },
-        {
-          type: "application/ld+json",
-          children: JSON.stringify(orgLd),
-        },
-        {
-          type: "application/ld+json",
-          children: JSON.stringify(websiteLd),
-        },
-      ],
+      scripts,
       links: [
         { rel: "stylesheet", href: appCss },
         { rel: "icon", type: "image/png", href: "/favicon.png" },

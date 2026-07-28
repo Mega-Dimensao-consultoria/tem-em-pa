@@ -33,6 +33,7 @@ export function SeoTab() {
       <TabsList>
         <TabsTrigger value="globals">Padrões globais</TabsTrigger>
         <TabsTrigger value="templates">Templates dinâmicos</TabsTrigger>
+        <TabsTrigger value="adsense">AdSense</TabsTrigger>
         <TabsTrigger value="cidades">Cidades</TabsTrigger>
       </TabsList>
       <TabsContent value="globals" className="mt-4">
@@ -41,10 +42,120 @@ export function SeoTab() {
       <TabsContent value="templates" className="mt-4">
         <TemplatesEditor initial={data} />
       </TabsContent>
+      <TabsContent value="adsense" className="mt-4">
+        <AdSenseEditor initial={data} />
+      </TabsContent>
       <TabsContent value="cidades" className="mt-4">
         <CitiesSeoTab />
       </TabsContent>
     </Tabs>
+  );
+}
+
+function AdSenseEditor({ initial }: { initial: SeoGlobals }) {
+  const [enabled, setEnabled] = useState(initial.adsense_enabled);
+  const [clientId, setClientId] = useState(initial.adsense_client_id ?? "");
+  const [head, setHead] = useState(initial.adsense_head_snippet ?? "");
+  const [body, setBody] = useState(initial.adsense_body_snippet ?? "");
+  const update = useUpdateSeoGlobals();
+
+  useEffect(() => {
+    setEnabled(initial.adsense_enabled);
+    setClientId(initial.adsense_client_id ?? "");
+    setHead(initial.adsense_head_snippet ?? "");
+    setBody(initial.adsense_body_snippet ?? "");
+  }, [initial]);
+
+  const dirty =
+    enabled !== initial.adsense_enabled ||
+    (clientId || "") !== (initial.adsense_client_id ?? "") ||
+    (head || "") !== (initial.adsense_head_snippet ?? "") ||
+    (body || "") !== (initial.adsense_body_snippet ?? "");
+
+  return (
+    <div className="space-y-6">
+      <section className="rounded-2xl border border-border bg-card p-5 shadow-soft">
+        <h3 className="mb-1 font-display text-lg font-semibold">Google AdSense</h3>
+        <p className="mb-4 text-xs text-muted-foreground">
+          O script oficial do AdSense é injetado em todas as páginas quando habilitado.
+          Basta informar o ID do publisher (formato <code>ca-pub-XXXXXXXXXXXXXXXX</code>).
+        </p>
+
+        <label className="flex cursor-pointer items-center gap-2">
+          <input
+            type="checkbox"
+            checked={enabled}
+            onChange={(e) => setEnabled(e.target.checked)}
+            className="h-4 w-4 rounded border-input"
+          />
+          <span className="text-sm">Habilitar Google AdSense no site</span>
+        </label>
+
+        <div className="mt-4">
+          <Label htmlFor="adsense-client">ID do publisher (client)</Label>
+          <Input
+            id="adsense-client"
+            value={clientId}
+            onChange={(e) => setClientId(e.target.value.trim())}
+            placeholder="ca-pub-2966465320218096"
+          />
+          <p className="mt-1 text-xs text-muted-foreground">
+            Encontrado em <em>AdSense → Sites → Detalhes → Snippet</em>.
+          </p>
+        </div>
+
+        <div className="mt-4">
+          <Label htmlFor="adsense-head">Código adicional no &lt;head&gt; (opcional)</Label>
+          <Textarea
+            id="adsense-head"
+            rows={5}
+            value={head}
+            onChange={(e) => setHead(e.target.value)}
+            placeholder='Ex.: (adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-...", enable_page_level_ads: true });'
+            className="font-mono text-xs"
+          />
+          <p className="mt-1 text-xs text-muted-foreground">
+            Cole apenas o conteúdo <strong>de dentro</strong> da tag <code>&lt;script&gt;</code>.
+          </p>
+        </div>
+
+        <div className="mt-4">
+          <Label htmlFor="adsense-body">HTML adicional (rodapé/body — opcional)</Label>
+          <Textarea
+            id="adsense-body"
+            rows={5}
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            placeholder='Ex.: <ins class="adsbygoogle" ...></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>'
+            className="font-mono text-xs"
+          />
+          <p className="mt-1 text-xs text-muted-foreground">
+            Injetado no final do &lt;body&gt; em todas as páginas. Use para blocos de anúncio globais ou verificação.
+          </p>
+        </div>
+      </section>
+
+      <div className="sticky bottom-0 flex justify-end border-t border-border bg-background/95 py-3 backdrop-blur">
+        <Button
+          onClick={() =>
+            update.mutate({
+              adsense_enabled: enabled,
+              adsense_client_id: clientId || null,
+              adsense_head_snippet: head || null,
+              adsense_body_snippet: body || null,
+            })
+          }
+          disabled={!dirty || update.isPending}
+        >
+          {update.isPending ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Save className="mr-2 h-4 w-4" />
+          )}
+          Salvar AdSense
+        </Button>
+      </div>
+    </div>
   );
 }
 

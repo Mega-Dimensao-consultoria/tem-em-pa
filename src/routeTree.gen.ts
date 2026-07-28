@@ -18,6 +18,7 @@ import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SitemapMainDotxmlRouteImport } from './routes/sitemap-main[.]xml'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as TermosRouteImport } from './routes/termos'
@@ -38,6 +39,8 @@ import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe
 import { Route as EmpresaIdRouteImport } from './routes/empresa.$id'
 import { Route as EventosIdRouteImport } from './routes/eventos.$id'
 import { Route as PreviewTokenRouteImport } from './routes/preview.$token'
+import { Route as SitemapCompaniesPageRouteImport } from './routes/sitemap-companies/$page'
+import { Route as SitemapNeighborhoodsPageRouteImport } from './routes/sitemap-neighborhoods/$page'
 import { Route as SuporteRedefinir2faRouteImport } from './routes/suporte.redefinir-2fa'
 import { Route as UHandleRouteImport } from './routes/u.$handle'
 import { Route as CitySlugBairroBairroSlugRouteImport } from './routes/$citySlug.bairro.$bairroSlug'
@@ -109,6 +112,11 @@ const PrivacidadeRoute = PrivacidadeRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapMainDotxmlRoute = SitemapMainDotxmlRouteImport.update({
+  id: '/sitemap-main.xml',
+  path: '/sitemap-main.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -213,6 +221,17 @@ const PreviewTokenRoute = PreviewTokenRouteImport.update({
   path: '/preview/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapCompaniesPageRoute = SitemapCompaniesPageRouteImport.update({
+  id: '/sitemap-companies/$page',
+  path: '/sitemap-companies/$page',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapNeighborhoodsPageRoute =
+  SitemapNeighborhoodsPageRouteImport.update({
+    id: '/sitemap-neighborhoods/$page',
+    path: '/sitemap-neighborhoods/$page',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const SuporteRedefinir2faRoute = SuporteRedefinir2faRouteImport.update({
   id: '/suporte/redefinir-2fa',
   path: '/suporte/redefinir-2fa',
@@ -380,6 +399,7 @@ export interface FileRoutesByFullPath {
   '/contato': typeof ContatoRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap-main.xml': typeof SitemapMainDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
@@ -398,6 +418,8 @@ export interface FileRoutesByFullPath {
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
   '/preview/$token': typeof PreviewTokenRoute
+  '/sitemap-companies/$page': typeof SitemapCompaniesPageRoute
+  '/sitemap-neighborhoods/$page': typeof SitemapNeighborhoodsPageRoute
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/u/$handle': typeof UHandleRoute
   '/$citySlug/': typeof CitySlugIndexRoute
@@ -436,6 +458,7 @@ export interface FileRoutesByTo {
   '/contato': typeof ContatoRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap-main.xml': typeof SitemapMainDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
@@ -453,6 +476,8 @@ export interface FileRoutesByTo {
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
   '/preview/$token': typeof PreviewTokenRoute
+  '/sitemap-companies/$page': typeof SitemapCompaniesPageRoute
+  '/sitemap-neighborhoods/$page': typeof SitemapNeighborhoodsPageRoute
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/u/$handle': typeof UHandleRoute
   '/$citySlug': typeof CitySlugIndexRoute
@@ -495,6 +520,7 @@ export interface FileRoutesById {
   '/contato': typeof ContatoRoute
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap-main.xml': typeof SitemapMainDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
@@ -513,6 +539,8 @@ export interface FileRoutesById {
   '/empresa/$id': typeof EmpresaIdRoute
   '/eventos/$id': typeof EventosIdRoute
   '/preview/$token': typeof PreviewTokenRoute
+  '/sitemap-companies/$page': typeof SitemapCompaniesPageRoute
+  '/sitemap-neighborhoods/$page': typeof SitemapNeighborhoodsPageRoute
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/u/$handle': typeof UHandleRoute
   '/$citySlug/': typeof CitySlugIndexRoute
@@ -555,6 +583,7 @@ export interface FileRouteTypes {
     | '/contato'
     | '/privacidade'
     | '/reset-password'
+    | '/sitemap-main.xml'
     | '/sitemap.xml'
     | '/sobre'
     | '/termos'
@@ -573,6 +602,8 @@ export interface FileRouteTypes {
     | '/empresa/$id'
     | '/eventos/$id'
     | '/preview/$token'
+    | '/sitemap-companies/$page'
+    | '/sitemap-neighborhoods/$page'
     | '/suporte/redefinir-2fa'
     | '/u/$handle'
     | '/$citySlug/'
@@ -611,6 +642,7 @@ export interface FileRouteTypes {
     | '/contato'
     | '/privacidade'
     | '/reset-password'
+    | '/sitemap-main.xml'
     | '/sitemap.xml'
     | '/sobre'
     | '/termos'
@@ -628,6 +660,8 @@ export interface FileRouteTypes {
     | '/empresa/$id'
     | '/eventos/$id'
     | '/preview/$token'
+    | '/sitemap-companies/$page'
+    | '/sitemap-neighborhoods/$page'
     | '/suporte/redefinir-2fa'
     | '/u/$handle'
     | '/$citySlug'
@@ -669,6 +703,7 @@ export interface FileRouteTypes {
     | '/contato'
     | '/privacidade'
     | '/reset-password'
+    | '/sitemap-main.xml'
     | '/sitemap.xml'
     | '/sobre'
     | '/termos'
@@ -687,6 +722,8 @@ export interface FileRouteTypes {
     | '/empresa/$id'
     | '/eventos/$id'
     | '/preview/$token'
+    | '/sitemap-companies/$page'
+    | '/sitemap-neighborhoods/$page'
     | '/suporte/redefinir-2fa'
     | '/u/$handle'
     | '/$citySlug/'
@@ -729,6 +766,7 @@ export interface RootRouteChildren {
   ContatoRoute: typeof ContatoRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SitemapMainDotxmlRoute: typeof SitemapMainDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SobreRoute: typeof SobreRoute
   TermosRoute: typeof TermosRoute
@@ -738,6 +776,8 @@ export interface RootRouteChildren {
   EmpresaIdRoute: typeof EmpresaIdRoute
   EventosIdRoute: typeof EventosIdRoute
   PreviewTokenRoute: typeof PreviewTokenRoute
+  SitemapCompaniesPageRoute: typeof SitemapCompaniesPageRoute
+  SitemapNeighborhoodsPageRoute: typeof SitemapNeighborhoodsPageRoute
   SuporteRedefinir2faRoute: typeof SuporteRedefinir2faRoute
   UHandleRoute: typeof UHandleRoute
   ApiPublicContactSubmitRoute: typeof ApiPublicContactSubmitRoute
@@ -817,6 +857,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-main.xml': {
+      id: '/sitemap-main.xml'
+      path: '/sitemap-main.xml'
+      fullPath: '/sitemap-main.xml'
+      preLoaderRoute: typeof SitemapMainDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -957,6 +1004,20 @@ declare module '@tanstack/react-router' {
       path: '/preview/$token'
       fullPath: '/preview/$token'
       preLoaderRoute: typeof PreviewTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-companies/$page': {
+      id: '/sitemap-companies/$page'
+      path: '/sitemap-companies/$page'
+      fullPath: '/sitemap-companies/$page'
+      preLoaderRoute: typeof SitemapCompaniesPageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-neighborhoods/$page': {
+      id: '/sitemap-neighborhoods/$page'
+      path: '/sitemap-neighborhoods/$page'
+      fullPath: '/sitemap-neighborhoods/$page'
+      preLoaderRoute: typeof SitemapNeighborhoodsPageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/suporte/redefinir-2fa': {
@@ -1259,6 +1320,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContatoRoute: ContatoRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SitemapMainDotxmlRoute: SitemapMainDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SobreRoute: SobreRoute,
   TermosRoute: TermosRoute,
@@ -1268,6 +1330,8 @@ const rootRouteChildren: RootRouteChildren = {
   EmpresaIdRoute: EmpresaIdRoute,
   EventosIdRoute: EventosIdRoute,
   PreviewTokenRoute: PreviewTokenRoute,
+  SitemapCompaniesPageRoute: SitemapCompaniesPageRoute,
+  SitemapNeighborhoodsPageRoute: SitemapNeighborhoodsPageRoute,
   SuporteRedefinir2faRoute: SuporteRedefinir2faRoute,
   UHandleRoute: UHandleRoute,
   ApiPublicContactSubmitRoute: ApiPublicContactSubmitRoute,

@@ -1,11 +1,13 @@
 import { Facebook, Globe, Instagram, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { trackEvent } from "@/lib/track";
+import { formatCompanyPhone, onlyDigits } from "@/lib/masks";
 
 type ClickEvent = "whatsapp_click" | "phone_click" | "website_click" | "maps_click";
 
 type Company = {
   id: string;
   phone?: string | null;
+  phone_ddd?: string | null;
   whatsapp?: string | null;
   email?: string | null;
   website?: string | null;
@@ -22,6 +24,8 @@ export function CompanyContactCard({
   fullAddress: string;
   isPending: boolean;
 }) {
+  const displayPhone = formatCompanyPhone(company.phone, company.phone_ddd);
+  const phoneHref = onlyDigits(displayPhone);
   const track = (type: ClickEvent) => {
     if (!isPending) trackEvent(company.id, type);
   };
@@ -35,15 +39,15 @@ export function CompanyContactCard({
             <span>{fullAddress}</span>
           </li>
         ) : null}
-        {company.phone ? (
+        {displayPhone ? (
           <li className="flex items-center gap-2">
             <Phone className="h-4 w-4 text-primary" />
             <a
-              href={`tel:${company.phone}`}
+              href={`tel:+55${phoneHref}`}
               onClick={() => track("phone_click")}
               className="hover:underline"
             >
-              {company.phone}
+              {displayPhone}
             </a>
           </li>
         ) : null}

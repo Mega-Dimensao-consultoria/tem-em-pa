@@ -24,6 +24,25 @@ export function maskPhone(v: string): string {
   return `(${ddd}) ${rest.slice(0, 5)}-${rest.slice(5)}`;
 }
 
+/**
+ * Exibe telefone de empresa sempre com DDD quando ele foi salvo separado.
+ * Aceita telefone já formatado, com DDD embutido, ou apenas 8/9 dígitos.
+ */
+export function formatCompanyPhone(phone?: string | null, phoneDdd?: string | null): string {
+  const phoneDigits = onlyDigits(phone ?? "");
+  if (!phoneDigits) return "";
+  if (phoneDigits.length >= 10) return maskPhone(phoneDigits);
+
+  const ddd = onlyDigits(phoneDdd ?? "").slice(0, 2);
+  if (ddd.length === 2 && (phoneDigits.length === 8 || phoneDigits.length === 9)) {
+    return maskPhone(`${ddd}${phoneDigits}`);
+  }
+
+  if (phoneDigits.length === 8) return `${phoneDigits.slice(0, 4)}-${phoneDigits.slice(4)}`;
+  if (phoneDigits.length === 9) return `${phoneDigits.slice(0, 5)}-${phoneDigits.slice(5)}`;
+  return phone ?? "";
+}
+
 
 /** UF maiúscula, máx 2 letras */
 export function maskUf(v: string): string {

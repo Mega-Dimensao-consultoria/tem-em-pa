@@ -2,7 +2,6 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import {
   CITIES_PER_SITEMAP_PAGE,
-  fetchAll,
   renderSitemap,
   sitemapClient,
   type SitemapEntry,
@@ -23,41 +22,37 @@ export const Route = createFileRoute("/sitemap-cities/$page")({
         const sb = sitemapClient();
         const offset = (pageNum - 1) * CITIES_PER_SITEMAP_PAGE;
 
-        type CityRow = { slug: string | null };
-        const cities = await fetchAll<CityRow>(async (from, to) => {
-          const absFrom = offset + from;
-          const absTo = offset + to;
-          if (absFrom >= offset + CITIES_PER_SITEMAP_PAGE) {
-            return { data: [], error: null };
-          }
-          const cappedTo = Math.min(absTo, offset + CITIES_PER_SITEMAP_PAGE - 1);
-          const res = await sb
-            .from("cities")
-            .select("slug")
-            .eq("is_active", true)
+        const [citiesRes, catsRes] = await Promise.all([
+          (
+            sb.rpc as unknown as (
+              fn: string,
+              args: Record<string, unknown>,
+            ) => Promise<{
+              data: Array<{ slug: string }> | null;
+              error: { message: string } | null;
+            }>
+          )("sitemap_cities_page", { _offset: offset, _limit: CITIES_PER_SITEMAP_PAGE }),
+          sb
+            .from("categories")
+            .select("slug, noindex")
             .or("noindex.is.null,noindex.eq.false")
-            .order("id", { ascending: true })
-            .range(absFrom, cappedTo);
-          return { data: res.data as CityRow[] | null, error: res.error };
-        });
+            .order("sort_order", { ascending: true }),
+        ]);
+        if (citiesRes.error) throw new Error(citiesRes.error.message);
 
-        const { data: cats } = await sb
-          .from("categories")
-          .select("slug, noindex")
-          .or("noindex.is.null,noindex.eq.false")
-          .order("sort_order", { ascending: true });
+        const cats = ((catsRes.data ?? []) as Array<{ slug: string | null }>)
+          .map((c) => c.slug)
+          .filter((s): s is string => !!s);
 
         const entries: SitemapEntry[] = [];
-        for (const c of cities) {
+        for (const c of citiesRes.data ?? []) {
           const s = c.slug;
-          if (!s) continue;
           entries.push({ path: `/${s}`, changefreq: "daily", priority: "0.9" });
           entries.push({ path: `/${s}/buscar`, changefreq: "daily", priority: "0.8" });
           entries.push({ path: `/${s}/eventos`, changefreq: "daily", priority: "0.7" });
-          for (const cat of (cats ?? []) as Array<{ slug: string | null }>) {
-            if (!cat.slug) continue;
+          for (const cat of cats) {
             entries.push({
-              path: `/${s}/categoria/${cat.slug}`,
+              path: `/${s}/categoria/${cat}`,
               changefreq: "weekly",
               priority: "0.7",
             });

@@ -1875,24 +1875,15 @@ export type Database = {
       }
       sitemap_cities_page: {
         Args: { _limit: number; _offset: number }
-        Returns: {
-          slug: string
-        }[]
+        Returns: Json
       }
       sitemap_companies_page: {
         Args: { _limit: number; _offset: number }
-        Returns: {
-          city_slug: string
-          slug: string
-          updated_at: string
-        }[]
+        Returns: Json
       }
       sitemap_neighborhoods_page: {
         Args: { _limit: number; _offset: number }
-        Returns: {
-          city_slug: string
-          slug: string
-        }[]
+        Returns: Json
       }
       slugify: { Args: { input: string }; Returns: string }
     }

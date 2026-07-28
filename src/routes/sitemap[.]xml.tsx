@@ -1,198 +1,40 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/integrations/supabase/types";
+import {
+  SITEMAP_PAGE_SIZE,
+  getSitemapCounts,
+  renderSitemapIndex,
+} from "@/lib/sitemap";
 
-const BASE_URL = "https://www.temnaminhacidade.com.br";
-
-interface SitemapEntry {
-  path: string;
-  lastmod?: string;
-  changefreq?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
-  priority?: string;
-}
-
+/**
+ * Sitemap index — enumera todos os sub-sitemaps do site.
+ * O Google limita cada sitemap a 50k URLs; usamos 40k por segurança.
+ */
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const sb = createClient<Database>(
-          process.env.SUPABASE_URL!,
-          process.env.SUPABASE_PUBLISHABLE_KEY!,
-          { auth: { storage: undefined, persistSession: false, autoRefreshToken: false } },
+        const { companyCount, neighborhoodCount } = await getSitemapCounts();
+
+        const children: { path: string }[] = [{ path: "/sitemap-main.xml" }];
+
+        const companyPages = Math.max(
+          1,
+          Math.ceil(companyCount / SITEMAP_PAGE_SIZE),
         );
+        for (let i = 1; i <= companyPages; i += 1) {
+          children.push({ path: `/sitemap-companies/${i}.xml` });
+        }
 
-        const entries: SitemapEntry[] = [
-          { path: "/", changefreq: "daily", priority: "1.0" },
-          { path: "/buscar", changefreq: "daily", priority: "0.8" },
-          { path: "/blog", changefreq: "daily", priority: "0.8" },
-          { path: "/sobre", changefreq: "monthly", priority: "0.5" },
-          { path: "/contato", changefreq: "monthly", priority: "0.5" },
-          { path: "/termos", changefreq: "yearly", priority: "0.3" },
-          { path: "/privacidade", changefreq: "yearly", priority: "0.3" },
-        ];
-
-        const nowIso = new Date().toISOString();
-        const [cats, companies, events, hoods, blogPosts, blogCats, cities] = await Promise.all([
-          sb
-            .from("categories")
-            .select("slug, noindex")
-            .or("noindex.is.null,noindex.eq.false"),
-          sb
-            .from("companies")
-            .select("id, slug, updated_at, noindex, cities:city_id(slug)")
-            .eq("status", "approved")
-            .or("noindex.is.null,noindex.eq.false")
-            .limit(5000),
-          sb
-            .from("city_events")
-            .select("id, updated_at, starts_at, noindex, cities:city_id(slug)")
-            .eq("is_active", true)
-            .or("noindex.is.null,noindex.eq.false")
-            .gte("starts_at", nowIso)
-            .limit(2000),
-          sb
-            .from("neighborhoods")
-            .select("slug, cities:city_id(slug)")
-            .eq("is_active", true)
-            .limit(5000),
-          sb
-            .from("blog_posts")
-            .select("slug, updated_at, noindex")
-            .eq("status", "published")
-            .eq("noindex", false)
-            .lte("published_at", nowIso)
-            .limit(5000),
-          sb
-            .from("blog_categories")
-            .select("slug, noindex")
-            .eq("is_active", true)
-            .or("noindex.is.null,noindex.eq.false"),
-          sb
-            .from("cities")
-            .select("slug, noindex")
-            .eq("is_active", true)
-            .or("noindex.is.null,noindex.eq.false"),
-        ]);
-
-        const indexableCitySlugs = new Set<string>(
-          ((cities.data ?? []) as Array<{ slug: string | null }>)
-            .map((c) => c.slug)
-            .filter((s): s is string => !!s),
+        const hoodPages = Math.max(
+          1,
+          Math.ceil(neighborhoodCount / SITEMAP_PAGE_SIZE),
         );
-
-        // Indexação condicional: só listar cidades/estados que possuem pelo menos
-        // uma empresa aprovada. Cidades vazias ficam fora do sitemap para evitar
-        // páginas sem conteúdo nos motores de busca.
-        const citySlugsWithCompanies = new Set<string>(
-          ((companies.data ?? []) as Array<{ cities: { slug: string | null } | null }>)
-            .map((c) => c.cities?.slug)
-            .filter((s): s is string => !!s && indexableCitySlugs.has(s)),
-        );
-
-        for (const s of citySlugsWithCompanies) {
-          entries.push({ path: `/${s}`, changefreq: "daily", priority: "0.9" });
-          entries.push({ path: `/${s}/buscar`, changefreq: "daily", priority: "0.8" });
-          entries.push({ path: `/${s}/eventos`, changefreq: "daily", priority: "0.7" });
-          for (const cat of cats.data ?? []) {
-            entries.push({
-              path: `/${s}/categoria/${cat.slug}`,
-              changefreq: "weekly",
-              priority: "0.7",
-            });
-          }
+        for (let i = 1; i <= hoodPages; i += 1) {
+          children.push({ path: `/sitemap-neighborhoods/${i}.xml` });
         }
 
-        for (const row of (companies.data ?? []) as Array<{
-          id: string;
-          slug: string | null;
-          updated_at: string | null;
-          cities: { slug: string | null } | null;
-        }>) {
-          const citySlug = row.cities?.slug;
-          if (!citySlug || !row.slug) continue;
-          entries.push({
-            path: `/${citySlug}/empresa/${row.slug}`,
-            lastmod: row.updated_at ? new Date(row.updated_at).toISOString().slice(0, 10) : undefined,
-            changefreq: "weekly",
-            priority: "0.7",
-          });
-        }
-
-        for (const e of (events.data ?? []) as Array<{
-          id: string;
-          updated_at: string | null;
-        }>) {
-          entries.push({
-            path: `/eventos/${e.id}`,
-            lastmod: e.updated_at ? new Date(e.updated_at).toISOString().slice(0, 10) : undefined,
-            changefreq: "daily",
-            priority: "0.6",
-          });
-        }
-
-        const seen = new Set<string>();
-        for (const row of (hoods.data ?? []) as Array<{
-          slug: string | null;
-          cities: { slug: string | null } | null;
-        }>) {
-          const s = row.cities?.slug;
-          const b = row.slug;
-          if (!s || !b) continue;
-          if (!citySlugsWithCompanies.has(s)) continue;
-          const key = `${s}/${b}`;
-          if (seen.has(key)) continue;
-          seen.add(key);
-          entries.push({ path: `/${s}/bairro/${b}`, changefreq: "weekly", priority: "0.6" });
-        }
-
-        // Blog: categorias ativas + cada post publicado.
-        for (const row of (blogCats.data ?? []) as Array<{ slug: string | null }>) {
-          if (!row.slug) continue;
-          entries.push({
-            path: `/blog/categoria/${row.slug}`,
-            changefreq: "weekly",
-            priority: "0.6",
-          });
-        }
-        for (const row of (blogPosts.data ?? []) as Array<{
-          slug: string | null;
-          updated_at: string | null;
-        }>) {
-          if (!row.slug) continue;
-          entries.push({
-            path: `/blog/${row.slug}`,
-            lastmod: row.updated_at ? new Date(row.updated_at).toISOString().slice(0, 10) : undefined,
-            changefreq: "monthly",
-            priority: "0.7",
-          });
-        }
-
-
-        const urls = entries.map((e) =>
-          [
-            `  <url>`,
-            `    <loc>${BASE_URL}${e.path}</loc>`,
-            e.lastmod ? `    <lastmod>${e.lastmod}</lastmod>` : null,
-            e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
-            e.priority ? `    <priority>${e.priority}</priority>` : null,
-            `  </url>`,
-          ].filter(Boolean).join("\n"),
-        );
-
-        const xml = [
-          `<?xml version="1.0" encoding="UTF-8"?>`,
-          `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
-          ...urls,
-          `</urlset>`,
-        ].join("\n");
-
-        return new Response(xml, {
-          headers: {
-            "Content-Type": "application/xml; charset=utf-8",
-            "Cache-Control": "public, max-age=3600",
-          },
-        });
+        return renderSitemapIndex(children);
       },
     },
   },

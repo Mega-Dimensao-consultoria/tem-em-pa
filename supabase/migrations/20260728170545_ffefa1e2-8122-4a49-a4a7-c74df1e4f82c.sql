@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS companies_created_at_desc_idx ON public.companies (created_at DESC);

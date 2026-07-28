@@ -9,107 +9,67 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TermosRouteImport } from './routes/termos'
-import { Route as SobreRouteImport } from './routes/sobre'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as PrivacidadeRouteImport } from './routes/privacidade'
-import { Route as ContatoRouteImport } from './routes/contato'
-import { Route as BuscarRouteImport } from './routes/buscar'
-import { Route as BlogRouteImport } from './routes/blog'
-import { Route as AuthRouteImport } from './routes/auth'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as CitySlugRouteImport } from './routes/$citySlug'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BlogRouteImport } from './routes/blog'
+import { Route as BuscarRouteImport } from './routes/buscar'
+import { Route as ContatoRouteImport } from './routes/contato'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SobreRouteImport } from './routes/sobre'
+import { Route as TermosRouteImport } from './routes/termos'
 import { Route as CitySlugIndexRouteImport } from './routes/$citySlug.index'
-import { Route as UHandleRouteImport } from './routes/u.$handle'
-import { Route as SuporteRedefinir2faRouteImport } from './routes/suporte.redefinir-2fa'
-import { Route as PreviewTokenRouteImport } from './routes/preview.$token'
-import { Route as EventosIdRouteImport } from './routes/eventos.$id'
-import { Route as EmpresaIdRouteImport } from './routes/empresa.$id'
-import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
-import { Route as CheckoutRetornoRouteImport } from './routes/checkout.retorno'
-import { Route as BlogRssDotxmlRouteImport } from './routes/blog.rss[.]xml'
-import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
-import { Route as AuthTwoFactorRouteImport } from './routes/auth_.two-factor'
-import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
-import { Route as AuthenticatedNotificacoesRouteImport } from './routes/_authenticated/notificacoes'
-import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
-import { Route as AuthenticatedCadastrarEmpresaRouteImport } from './routes/_authenticated/cadastrar-empresa'
-import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
-import { Route as CitySlugEventosRouteImport } from './routes/$citySlug.eventos'
 import { Route as CitySlugBuscarRouteImport } from './routes/$citySlug.buscar'
-import { Route as AuthenticatedPainelIndexRouteImport } from './routes/_authenticated/painel.index'
-import { Route as AuthenticatedOwnerIndexRouteImport } from './routes/_authenticated/owner.index'
-import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
-import { Route as BlogCategoriaSlugRouteImport } from './routes/blog.categoria.$slug'
-import { Route as ApiPublicContactSubmitRouteImport } from './routes/api/public/contact-submit'
-import { Route as AuthenticatedPainelSegurancaRouteImport } from './routes/_authenticated/painel.seguranca'
-import { Route as AuthenticatedPainelConfiguracoesRouteImport } from './routes/_authenticated/painel.configuracoes'
-import { Route as AuthenticatedPainelAvaliacoesRouteImport } from './routes/_authenticated/painel.avaliacoes'
-import { Route as CitySlugEmpresaCompSlugRouteImport } from './routes/$citySlug.empresa.$compSlug'
-import { Route as CitySlugCategoriaCatSlugRouteImport } from './routes/$citySlug.categoria.$catSlug'
+import { Route as CitySlugEventosRouteImport } from './routes/$citySlug.eventos'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedCadastrarEmpresaRouteImport } from './routes/_authenticated/cadastrar-empresa'
+import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
+import { Route as AuthenticatedNotificacoesRouteImport } from './routes/_authenticated/notificacoes'
+import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
+import { Route as AuthTwoFactorRouteImport } from './routes/auth_.two-factor'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as BlogRssDotxmlRouteImport } from './routes/blog.rss[.]xml'
+import { Route as CheckoutRetornoRouteImport } from './routes/checkout.retorno'
+import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
+import { Route as EmpresaIdRouteImport } from './routes/empresa.$id'
+import { Route as EventosIdRouteImport } from './routes/eventos.$id'
+import { Route as PreviewTokenRouteImport } from './routes/preview.$token'
+import { Route as SuporteRedefinir2faRouteImport } from './routes/suporte.redefinir-2fa'
+import { Route as UHandleRouteImport } from './routes/u.$handle'
 import { Route as CitySlugBairroBairroSlugRouteImport } from './routes/$citySlug.bairro.$bairroSlug'
-import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
-import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
-import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
-import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
-import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
-import { Route as ApiPublicPushDispatchRouteImport } from './routes/api/public/push.dispatch'
-import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
-import { Route as ApiPublicHooksRetryEmailDlqRouteImport } from './routes/api/public/hooks/retry-email-dlq'
+import { Route as CitySlugCategoriaCatSlugRouteImport } from './routes/$citySlug.categoria.$catSlug'
+import { Route as CitySlugEmpresaCompSlugRouteImport } from './routes/$citySlug.empresa.$compSlug'
+import { Route as AuthenticatedOwnerIndexRouteImport } from './routes/_authenticated/owner.index'
+import { Route as AuthenticatedPainelIndexRouteImport } from './routes/_authenticated/painel.index'
+import { Route as AuthenticatedPainelAvaliacoesRouteImport } from './routes/_authenticated/painel.avaliacoes'
+import { Route as AuthenticatedPainelConfiguracoesRouteImport } from './routes/_authenticated/painel.configuracoes'
+import { Route as AuthenticatedPainelSegurancaRouteImport } from './routes/_authenticated/painel.seguranca'
+import { Route as ApiPublicContactSubmitRouteImport } from './routes/api/public/contact-submit'
+import { Route as BlogCategoriaSlugRouteImport } from './routes/blog.categoria.$slug'
+import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as ApiPublicHooksNotificationEmailRouteImport } from './routes/api/public/hooks/notification-email'
-import { Route as ApiPublicOgEventIdRouteImport } from './routes/api/public/og.event.$id'
-import { Route as AuthenticatedOwnerEmpresaIdProdutosRouteImport } from './routes/_authenticated/owner.empresa.$id.produtos'
-import { Route as AuthenticatedOwnerEmpresaIdEventosRouteImport } from './routes/_authenticated/owner.empresa.$id.eventos'
-import { Route as AuthenticatedOwnerEmpresaIdEditarRouteImport } from './routes/_authenticated/owner.empresa.$id.editar'
-import { Route as AuthenticatedOwnerEmpresaIdDestaqueRouteImport } from './routes/_authenticated/owner.empresa.$id.destaque'
+import { Route as ApiPublicHooksRetryEmailDlqRouteImport } from './routes/api/public/hooks/retry-email-dlq'
+import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
+import { Route as ApiPublicPushDispatchRouteImport } from './routes/api/public/push.dispatch'
+import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
+import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
+import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
+import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
+import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
 import { Route as AuthenticatedOwnerEmpresaIdDashboardRouteImport } from './routes/_authenticated/owner.empresa.$id.dashboard'
+import { Route as AuthenticatedOwnerEmpresaIdDestaqueRouteImport } from './routes/_authenticated/owner.empresa.$id.destaque'
+import { Route as AuthenticatedOwnerEmpresaIdEditarRouteImport } from './routes/_authenticated/owner.empresa.$id.editar'
+import { Route as AuthenticatedOwnerEmpresaIdEventosRouteImport } from './routes/_authenticated/owner.empresa.$id.eventos'
+import { Route as AuthenticatedOwnerEmpresaIdProdutosRouteImport } from './routes/_authenticated/owner.empresa.$id.produtos'
+import { Route as ApiPublicOgEventIdRouteImport } from './routes/api/public/og.event.$id'
 
-const TermosRoute = TermosRouteImport.update({
-  id: '/termos',
-  path: '/termos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SobreRoute = SobreRouteImport.update({
-  id: '/sobre',
-  path: '/sobre',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacidadeRoute = PrivacidadeRouteImport.update({
-  id: '/privacidade',
-  path: '/privacidade',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContatoRoute = ContatoRouteImport.update({
-  id: '/contato',
-  path: '/contato',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BuscarRoute = BuscarRouteImport.update({
-  id: '/buscar',
-  path: '/buscar',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CitySlugRoute = CitySlugRouteImport.update({
@@ -121,85 +81,69 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogIndexRoute = BlogIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => BlogRoute,
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BuscarRoute = BuscarRouteImport.update({
+  id: '/buscar',
+  path: '/buscar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContatoRoute = ContatoRouteImport.update({
+  id: '/contato',
+  path: '/contato',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SobreRoute = SobreRouteImport.update({
+  id: '/sobre',
+  path: '/sobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermosRoute = TermosRouteImport.update({
+  id: '/termos',
+  path: '/termos',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CitySlugIndexRoute = CitySlugIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => CitySlugRoute,
 } as any)
-const UHandleRoute = UHandleRouteImport.update({
-  id: '/u/$handle',
-  path: '/u/$handle',
-  getParentRoute: () => rootRouteImport,
+const CitySlugBuscarRoute = CitySlugBuscarRouteImport.update({
+  id: '/buscar',
+  path: '/buscar',
+  getParentRoute: () => CitySlugRoute,
 } as any)
-const SuporteRedefinir2faRoute = SuporteRedefinir2faRouteImport.update({
-  id: '/suporte/redefinir-2fa',
-  path: '/suporte/redefinir-2fa',
-  getParentRoute: () => rootRouteImport,
+const CitySlugEventosRoute = CitySlugEventosRouteImport.update({
+  id: '/eventos',
+  path: '/eventos',
+  getParentRoute: () => CitySlugRoute,
 } as any)
-const PreviewTokenRoute = PreviewTokenRouteImport.update({
-  id: '/preview/$token',
-  path: '/preview/$token',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EventosIdRoute = EventosIdRouteImport.update({
-  id: '/eventos/$id',
-  path: '/eventos/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EmpresaIdRoute = EmpresaIdRouteImport.update({
-  id: '/empresa/$id',
-  path: '/empresa/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
-  id: '/email/unsubscribe',
-  path: '/email/unsubscribe',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CheckoutRetornoRoute = CheckoutRetornoRouteImport.update({
-  id: '/checkout/retorno',
-  path: '/checkout/retorno',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogRssDotxmlRoute = BlogRssDotxmlRouteImport.update({
-  id: '/rss.xml',
-  path: '/rss.xml',
-  getParentRoute: () => BlogRoute,
-} as any)
-const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => BlogRoute,
-} as any)
-const AuthTwoFactorRoute = AuthTwoFactorRouteImport.update({
-  id: '/auth_/two-factor',
-  path: '/auth/two-factor',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
-  id: '/painel',
-  path: '/painel',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedNotificacoesRoute =
-  AuthenticatedNotificacoesRouteImport.update({
-    id: '/notificacoes',
-    path: '/notificacoes',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedFavoritosRoute = AuthenticatedFavoritosRouteImport.update({
-  id: '/favoritos',
-  path: '/favoritos',
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedCadastrarEmpresaRoute =
@@ -208,57 +152,103 @@ const AuthenticatedCadastrarEmpresaRoute =
     path: '/cadastrar-empresa',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
+const AuthenticatedFavoritosRoute = AuthenticatedFavoritosRouteImport.update({
+  id: '/favoritos',
+  path: '/favoritos',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const CitySlugEventosRoute = CitySlugEventosRouteImport.update({
-  id: '/eventos',
-  path: '/eventos',
-  getParentRoute: () => CitySlugRoute,
-} as any)
-const CitySlugBuscarRoute = CitySlugBuscarRouteImport.update({
-  id: '/buscar',
-  path: '/buscar',
-  getParentRoute: () => CitySlugRoute,
-} as any)
-const AuthenticatedPainelIndexRoute =
-  AuthenticatedPainelIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedPainelRoute,
+const AuthenticatedNotificacoesRoute =
+  AuthenticatedNotificacoesRouteImport.update({
+    id: '/notificacoes',
+    path: '/notificacoes',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthTwoFactorRoute = AuthTwoFactorRouteImport.update({
+  id: '/auth_/two-factor',
+  path: '/auth/two-factor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BlogRoute,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
+const BlogRssDotxmlRoute = BlogRssDotxmlRouteImport.update({
+  id: '/rss.xml',
+  path: '/rss.xml',
+  getParentRoute: () => BlogRoute,
+} as any)
+const CheckoutRetornoRoute = CheckoutRetornoRouteImport.update({
+  id: '/checkout/retorno',
+  path: '/checkout/retorno',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
+  id: '/email/unsubscribe',
+  path: '/email/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmpresaIdRoute = EmpresaIdRouteImport.update({
+  id: '/empresa/$id',
+  path: '/empresa/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventosIdRoute = EventosIdRouteImport.update({
+  id: '/eventos/$id',
+  path: '/eventos/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewTokenRoute = PreviewTokenRouteImport.update({
+  id: '/preview/$token',
+  path: '/preview/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SuporteRedefinir2faRoute = SuporteRedefinir2faRouteImport.update({
+  id: '/suporte/redefinir-2fa',
+  path: '/suporte/redefinir-2fa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UHandleRoute = UHandleRouteImport.update({
+  id: '/u/$handle',
+  path: '/u/$handle',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CitySlugBairroBairroSlugRoute =
+  CitySlugBairroBairroSlugRouteImport.update({
+    id: '/bairro/$bairroSlug',
+    path: '/bairro/$bairroSlug',
+    getParentRoute: () => CitySlugRoute,
+  } as any)
+const CitySlugCategoriaCatSlugRoute =
+  CitySlugCategoriaCatSlugRouteImport.update({
+    id: '/categoria/$catSlug',
+    path: '/categoria/$catSlug',
+    getParentRoute: () => CitySlugRoute,
+  } as any)
+const CitySlugEmpresaCompSlugRoute = CitySlugEmpresaCompSlugRouteImport.update({
+  id: '/empresa/$compSlug',
+  path: '/empresa/$compSlug',
+  getParentRoute: () => CitySlugRoute,
+} as any)
 const AuthenticatedOwnerIndexRoute = AuthenticatedOwnerIndexRouteImport.update({
   id: '/owner/',
   path: '/owner/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
-  id: '/lovable/email/suppression',
-  path: '/lovable/email/suppression',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogCategoriaSlugRoute = BlogCategoriaSlugRouteImport.update({
-  id: '/categoria/$slug',
-  path: '/categoria/$slug',
-  getParentRoute: () => BlogRoute,
-} as any)
-const ApiPublicContactSubmitRoute = ApiPublicContactSubmitRouteImport.update({
-  id: '/api/public/contact-submit',
-  path: '/api/public/contact-submit',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedPainelSegurancaRoute =
-  AuthenticatedPainelSegurancaRouteImport.update({
-    id: '/seguranca',
-    path: '/seguranca',
-    getParentRoute: () => AuthenticatedPainelRoute,
-  } as any)
-const AuthenticatedPainelConfiguracoesRoute =
-  AuthenticatedPainelConfiguracoesRouteImport.update({
-    id: '/configuracoes',
-    path: '/configuracoes',
+const AuthenticatedPainelIndexRoute =
+  AuthenticatedPainelIndexRouteImport.update({
+    id: '/',
+    path: '/',
     getParentRoute: () => AuthenticatedPainelRoute,
   } as any)
 const AuthenticatedPainelAvaliacoesRoute =
@@ -267,60 +257,37 @@ const AuthenticatedPainelAvaliacoesRoute =
     path: '/avaliacoes',
     getParentRoute: () => AuthenticatedPainelRoute,
   } as any)
-const CitySlugEmpresaCompSlugRoute = CitySlugEmpresaCompSlugRouteImport.update({
-  id: '/empresa/$compSlug',
-  path: '/empresa/$compSlug',
-  getParentRoute: () => CitySlugRoute,
-} as any)
-const CitySlugCategoriaCatSlugRoute =
-  CitySlugCategoriaCatSlugRouteImport.update({
-    id: '/categoria/$catSlug',
-    path: '/categoria/$catSlug',
-    getParentRoute: () => CitySlugRoute,
+const AuthenticatedPainelConfiguracoesRoute =
+  AuthenticatedPainelConfiguracoesRouteImport.update({
+    id: '/configuracoes',
+    path: '/configuracoes',
+    getParentRoute: () => AuthenticatedPainelRoute,
   } as any)
-const CitySlugBairroBairroSlugRoute =
-  CitySlugBairroBairroSlugRouteImport.update({
-    id: '/bairro/$bairroSlug',
-    path: '/bairro/$bairroSlug',
-    getParentRoute: () => CitySlugRoute,
+const AuthenticatedPainelSegurancaRoute =
+  AuthenticatedPainelSegurancaRouteImport.update({
+    id: '/seguranca',
+    path: '/seguranca',
+    getParentRoute: () => AuthenticatedPainelRoute,
   } as any)
-const LovableEmailTransactionalSendRoute =
-  LovableEmailTransactionalSendRouteImport.update({
-    id: '/lovable/email/transactional/send',
-    path: '/lovable/email/transactional/send',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const LovableEmailTransactionalPreviewRoute =
-  LovableEmailTransactionalPreviewRouteImport.update({
-    id: '/lovable/email/transactional/preview',
-    path: '/lovable/email/transactional/preview',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const LovableEmailQueueProcessRoute =
-  LovableEmailQueueProcessRouteImport.update({
-    id: '/lovable/email/queue/process',
-    path: '/lovable/email/queue/process',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const LovableEmailAuthWebhookRoute = LovableEmailAuthWebhookRouteImport.update({
-  id: '/lovable/email/auth/webhook',
-  path: '/lovable/email/auth/webhook',
+const ApiPublicContactSubmitRoute = ApiPublicContactSubmitRouteImport.update({
+  id: '/api/public/contact-submit',
+  path: '/api/public/contact-submit',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
-  id: '/lovable/email/auth/preview',
-  path: '/lovable/email/auth/preview',
+const BlogCategoriaSlugRoute = BlogCategoriaSlugRouteImport.update({
+  id: '/categoria/$slug',
+  path: '/categoria/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
+const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
+  id: '/lovable/email/suppression',
+  path: '/lovable/email/suppression',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicPushDispatchRoute = ApiPublicPushDispatchRouteImport.update({
-  id: '/api/public/push/dispatch',
-  path: '/api/public/push/dispatch',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicPaymentsWebhookRoute =
-  ApiPublicPaymentsWebhookRouteImport.update({
-    id: '/api/public/payments/webhook',
-    path: '/api/public/payments/webhook',
+const ApiPublicHooksNotificationEmailRoute =
+  ApiPublicHooksNotificationEmailRouteImport.update({
+    id: '/api/public/hooks/notification-email',
+    path: '/api/public/hooks/notification-email',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ApiPublicHooksRetryEmailDlqRoute =
@@ -329,33 +296,49 @@ const ApiPublicHooksRetryEmailDlqRoute =
     path: '/api/public/hooks/retry-email-dlq',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicHooksNotificationEmailRoute =
-  ApiPublicHooksNotificationEmailRouteImport.update({
-    id: '/api/public/hooks/notification-email',
-    path: '/api/public/hooks/notification-email',
+const ApiPublicPaymentsWebhookRoute =
+  ApiPublicPaymentsWebhookRouteImport.update({
+    id: '/api/public/payments/webhook',
+    path: '/api/public/payments/webhook',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicOgEventIdRoute = ApiPublicOgEventIdRouteImport.update({
-  id: '/api/public/og/event/$id',
-  path: '/api/public/og/event/$id',
+const ApiPublicPushDispatchRoute = ApiPublicPushDispatchRouteImport.update({
+  id: '/api/public/push/dispatch',
+  path: '/api/public/push/dispatch',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedOwnerEmpresaIdProdutosRoute =
-  AuthenticatedOwnerEmpresaIdProdutosRouteImport.update({
-    id: '/owner/empresa/$id/produtos',
-    path: '/owner/empresa/$id/produtos',
-    getParentRoute: () => AuthenticatedRouteRoute,
+const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
+  id: '/lovable/email/auth/preview',
+  path: '/lovable/email/auth/preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LovableEmailAuthWebhookRoute = LovableEmailAuthWebhookRouteImport.update({
+  id: '/lovable/email/auth/webhook',
+  path: '/lovable/email/auth/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LovableEmailQueueProcessRoute =
+  LovableEmailQueueProcessRouteImport.update({
+    id: '/lovable/email/queue/process',
+    path: '/lovable/email/queue/process',
+    getParentRoute: () => rootRouteImport,
   } as any)
-const AuthenticatedOwnerEmpresaIdEventosRoute =
-  AuthenticatedOwnerEmpresaIdEventosRouteImport.update({
-    id: '/owner/empresa/$id/eventos',
-    path: '/owner/empresa/$id/eventos',
-    getParentRoute: () => AuthenticatedRouteRoute,
+const LovableEmailTransactionalPreviewRoute =
+  LovableEmailTransactionalPreviewRouteImport.update({
+    id: '/lovable/email/transactional/preview',
+    path: '/lovable/email/transactional/preview',
+    getParentRoute: () => rootRouteImport,
   } as any)
-const AuthenticatedOwnerEmpresaIdEditarRoute =
-  AuthenticatedOwnerEmpresaIdEditarRouteImport.update({
-    id: '/owner/empresa/$id/editar',
-    path: '/owner/empresa/$id/editar',
+const LovableEmailTransactionalSendRoute =
+  LovableEmailTransactionalSendRouteImport.update({
+    id: '/lovable/email/transactional/send',
+    path: '/lovable/email/transactional/send',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedOwnerEmpresaIdDashboardRoute =
+  AuthenticatedOwnerEmpresaIdDashboardRouteImport.update({
+    id: '/owner/empresa/$id/dashboard',
+    path: '/owner/empresa/$id/dashboard',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedOwnerEmpresaIdDestaqueRoute =
@@ -364,12 +347,29 @@ const AuthenticatedOwnerEmpresaIdDestaqueRoute =
     path: '/owner/empresa/$id/destaque',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedOwnerEmpresaIdDashboardRoute =
-  AuthenticatedOwnerEmpresaIdDashboardRouteImport.update({
-    id: '/owner/empresa/$id/dashboard',
-    path: '/owner/empresa/$id/dashboard',
+const AuthenticatedOwnerEmpresaIdEditarRoute =
+  AuthenticatedOwnerEmpresaIdEditarRouteImport.update({
+    id: '/owner/empresa/$id/editar',
+    path: '/owner/empresa/$id/editar',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedOwnerEmpresaIdEventosRoute =
+  AuthenticatedOwnerEmpresaIdEventosRouteImport.update({
+    id: '/owner/empresa/$id/eventos',
+    path: '/owner/empresa/$id/eventos',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedOwnerEmpresaIdProdutosRoute =
+  AuthenticatedOwnerEmpresaIdProdutosRouteImport.update({
+    id: '/owner/empresa/$id/produtos',
+    path: '/owner/empresa/$id/produtos',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const ApiPublicOgEventIdRoute = ApiPublicOgEventIdRouteImport.update({
+  id: '/api/public/og/event/$id',
+  path: '/api/public/og/event/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -756,67 +756,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/termos': {
-      id: '/termos'
-      path: '/termos'
-      fullPath: '/termos'
-      preLoaderRoute: typeof TermosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sobre': {
-      id: '/sobre'
-      path: '/sobre'
-      fullPath: '/sobre'
-      preLoaderRoute: typeof SobreRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacidade': {
-      id: '/privacidade'
-      path: '/privacidade'
-      fullPath: '/privacidade'
-      preLoaderRoute: typeof PrivacidadeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contato': {
-      id: '/contato'
-      path: '/contato'
-      fullPath: '/contato'
-      preLoaderRoute: typeof ContatoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/buscar': {
-      id: '/buscar'
-      path: '/buscar'
-      fullPath: '/buscar'
-      preLoaderRoute: typeof BuscarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$citySlug': {
@@ -833,137 +777,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog/': {
-      id: '/blog/'
-      path: '/'
-      fullPath: '/blog/'
-      preLoaderRoute: typeof BlogIndexRouteImport
-      parentRoute: typeof BlogRoute
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/buscar': {
+      id: '/buscar'
+      path: '/buscar'
+      fullPath: '/buscar'
+      preLoaderRoute: typeof BuscarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contato': {
+      id: '/contato'
+      path: '/contato'
+      fullPath: '/contato'
+      preLoaderRoute: typeof ContatoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sobre': {
+      id: '/sobre'
+      path: '/sobre'
+      fullPath: '/sobre'
+      preLoaderRoute: typeof SobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/termos': {
+      id: '/termos'
+      path: '/termos'
+      fullPath: '/termos'
+      preLoaderRoute: typeof TermosRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/$citySlug/': {
       id: '/$citySlug/'
       path: '/'
       fullPath: '/$citySlug/'
       preLoaderRoute: typeof CitySlugIndexRouteImport
-      parentRoute: typeof CitySlugRoute
-    }
-    '/u/$handle': {
-      id: '/u/$handle'
-      path: '/u/$handle'
-      fullPath: '/u/$handle'
-      preLoaderRoute: typeof UHandleRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/suporte/redefinir-2fa': {
-      id: '/suporte/redefinir-2fa'
-      path: '/suporte/redefinir-2fa'
-      fullPath: '/suporte/redefinir-2fa'
-      preLoaderRoute: typeof SuporteRedefinir2faRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/preview/$token': {
-      id: '/preview/$token'
-      path: '/preview/$token'
-      fullPath: '/preview/$token'
-      preLoaderRoute: typeof PreviewTokenRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/eventos/$id': {
-      id: '/eventos/$id'
-      path: '/eventos/$id'
-      fullPath: '/eventos/$id'
-      preLoaderRoute: typeof EventosIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/empresa/$id': {
-      id: '/empresa/$id'
-      path: '/empresa/$id'
-      fullPath: '/empresa/$id'
-      preLoaderRoute: typeof EmpresaIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/email/unsubscribe': {
-      id: '/email/unsubscribe'
-      path: '/email/unsubscribe'
-      fullPath: '/email/unsubscribe'
-      preLoaderRoute: typeof EmailUnsubscribeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checkout/retorno': {
-      id: '/checkout/retorno'
-      path: '/checkout/retorno'
-      fullPath: '/checkout/retorno'
-      preLoaderRoute: typeof CheckoutRetornoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog/rss.xml': {
-      id: '/blog/rss.xml'
-      path: '/rss.xml'
-      fullPath: '/blog/rss.xml'
-      preLoaderRoute: typeof BlogRssDotxmlRouteImport
-      parentRoute: typeof BlogRoute
-    }
-    '/blog/$slug': {
-      id: '/blog/$slug'
-      path: '/$slug'
-      fullPath: '/blog/$slug'
-      preLoaderRoute: typeof BlogSlugRouteImport
-      parentRoute: typeof BlogRoute
-    }
-    '/auth_/two-factor': {
-      id: '/auth_/two-factor'
-      path: '/auth/two-factor'
-      fullPath: '/auth/two-factor'
-      preLoaderRoute: typeof AuthTwoFactorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/painel': {
-      id: '/_authenticated/painel'
-      path: '/painel'
-      fullPath: '/painel'
-      preLoaderRoute: typeof AuthenticatedPainelRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/notificacoes': {
-      id: '/_authenticated/notificacoes'
-      path: '/notificacoes'
-      fullPath: '/notificacoes'
-      preLoaderRoute: typeof AuthenticatedNotificacoesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/favoritos': {
-      id: '/_authenticated/favoritos'
-      path: '/favoritos'
-      fullPath: '/favoritos'
-      preLoaderRoute: typeof AuthenticatedFavoritosRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/cadastrar-empresa': {
-      id: '/_authenticated/cadastrar-empresa'
-      path: '/cadastrar-empresa'
-      fullPath: '/cadastrar-empresa'
-      preLoaderRoute: typeof AuthenticatedCadastrarEmpresaRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/admin': {
-      id: '/_authenticated/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AuthenticatedAdminRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/$citySlug/eventos': {
-      id: '/$citySlug/eventos'
-      path: '/eventos'
-      fullPath: '/$citySlug/eventos'
-      preLoaderRoute: typeof CitySlugEventosRouteImport
       parentRoute: typeof CitySlugRoute
     }
     '/$citySlug/buscar': {
@@ -973,67 +854,130 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CitySlugBuscarRouteImport
       parentRoute: typeof CitySlugRoute
     }
-    '/_authenticated/painel/': {
-      id: '/_authenticated/painel/'
-      path: '/'
-      fullPath: '/painel/'
-      preLoaderRoute: typeof AuthenticatedPainelIndexRouteImport
-      parentRoute: typeof AuthenticatedPainelRoute
+    '/$citySlug/eventos': {
+      id: '/$citySlug/eventos'
+      path: '/eventos'
+      fullPath: '/$citySlug/eventos'
+      preLoaderRoute: typeof CitySlugEventosRouteImport
+      parentRoute: typeof CitySlugRoute
     }
-    '/_authenticated/owner/': {
-      id: '/_authenticated/owner/'
-      path: '/owner'
-      fullPath: '/owner/'
-      preLoaderRoute: typeof AuthenticatedOwnerIndexRouteImport
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/lovable/email/suppression': {
-      id: '/lovable/email/suppression'
-      path: '/lovable/email/suppression'
-      fullPath: '/lovable/email/suppression'
-      preLoaderRoute: typeof LovableEmailSuppressionRouteImport
+    '/_authenticated/cadastrar-empresa': {
+      id: '/_authenticated/cadastrar-empresa'
+      path: '/cadastrar-empresa'
+      fullPath: '/cadastrar-empresa'
+      preLoaderRoute: typeof AuthenticatedCadastrarEmpresaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/favoritos': {
+      id: '/_authenticated/favoritos'
+      path: '/favoritos'
+      fullPath: '/favoritos'
+      preLoaderRoute: typeof AuthenticatedFavoritosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/notificacoes': {
+      id: '/_authenticated/notificacoes'
+      path: '/notificacoes'
+      fullPath: '/notificacoes'
+      preLoaderRoute: typeof AuthenticatedNotificacoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/painel': {
+      id: '/_authenticated/painel'
+      path: '/painel'
+      fullPath: '/painel'
+      preLoaderRoute: typeof AuthenticatedPainelRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/auth_/two-factor': {
+      id: '/auth_/two-factor'
+      path: '/auth/two-factor'
+      fullPath: '/auth/two-factor'
+      preLoaderRoute: typeof AuthTwoFactorRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog/categoria/$slug': {
-      id: '/blog/categoria/$slug'
-      path: '/categoria/$slug'
-      fullPath: '/blog/categoria/$slug'
-      preLoaderRoute: typeof BlogCategoriaSlugRouteImport
+    '/blog/': {
+      id: '/blog/'
+      path: '/'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof BlogRoute
     }
-    '/api/public/contact-submit': {
-      id: '/api/public/contact-submit'
-      path: '/api/public/contact-submit'
-      fullPath: '/api/public/contact-submit'
-      preLoaderRoute: typeof ApiPublicContactSubmitRouteImport
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
+    }
+    '/blog/rss.xml': {
+      id: '/blog/rss.xml'
+      path: '/rss.xml'
+      fullPath: '/blog/rss.xml'
+      preLoaderRoute: typeof BlogRssDotxmlRouteImport
+      parentRoute: typeof BlogRoute
+    }
+    '/checkout/retorno': {
+      id: '/checkout/retorno'
+      path: '/checkout/retorno'
+      fullPath: '/checkout/retorno'
+      preLoaderRoute: typeof CheckoutRetornoRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/painel/seguranca': {
-      id: '/_authenticated/painel/seguranca'
-      path: '/seguranca'
-      fullPath: '/painel/seguranca'
-      preLoaderRoute: typeof AuthenticatedPainelSegurancaRouteImport
-      parentRoute: typeof AuthenticatedPainelRoute
+    '/email/unsubscribe': {
+      id: '/email/unsubscribe'
+      path: '/email/unsubscribe'
+      fullPath: '/email/unsubscribe'
+      preLoaderRoute: typeof EmailUnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/painel/configuracoes': {
-      id: '/_authenticated/painel/configuracoes'
-      path: '/configuracoes'
-      fullPath: '/painel/configuracoes'
-      preLoaderRoute: typeof AuthenticatedPainelConfiguracoesRouteImport
-      parentRoute: typeof AuthenticatedPainelRoute
+    '/empresa/$id': {
+      id: '/empresa/$id'
+      path: '/empresa/$id'
+      fullPath: '/empresa/$id'
+      preLoaderRoute: typeof EmpresaIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/painel/avaliacoes': {
-      id: '/_authenticated/painel/avaliacoes'
-      path: '/avaliacoes'
-      fullPath: '/painel/avaliacoes'
-      preLoaderRoute: typeof AuthenticatedPainelAvaliacoesRouteImport
-      parentRoute: typeof AuthenticatedPainelRoute
+    '/eventos/$id': {
+      id: '/eventos/$id'
+      path: '/eventos/$id'
+      fullPath: '/eventos/$id'
+      preLoaderRoute: typeof EventosIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/$citySlug/empresa/$compSlug': {
-      id: '/$citySlug/empresa/$compSlug'
-      path: '/empresa/$compSlug'
-      fullPath: '/$citySlug/empresa/$compSlug'
-      preLoaderRoute: typeof CitySlugEmpresaCompSlugRouteImport
+    '/preview/$token': {
+      id: '/preview/$token'
+      path: '/preview/$token'
+      fullPath: '/preview/$token'
+      preLoaderRoute: typeof PreviewTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/suporte/redefinir-2fa': {
+      id: '/suporte/redefinir-2fa'
+      path: '/suporte/redefinir-2fa'
+      fullPath: '/suporte/redefinir-2fa'
+      preLoaderRoute: typeof SuporteRedefinir2faRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/u/$handle': {
+      id: '/u/$handle'
+      path: '/u/$handle'
+      fullPath: '/u/$handle'
+      preLoaderRoute: typeof UHandleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$citySlug/bairro/$bairroSlug': {
+      id: '/$citySlug/bairro/$bairroSlug'
+      path: '/bairro/$bairroSlug'
+      fullPath: '/$citySlug/bairro/$bairroSlug'
+      preLoaderRoute: typeof CitySlugBairroBairroSlugRouteImport
       parentRoute: typeof CitySlugRoute
     }
     '/$citySlug/categoria/$catSlug': {
@@ -1043,67 +987,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CitySlugCategoriaCatSlugRouteImport
       parentRoute: typeof CitySlugRoute
     }
-    '/$citySlug/bairro/$bairroSlug': {
-      id: '/$citySlug/bairro/$bairroSlug'
-      path: '/bairro/$bairroSlug'
-      fullPath: '/$citySlug/bairro/$bairroSlug'
-      preLoaderRoute: typeof CitySlugBairroBairroSlugRouteImport
+    '/$citySlug/empresa/$compSlug': {
+      id: '/$citySlug/empresa/$compSlug'
+      path: '/empresa/$compSlug'
+      fullPath: '/$citySlug/empresa/$compSlug'
+      preLoaderRoute: typeof CitySlugEmpresaCompSlugRouteImport
       parentRoute: typeof CitySlugRoute
     }
-    '/lovable/email/transactional/send': {
-      id: '/lovable/email/transactional/send'
-      path: '/lovable/email/transactional/send'
-      fullPath: '/lovable/email/transactional/send'
-      preLoaderRoute: typeof LovableEmailTransactionalSendRouteImport
+    '/_authenticated/owner/': {
+      id: '/_authenticated/owner/'
+      path: '/owner'
+      fullPath: '/owner/'
+      preLoaderRoute: typeof AuthenticatedOwnerIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/painel/': {
+      id: '/_authenticated/painel/'
+      path: '/'
+      fullPath: '/painel/'
+      preLoaderRoute: typeof AuthenticatedPainelIndexRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/_authenticated/painel/avaliacoes': {
+      id: '/_authenticated/painel/avaliacoes'
+      path: '/avaliacoes'
+      fullPath: '/painel/avaliacoes'
+      preLoaderRoute: typeof AuthenticatedPainelAvaliacoesRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/_authenticated/painel/configuracoes': {
+      id: '/_authenticated/painel/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/painel/configuracoes'
+      preLoaderRoute: typeof AuthenticatedPainelConfiguracoesRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/_authenticated/painel/seguranca': {
+      id: '/_authenticated/painel/seguranca'
+      path: '/seguranca'
+      fullPath: '/painel/seguranca'
+      preLoaderRoute: typeof AuthenticatedPainelSegurancaRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/api/public/contact-submit': {
+      id: '/api/public/contact-submit'
+      path: '/api/public/contact-submit'
+      fullPath: '/api/public/contact-submit'
+      preLoaderRoute: typeof ApiPublicContactSubmitRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/lovable/email/transactional/preview': {
-      id: '/lovable/email/transactional/preview'
-      path: '/lovable/email/transactional/preview'
-      fullPath: '/lovable/email/transactional/preview'
-      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
-      parentRoute: typeof rootRouteImport
+    '/blog/categoria/$slug': {
+      id: '/blog/categoria/$slug'
+      path: '/categoria/$slug'
+      fullPath: '/blog/categoria/$slug'
+      preLoaderRoute: typeof BlogCategoriaSlugRouteImport
+      parentRoute: typeof BlogRoute
     }
-    '/lovable/email/queue/process': {
-      id: '/lovable/email/queue/process'
-      path: '/lovable/email/queue/process'
-      fullPath: '/lovable/email/queue/process'
-      preLoaderRoute: typeof LovableEmailQueueProcessRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lovable/email/auth/webhook': {
-      id: '/lovable/email/auth/webhook'
-      path: '/lovable/email/auth/webhook'
-      fullPath: '/lovable/email/auth/webhook'
-      preLoaderRoute: typeof LovableEmailAuthWebhookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lovable/email/auth/preview': {
-      id: '/lovable/email/auth/preview'
-      path: '/lovable/email/auth/preview'
-      fullPath: '/lovable/email/auth/preview'
-      preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/push/dispatch': {
-      id: '/api/public/push/dispatch'
-      path: '/api/public/push/dispatch'
-      fullPath: '/api/public/push/dispatch'
-      preLoaderRoute: typeof ApiPublicPushDispatchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/payments/webhook': {
-      id: '/api/public/payments/webhook'
-      path: '/api/public/payments/webhook'
-      fullPath: '/api/public/payments/webhook'
-      preLoaderRoute: typeof ApiPublicPaymentsWebhookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/hooks/retry-email-dlq': {
-      id: '/api/public/hooks/retry-email-dlq'
-      path: '/api/public/hooks/retry-email-dlq'
-      fullPath: '/api/public/hooks/retry-email-dlq'
-      preLoaderRoute: typeof ApiPublicHooksRetryEmailDlqRouteImport
+    '/lovable/email/suppression': {
+      id: '/lovable/email/suppression'
+      path: '/lovable/email/suppression'
+      fullPath: '/lovable/email/suppression'
+      preLoaderRoute: typeof LovableEmailSuppressionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/hooks/notification-email': {
@@ -1113,32 +1057,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksNotificationEmailRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/og/event/$id': {
-      id: '/api/public/og/event/$id'
-      path: '/api/public/og/event/$id'
-      fullPath: '/api/public/og/event/$id'
-      preLoaderRoute: typeof ApiPublicOgEventIdRouteImport
+    '/api/public/hooks/retry-email-dlq': {
+      id: '/api/public/hooks/retry-email-dlq'
+      path: '/api/public/hooks/retry-email-dlq'
+      fullPath: '/api/public/hooks/retry-email-dlq'
+      preLoaderRoute: typeof ApiPublicHooksRetryEmailDlqRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/owner/empresa/$id/produtos': {
-      id: '/_authenticated/owner/empresa/$id/produtos'
-      path: '/owner/empresa/$id/produtos'
-      fullPath: '/owner/empresa/$id/produtos'
-      preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdProdutosRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/api/public/payments/webhook': {
+      id: '/api/public/payments/webhook'
+      path: '/api/public/payments/webhook'
+      fullPath: '/api/public/payments/webhook'
+      preLoaderRoute: typeof ApiPublicPaymentsWebhookRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/owner/empresa/$id/eventos': {
-      id: '/_authenticated/owner/empresa/$id/eventos'
-      path: '/owner/empresa/$id/eventos'
-      fullPath: '/owner/empresa/$id/eventos'
-      preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdEventosRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/api/public/push/dispatch': {
+      id: '/api/public/push/dispatch'
+      path: '/api/public/push/dispatch'
+      fullPath: '/api/public/push/dispatch'
+      preLoaderRoute: typeof ApiPublicPushDispatchRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/owner/empresa/$id/editar': {
-      id: '/_authenticated/owner/empresa/$id/editar'
-      path: '/owner/empresa/$id/editar'
-      fullPath: '/owner/empresa/$id/editar'
-      preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdEditarRouteImport
+    '/lovable/email/auth/preview': {
+      id: '/lovable/email/auth/preview'
+      path: '/lovable/email/auth/preview'
+      fullPath: '/lovable/email/auth/preview'
+      preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/auth/webhook': {
+      id: '/lovable/email/auth/webhook'
+      path: '/lovable/email/auth/webhook'
+      fullPath: '/lovable/email/auth/webhook'
+      preLoaderRoute: typeof LovableEmailAuthWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/queue/process': {
+      id: '/lovable/email/queue/process'
+      path: '/lovable/email/queue/process'
+      fullPath: '/lovable/email/queue/process'
+      preLoaderRoute: typeof LovableEmailQueueProcessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/transactional/preview': {
+      id: '/lovable/email/transactional/preview'
+      path: '/lovable/email/transactional/preview'
+      fullPath: '/lovable/email/transactional/preview'
+      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/transactional/send': {
+      id: '/lovable/email/transactional/send'
+      path: '/lovable/email/transactional/send'
+      fullPath: '/lovable/email/transactional/send'
+      preLoaderRoute: typeof LovableEmailTransactionalSendRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/owner/empresa/$id/dashboard': {
+      id: '/_authenticated/owner/empresa/$id/dashboard'
+      path: '/owner/empresa/$id/dashboard'
+      fullPath: '/owner/empresa/$id/dashboard'
+      preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/owner/empresa/$id/destaque': {
@@ -1148,12 +1127,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdDestaqueRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/owner/empresa/$id/dashboard': {
-      id: '/_authenticated/owner/empresa/$id/dashboard'
-      path: '/owner/empresa/$id/dashboard'
-      fullPath: '/owner/empresa/$id/dashboard'
-      preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdDashboardRouteImport
+    '/_authenticated/owner/empresa/$id/editar': {
+      id: '/_authenticated/owner/empresa/$id/editar'
+      path: '/owner/empresa/$id/editar'
+      fullPath: '/owner/empresa/$id/editar'
+      preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdEditarRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/owner/empresa/$id/eventos': {
+      id: '/_authenticated/owner/empresa/$id/eventos'
+      path: '/owner/empresa/$id/eventos'
+      fullPath: '/owner/empresa/$id/eventos'
+      preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdEventosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/owner/empresa/$id/produtos': {
+      id: '/_authenticated/owner/empresa/$id/produtos'
+      path: '/owner/empresa/$id/produtos'
+      fullPath: '/owner/empresa/$id/produtos'
+      preLoaderRoute: typeof AuthenticatedOwnerEmpresaIdProdutosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/api/public/og/event/$id': {
+      id: '/api/public/og/event/$id'
+      path: '/api/public/og/event/$id'
+      fullPath: '/api/public/og/event/$id'
+      preLoaderRoute: typeof ApiPublicOgEventIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }

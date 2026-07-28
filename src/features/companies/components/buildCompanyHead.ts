@@ -1,6 +1,7 @@
 import { breadcrumbJsonLd } from "@/components/Breadcrumbs";
 import { resolveSeo, buildSeoHead } from "@/lib/seo/render";
 import type { SeoGlobals, SeoOverride } from "@/lib/seo/types";
+import { formatCompanyPhone } from "@/lib/masks";
 
 const BASE = "https://www.temnaminhacidade.com.br";
 const DAY_MAP = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -44,6 +45,10 @@ export function buildCompanyHead(loaderData: AnyCompany, params: CompanyHeadPara
     asString(loaderData?.description) ??
     (cityLabel ? `Empresa em ${cityLabel}` : "Empresa no Tem na minha cidade");
   const img = asString(loaderData?.cover_url) ?? asString(loaderData?.logo_url);
+  const telephone = formatCompanyPhone(
+    asString(loaderData?.phone) ?? null,
+    asString(loaderData?.phone_ddd) ?? null,
+  );
 
   const override: SeoOverride = {
     seo_title: asString(loaderData?.seo_title) ?? null,
@@ -102,7 +107,7 @@ export function buildCompanyHead(loaderData: AnyCompany, params: CompanyHeadPara
     description: seo.description,
     url,
     ...(img ? { image: img } : {}),
-    ...(loaderData?.phone ? { telephone: loaderData.phone } : {}),
+    ...(telephone ? { telephone } : {}),
     address: {
       "@type": "PostalAddress",
       streetAddress: loaderData?.address ?? undefined,

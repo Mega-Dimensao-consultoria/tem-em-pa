@@ -44,7 +44,7 @@ const privateBySlugQO = (p: SlugParams) =>
       const { data: rawCompany, error } = await supabase
         .from("companies")
         .select(
-          "id, name, slug, description, cep, address, number, complement, city_id, neighborhood_id, state, lat, lng, phone, whatsapp, email, website, instagram_url, facebook_url, hours, gallery_urls, logo_url, cover_url, status, owner_id, is_featured, category_id, categories:category_id(name, slug, icon), cities:city_id(name, slug, state), neighborhoods:neighborhood_id(name, slug)",
+          "id, name, slug, description, cep, address, number, complement, city_id, neighborhood_id, state, lat, lng, phone, phone_ddd, whatsapp, email, website, instagram_url, facebook_url, hours, gallery_urls, logo_url, cover_url, status, owner_id, is_featured, category_id, categories:category_id(name, slug, icon), cities:city_id(name, slug, state), neighborhoods:neighborhood_id(name, slug)",
         )
         .eq("city_id", city.id)
         .eq("slug", p.compSlug)

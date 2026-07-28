@@ -9,9 +9,9 @@ export const getCompanyContact = createServerFn({ method: "GET" })
   .handler(async ({ data, context }) => {
     const { data: row, error } = await context.supabase
       .from("companies")
-      .select("phone, whatsapp, email")
+      .select("phone, phone_ddd, whatsapp, email")
       .eq("id", data.id)
       .maybeSingle();
     if (error) throw new Error(error.message);
-    return row ?? { phone: null, whatsapp: null, email: null };
+    return row ?? { phone: null, phone_ddd: null, whatsapp: null, email: null };
   });

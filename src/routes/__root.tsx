@@ -249,6 +249,13 @@ function RootComponent() {
           <Toaster richColors position="top-center" containerAriaLabel="Central de notificações" />
           <AccessibilityBar />
           <VLibrasWidget />
+          {adsenseBody ? (
+            <div
+              aria-hidden="true"
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{ __html: adsenseBody }}
+            />
+          ) : null}
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>

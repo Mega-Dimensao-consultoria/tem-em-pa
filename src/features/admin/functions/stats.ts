@@ -23,7 +23,10 @@ export type AdminStats = {
   categories: number;
 };
 
-const HEAD = { count: "exact" as const, head: true };
+// "estimated" returns exact count for small tables and planner estimate for
+// large ones (e.g. companies has ~200k rows; an exact count exceeds the 8s
+// statement timeout on the authenticated role and makes overview cards blank).
+const HEAD = { count: "estimated" as const, head: true };
 
 async function unwrap(p: PromiseLike<{ count: number | null; error: unknown }>): Promise<number> {
   const { count, error } = await p;

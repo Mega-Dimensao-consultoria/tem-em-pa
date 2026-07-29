@@ -2,7 +2,10 @@ import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 
 export const SITEMAP_BASE_URL = "https://www.temnaminhacidade.com.br";
-export const SITEMAP_PAGE_SIZE = 40000;
+// 10k URLs por sub-sitemap: bem dentro do limite de 50k do protocolo e
+// leve o suficiente para caber no CPU/memória do Worker sem estourar
+// (evita "connection reset by peer" em picos de crawler).
+export const SITEMAP_PAGE_SIZE = 10000;
 /** Cidades por página em /sitemap-cities/$page — 2000 × ~16 URLs/cidade ≈ 32k URLs. */
 export const CITIES_PER_SITEMAP_PAGE = 2000;
 

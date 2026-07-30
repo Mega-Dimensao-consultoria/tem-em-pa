@@ -1720,6 +1720,7 @@ export type Database = {
         Returns: undefined
       }
       backfill_company_ddd: { Args: never; Returns: Json }
+      check_email_dlq_health: { Args: never; Returns: Json }
       company_promotion_eligibility: {
         Args: { _company_id: string }
         Returns: {

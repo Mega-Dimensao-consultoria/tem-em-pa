@@ -17,6 +17,7 @@ import { PendingRemovalsTab } from "@/features/admin/components/tabs/PendingRemo
 import { ContactMessagesTab } from "@/features/admin/components/tabs/ContactMessagesTab";
 import { SitePagesTab } from "@/features/admin/components/tabs/SitePagesTab";
 import { SeoTab } from "@/features/admin/components/tabs/SeoTab";
+import { EmailLogTab } from "@/features/admin/components/tabs/EmailLogTab";
 
 import { BlogSection } from "@/features/admin/components/tabs/BlogSection";
 import { AdminOverviewTab } from "@/features/admin/components/tabs/AdminOverviewTab";
@@ -87,6 +88,7 @@ function AdminPage() {
             <TabsTrigger value="paginas">Páginas</TabsTrigger>
             <TabsTrigger value="blog">Blog</TabsTrigger>
             <TabsTrigger value="reset2fa">Reset 2FA</TabsTrigger>
+            <TabsTrigger value="emails">E-mails</TabsTrigger>
             <TabsTrigger value="seo">SEO</TabsTrigger>
             <TabsTrigger value="importar">Importar</TabsTrigger>
             <TabsTrigger value="auditoria">Auditoria</TabsTrigger>
@@ -106,6 +108,7 @@ function AdminPage() {
           <TabsContent value="paginas"><SitePagesTab /></TabsContent>
           <TabsContent value="blog"><BlogSection /></TabsContent>
           <TabsContent value="reset2fa"><TwoFaResetRequestsTab /></TabsContent>
+          <TabsContent value="emails"><EmailLogTab /></TabsContent>
           <TabsContent value="seo"><SeoTab /></TabsContent>
           <TabsContent value="importar"><ImportPublicTab /></TabsContent>
           <TabsContent value="auditoria"><AuditLogTab /></TabsContent>

@@ -56,22 +56,24 @@ export const Route = createFileRoute('/api/public/contact-submit')({
 
         // Fire-and-forget admin notification
         try {
-          const { enqueueContactEmail, ADMIN_CONTACT_EMAIL } = await import(
-            '@/lib/contact-email.server'
-          )
-          await enqueueContactEmail({
-            supabase,
-            templateName: 'contact-admin-notification',
-            to: ADMIN_CONTACT_EMAIL,
-            messageId: `contact-${inserted.id}`,
-            data: {
-              fullName: parsed.data.full_name,
-              fromEmail: parsed.data.email,
-              subjectLine: parsed.data.subject,
-              message: parsed.data.message,
-              adminUrl: 'https://www.temnaminhacidade.com.br/admin',
-            },
-          })
+          const { enqueueContactEmail } = await import('@/lib/contact-email.server')
+          const { getAdminRecipients } = await import('@/lib/admin-recipients.server')
+          const recipients = await getAdminRecipients(supabase)
+          for (const to of recipients) {
+            await enqueueContactEmail({
+              supabase,
+              templateName: 'contact-admin-notification',
+              to,
+              messageId: `contact-${inserted.id}-${to}`,
+              data: {
+                fullName: parsed.data.full_name,
+                fromEmail: parsed.data.email,
+                subjectLine: parsed.data.subject,
+                message: parsed.data.message,
+                adminUrl: 'https://www.temnaminhacidade.com.br/admin',
+              },
+            })
+          }
         } catch {
           // do not fail the user-facing submission if email enqueue fails
         }

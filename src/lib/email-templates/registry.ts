@@ -25,6 +25,7 @@ import { template as companyRemovalApprovedTemplate } from './company-removal-ap
 import { template as companyRemovalRejectedTemplate } from './company-removal-rejected'
 import { template as contactAdminNotificationTemplate } from './contact-admin-notification'
 import { template as contactReplyTemplate } from './contact-reply'
+import { template as adminAlertTemplate } from './admin-alert'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'two-fa-recovery': twoFaRecoveryTemplate,
@@ -43,6 +44,7 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'company-removal-rejected': companyRemovalRejectedTemplate,
   'contact-admin-notification': contactAdminNotificationTemplate,
   'contact-reply': contactReplyTemplate,
+  'admin-alert': adminAlertTemplate,
 }
 
 /**
@@ -63,4 +65,5 @@ export const NOTIFICATION_TYPE_TO_TEMPLATE: Record<string, string> = {
   removal_request_received: 'removal-request-received',
   company_removal_approved: 'company-removal-approved',
   company_removal_rejected: 'company-removal-rejected',
+  admin_alert: 'admin-alert',
 }

@@ -11,6 +11,7 @@ import { createClient } from '@supabase/supabase-js'
  * auth, so validation happens here.
  */
 const MAX_AGE_HOURS = 24
+const MAX_RETRIES = 3
 const BATCH_SIZE = 25
 const VISIBILITY_SECONDS = 60
 
@@ -58,16 +59,23 @@ export const Route = createFileRoute('/api/public/hooks/retry-email-dlq')({
           let expired = 0
           for (const row of rows ?? []) {
             const payload = row.message as Record<string, unknown>
-            const enqueuedAt = Number(payload.enqueued_at ?? 0)
+            // `enqueued_at` is not always present; fall back to `queued_at`
+            // (ISO string set by the enqueue helpers) so old payloads expire
+            // instead of being retried forever.
+            const enqueuedAt =
+              Number(payload.enqueued_at ?? 0) ||
+              (payload.queued_at ? Date.parse(String(payload.queued_at)) : 0)
+            const retryCount = Number(payload.dlq_retry_count ?? 0)
             const messageId = String(payload.message_id ?? row.msg_id)
 
-            if (enqueuedAt && enqueuedAt < cutoff) {
+            const tooOld = enqueuedAt ? enqueuedAt < cutoff : retryCount >= MAX_RETRIES
+            if (tooOld || retryCount >= MAX_RETRIES) {
               await supabase.from('email_send_log').insert({
                 message_id: messageId,
                 template_name: (payload.label || queue) as string,
                 recipient_email: (payload.to ?? '') as string,
-                status: 'dlq_expired',
-                error_message: `DLQ age > ${MAX_AGE_HOURS}h`,
+                status: 'failed',
+                error_message: `descartado: idade > ${MAX_AGE_HOURS}h ou ${MAX_RETRIES} tentativas`,
               })
               await supabase.rpc('delete_email', {
                 queue_name: dlq,
@@ -77,7 +85,11 @@ export const Route = createFileRoute('/api/public/hooks/retry-email-dlq')({
               continue
             }
 
-            const requeued = { ...payload, dlq_retry_at: Date.now() }
+            const requeued = {
+              ...payload,
+              dlq_retry_at: Date.now(),
+              dlq_retry_count: retryCount + 1,
+            }
             const { error: enqErr } = await supabase.rpc('enqueue_email', {
               queue_name: queue,
               payload: requeued,
@@ -94,8 +106,9 @@ export const Route = createFileRoute('/api/public/hooks/retry-email-dlq')({
               message_id: messageId,
               template_name: (payload.label || queue) as string,
               recipient_email: (payload.to ?? '') as string,
-              status: 'dlq_retried',
-              error_message: null,
+              status: 'pending',
+              error_message: 'reenfileirado a partir da DLQ',
+
             })
             retried++
           }

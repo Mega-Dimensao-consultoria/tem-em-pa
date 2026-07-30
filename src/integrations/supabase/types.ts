@@ -1884,7 +1884,18 @@ export type Database = {
         }
         Returns: number
       }
+      notify_admins: {
+        Args: {
+          _link?: string
+          _message: string
+          _metadata?: Json
+          _title: string
+          _type: string
+        }
+        Returns: number
+      }
       process_escolas_import: { Args: never; Returns: Json }
+      purge_email_dlq: { Args: never; Returns: Json }
       read_email_batch: {
         Args: { batch_size: number; queue_name: string; vt: number }
         Returns: {

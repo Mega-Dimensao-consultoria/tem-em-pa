@@ -90,6 +90,14 @@ export const Route = createFileRoute('/api/public/hooks/notification-email')({
           appUrl: APP_URL,
         }
 
+        // Generic admin alerts carry their copy on the notification itself
+        if (notif.type === 'admin_alert') {
+          templateData.alertTitle = templateData.alertTitle ?? notif.title
+          templateData.alertMessage = templateData.alertMessage ?? notif.message
+          templateData.link = templateData.link ?? notif.link ?? '/admin'
+          templateData.eventLabel = templateData.eventLabel ?? 'Moderação'
+        }
+
         // Enrich with company name when available (falls back to metadata snapshot
         // for events where the company row may already be gone — e.g. company_deleted)
         if (meta.company_id) {

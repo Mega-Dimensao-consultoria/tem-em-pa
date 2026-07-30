@@ -17,6 +17,7 @@ import { ConfirmDestructive } from "@/components/ConfirmDestructive";
 import { Empty, Loading } from "../admin-ui";
 import { toastError } from "@/lib/safe";
 import { AdminPagination, usePagination } from "../AdminPagination";
+import { AdminAlertsCard } from "./AdminAlertsCard";
 
 export function ContactMessagesTab() {
   const qc = useQueryClient();
@@ -58,13 +59,22 @@ export function ContactMessagesTab() {
   });
 
   if (isLoading) return <Loading />;
-  if (data.length === 0) return <Empty>Nenhuma mensagem de contato recebida ainda.</Empty>;
 
   const opened = openId ? (data as any[]).find((m) => m.id === openId) ?? null : null;
 
+  if (data.length === 0)
+    return (
+      <section className="mt-4 space-y-4">
+        <AdminAlertsCard />
+        <Empty>Nenhuma mensagem de contato recebida ainda.</Empty>
+      </section>
+    );
+
   return (
-    <section className="mt-4 space-y-3" aria-labelledby="contact-heading">
+    <section className="mt-4 space-y-4" aria-labelledby="contact-heading">
       <h2 id="contact-heading" className="sr-only">Mensagens de contato</h2>
+      <AdminAlertsCard />
+
       <div className="overflow-x-auto rounded-2xl border border-border bg-card shadow-soft">
         <table className="w-full text-sm">
           <caption className="sr-only">Mensagens recebidas pelo formulário de contato.</caption>

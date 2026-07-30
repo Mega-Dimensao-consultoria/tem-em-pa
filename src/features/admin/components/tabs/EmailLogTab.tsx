@@ -20,7 +20,6 @@ import {
   AdminPagination,
   DEFAULT_PAGE_SIZE,
 } from "@/features/admin/components/AdminPagination";
-import { AdminAlertsCard } from "./AdminAlertsCard";
 
 type Status = "all" | "sent" | "pending" | "failed" | "suppressed";
 
@@ -65,8 +64,6 @@ export function EmailLogTab() {
 
   return (
     <div className="space-y-6">
-      <AdminAlertsCard />
-
       <div className="rounded-xl border bg-card p-5">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">

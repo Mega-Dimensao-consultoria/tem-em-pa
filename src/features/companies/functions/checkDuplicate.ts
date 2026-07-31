@@ -67,7 +67,7 @@ export const checkCompanyDuplicate = createServerFn({ method: "GET" })
     const matches: DuplicateMatch[] = [];
     for (const r of rows) {
       const rCore = coreCompanyName(r.name ?? "");
-      const rCore = coreCompanyName(r.name ?? "");
+
       // Compara o núcleo do nome (sem prefixos institucionais genéricos como
       // "prefeitura municipal de" / "escola municipal de"), evitando falsos
       // positivos entre instituições de cidades diferentes.

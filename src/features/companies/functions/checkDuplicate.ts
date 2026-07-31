@@ -1,20 +1,14 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { publicClient } from "./_client";
+import { coreCompanyName, normalizeName } from "@/lib/companyName";
 
-function normalize(s: string): string {
-  return s
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9 ]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
+const normalize = normalizeName;
 
 function digits(s: string): string {
   return s.replace(/\D+/g, "");
 }
+
 
 export type DuplicateMatch = {
   id: string;

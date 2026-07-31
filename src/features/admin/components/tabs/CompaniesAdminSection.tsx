@@ -25,5 +25,7 @@ export function CompaniesAdminSection() {
       <TabsContent value="duplicadas"><DuplicatesTab /></TabsContent>
       <TabsContent value="importar"><ImportPublicTab /></TabsContent>
     </Tabs>
+    </>
   );
+
 }

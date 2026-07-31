@@ -142,14 +142,18 @@ function CadastrarPage() {
         owner_id: user.id,
         status: "pending",
       })
-      .select("id")
+      .select("id, status")
       .single();
     setSubmitting(false);
     if (error || !data) {
       toastError(error, "Falha ao cadastrar");
       return;
     }
-    toast.success("Empresa enviada para aprovação!");
+    toast.success(
+      data.status === "approved"
+        ? "Empresa cadastrada e publicada!"
+        : "Empresa enviada para aprovação!",
+    );
     navigate({ to: "/empresa/$id", params: { id: data.id } });
   }
 

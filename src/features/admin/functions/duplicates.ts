@@ -32,6 +32,81 @@ function normalize(s: string | null | undefined): string {
     .replace(/\s+/g, " ")
     .trim();
 }
+
+/**
+ * Prefixos institucionais genéricos ("prefeitura municipal de", "escola
+ * municipal de"…) repetem-se em milhares de registros legítimos de cidades
+ * diferentes. São removidos antes de comparar nomes para não gerar
+ * falsos positivos.
+ */
+const GENERIC_PREFIXES = [
+  "prefeitura municipal de",
+  "prefeitura municipal",
+  "prefeitura de",
+  "prefeitura",
+  "camara municipal de",
+  "camara municipal",
+  "escola municipal de ensino fundamental",
+  "escola municipal de educacao infantil",
+  "escola estadual de ensino fundamental",
+  "escola estadual de ensino medio",
+  "escola municipal de",
+  "escola estadual de",
+  "escola municipal",
+  "escola estadual",
+  "escola de educacao infantil",
+  "escola de educacao basica",
+  "escola de ensino fundamental",
+  "escola de ensino medio",
+  "centro municipal de educacao infantil",
+  "centro de educacao infantil",
+  "centro municipal de",
+  "centro de educacao",
+  "colegio estadual de",
+  "colegio municipal de",
+  "colegio estadual",
+  "colegio municipal",
+  "creche municipal",
+  "unidade basica de saude",
+  "e m e i f",
+  "e m e i",
+  "e m e f",
+  "e e e f m",
+  "e e e f",
+  "e e e m",
+  "e m",
+  "e e",
+  "emeif",
+  "emeb",
+  "emef",
+  "emei",
+  "eeef",
+  "eeem",
+  "esc est ens fund",
+  "esc est ens medio",
+  "esc mun ens fund",
+  "esc est",
+  "esc mun",
+  "cr p conv",
+  "cei",
+  "cmei",
+  "ubs",
+];
+
+/** Nome sem o prefixo institucional genérico (o "núcleo" identificador). */
+function coreName(name: string | null | undefined): string {
+  const n = normalize(name);
+  let best = n;
+  for (const p of GENERIC_PREFIXES) {
+    if (n === p) return "";
+    if (n.startsWith(p + " ")) {
+      const rest = n.slice(p.length + 1).trim();
+      if (rest.length < best.length) best = rest;
+    }
+  }
+  return best;
+}
+
 function digits(s: string | null | undefined): string {
   return (s ?? "").replace(/\D+/g, "");
 }
@@ -43,9 +118,11 @@ type RawDupRow = {
   whatsapp: string | null;
   status: string;
   created_at: string;
+  city_id: string | null;
   cities: { name: string | null } | null;
   neighborhoods: { name: string | null } | null;
 };
+
 
 export function useDuplicateGroups() {
   return useQuery({

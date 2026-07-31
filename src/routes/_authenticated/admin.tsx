@@ -15,7 +15,7 @@ import { AuditLogTab } from "@/features/admin/components/tabs/AuditLogTab";
 import { TwoFaResetRequestsTab } from "@/features/admin/components/tabs/TwoFaResetRequestsTab";
 import { PendingRemovalsTab } from "@/features/admin/components/tabs/PendingRemovalsTab";
 import { ContactMessagesTab } from "@/features/admin/components/tabs/ContactMessagesTab";
-import { SitePagesTab } from "@/features/admin/components/tabs/SitePagesTab";
+import { PagesSection } from "@/features/admin/components/tabs/PagesSection";
 import { SeoTab } from "@/features/admin/components/tabs/SeoTab";
 import { EmailLogTab } from "@/features/admin/components/tabs/EmailLogTab";
 
@@ -105,7 +105,7 @@ function AdminPage() {
           <TabsContent value="categorias"><CategoriesTab /></TabsContent>
           <TabsContent value="palavras"><BannedWordsTab /></TabsContent>
           <TabsContent value="usuarios"><UsersTab /></TabsContent>
-          <TabsContent value="paginas"><SitePagesTab /></TabsContent>
+          <TabsContent value="paginas"><PagesSection /></TabsContent>
           <TabsContent value="blog"><BlogSection /></TabsContent>
           <TabsContent value="reset2fa"><TwoFaResetRequestsTab /></TabsContent>
           <TabsContent value="emails"><EmailLogTab /></TabsContent>

@@ -1,20 +1,14 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { publicClient } from "./_client";
+import { coreCompanyName, normalizeName } from "@/lib/companyName";
 
-function normalize(s: string): string {
-  return s
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9 ]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
+const normalize = normalizeName;
 
 function digits(s: string): string {
   return s.replace(/\D+/g, "");
 }
+
 
 export type DuplicateMatch = {
   id: string;
@@ -69,19 +63,24 @@ export const checkCompanyDuplicate = createServerFn({ method: "GET" })
     const phoneDigits = data.phone ? digits(data.phone) : "";
     const wppDigits = data.whatsapp ? digits(data.whatsapp) : "";
 
+    const coreNorm = coreCompanyName(data.name);
     const matches: DuplicateMatch[] = [];
     for (const r of rows) {
-      const rn = normalize(r.name ?? "");
+      const rCore = coreCompanyName(r.name ?? "");
+
+      // Compara o núcleo do nome (sem prefixos institucionais genéricos como
+      // "prefeitura municipal de" / "escola municipal de"), evitando falsos
+      // positivos entre instituições de cidades diferentes.
       const nameMatch =
-        rn === nameNorm ||
-        rn.startsWith(nameNorm) ||
-        nameNorm.startsWith(rn) ||
-        rn.split(" ").slice(0, 2).join(" ") === nameNorm.split(" ").slice(0, 2).join(" ");
+        coreNorm.length >= 4 &&
+        rCore.length >= 4 &&
+        (rCore === coreNorm || rCore.startsWith(coreNorm) || coreNorm.startsWith(rCore));
       const rPhone = r.phone ? digits(r.phone) : "";
       const rWpp = r.whatsapp ? digits(r.whatsapp) : "";
       const phoneMatch =
         (phoneDigits.length >= 8 && (rPhone === phoneDigits || rWpp === phoneDigits)) ||
         (wppDigits.length >= 8 && (rPhone === wppDigits || rWpp === wppDigits));
+
       if (nameMatch || phoneMatch) {
         matches.push({
           id: r.id,

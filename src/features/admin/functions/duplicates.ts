@@ -131,16 +131,19 @@ export function useDuplicateGroups() {
       const { data, error } = await supabase
         .from("companies")
         .select(
-          "id, name, phone, whatsapp, status, created_at, cities:city_id(name), neighborhoods:neighborhood_id(name)",
+          "id, name, phone, whatsapp, status, created_at, city_id, cities:city_id(name), neighborhoods:neighborhood_id(name)",
         )
         .in("status", ["approved", "pending", "claimed_pending", "rejected"])
         .order("created_at", { ascending: true })
         .limit(2000);
       if (error) throw error;
-      const rows: DupCandidate[] = ((data ?? []) as unknown as RawDupRow[]).map((r) => ({
+      const rows: (DupCandidate & { cityId: string | null })[] = (
+        (data ?? []) as unknown as RawDupRow[]
+      ).map((r) => ({
         id: r.id,
         name: r.name,
         city: r.cities?.name ?? null,
+        cityId: r.city_id,
         neighborhood: r.neighborhoods?.name ?? null,
         phone: r.phone,
         whatsapp: r.whatsapp,
@@ -152,20 +155,25 @@ export function useDuplicateGroups() {
       const byPhone = new Map<string, DupCandidate[]>();
 
       for (const r of rows) {
-        const nk = normalize(r.name).split(" ").slice(0, 3).join(" ");
-        if (nk.length >= 4) {
+        // Nome completo sem prefixo institucional genérico, sempre escopado
+        // pela cidade — prefeituras/escolas de cidades diferentes não colidem.
+        const core = coreName(r.name);
+        if (core.length >= 4) {
+          const nk = `${r.cityId ?? "-"}|${core}`;
           const arr = byName.get(nk) ?? [];
           arr.push(r);
           byName.set(nk, arr);
         }
         for (const d of [digits(r.phone), digits(r.whatsapp)]) {
           if (d.length >= 8) {
-            const arr = byPhone.get(d) ?? [];
+            const pk = `${r.cityId ?? "-"}|${d}`;
+            const arr = byPhone.get(pk) ?? [];
             if (!arr.find((x) => x.id === r.id)) arr.push(r);
-            byPhone.set(d, arr);
+            byPhone.set(pk, arr);
           }
         }
       }
+
 
       const groups: DupGroup[] = [];
       for (const [k, items] of byName) {

@@ -5,6 +5,8 @@ import { toastError } from "@/lib/safe";
 import { useAuth } from "@/features/auth/use-auth";
 import { adminKeys } from "./keys";
 import { logAdminAction } from "./audit";
+import { coreCompanyName } from "@/lib/companyName";
+
 
 export type DupCandidate = {
   id: string;

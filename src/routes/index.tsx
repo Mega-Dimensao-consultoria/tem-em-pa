@@ -48,6 +48,7 @@ export const Route = createFileRoute("/")({
     const [globals] = await Promise.all([
       context.queryClient.ensureQueryData(seoGlobalsServerQO),
       context.queryClient.ensureQueryData(citiesQO),
+      context.queryClient.ensureQueryData(faqQO),
     ]);
     return { globals };
   },
@@ -97,10 +98,14 @@ function Hub() {
         </div>
       </section>
 
+      <AboutSection />
+
       <PromotedCompaniesSection
         title="Empresas em destaque agora"
         subtitle="Selecionadas em tempo real entre as empresas com destaque ativo."
       />
+
+      <FaqSection />
 
       <section className="mx-auto max-w-6xl px-4 pb-20 pt-8">
         <div className="overflow-hidden rounded-3xl bg-hero-gradient p-8 text-center text-white shadow-elegant md:p-12">

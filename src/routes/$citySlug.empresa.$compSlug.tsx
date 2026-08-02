@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { isNonCitySlug } from "@/lib/routing/reservedSlugs";
 import { useSuspenseQuery, useQuery, useQueryClient, queryOptions } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Clock, Pencil } from "lucide-react";

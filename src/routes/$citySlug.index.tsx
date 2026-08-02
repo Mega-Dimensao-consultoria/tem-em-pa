@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery, useQuery, queryOptions } from "@tanstack/react-query";
 import { useState } from "react";
 import { Sparkles, Store, ShieldCheck, Loader2 } from "lucide-react";
@@ -43,7 +43,7 @@ export const Route = createFileRoute("/$citySlug/")({
       context.queryClient.ensureQueryData(cityBySlugQO(params.citySlug)),
       context.queryClient.ensureQueryData(seoGlobalsServerQO),
     ]);
-    if (!city) return null;
+    if (!city) throw notFound();
     const [, featured] = await Promise.all([
       context.queryClient.ensureQueryData(categoriesQO),
       context.queryClient.ensureQueryData(featuredByCityQO(city.id)),

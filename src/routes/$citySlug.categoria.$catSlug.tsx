@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { PageShell } from "@/components/PageShell";
 import { CompanyCard } from "@/features/companies/components/CompanyCard";
@@ -29,7 +29,7 @@ export const Route = createFileRoute("/$citySlug/categoria/$catSlug")({
       context.queryClient.ensureQueryData(cityBySlugQO(params.citySlug)),
       context.queryClient.ensureQueryData(seoGlobalsServerQO),
     ]);
-    if (!city) return null;
+    if (!city) throw notFound();
     const [list, cat] = await Promise.all([
       context.queryClient.ensureQueryData(listQo(city.id, params.catSlug)),
       context.queryClient.ensureQueryData(catQo(params.catSlug)),

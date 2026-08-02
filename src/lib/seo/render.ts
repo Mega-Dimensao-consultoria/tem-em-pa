@@ -148,7 +148,14 @@ export function buildSeoHead(input: {
   }
   if (seo.noindex) {
     meta.push({ name: "robots", content: "noindex, nofollow" });
+  } else {
+    // Explicitamente indexável (Google/Bing + IAs), com preview completo.
+    meta.push({
+      name: "robots",
+      content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+    });
   }
+
 
   const scripts: ScriptEntry[] = [];
   if (seo.schemaType) {

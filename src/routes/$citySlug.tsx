@@ -3,6 +3,8 @@ import { queryOptions } from "@tanstack/react-query";
 import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { getCityBySlug } from "@/features/companies/functions";
+import { isNonCitySlug } from "@/lib/routing/reservedSlugs";
+
 
 export const cityBySlugQO = (slug: string) =>
   queryOptions({
@@ -13,10 +15,13 @@ export const cityBySlugQO = (slug: string) =>
 
 export const Route = createFileRoute("/$citySlug")({
   loader: async ({ context, params }) => {
+    // Fast 404 for asset/bot requests (/favicon.ico, /ads.txt, ...): no DB, no SSR render.
+    if (isNonCitySlug(params.citySlug)) throw notFound();
     const city = await context.queryClient.ensureQueryData(cityBySlugQO(params.citySlug));
     if (!city) throw notFound();
     return city;
   },
+
   component: () => <Outlet />,
   notFoundComponent: () => (
     <PageShell>

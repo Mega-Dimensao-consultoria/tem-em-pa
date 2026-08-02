@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { isNonCitySlug } from "@/lib/routing/reservedSlugs";
 import { useSuspenseQuery, useQuery, useQueryClient, queryOptions } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Clock, Pencil } from "lucide-react";
@@ -87,12 +88,15 @@ const privateBySlugQO = (p: SlugParams) =>
 
 export const Route = createFileRoute("/$citySlug/empresa/$compSlug")({
   loader: async ({ context, params }) => {
+    if (isNonCitySlug(params.citySlug)) throw notFound();
     const [company, globals] = await Promise.all([
       context.queryClient.ensureQueryData(publicBySlugQO(params)),
       context.queryClient.ensureQueryData(seoGlobalsServerQO),
     ]);
+    if (!company) throw notFound();
     return { company, globals };
   },
+
   head: ({ params, loaderData }) =>
     buildCompanyHead(loaderData?.company ?? null, {
       citySlug: params.citySlug,

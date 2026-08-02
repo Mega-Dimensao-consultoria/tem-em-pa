@@ -60,7 +60,13 @@ export const Route = createFileRoute("/blog/$slug")({
     }
     if (p.noindex) {
       meta.push({ name: "robots", content: "noindex, nofollow" });
+    } else {
+      meta.push({
+        name: "robots",
+        content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+      });
     }
+
     return {
       meta,
       links: [{ rel: "canonical", href: canonical }],

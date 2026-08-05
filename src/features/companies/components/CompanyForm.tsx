@@ -218,27 +218,23 @@ export function CompanyForm({
       <FormSection title={sections.socials ? "Contato & Redes sociais" : "Contato"}>
         <div className="grid gap-4 sm:grid-cols-2">
           <FormField label="Telefone" id="phone">
-            <div className="flex gap-2">
-              <Input
-                id="phone_ddd"
-                value={form.phone_ddd}
-                onChange={(e) => set("phone_ddd", e.target.value.replace(/\D/g, "").slice(0, 2))}
-                inputMode="numeric"
-                maxLength={2}
-                placeholder="DDD"
-                aria-label="DDD"
-                className="w-20"
-              />
-              <Input
-                id="phone"
-                value={form.phone}
-                onChange={(e) => set("phone", maskPhone(e.target.value))}
-                inputMode="tel"
-                maxLength={16}
-                placeholder="3421-0000"
-              />
-            </div>
+            <Input
+              id="phone"
+              value={form.phone}
+              onChange={(e) => {
+                const masked = maskPhone(e.target.value);
+                setForm((f) => ({
+                  ...f,
+                  phone: masked,
+                  phone_ddd: masked.replace(/\D/g, "").slice(0, 2),
+                }));
+              }}
+              inputMode="tel"
+              maxLength={16}
+              placeholder="(35) 3421-0000"
+            />
           </FormField>
+
           <FormField label="WhatsApp" id="wpp">
             <Input
               id="wpp"

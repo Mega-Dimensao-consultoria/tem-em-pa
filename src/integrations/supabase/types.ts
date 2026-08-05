@@ -1672,6 +1672,7 @@ export type Database = {
         Returns: undefined
       }
       check_email_dlq_health: { Args: never; Returns: Json }
+      company_moderation_enabled: { Args: never; Returns: boolean }
       company_promotion_eligibility: {
         Args: { _company_id: string }
         Returns: {

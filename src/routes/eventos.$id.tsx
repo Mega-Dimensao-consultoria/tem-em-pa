@@ -163,11 +163,12 @@ export const Route = createFileRoute('/eventos/$id')({
           O evento pode ter sido removido ou não está mais ativo.
         </p>
         <Link
-          to="/eventos"
+          to="/"
           className="mt-4 inline-flex items-center gap-1 text-sm text-primary hover:underline"
         >
-          <ArrowLeft className="h-3 w-3" /> Ver todos os eventos
+          <ArrowLeft className="h-3 w-3" /> Voltar para a página inicial
         </Link>
+
       </div>
     </PageShell>
   ),
@@ -189,11 +190,12 @@ function EventDetailPage() {
         className="mx-auto max-w-3xl px-4 py-8"
       >
         <Link
-          to="/eventos"
+          to="/"
           className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="h-3 w-3" aria-hidden="true" /> Voltar aos eventos
+          <ArrowLeft className="h-3 w-3" aria-hidden="true" /> Voltar para a página inicial
         </Link>
+
 
         {ev.image_url ? (
           <img

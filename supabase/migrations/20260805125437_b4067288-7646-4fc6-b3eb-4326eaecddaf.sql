@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.company_moderation_enabled() FROM anon;

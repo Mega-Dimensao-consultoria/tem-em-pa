@@ -29,7 +29,7 @@ export const Route = createFileRoute("/")({
     const fallbackTitle = `${siteName} — ${tagline}`;
     const fallbackDesc =
       globals?.default_description ??
-      "Descubra restaurantes, mercados, serviços e comércio local em qualquer cidade do Brasil. Avaliações reais e contato direto.";
+      "Encontre empresas, profissionais e eventos na sua cidade. Busque por categoria, veja avaliações e descubra o que está rolando perto de você.";
     const seo = resolveSeo({
       url: `${BASE}/`,
       fallbackTitle,

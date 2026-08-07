@@ -96,7 +96,7 @@ export const DEFAULT_GLOBALS: SeoGlobals = {
   title_base: "Tem na minha cidade",
   title_separator: " — ",
   default_description:
-    "Descubra restaurantes, mercados, serviços e comércio local em qualquer cidade do Brasil.",
+    "Encontre empresas, profissionais e eventos na sua cidade. Busque por categoria, veja avaliações e descubra o que está rolando perto de você.",
   default_keywords:
     "guia local, empresas, comércio local, serviços na minha cidade, avaliações",
   default_og_image_url: null,

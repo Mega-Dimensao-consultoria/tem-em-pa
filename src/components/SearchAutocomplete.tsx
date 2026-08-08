@@ -33,7 +33,13 @@ export function SearchAutocomplete({ placeholder = "Buscar empresas…" }: { pla
         ? "1 empresa encontrada."
         : `${data.length} empresas encontradas.`;
     if (activeItem) {
-      const where = activeItem.neighborhood ? `, ${activeItem.neighborhood}` : "";
+      const place = [
+        activeItem.neighborhood,
+        [activeItem.city_name, activeItem.state].filter(Boolean).join(" - "),
+      ]
+        .filter(Boolean)
+        .join(", ");
+      const where = place ? `, ${place}` : "";
       return `${countMsg} Selecionada: ${activeItem.name}${where}. Opção ${activeIndex + 1} de ${data.length}.`;
     }
     return countMsg;

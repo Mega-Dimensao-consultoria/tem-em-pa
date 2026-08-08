@@ -1863,12 +1863,14 @@ export type Database = {
       search_companies_autocomplete: {
         Args: { _city_id: string; lim?: number; q: string }
         Returns: {
+          city_name: string
           city_slug: string
           id: string
           logo_url: string
           name: string
           neighborhood: string
           slug: string
+          state: string
         }[]
       }
       sitemap_cities_page: {

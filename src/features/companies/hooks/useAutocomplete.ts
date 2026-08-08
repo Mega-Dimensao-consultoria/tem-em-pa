@@ -9,6 +9,8 @@ export type AutocompleteRow = {
   neighborhood: string | null;
   logo_url: string | null;
   city_slug: string | null;
+  city_name: string | null;
+  state: string | null;
 };
 
 /** Debounced autocomplete driven by the search_companies_autocomplete RPC. */

@@ -126,9 +126,17 @@ export function SearchAutocomplete({ placeholder = "Buscar empresas…" }: { pla
                 )}
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-medium">{r.name}</p>
-                  {r.neighborhood ? (
-                    <p className="truncate text-xs text-muted-foreground">{r.neighborhood}</p>
-                  ) : null}
+                  {(() => {
+                    const place = [
+                      r.neighborhood,
+                      [r.city_name, r.state].filter(Boolean).join(" - "),
+                    ]
+                      .filter(Boolean)
+                      .join(" · ");
+                    return place ? (
+                      <p className="truncate text-xs text-muted-foreground">{place}</p>
+                    ) : null;
+                  })()}
                 </div>
               </button>
             </li>

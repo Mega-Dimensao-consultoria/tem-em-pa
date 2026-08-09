@@ -339,3 +339,5 @@ export function EmailLogTab() {
     </div>
   );
 }
+
+}

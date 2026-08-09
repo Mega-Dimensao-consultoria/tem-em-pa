@@ -112,12 +112,9 @@ export const adminGetEmailStats = createServerFn({ method: 'GET' })
     return out
   })
 
-/** Re-enviar um e-mail que falhou. */
-export const adminRetryEmail = createServerFn({ method: 'POST' })
+/** Re-enviar todos os e-mails que falharam (estão na DLQ). */
+export const adminRetryAllDlq = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
-    z.object({ id: z.string().uuid() }).parse(input)
-  )
   .handler(async ({ context }) => {
     await assertAdmin(context)
     
@@ -129,6 +126,19 @@ export const adminRetryEmail = createServerFn({ method: 'POST' })
       throw new Error(error.message || 'Não foi possível processar o reenvio no momento.')
     }
     
+    return data as { auth_emails_retried: number; transactional_emails_retried: number }
+  })
+
+/** Re-enviar um e-mail específico que falhou. */
+export const adminRetryEmail = createServerFn({ method: 'POST' })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) =>
+    z.object({ id: z.string().uuid() }).parse(input)
+  )
+  .handler(async ({ context }) => {
+    await assertAdmin(context)
+    const { data, error } = await context.supabase.rpc('retry_email_dlq')
+    if (error) throw new Error(error.message)
     return { ok: true, result: data }
   })
 

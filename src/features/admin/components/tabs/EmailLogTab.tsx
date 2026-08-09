@@ -1,11 +1,21 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Loader2, MailCheck, RefreshCw, Search, SendHorizontal, Trash2, Eye } from "lucide-react";
+import { 
+  Loader2, 
+  MailCheck, 
+  RefreshCw, 
+  Search, 
+  Trash2, 
+  Eye, 
+  RotateCcw,
+  SendHorizontal
+} from "lucide-react";
 import {
   adminGetEmailLog,
   adminGetEmailStats,
   adminRetryEmail,
+  adminRetryAllDlq,
   adminPurgeEmailDlq,
   adminPurgePendingQueue,
 } from "@/features/admin/functions/adminAlerts";
@@ -52,10 +62,12 @@ export function EmailLogTab() {
   const logFn = useServerFn(adminGetEmailLog);
   const statsFn = useServerFn(adminGetEmailStats);
   const retryFn = useServerFn(adminRetryEmail);
+  const retryAllFn = useServerFn(adminRetryAllDlq);
   const purgeFn = useServerFn(adminPurgeEmailDlq);
   const purgePendingFn = useServerFn(adminPurgePendingQueue);
 
   const [isRetrying, setIsRetrying] = useState<string | null>(null);
+  const [isRetryingAll, setIsRetryingAll] = useState(false);
   const [isPurging, setIsPurging] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState<any>(null);
   const [status, setStatus] = useState<Status>("all");
@@ -149,6 +161,37 @@ export function EmailLogTab() {
                 <Trash2 className="h-4 w-4" />
               )}
               Limpar Pendentes
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 text-primary hover:bg-primary/10"
+              disabled={isRetryingAll}
+              onClick={async () => {
+                setIsRetryingAll(true);
+                try {
+                  const result = await retryAllFn();
+                  const total = (result.auth_emails_retried || 0) + (result.transactional_emails_retried || 0);
+                  if (total > 0) {
+                    toast.success(`${total} e-mails movidos de volta para a fila de envio.`);
+                  } else {
+                    toast.info("Nenhum e-mail pendente nas filas de erro.");
+                  }
+                  stats.refetch();
+                  log.refetch();
+                } catch (err: any) {
+                  toast.error(`Erro ao reenviar: ${err.message}`);
+                } finally {
+                  setIsRetryingAll(false);
+                }
+              }}
+            >
+              {isRetryingAll ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <RotateCcw className="h-4 w-4" />
+              )}
+              Reenviar Falhas
             </Button>
             <Button
               variant="outline"

@@ -1,7 +1,16 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Loader2, MailCheck, RefreshCw, Search, SendHorizontal, Trash2, Eye } from "lucide-react";
+import { 
+  Loader2, 
+  MailCheck, 
+  RefreshCw, 
+  Search, 
+  Trash2, 
+  Eye, 
+  RotateCcw,
+  SendHorizontal
+} from "lucide-react";
 import {
   adminGetEmailLog,
   adminGetEmailStats,
@@ -32,16 +41,6 @@ import {
   AdminPagination,
   DEFAULT_PAGE_SIZE,
 } from "@/features/admin/components/AdminPagination";
-import { 
-  MailCheck, 
-  Trash2, 
-  Loader2, 
-  Eye, 
-  RotateCcw, 
-  Search,
-  Filter,
-  RefreshCw
-} from "lucide-react";
 
 type Status = "all" | "sent" | "pending" | "failed" | "suppressed";
 

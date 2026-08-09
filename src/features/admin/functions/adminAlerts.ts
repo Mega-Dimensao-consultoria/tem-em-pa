@@ -111,3 +111,27 @@ export const adminGetEmailStats = createServerFn({ method: 'GET' })
     }
     return out
   })
+
+/** Re-enviar um e-mail que falhou. */
+export const adminRetryEmail = createServerFn({ method: 'POST' })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) =>
+    z.object({ id: z.string().uuid() }).parse(input)
+  )
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context)
+    const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+    
+    const { data: logEntry, error: logError } = await supabaseAdmin
+      .from('email_send_log')
+      .select('*')
+      .eq('id', data.id)
+      .single()
+
+    if (logError || !logEntry) throw new Error('E-mail não encontrado')
+    
+    const { error } = await supabaseAdmin.rpc('retry_email_by_id', { _message_id: logEntry.message_id })
+    if (error) throw new Error(error.message)
+    
+    return { ok: true }
+  })

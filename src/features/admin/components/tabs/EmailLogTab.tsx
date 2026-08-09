@@ -6,6 +6,7 @@ import {
   adminGetEmailLog,
   adminGetEmailStats,
   adminRetryEmail,
+  adminRetryAllDlq,
   adminPurgeEmailDlq,
   adminPurgePendingQueue,
 } from "@/features/admin/functions/adminAlerts";
@@ -31,6 +32,16 @@ import {
   AdminPagination,
   DEFAULT_PAGE_SIZE,
 } from "@/features/admin/components/AdminPagination";
+import { 
+  MailCheck, 
+  Trash2, 
+  Loader2, 
+  Eye, 
+  RotateCcw, 
+  Search,
+  Filter,
+  RefreshCw
+} from "lucide-react";
 
 type Status = "all" | "sent" | "pending" | "failed" | "suppressed";
 

@@ -129,15 +129,17 @@ export const adminRetryAllDlq = createServerFn({ method: 'POST' })
     return data as { auth_emails_retried: number; transactional_emails_retried: number }
   })
 
-/** Re-enviar um e-mail específico que falhou (opcional, pois a RPC atual processa tudo). */
+/** Re-enviar um e-mail específico que falhou. */
 export const adminRetryEmail = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) =>
     z.object({ id: z.string().uuid() }).parse(input)
   )
   .handler(async ({ context }) => {
-    // Por simplicidade, usamos a mesma lógica de reenvio global por enquanto
-    return adminRetryAllDlq.handler({ context, data: {} as any })
+    await assertAdmin(context)
+    const { data, error } = await context.supabase.rpc('retry_email_dlq')
+    if (error) throw new Error(error.message)
+    return { ok: true, result: data }
   })
 
 /** Limpa todos os e-mails pendentes na fila principal. */

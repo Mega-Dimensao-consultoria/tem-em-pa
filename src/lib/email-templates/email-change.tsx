@@ -32,12 +32,17 @@ export const EmailChangeEmail = ({
 }: EmailChangeEmailProps) => (
   <Html lang="pt-BR" dir="ltr">
     <Head />
-    <Preview>Confirme a alteração de e-mail no {siteName}</Preview>
+    <Preview>Ação necessária: Confirme a alteração de seu e-mail no {siteName}</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Confirme a alteração de e-mail</Heading>
+        <Heading style={h1}>Confirmação de Novo E-mail</Heading>
         <Text style={text}>
-          Você solicitou a alteração do endereço de e-mail no {siteName} de{' '}
+          Olá! Recebemos uma solicitação para alterar o endereço de e-mail principal 
+          da sua conta no {siteName}. Esta é uma medida importante para manter seu 
+          acesso sempre atualizado e seguro.
+        </Text>
+        <Text style={text}>
+          O endereço será alterado de{' '}
           <Link href={`mailto:${oldEmail}`} style={link}>
             {oldEmail}
           </Link>{' '}
@@ -48,14 +53,16 @@ export const EmailChangeEmail = ({
           .
         </Text>
         <Text style={text}>
-          Clique no botão abaixo para confirmar esta alteração:
+          Para que a mudança seja concluída com sucesso, precisamos que você 
+          confirme a posse deste novo endereço clicando no botão abaixo:
         </Text>
         <Button style={button} href={confirmationUrl}>
-          Confirmar alteração
+          Confirmar Novo E-mail
         </Button>
         <Text style={footer}>
-          Se você não solicitou esta alteração, proteja sua conta
-          imediatamente.
+          <strong>Importante:</strong> Se você não solicitou esta alteração, por favor, 
+          ignore este e-mail e entre em contato com nosso suporte imediatamente. 
+          Alguém pode estar tentando acessar sua conta sem autorização.
         </Text>
       </Container>
     </Body>

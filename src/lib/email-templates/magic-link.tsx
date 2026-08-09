@@ -22,20 +22,24 @@ export const MagicLinkEmail = ({
 }: MagicLinkEmailProps) => (
   <Html lang="pt-BR" dir="ltr">
     <Head />
-    <Preview>Seu link de acesso para o {siteName}</Preview>
+    <Preview>Seu link de acesso rápido para o {siteName}</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Seu link de acesso</Heading>
+        <Heading style={h1}>Seu Acesso Instantâneo</Heading>
         <Text style={text}>
-          Clique no botão abaixo para entrar no {siteName}. Este link expira em
-          breve.
+          Você solicitou um link de acesso rápido para entrar na sua conta no {siteName} 
+          sem precisar digitar sua senha. Esta é uma forma segura e prática de se conectar.
+        </Text>
+        <Text style={text}>
+          Clique no botão abaixo para ser autenticado automaticamente. Por segurança, 
+          este link é de uso único e expira em alguns minutos:
         </Text>
         <Button style={button} href={confirmationUrl}>
-          Entrar
+          Entrar Agora na Minha Conta
         </Button>
         <Text style={footer}>
-          Se você não solicitou este link, pode ignorar este e-mail com
-          segurança.
+          Se você não solicitou este link de acesso, pode ignorar este e-mail com 
+          total segurança. Ninguém terá acesso à sua conta sem que o botão acima seja clicado.
         </Text>
       </Container>
     </Body>

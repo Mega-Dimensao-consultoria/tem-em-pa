@@ -70,6 +70,7 @@ export function EmailLogTab() {
 
   const [isRetrying, setIsRetrying] = useState<string | null>(null);
   const [isRetryingAll, setIsRetryingAll] = useState(false);
+  const [isRetryingPending, setIsRetryingPending] = useState(false);
   const [isPurging, setIsPurging] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState<any>(null);
   const [status, setStatus] = useState<Status>("all");

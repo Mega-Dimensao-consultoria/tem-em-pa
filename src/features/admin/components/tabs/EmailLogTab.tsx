@@ -319,7 +319,7 @@ export function EmailLogTab() {
                 </div>
               </div>
 
-              {selectedEmail.error_message && (
+              {selectedEmail.error_message ? (
                 <div className="rounded-lg bg-destructive/10 p-3 border border-destructive/20">
                   <p className="text-xs text-destructive uppercase font-bold mb-1">Log de Erro</p>
                   <p className="text-destructive whitespace-pre-wrap font-mono text-xs">

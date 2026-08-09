@@ -147,7 +147,8 @@ export const adminPurgePendingQueue = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertAdmin(context)
-    const { data, error } = await context.supabase.rpc('purge_email_queue')
+    const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+    const { data, error } = await supabaseAdmin.rpc('purge_email_queue')
     if (error) throw new Error(error.message)
     return data as Record<string, number>
   })
@@ -157,7 +158,8 @@ export const adminRetryPendingEmails = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertAdmin(context)
-    const { data, error } = await context.supabase.rpc('retry_pending_emails')
+    const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+    const { data, error } = await supabaseAdmin.rpc('retry_pending_emails')
     if (error) throw new Error(error.message)
     return data as { message: string }
   })

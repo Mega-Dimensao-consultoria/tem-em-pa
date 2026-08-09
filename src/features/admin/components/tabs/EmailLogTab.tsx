@@ -165,6 +165,37 @@ export function EmailLogTab() {
             <Button
               variant="outline"
               size="sm"
+              className="gap-2 text-primary hover:bg-primary/10"
+              disabled={isRetryingAll}
+              onClick={async () => {
+                setIsRetryingAll(true);
+                try {
+                  const result = await retryAllFn();
+                  const total = (result.auth_emails_retried || 0) + (result.transactional_emails_retried || 0);
+                  if (total > 0) {
+                    toast.success(`${total} e-mails movidos de volta para a fila de envio.`);
+                  } else {
+                    toast.info("Nenhum e-mail pendente nas filas de erro.");
+                  }
+                  stats.refetch();
+                  log.refetch();
+                } catch (err: any) {
+                  toast.error(`Erro ao reenviar: ${err.message}`);
+                } finally {
+                  setIsRetryingAll(false);
+                }
+              }}
+            >
+              {isRetryingAll ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <RotateCcw className="h-4 w-4" />
+              )}
+              Reenviar Falhas
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
               className="gap-2"
               onClick={() => {
                 log.refetch();

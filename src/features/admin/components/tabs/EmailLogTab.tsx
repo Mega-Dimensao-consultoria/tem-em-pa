@@ -62,10 +62,12 @@ export function EmailLogTab() {
   const logFn = useServerFn(adminGetEmailLog);
   const statsFn = useServerFn(adminGetEmailStats);
   const retryFn = useServerFn(adminRetryEmail);
+  const retryAllFn = useServerFn(adminRetryAllDlq);
   const purgeFn = useServerFn(adminPurgeEmailDlq);
   const purgePendingFn = useServerFn(adminPurgePendingQueue);
 
   const [isRetrying, setIsRetrying] = useState<string | null>(null);
+  const [isRetryingAll, setIsRetryingAll] = useState(false);
   const [isPurging, setIsPurging] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState<any>(null);
   const [status, setStatus] = useState<Status>("all");

@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Loader2, MailCheck, RefreshCw, Search } from "lucide-react";
+import { Loader2, MailCheck, RefreshCw, Search, SendHorizontal } from "lucide-react";
 import {
   adminGetEmailLog,
   adminGetEmailStats,
+  adminRetryEmail,
 } from "@/features/admin/functions/adminAlerts";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -40,7 +42,9 @@ function statusVariant(status: string) {
 export function EmailLogTab() {
   const logFn = useServerFn(adminGetEmailLog);
   const statsFn = useServerFn(adminGetEmailStats);
+  const retryFn = useServerFn(adminRetryEmail);
 
+  const [isRetrying, setIsRetrying] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>("all");
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
@@ -164,6 +168,7 @@ export function EmailLogTab() {
                   <th className="px-2 py-2">Template</th>
                   <th className="px-2 py-2">Status</th>
                   <th className="px-2 py-2">Erro</th>
+                  <th className="px-2 py-2 text-right">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -181,6 +186,35 @@ export function EmailLogTab() {
                     </td>
                     <td className="max-w-[280px] truncate px-2 py-2 text-xs text-muted-foreground">
                       {r.error_message ?? "—"}
+                    </td>
+                    <td className="px-2 py-2 text-right">
+                      {(r.status === "failed" || r.status === "pending") && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-primary"
+                          disabled={isRetrying === r.id}
+                          title="Reenviar e-mail"
+                          onClick={async () => {
+                            setIsRetrying(r.id);
+                            try {
+                              await retryFn({ data: { id: r.id } });
+                              toast.success("Comando de reenvio enviado com sucesso");
+                              log.refetch();
+                            } catch (err: any) {
+                              toast.error(`Erro ao reenviar: ${err.message}`);
+                            } finally {
+                              setIsRetrying(null);
+                            }
+                          }}
+                        >
+                          {isRetrying === r.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <SendHorizontal className="h-4 w-4" />
+                          )}
+                        </Button>
+                      )}
                     </td>
                   </tr>
                 ))}

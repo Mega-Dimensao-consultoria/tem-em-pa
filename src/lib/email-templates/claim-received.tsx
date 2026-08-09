@@ -13,47 +13,47 @@ const Email = ({
   appUrl = 'https://www.temnaminhacidade.com.br',
 }: Props) => (
   <EmailLayout
-    previewText={`Recebemos um pedido para reivindicar a empresa ${companyName} no Tem na minha cidade.`}
-    title="Pedido de reivindicação recebido"
+    previewText={`Informação Importante: Pedido de reivindicação para a empresa ${companyName}`}
+    title="Recebemos um pedido de reivindicação"
     intro={
       <>
-        Olá! Um usuário do Tem na minha cidade. acaba de enviar um pedido formal para reivindicar
-        a empresa <strong>{companyName}</strong>. Como você consta no nosso sistema
-        como contato relacionado a esse cadastro, estamos te avisando para que tudo
-        seja resolvido com transparência.
+        Olá! Gostaríamos de informar que um usuário da plataforma acaba de enviar um 
+        pedido formal para reivindicar a administração da empresa <strong>{companyName}</strong>. 
+        Como você consta em nossos registros como o contato atual para este cadastro, 
+        estamos notificando você para garantir total transparência em todo o processo.
       </>
     }
     body={
       <>
         <Text style={text}>
-          Reivindicar uma empresa significa pedir para assumir oficialmente a
-          administração do cadastro — passando a poder editar dados, responder
-          avaliações e gerenciar fotos. Por isso, antes de qualquer alteração, nossa
-          equipe vai analisar os documentos enviados pelo solicitante para confirmar
-          o vínculo real com o negócio (como contrato social, comprovantes de endereço
-          comercial ou registros equivalentes).
+          A reivindicação de uma empresa é o procedimento pelo qual um usuário solicita 
+          o controle oficial do perfil comercial na nossa plataforma. Isso permite 
+          atualizar informações, responder avaliações de clientes e gerenciar fotos. 
+          Por ser uma ação de alta relevância, nossa equipe de moderação realizará uma 
+          análise criteriosa dos documentos comprobatórios enviados pelo solicitante.
         </Text>
         <Text style={text}>
-          Esse processo costuma levar até alguns dias úteis. Assim que houver uma
-          decisão — aprovada ou recusada — você receberá um novo e-mail explicando o
-          resultado. Enquanto isso, nenhuma informação pública da empresa é alterada.
+          Durante este período de validação, que pode levar alguns dias úteis, nenhuma 
+          alteração será feita nos dados públicos da sua empresa. Você receberá uma 
+          nova notificação assim que a análise for concluída, independentemente do 
+          resultado ser aprovação ou recusa.
         </Text>
         <Text style={text}>
-          <strong>Se você é o verdadeiro responsável</strong> pela empresa e ainda não
-          confirmou o seu vínculo no painel, recomendamos que faça isso agora.
-          Cadastros confirmados têm prioridade na análise e ajudam a evitar
-          reivindicações indevidas por terceiros. Você também pode anexar documentos
-          adicionais que comprovem a sua relação com o negócio.
+          <strong>Importante para você:</strong> Se você é o proprietário legítimo e 
+          ainda não validou sua conta no painel administrativo, sugerimos que o faça 
+          o quanto antes. Perfis com identidade já confirmada possuem prioridade em 
+          nossas análises de segurança e ajudam a prevenir solicitações indevidas.
         </Text>
         <Text style={text}>
-          Caso não reconheça esse pedido ou queira contestá-lo, entre em contato com
-          nossa equipe de suporte o quanto antes para registrar a sua manifestação.
+          Caso você não reconheça este pedido ou deseje contestar a solicitação de 
+          terceiros agora mesmo, sinta-se à vontade para entrar em contato com nossa 
+          equipe de suporte especializado.
         </Text>
       </>
     }
-    ctaLabel="Abrir painel do dono"
+    ctaLabel="Gerenciar Minha Empresa"
     ctaUrl={`${appUrl}/owner`}
-    footnote="Você está recebendo este e-mail porque consta como contato vinculado a este cadastro no Tem na minha cidade."
+    footnote="Este e-mail foi enviado automaticamente porque você é o contato de referência para esta empresa na plataforma."
   />
 )
 

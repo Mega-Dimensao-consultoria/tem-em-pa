@@ -7,6 +7,7 @@ import {
   adminGetEmailStats,
   adminRetryEmail,
   adminPurgeEmailDlq,
+  adminPurgePendingQueue,
 } from "@/features/admin/functions/adminAlerts";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,6 +53,7 @@ export function EmailLogTab() {
   const statsFn = useServerFn(adminGetEmailStats);
   const retryFn = useServerFn(adminRetryEmail);
   const purgeFn = useServerFn(adminPurgeEmailDlq);
+  const purgePendingFn = useServerFn(adminPurgePendingQueue);
 
   const [isRetrying, setIsRetrying] = useState<string | null>(null);
   const [isPurging, setIsPurging] = useState(false);
@@ -117,6 +119,36 @@ export function EmailLogTab() {
                 <Trash2 className="h-4 w-4" />
               )}
               Limpar Falhas
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 text-orange-600 hover:bg-orange-50"
+              disabled={isPurging}
+              onClick={async () => {
+                if (!confirm("Deseja realmente limpar TODOS os e-mails PENDENTES na fila de envio?"))
+                  return;
+                setIsPurging(true);
+                try {
+                  const result = await purgePendingFn();
+                  toast.success(
+                    `Fila pendente limpa. Removidos: ${Number(result.auth_emails || 0) + Number(result.transactional_emails || 0)}`
+                  );
+                  stats.refetch();
+                  log.refetch();
+                } catch (err: any) {
+                  toast.error(`Erro ao limpar fila: ${err.message}`);
+                } finally {
+                  setIsPurging(false);
+                }
+              }}
+            >
+              {isPurging ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Trash2 className="h-4 w-4" />
+              )}
+              Limpar Pendentes
             </Button>
             <Button
               variant="outline"
@@ -241,14 +273,22 @@ export function EmailLogTab() {
                           size="icon"
                           className="h-8 w-8 text-primary"
                           disabled={isRetrying === r.id}
-                          title="Reenviar e-mail"
+                          title="Reenviar fila de erros"
                           onClick={async (e) => {
                             e.stopPropagation();
                             setIsRetrying(r.id);
                             try {
-                              await retryFn({ data: { id: r.id } });
-                              toast.success("Comando de reenvio enviado com sucesso");
+                              const result = await retryFn({ data: { id: r.id } });
+                              const totalRetried = Number(result.result?.auth_emails_retried || 0) + 
+                                                 Number(result.result?.transactional_emails_retried || 0);
+                              
+                              if (totalRetried > 0) {
+                                toast.success(`${totalRetried} e-mails movidos para a fila de envio.`);
+                              } else {
+                                toast.info("Nenhum e-mail pendente nas filas de erro para reenvio.");
+                              }
                               log.refetch();
+                              stats.refetch();
                             } catch (err: any) {
                               toast.error(`Erro ao reenviar: ${err.message}`);
                             } finally {
@@ -259,7 +299,7 @@ export function EmailLogTab() {
                           {isRetrying === r.id ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
                           ) : (
-                            <SendHorizontal className="h-4 w-4" />
+                            <RefreshCw className="h-4 w-4" />
                           )}
                         </Button>
                       )}

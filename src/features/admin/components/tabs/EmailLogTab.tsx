@@ -66,6 +66,7 @@ export function EmailLogTab() {
   const retryAllFn = useServerFn(adminRetryAllDlq);
   const purgeFn = useServerFn(adminPurgeEmailDlq);
   const purgePendingFn = useServerFn(adminPurgePendingQueue);
+  const retryPendingFn = useServerFn(adminRetryPendingEmails);
 
   const [isRetrying, setIsRetrying] = useState<string | null>(null);
   const [isRetryingAll, setIsRetryingAll] = useState(false);

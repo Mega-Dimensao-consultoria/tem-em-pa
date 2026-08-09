@@ -18,6 +18,7 @@ import {
   adminRetryAllDlq,
   adminPurgeEmailDlq,
   adminPurgePendingQueue,
+  adminRetryPendingEmails,
 } from "@/features/admin/functions/adminAlerts";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -65,9 +66,11 @@ export function EmailLogTab() {
   const retryAllFn = useServerFn(adminRetryAllDlq);
   const purgeFn = useServerFn(adminPurgeEmailDlq);
   const purgePendingFn = useServerFn(adminPurgePendingQueue);
+  const retryPendingFn = useServerFn(adminRetryPendingEmails);
 
   const [isRetrying, setIsRetrying] = useState<string | null>(null);
   const [isRetryingAll, setIsRetryingAll] = useState(false);
+  const [isRetryingPending, setIsRetryingPending] = useState(false);
   const [isPurging, setIsPurging] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState<any>(null);
   const [status, setStatus] = useState<Status>("all");
@@ -161,6 +164,32 @@ export function EmailLogTab() {
                 <Trash2 className="h-4 w-4" />
               )}
               Limpar Pendentes
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 text-primary hover:bg-primary/10"
+              disabled={isRetryingPending}
+              onClick={async () => {
+                setIsRetryingPending(true);
+                try {
+                  const result = await retryPendingFn();
+                  toast.success(result.message);
+                  stats.refetch();
+                  log.refetch();
+                } catch (err: any) {
+                  toast.error(`Erro ao processar pendentes: ${err.message}`);
+                } finally {
+                  setIsRetryingPending(false);
+                }
+              }}
+            >
+              {isRetryingPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <SendHorizontal className="h-4 w-4" />
+              )}
+              Reenviar Pendentes
             </Button>
             <Button
               variant="outline"

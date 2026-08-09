@@ -1862,6 +1862,7 @@ export type Database = {
         Returns: undefined
       }
       retry_email_dlq: { Args: never; Returns: Json }
+      retry_pending_emails: { Args: never; Returns: Json }
       search_companies_autocomplete: {
         Args: { _city_id: string; lim?: number; q: string }
         Returns: {

@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Loader2, MailCheck, RefreshCw, Search, SendHorizontal } from "lucide-react";
+import { Loader2, MailCheck, RefreshCw, Search, SendHorizontal, Trash2, Eye } from "lucide-react";
 import {
   adminGetEmailLog,
   adminGetEmailStats,
   adminRetryEmail,
+  adminPurgeEmailDlq,
 } from "@/features/admin/functions/adminAlerts";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +19,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   AdminPagination,
   DEFAULT_PAGE_SIZE,
@@ -43,8 +51,11 @@ export function EmailLogTab() {
   const logFn = useServerFn(adminGetEmailLog);
   const statsFn = useServerFn(adminGetEmailStats);
   const retryFn = useServerFn(adminRetryEmail);
+  const purgeFn = useServerFn(adminPurgeEmailDlq);
 
   const [isRetrying, setIsRetrying] = useState<string | null>(null);
+  const [isPurging, setIsPurging] = useState(false);
+  const [selectedEmail, setSelectedEmail] = useState<any>(null);
   const [status, setStatus] = useState<Status>("all");
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
@@ -76,18 +87,67 @@ export function EmailLogTab() {
               Histórico de e-mails
             </h3>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-2"
-            onClick={() => {
-              log.refetch();
-              stats.refetch();
-            }}
-          >
-            <RefreshCw className="h-4 w-4" /> Atualizar
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 text-destructive hover:bg-destructive/10"
+              disabled={isPurging}
+              onClick={async () => {
+                if (!confirm("Deseja realmente limpar todos os e-mails que falharam (DLQ)?"))
+                  return;
+                setIsPurging(true);
+                try {
+                  const result = await purgeFn();
+                  toast.success(
+                    `DLQ limpa. Removidos: ${result.auth_emails_dlq + result.transactional_emails_dlq}`
+                  );
+                  stats.refetch();
+                  log.refetch();
+                } catch (err: any) {
+                  toast.error(`Erro ao limpar: ${err.message}`);
+                } finally {
+                  setIsPurging(false);
+                }
+              }}
+            >
+              {isPurging ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Trash2 className="h-4 w-4" />
+              )}
+              Limpar Falhas
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2"
+              onClick={() => {
+                log.refetch();
+                stats.refetch();
+              }}
+            >
+              <RefreshCw className="h-4 w-4" /> Atualizar
+            </Button>
+          </div>
         </div>
+
+        <Tabs
+          value={status}
+          onValueChange={(v) => {
+            setStatus(v as Status);
+            setPage(1);
+          }}
+          className="mb-6"
+        >
+          <TabsList className="grid w-full grid-cols-5 lg:w-[600px]">
+            <TabsTrigger value="all">Todos</TabsTrigger>
+            <TabsTrigger value="sent">Enviados</TabsTrigger>
+            <TabsTrigger value="failed">Falhou</TabsTrigger>
+            <TabsTrigger value="pending">Na fila</TabsTrigger>
+            <TabsTrigger value="suppressed">Bloqueado</TabsTrigger>
+          </TabsList>
+        </Tabs>
 
         <div className="mb-4 flex flex-wrap gap-2 text-xs">
           {(["sent", "pending", "failed", "suppressed"] as const).map((s) => (
@@ -126,28 +186,6 @@ export function EmailLogTab() {
               <Search className="h-4 w-4" /> Buscar
             </Button>
           </form>
-
-          <div>
-            <label className="block text-xs text-muted-foreground">Status</label>
-            <Select
-              value={status}
-              onValueChange={(v) => {
-                setStatus(v as Status);
-                setPage(1);
-              }}
-            >
-              <SelectTrigger className="h-9 w-40" aria-label="Filtrar status">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="sent">Enviado</SelectItem>
-                <SelectItem value="pending">Na fila</SelectItem>
-                <SelectItem value="failed">Falhou</SelectItem>
-                <SelectItem value="suppressed">Bloqueado</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
         </div>
 
         {log.isLoading ? (
@@ -187,7 +225,16 @@ export function EmailLogTab() {
                     <td className="max-w-[280px] truncate px-2 py-2 text-xs text-muted-foreground">
                       {r.error_message ?? "—"}
                     </td>
-                    <td className="px-2 py-2 text-right">
+                    <td className="px-2 py-2 text-right flex justify-end gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        title="Ver detalhes"
+                        onClick={() => setSelectedEmail(r)}
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
                       {(r.status === "failed" || r.status === "pending") && (
                         <Button
                           variant="ghost"
@@ -195,7 +242,8 @@ export function EmailLogTab() {
                           className="h-8 w-8 text-primary"
                           disabled={isRetrying === r.id}
                           title="Reenviar e-mail"
-                          onClick={async () => {
+                          onClick={async (e) => {
+                            e.stopPropagation();
                             setIsRetrying(r.id);
                             try {
                               await retryFn({ data: { id: r.id } });
@@ -235,6 +283,59 @@ export function EmailLogTab() {
           label="envios"
         />
       </div>
+
+      <Dialog
+        open={!!selectedEmail}
+        onOpenChange={(open) => !open && setSelectedEmail(null)}
+      >
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Detalhes do Envio</DialogTitle>
+          </DialogHeader>
+          {selectedEmail && (
+            <div className="space-y-4 text-sm">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-xs text-muted-foreground uppercase">ID da Mensagem</p>
+                  <p className="font-mono break-all">{selectedEmail.message_id || "—"}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground uppercase">Data</p>
+                  <p>{new Date(selectedEmail.created_at).toLocaleString("pt-BR")}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground uppercase">Destinatário</p>
+                  <p>{selectedEmail.recipient_email}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground uppercase">Template</p>
+                  <Badge variant="outline">{selectedEmail.template_name}</Badge>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground uppercase">Status</p>
+                  <Badge variant={statusVariant(selectedEmail.status)}>
+                    {STATUS_LABEL[selectedEmail.status] ?? selectedEmail.status}
+                  </Badge>
+                </div>
+              </div>
+
+              {selectedEmail.error_message && (
+                <div className="rounded-lg bg-destructive/10 p-3 border border-destructive/20">
+                  <p className="text-xs text-destructive uppercase font-bold mb-1">Log de Erro</p>
+                  <p className="text-destructive whitespace-pre-wrap font-mono text-xs">
+                    {selectedEmail.error_message}
+                  </p>
+                </div>
+              ) : (
+                <div className="rounded-lg bg-green-500/10 p-3 border border-green-500/20">
+                  <p className="text-xs text-green-600 uppercase font-bold">Status de Sucesso</p>
+                  <p className="text-green-600">E-mail processado sem erros registrados.</p>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

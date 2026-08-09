@@ -23,27 +23,32 @@ const Email = ({
     title={alertTitle}
     intro={
       <>
-        Você está recebendo este aviso porque é <strong>administrador</strong> do
-        Tem na minha cidade. Um novo evento que exige atenção da moderação acabou de
-        ser registrado na plataforma.
+        Você está recebendo este alerta de alta prioridade porque possui privilégios de 
+        <strong> administrador</strong> na plataforma. Um novo evento que requer 
+        análise imediata da equipe de moderação foi registrado e aguarda sua ação.
       </>
     }
     body={
       <>
         <Text style={text}>
-          <strong>Tipo do evento:</strong> {eventLabel}
+          <strong>Identificação do Evento:</strong> {eventLabel}
         </Text>
         {alertMessage ? <Text style={quote}>{alertMessage}</Text> : null}
         <Text style={text}>
-          Acesse o painel administrativo para analisar o caso, conferir os dados
-          enviados e tomar a decisão adequada. Enquanto o item não for tratado, ele
-          permanece na fila de pendências do painel.
+          Recomendamos que você acesse o painel administrativo o quanto antes para 
+          conferir os detalhes completos, validar as evidências enviadas e aplicar a 
+          decisão necessária conforme nossas diretrizes de comunidade.
+        </Text>
+        <Text style={text}>
+          Lembramos que, enquanto este item não for processado, ele permanecerá na 
+          fila de pendências crítica, podendo impactar a experiência dos usuários 
+          envolvidos.
         </Text>
       </>
     }
-    ctaLabel="Abrir painel administrativo"
+    ctaLabel="Acessar Painel de Controle"
     ctaUrl={`${appUrl}${link?.startsWith('/') ? link : '/admin'}`}
-    footnote="Este aviso é enviado automaticamente para todos os administradores cadastrados no Tem na minha cidade."
+    footnote="Este é um comunicado técnico enviado automaticamente para a equipe de gestão da plataforma."
   />
 )
 

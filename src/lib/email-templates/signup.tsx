@@ -27,29 +27,36 @@ export const SignupEmail = ({
 }: SignupEmailProps) => (
   <Html lang="pt-BR" dir="ltr">
     <Head />
-    <Preview>Confirme seu e-mail no {siteName}</Preview>
+    <Preview>Seja muito bem-vindo ao {siteName} - Confirme seu cadastro</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Confirme seu e-mail</Heading>
+        <Heading style={h1}>Bem-vindo ao {siteName}!</Heading>
         <Text style={text}>
-          Obrigado por criar sua conta no{' '}
+          É um prazer ter você conosco! O{' '}
           <Link href={siteUrl} style={link}>
             <strong>{siteName}</strong>
-          </Link>
-          !
+          </Link>{' '}
+          é o seu novo guia local completo, facilitando a conexão entre moradores, 
+          visitantes e as melhores empresas e profissionais da sua região.
         </Text>
         <Text style={text}>
-          Confirme seu endereço de e-mail (
+          Para garantir a segurança da sua conta e liberar o acesso total a todas as 
+          nossas funcionalidades — como favoritar locais, deixar avaliações e receber 
+          ofertas exclusivas — precisamos que você confirme seu endereço de e-mail (
           <Link href={`mailto:${recipient}`} style={link}>
             {recipient}
           </Link>
-          ) clicando no botão abaixo:
+          ).
+        </Text>
+        <Text style={text}>
+          Por favor, clique no botão abaixo para ativar sua conta agora mesmo:
         </Text>
         <Button style={button} href={confirmationUrl}>
-          Confirmar e-mail
+          Confirmar e Ativar Minha Conta
         </Button>
         <Text style={footer}>
-          Se você não criou uma conta, pode ignorar este e-mail com segurança.
+          Caso você não tenha realizado este cadastro, por favor, ignore esta mensagem. 
+          Sua conta só será ativada após o clique no botão acima.
         </Text>
       </Container>
     </Body>

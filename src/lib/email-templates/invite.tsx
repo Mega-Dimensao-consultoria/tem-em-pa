@@ -25,23 +25,31 @@ export const InviteEmail = ({
 }: InviteEmailProps) => (
   <Html lang="pt-BR" dir="ltr">
     <Head />
-    <Preview>Você foi convidado(a) para o {siteName}</Preview>
+    <Preview>Convite especial: Junte-se ao {siteName}</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Você foi convidado(a)</Heading>
+        <Heading style={h1}>Você Recebeu um Convite!</Heading>
         <Text style={text}>
-          Você foi convidado(a) para participar do{' '}
+          Temos ótimas notícias! Você foi convidado(a) para fazer parte do{' '}
           <Link href={siteUrl} style={link}>
             <strong>{siteName}</strong>
           </Link>
-          . Clique no botão abaixo para aceitar o convite e criar sua conta.
+          , a plataforma que conecta os melhores estabelecimentos e profissionais 
+          diretamente com os moradores e visitantes da cidade.
+        </Text>
+        <Text style={text}>
+          Ao aceitar este convite, você poderá gerenciar perfis, interagir com a 
+          comunidade e aproveitar todas as ferramentas exclusivas que preparamos para você.
+        </Text>
+        <Text style={text}>
+          Clique no botão abaixo para aceitar o convite e completar o seu cadastro:
         </Text>
         <Button style={button} href={confirmationUrl}>
-          Aceitar convite
+          Aceitar Convite e Começar
         </Button>
         <Text style={footer}>
-          Se você não esperava este convite, pode ignorar este e-mail com
-          segurança.
+          Se você não esperava este convite ou não conhece a pessoa/empresa que o enviou, 
+          pode ignorar este e-mail. Nenhuma conta será criada sem a sua ação.
         </Text>
       </Container>
     </Body>

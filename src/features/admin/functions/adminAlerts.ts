@@ -121,31 +121,23 @@ export const adminRetryEmail = createServerFn({ method: 'POST' })
   .handler(async ({ context }) => {
     await assertAdmin(context)
     
-    // Como a RPC individual não existe, invocamos o job de reenvio da DLQ.
-    // O job processa lotes e re-enfileira o que estiver parado.
-    const dispatchSecret = process.env.PUSH_DISPATCH_SECRET;
-    if (!dispatchSecret) throw new Error('Secret de despacho não configurado');
-
-    const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
-    const host = process.env.LOVABLE_APP_DOMAIN || 'localhost:8080';
-    const url = `${protocol}://${host}/api/public/hooks/retry-email-dlq`;
-
-    try {
-      const resp = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'x-dispatch-secret': dispatchSecret
-        }
-      });
-      
-      if (!resp.ok) {
-        const text = await resp.text();
-        throw new Error(`Falha no trigger: ${text}`);
-      }
-      
-      return { ok: true };
-    } catch (err: any) {
-      console.error('Falha ao acionar reenvio:', err);
-      throw new Error('Não foi possível processar o reenvio no momento.');
+    // Invocamos a RPC que processa as filas de erro (DLQ) e as move de volta para a fila principal.
+    const { data, error } = await context.supabase.rpc('retry_email_dlq')
+    
+    if (error) {
+      console.error('Falha ao acionar RPC de reenvio:', error)
+      throw new Error(error.message || 'Não foi possível processar o reenvio no momento.')
     }
+    
+    return { ok: true, result: data }
+  })
+
+/** Limpa todos os e-mails pendentes na fila principal. */
+export const adminPurgePendingQueue = createServerFn({ method: 'POST' })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context)
+    const { data, error } = await context.supabase.rpc('purge_email_queue')
+    if (error) throw new Error(error.message)
+    return data as Record<string, number>
   })

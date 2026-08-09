@@ -1848,6 +1848,7 @@ export type Database = {
         Returns: number
       }
       purge_email_dlq: { Args: never; Returns: Json }
+      purge_email_queue: { Args: never; Returns: Json }
       read_email_batch: {
         Args: { batch_size: number; queue_name: string; vt: number }
         Returns: {
@@ -1860,6 +1861,7 @@ export type Database = {
         Args: { p_reply: string; p_review_id: string }
         Returns: undefined
       }
+      retry_email_dlq: { Args: never; Returns: Json }
       search_companies_autocomplete: {
         Args: { _city_id: string; lim?: number; q: string }
         Returns: {

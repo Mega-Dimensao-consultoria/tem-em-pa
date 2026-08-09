@@ -100,7 +100,7 @@ export function EmailLogTab() {
                 try {
                   const result = await purgeFn();
                   toast.success(
-                    `DLQ limpa. Removidos: ${result.auth_emails_dlq + result.transactional_emails_dlq}`
+                    `DLQ limpa. Removidos: ${Number(result.auth_emails_dlq || 0) + Number(result.transactional_emails_dlq || 0)}`
                   );
                   stats.refetch();
                   log.refetch();

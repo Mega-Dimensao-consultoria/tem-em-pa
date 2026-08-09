@@ -11,10 +11,11 @@ import {
 } from '@react-email/components'
 
 interface ReauthenticationEmailProps {
+  siteName: string
   token: string
 }
-
-export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => (
+ 
+export const ReauthenticationEmail = ({ siteName, token }: ReauthenticationEmailProps) => (
   <Html lang="pt-BR" dir="ltr">
     <Head />
     <Preview>Seu código de segurança para acesso ao {siteName}</Preview>

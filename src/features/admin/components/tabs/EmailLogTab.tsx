@@ -279,8 +279,9 @@ export function EmailLogTab() {
                             setIsRetrying(r.id);
                             try {
                               const result = await retryFn({ data: { id: r.id } });
-                              const totalRetried = Number(result.result?.auth_emails_retried || 0) + 
-                                                 Number(result.result?.transactional_emails_retried || 0);
+                              const resData = result.result as any;
+                              const totalRetried = Number(resData?.auth_emails_retried || 0) + 
+                                                 Number(resData?.transactional_emails_retried || 0);
                               
                               if (totalRetried > 0) {
                                 toast.success(`${totalRetried} e-mails movidos para a fila de envio.`);

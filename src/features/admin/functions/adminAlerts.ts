@@ -130,7 +130,10 @@ export const adminRetryEmail = createServerFn({ method: 'POST' })
 
     if (logError || !logEntry) throw new Error('E-mail não encontrado')
     
-    const { error } = await supabaseAdmin.rpc('retry_email_by_id', { _message_id: logEntry.message_id })
+    // Tenta reprocessar e-mails que caíram no DLQ. 
+    // Como a RPC específica de reenvio individual não foi encontrada,
+    // usamos a purga/retry do DLQ que re-enfileira as mensagens falhas.
+    const { error } = await supabaseAdmin.rpc('retry_email_dlq')
     if (error) throw new Error(error.message)
     
     return { ok: true }

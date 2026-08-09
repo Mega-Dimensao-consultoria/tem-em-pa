@@ -118,23 +118,34 @@ export const adminRetryEmail = createServerFn({ method: 'POST' })
   .inputValidator((input: unknown) =>
     z.object({ id: z.string().uuid() }).parse(input)
   )
-  .handler(async ({ data, context }) => {
+  .handler(async ({ context }) => {
     await assertAdmin(context)
-    const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
     
-    const { data: logEntry, error: logError } = await supabaseAdmin
-      .from('email_send_log')
-      .select('*')
-      .eq('id', data.id)
-      .single()
+    // Como a RPC individual não existe, invocamos o job de reenvio da DLQ.
+    // O job processa lotes e re-enfileira o que estiver parado.
+    const dispatchSecret = process.env.PUSH_DISPATCH_SECRET;
+    if (!dispatchSecret) throw new Error('Secret de despacho não configurado');
 
-    if (logError || !logEntry) throw new Error('E-mail não encontrado')
-    
-    // Tenta reprocessar e-mails que caíram no DLQ. 
-    // Como a RPC específica de reenvio individual não foi encontrada,
-    // usamos a purga/retry do DLQ que re-enfileira as mensagens falhas.
-    const { error } = await supabaseAdmin.rpc('retry_email_dlq')
-    if (error) throw new Error(error.message)
-    
-    return { ok: true }
+    const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
+    const host = process.env.LOVABLE_APP_DOMAIN || 'localhost:8080';
+    const url = `${protocol}://${host}/api/public/hooks/retry-email-dlq`;
+
+    try {
+      const resp = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'x-dispatch-secret': dispatchSecret
+        }
+      });
+      
+      if (!resp.ok) {
+        const text = await resp.text();
+        throw new Error(`Falha no trigger: ${text}`);
+      }
+      
+      return { ok: true };
+    } catch (err: any) {
+      console.error('Falha ao acionar reenvio:', err);
+      throw new Error('Não foi possível processar o reenvio no momento.');
+    }
   })

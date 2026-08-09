@@ -151,3 +151,13 @@ export const adminPurgePendingQueue = createServerFn({ method: 'POST' })
     if (error) throw new Error(error.message)
     return data as Record<string, number>
   })
+
+/** Aciona o reprocessamento da fila de e-mails pendentes. */
+export const adminRetryPendingEmails = createServerFn({ method: 'POST' })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context)
+    const { data, error } = await context.supabase.rpc('retry_pending_emails')
+    if (error) throw new Error(error.message)
+    return data as { message: string }
+  })

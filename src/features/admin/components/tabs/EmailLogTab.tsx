@@ -18,6 +18,7 @@ import {
   adminRetryAllDlq,
   adminPurgeEmailDlq,
   adminPurgePendingQueue,
+  adminRetryPendingEmails,
 } from "@/features/admin/functions/adminAlerts";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

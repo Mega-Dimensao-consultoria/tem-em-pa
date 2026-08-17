@@ -1,60 +1,61 @@
+# Plano de Implementação: Área "O que estão vendendo na minha cidade?"
 
-# Contadores reais + paginação universal no admin
+Implementação de uma nova seção de marketplace de produtos, permitindo que empresas aprovadas promovam até 10 produtos com galeria de fotos, filtros por cidade e categoria, e contato direto via WhatsApp.
 
-Objetivo: nenhuma estimativa em lugar nenhum, e toda lista longa com paginação de página com tamanho editável (10/25/50/100).
+## 1. Banco de Dados e Segurança
 
-## Parte 1 — Cache de contadores (banco)
+### Alterações no Esquema
+- **Tabela `products`**:
+    - Adicionar `image_url_2` até `image_url_10` (totalizando 10 colunas de imagem).
+    - Adicionar `is_promoted` (boolean) para indicar se o produto deve aparecer na vitrine global.
+    - Adicionar `is_featured` (boolean) para destaques pagos (roadmap).
+    - Adicionar `category` (string/enum) para filtros de tipo de produto.
+- **Tabela `companies`**:
+    - Garantir que a contagem de produtos promovidos seja validada (máx 10).
 
-Criar `public.admin_stats_cache` com uma linha por métrica (`key text PRIMARY KEY, value bigint, updated_at timestamptz`). Populada por triggers `AFTER INSERT/UPDATE/DELETE` nas tabelas grandes:
+### Políticas de Segurança (RLS)
+- `SELECT`: Público para produtos de empresas com `status = 'approved'`, `is_active = true` e que possuam ao menos uma imagem (`image_url_1 IS NOT NULL`).
+- `INSERT/UPDATE/DELETE`: Apenas o `owner_id` da empresa vinculada ou administradores.
 
-- `companies` → total, approved, pending (pending+claimed_pending), rejected
-- `reviews` → total, pending (pending_moderation+flagged)
-- `company_claims` → pending
-- `company_removal_requests` → pending
-- `review_reports` → pending
-- `contact_messages` → pending, total
-- `profiles` → total (usuários)
-- `blog_posts` → total, published
-- `site_pages`, `cities`, `neighborhoods`, `categories` → total
+## 2. Interface Administrativa (Painel do Dono)
 
-Regra: cada trigger só faz `UPDATE admin_stats_cache SET value = value ± 1 WHERE key = ...`. Custo por escrita ≈ 1 update em tabela de 15 linhas — imperceptível. Migração seed roda `COUNT(*)` real 1× (sem timeout: rodando como SECURITY DEFINER via função de reseed).
+### Gerenciamento de Produtos
+- **Formulário de Produto**:
+    - Expandir `ProductForm` para suportar 10 imagens (usando `AttachmentPicker` ou `ImageUpload`).
+    - Adicionar campos obrigatórios: Nome, Descrição, Preço, Categoria e ao menos 1 Imagem.
+    - Toggle "Promover para a Vitrine Global" (respeitando o limite de 10).
+- **Lista de Produtos**:
+    - Indicador visual de produtos promovidos.
+    - Validação de limite de 10 produtos totais por empresa.
 
-RLS: leitura só por admin (`has_role(auth.uid(),'admin')`). Uma RPC `admin_reseed_stats()` recalcula tudo do zero on-demand.
+## 3. Novas Rotas e Navegação
 
-## Parte 2 — Frontend admin: contadores exatos
+### Menu e Roteamento
+- Adicionar "O que estão vendendo?" no Menu principal (`Navigation`).
+- **Nova Rota**: `/o-que-estao-vendendo` (e opcionalmente `/vendas`).
+    - Listagem paginada (30 por página).
+    - Filtros: Busca por nome, Seleção de Cidade, Categoria de Produto.
 
-- `stats.ts`: substitui os 18 `count: "estimated"` por um único `SELECT * FROM admin_stats_cache`. Resultado exato, ~10ms.
-- `AdminOverviewTab`: sem mudança visual, agora com número real.
-- `companies.ts` (`useCompaniesPage`): quando não há filtro custom (status/city/q), usa `total` do cache; quando há filtro, usa `count: "estimated"` (única exceção justificada — filtro arbitrário sobre 200k linhas não tem como ser exato em <8s sem materializar cada combinação).
+### Componentes de Visualização
+- **ProductCard**: Exibição em grid com Foto Destaque, Preço, Nome e Localização (Bairro - Cidade/UF).
+- **ProductDetailModal**:
+    - Galeria de imagens (slides).
+    - Detalhes do produto e da empresa vendedora.
+    - Botão "Falar com o Vendedor" (link direto para WhatsApp da empresa).
 
-## Parte 3 — Paginação universal
+## 4. Integração na Home
+- Nova seção: "Produtos que estão vendendo aqui".
+- Carrossel ou Grid com os produtos promovidos mais recentes/aleatórios.
 
-Componente `AdminPagination` ganha seletor de tamanho de página (10/25/50/100), estado persistido em `localStorage` por lista (`admin.pageSize.<listKey>`).
+## Detalhes Técnicos
 
-Refatorar cada aba abaixo para paginação server-side (`.range(from,to)` + `count: "exact"` — todas essas tabelas têm poucos milhares de linhas no máximo, `exact` roda em milissegundos):
+- **Tecnologias**: TanStack Start, Supabase (RLS + Storage), Tailwind CSS, Lucide Icons.
+- **Performance**: Uso de `useSuspenseQuery` para carregamento de dados e `createServerFn` para filtros complexos se necessário.
+- **Validação**: Triggers no banco de dados para garantir que apenas empresas aprovadas promovam produtos e para impor o limite de 10 itens.
 
-- `AllCompaniesTab` — já paginada; adicionar seletor de tamanho.
-- `UsersTab` — hoje carrega tudo; server-side com busca.
-- `PendingCompaniesTab`, `PendingClaimsTab`, `PendingRemovalsTab`, `PendingReviewsTab`, `ReportsTab`, `FlaggedCompaniesTab`, `ContactMessagesTab`, `TwoFaResetRequestsTab`, `AuditLogTab`, `DuplicatesTab`.
-- `BlogPostsTab`, `BlogCategoriesTab`, `SitePagesTab`, `CategoriesTab`, `BannedWordsTab`, `CitiesSeoTab`.
+---
 
-Cada tabela retorna `{ rows, total }` do banco; UI mostra "Mostrando X–Y de TOTAL" com total real. Nenhum "500 de 500" placeholder.
-
-## Detalhes técnicos
-
-- Triggers usam `pg_try_advisory_xact_lock` por chave para evitar lock contention em bursts de inserts (ex.: importação em massa) — cai no fallback de reseed agendado.
-- Após uma importação em massa, chamar `admin_reseed_stats()` explicitamente do backend do importador para garantir consistência (a fila natural de triggers já mantém sincronia, mas o reseed é barato como salvaguarda).
-- `AdminPagination` novo prop: `pageSize`, `onPageSizeChange`, `pageSizeOptions=[10,25,50,100]`. Mantém compat com quem não passar.
-- Hooks de listagem seguem o padrão `useXxxPage(filters, page, pageSize) → { rows, total }` com `placeholderData: prev`.
-
-## Ordem de entrega
-
-1. Migração do cache + triggers + RPC de reseed + seed inicial.
-2. Refatorar `stats.ts` + `AdminOverviewTab`.
-3. `AdminPagination` com seletor de tamanho + `useAdminPageSize(listKey)`.
-4. Converter cada aba (`AllCompaniesTab` primeiro; depois Users; depois as pending; depois as demais).
-
-## Fora do escopo
-
-- Paginação em telas do usuário final (empresas, home, cidade) — só admin, como pedido.
-- Métricas fora das listadas (ex.: contagem de favoritos, notificações) — podem ser adicionadas depois sob o mesmo padrão.
+### Questões para Discussão
+1. As categorias de produtos devem ser fixas (enum) ou dinâmicas (tabela separada)?
+2. O botão "Falar com o vendedor" deve abrir o WhatsApp diretamente ou exibir também o e-mail/telefone fixo?
+3. O limite de 10 produtos é por empresa no total ou apenas 10 produtos *promovidos* na vitrine global?

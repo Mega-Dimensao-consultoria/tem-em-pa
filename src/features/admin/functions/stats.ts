@@ -66,6 +66,7 @@ function zeroStats(): AdminStats {
     cities: 0,
     neighborhoods: 0,
     categories: 0,
+    products: 0,
   };
 }
 

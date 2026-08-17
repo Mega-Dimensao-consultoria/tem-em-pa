@@ -24,14 +24,64 @@ import {
 } from "@/components/ui/select";
 
 export const Route = createFileRoute("/vendas")({
-  head: () => ({
-    meta: [
-      { title: "Marketplace — O que estão vendendo na minha cidade?" },
-      { name: "description", content: "Explore produtos, móveis, eletrônicos e ofertas exclusivas de empresas e vendedores locais na sua região." },
-      { property: "og:title", content: "Marketplace Local — Tem na minha cidade" },
-      { property: "og:description", content: "Conectando quem precisa com quem oferece o melhor produto na sua cidade." },
-    ],
-  }),
+  head: ({ loaderData }) => {
+    const products = (loaderData as any)?.products as MarketplaceProduct[] | undefined;
+    const scripts = [];
+    
+    // Se houver produtos, adicione JSON-LD de carrossel de produtos
+    if (products && products.length > 0) {
+      const itemList = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "itemListElement": products.map((p, i) => ({
+          "@type": "ListItem",
+          "position": i + 1,
+          "url": `https://www.temnaminhacidade.com.br/vendas?id=${p.id}`,
+          "name": p.name,
+          "image": p.image_url_1,
+          "offers": p.price ? {
+            "@type": "Offer",
+            "price": p.price,
+            "priceCurrency": "BRL"
+          } : undefined
+        }))
+      };
+      scripts.push({ type: "application/ld+json", children: JSON.stringify(itemList) });
+    }
+
+    return {
+      meta: [
+        { title: "Marketplace — O que estão vendendo na minha cidade?" },
+        { name: "description", content: "Explore produtos, móveis, eletrônicos e ofertas exclusivas de empresas e vendedores locais na sua região." },
+        { property: "og:title", content: "Marketplace Local — Tem na minha cidade" },
+        { property: "og:description", content: "Conectando quem precisa com quem oferece o melhor produto na sua cidade." },
+        { name: "robots", content: "index, follow, max-snippet:-1, max-image-preview:large" },
+      ],
+      scripts
+    };
+  },
+  loader: async ({ context: { queryClient } }) => {
+    // Carregamento inicial de produtos para o SEO (sem filtros aplicados)
+    const { data } = await supabase
+      .from("products")
+      .select(`
+        *,
+        company:companies(
+          id,
+          name,
+          whatsapp,
+          city:cities(name, state)
+        )
+      `)
+      .eq("is_active", true)
+      .eq("companies.status", "approved")
+      .not("image_url_1", "is", null)
+      .order("is_promoted", { ascending: false })
+      .order("created_at", { ascending: false })
+      .limit(10);
+    
+    return { products: data };
+  },
   component: MarketplacePage,
 });
 

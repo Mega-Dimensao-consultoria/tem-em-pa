@@ -83,7 +83,9 @@ function AdminPage() {
             <TabsTrigger value="comentarios">Comentários</TabsTrigger>
             <TabsTrigger value="denuncias">Denúncias</TabsTrigger>
             <TabsTrigger value="contato">Contato</TabsTrigger>
-            <TabsTrigger value="categorias">Categorias</TabsTrigger>
+            <TabsTrigger value="categorias">Cat. Empresas</TabsTrigger>
+            <TabsTrigger value="cat-produtos">Cat. Produtos</TabsTrigger>
+            <TabsTrigger value="marketplace">Marketplace</TabsTrigger>
             <TabsTrigger value="palavras">Palavras proibidas</TabsTrigger>
             <TabsTrigger value="usuarios">Usuários</TabsTrigger>
             <TabsTrigger value="paginas">Páginas</TabsTrigger>

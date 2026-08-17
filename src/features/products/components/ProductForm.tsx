@@ -63,14 +63,7 @@ export function ProductForm({
   const [isPromoted, setIsPromoted] = useState(false);
   const [productCategoryId, setProductCategoryId] = useState<string>("none");
 
-  const { data: categories = [] } = useQuery({
-    queryKey: ["product-categories-public"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("product_categories").select("*").order("sort_order");
-      if (error) throw error;
-      return data;
-    }
-  });
+  const { data: categories = [] } = useProductCategories();
 
   const updateImage = (index: number, val: string | null) => {
     setImages((prev) => {

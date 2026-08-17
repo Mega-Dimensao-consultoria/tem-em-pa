@@ -18,6 +18,7 @@ import { ContactMessagesTab } from "@/features/admin/components/tabs/ContactMess
 import { PagesSection } from "@/features/admin/components/tabs/PagesSection";
 import { SeoTab } from "@/features/admin/components/tabs/SeoTab";
 import { EmailLogTab } from "@/features/admin/components/tabs/EmailLogTab";
+import { MarketplaceAdminTab } from "@/features/admin/components/tabs/MarketplaceAdminTab";
 
 import { BlogSection } from "@/features/admin/components/tabs/BlogSection";
 import { AdminOverviewTab } from "@/features/admin/components/tabs/AdminOverviewTab";

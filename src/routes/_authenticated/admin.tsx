@@ -105,7 +105,9 @@ function AdminPage() {
           <TabsContent value="comentarios"><PendingReviewsTab /></TabsContent>
           <TabsContent value="denuncias"><ReportsTab /></TabsContent>
           <TabsContent value="contato"><ContactMessagesTab /></TabsContent>
-          <TabsContent value="categorias"><CategoriesTab /></TabsContent>
+          <TabsContent value="categorias"><CategoriesTab type="company" /></TabsContent>
+          <TabsContent value="cat-produtos"><CategoriesTab type="product" /></TabsContent>
+          <TabsContent value="marketplace"><MarketplaceAdminTab /></TabsContent>
           <TabsContent value="palavras"><BannedWordsTab /></TabsContent>
           <TabsContent value="usuarios"><UsersTab /></TabsContent>
           <TabsContent value="paginas"><PagesSection /></TabsContent>

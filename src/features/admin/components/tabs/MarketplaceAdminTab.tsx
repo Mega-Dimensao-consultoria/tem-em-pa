@@ -60,7 +60,7 @@ export function MarketplaceAdminTab() {
   });
 
   const updateProduct = useMutation({
-    mutationFn: (args: { id: string; updates: any }) => updateProductAdmin(args),
+    mutationFn: (args: { id: string; updates: any }) => updateProductAdmin({ data: args }),
     onSuccess: () => {
       toast.success("Produto atualizado");
       setEditingProduct(null);

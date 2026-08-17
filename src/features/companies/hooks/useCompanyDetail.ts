@@ -43,7 +43,7 @@ export const privateCompanyQO = (id: string) =>
           .eq("company_id", id)
           .eq("is_active", true),
         supabase
-          .from("reviews")
+          .from("reviews_public")
           .select("id, rating, comment, created_at, owner_reply, owner_reply_at, photos")
           .eq("company_id", id)
           .eq("status", "approved")

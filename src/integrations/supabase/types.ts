@@ -1082,6 +1082,30 @@ export type Database = {
           },
         ]
       }
+      product_categories: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          slug: string
+          sort_order: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          slug: string
+          sort_order?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          sort_order?: number | null
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category: string | null
@@ -1104,6 +1128,7 @@ export type Database = {
           is_promoted: boolean | null
           name: string
           price: number | null
+          product_category_id: string | null
           updated_at: string
         }
         Insert: {
@@ -1127,6 +1152,7 @@ export type Database = {
           is_promoted?: boolean | null
           name: string
           price?: number | null
+          product_category_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -1150,6 +1176,7 @@ export type Database = {
           is_promoted?: boolean | null
           name?: string
           price?: number | null
+          product_category_id?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -1158,6 +1185,13 @@ export type Database = {
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_product_category_id_fkey"
+            columns: ["product_category_id"]
+            isOneToOne: false
+            referencedRelation: "product_categories"
             referencedColumns: ["id"]
           },
         ]

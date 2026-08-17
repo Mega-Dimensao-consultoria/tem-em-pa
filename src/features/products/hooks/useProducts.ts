@@ -75,3 +75,11 @@ export function useDeleteProduct(companyId: string) {
     onError: (e: unknown) => toast.error((e as Error).message),
   });
 }
+
+export function useProductCategories() {
+  return useQuery({
+    queryKey: ["product-categories-public"],
+    queryFn: () => getProductCategories(),
+    staleTime: 5 * 60 * 1000,
+  });
+}

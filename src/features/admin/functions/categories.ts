@@ -24,34 +24,43 @@ export type CategoryPayload = {
   sort_order: number;
 };
 
-export function useAdminCategories() {
+export function useAdminCategories(type: "company" | "product" = "company") {
   return useQuery({
-    queryKey: adminKeys.categories(),
+    queryKey: type === "company" ? adminKeys.categories() : ["admin", "product-categories"],
     queryFn: async () => {
+      const table = type === "company" ? "categories" : "product_categories";
+      const columns = type === "company" 
+        ? "id, name, slug, icon, sort_order, seo_title, seo_description, og_image_url, canonical_url, noindex"
+        : "id, name, slug, sort_order";
+      
       const { data, error } = await supabase
-        .from("categories")
-        .select("id, name, slug, icon, sort_order, seo_title, seo_description, og_image_url, canonical_url, noindex")
+        .from(table as any)
+        .select(columns)
         .order("sort_order");
+      
       if (error) throw error;
       return data as AdminCategory[];
     },
   });
 }
 
-export function useSaveCategory() {
+export function useSaveCategory(type: "company" | "product" = "company") {
   return useAdminMutation<CategoryPayload, { id: string }>({
     mutationFn: async ({ id, name, slug, icon, sort_order }) => {
-      const payload = { name, slug, icon, sort_order };
+      const table = type === "company" ? "categories" : "product_categories";
+      const payload: any = { name, slug, sort_order };
+      if (type === "company") payload.icon = icon;
+
       if (id) {
         const { error } = await supabase
-          .from("categories")
+          .from(table as any)
           .update(payload)
           .eq("id", id);
         if (error) throw error;
         return { id };
       }
       const { data, error } = await supabase
-        .from("categories")
+        .from(table as any)
         .insert(payload)
         .select("id")
         .single();
@@ -59,13 +68,12 @@ export function useSaveCategory() {
       return { id: data.id };
     },
     audit: (vars, { id }) => ({
-      action: vars.id ? "category.update" : "category.create",
-      entityType: "category",
+      action: vars.id ? `${type}_category.update` : `${type}_category.create`,
+      entityType: `${type}_category`,
       entityId: id,
       details: {
         name: vars.name,
         slug: vars.slug,
-        icon: vars.icon,
         sort_order: vars.sort_order,
       },
     }),
@@ -74,15 +82,16 @@ export function useSaveCategory() {
   });
 }
 
-export function useDeleteCategory() {
+export function useDeleteCategory(type: "company" | "product" = "company") {
   return useAdminMutation<{ id: string; name: string }>({
     mutationFn: async ({ id }) => {
-      const { error } = await supabase.from("categories").delete().eq("id", id);
+      const table = type === "company" ? "categories" : "product_categories";
+      const { error } = await supabase.from(table as any).delete().eq("id", id);
       if (error) throw error;
     },
     audit: ({ id, name }) => ({
-      action: "category.delete",
-      entityType: "category",
+      action: `${type}_category.delete`,
+      entityType: `${type}_category`,
       entityId: id,
       details: { name },
     }),

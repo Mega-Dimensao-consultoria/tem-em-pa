@@ -1084,37 +1084,70 @@ export type Database = {
       }
       products: {
         Row: {
+          category: string | null
           company_id: string
           created_at: string
           description: string | null
           id: string
           image_url_1: string | null
+          image_url_10: string | null
           image_url_2: string | null
+          image_url_3: string | null
+          image_url_4: string | null
+          image_url_5: string | null
+          image_url_6: string | null
+          image_url_7: string | null
+          image_url_8: string | null
+          image_url_9: string | null
           is_active: boolean
+          is_featured: boolean | null
+          is_promoted: boolean | null
           name: string
           price: number | null
           updated_at: string
         }
         Insert: {
+          category?: string | null
           company_id: string
           created_at?: string
           description?: string | null
           id?: string
           image_url_1?: string | null
+          image_url_10?: string | null
           image_url_2?: string | null
+          image_url_3?: string | null
+          image_url_4?: string | null
+          image_url_5?: string | null
+          image_url_6?: string | null
+          image_url_7?: string | null
+          image_url_8?: string | null
+          image_url_9?: string | null
           is_active?: boolean
+          is_featured?: boolean | null
+          is_promoted?: boolean | null
           name: string
           price?: number | null
           updated_at?: string
         }
         Update: {
+          category?: string | null
           company_id?: string
           created_at?: string
           description?: string | null
           id?: string
           image_url_1?: string | null
+          image_url_10?: string | null
           image_url_2?: string | null
+          image_url_3?: string | null
+          image_url_4?: string | null
+          image_url_5?: string | null
+          image_url_6?: string | null
+          image_url_7?: string | null
+          image_url_8?: string | null
+          image_url_9?: string | null
           is_active?: boolean
+          is_featured?: boolean | null
+          is_promoted?: boolean | null
           name?: string
           price?: number | null
           updated_at?: string

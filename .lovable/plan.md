@@ -1,61 +1,40 @@
-# Plano de Implementação: Área "O que estão vendendo na minha cidade?"
+# Plano: Marketplace "O que estão vendendo na minha cidade?"
 
-Implementação de uma nova seção de marketplace de produtos, permitindo que empresas aprovadas promovam até 10 produtos com galeria de fotos, filtros por cidade e categoria, e contato direto via WhatsApp.
+Implementação de uma seção de marketplace para produtos, com galeria de até 10 fotos, filtros por cidade e categorias, e sistema de produtos promovidos.
 
-## 1. Banco de Dados e Segurança
+## User Review Required
 
-### Alterações no Esquema
-- **Tabela `products`**:
-    - Adicionar `image_url_2` até `image_url_10` (totalizando 10 colunas de imagem).
-    - Adicionar `is_promoted` (boolean) para indicar se o produto deve aparecer na vitrine global.
-    - Adicionar `is_featured` (boolean) para destaques pagos (roadmap).
-    - Adicionar `category` (string/enum) para filtros de tipo de produto.
-- **Tabela `companies`**:
-    - Garantir que a contagem de produtos promovidos seja validada (máx 10).
+> [!IMPORTANT]
+> - O limite de 10 fotos por produto foi aplicado.
+> - O limite de 10 produtos **promovidos** por empresa é garantido por trigger no banco.
+> - A categoria do produto será preenchida manualmente pelo dono no momento do cadastro.
 
-### Políticas de Segurança (RLS)
-- `SELECT`: Público para produtos de empresas com `status = 'approved'`, `is_active = true` e que possuam ao menos uma imagem (`image_url_1 IS NOT NULL`).
-- `INSERT/UPDATE/DELETE`: Apenas o `owner_id` da empresa vinculada ou administradores.
+- **Dúvida**: Deseja categorias pré-definidas (ex: Eletrônicos, Imóveis, Serviços) ou campo de texto livre?
+- **Dúvida**: O botão de "Comprar/Ver mais" deve abrir o WhatsApp da empresa ou um modal com detalhes e todas as fotos antes?
 
-## 2. Interface Administrativa (Painel do Dono)
+## Proposta Técnica
 
-### Gerenciamento de Produtos
-- **Formulário de Produto**:
-    - Expandir `ProductForm` para suportar 10 imagens (usando `AttachmentPicker` ou `ImageUpload`).
-    - Adicionar campos obrigatórios: Nome, Descrição, Preço, Categoria e ao menos 1 Imagem.
-    - Toggle "Promover para a Vitrine Global" (respeitando o limite de 10).
-- **Lista de Produtos**:
-    - Indicador visual de produtos promovidos.
-    - Validação de limite de 10 produtos totais por empresa.
+### 1. Banco de Dados (Supabase)
+- [x] Migração executada: colunas `image_url_3-10`, `is_promoted`, `category` adicionadas à tabela `products`.
+- [x] Trigger `trg_check_company_promoted_products_limit` criado para impor limite de 10 itens promovidos por empresa.
+- [x] RLS atualizado para permitir visualização pública apenas de produtos de empresas aprovadas.
 
-## 3. Novas Rotas e Navegação
+### 2. Gerenciamento (Painel do Dono)
+- **`useProducts.ts`**: Atualizar hooks para suportar os novos campos (is_promoted, category, imagens 1-10).
+- **`ProductForm.tsx`**: Expandir para permitir upload de 10 fotos (grade) e seleção de categoria/promoção.
+- **`ProductList.tsx`**: Adicionar badges de "Promovido" e indicação de múltiplas fotos.
 
-### Menu e Roteamento
-- Adicionar "O que estão vendendo?" no Menu principal (`Navigation`).
-- **Nova Rota**: `/o-que-estao-vendendo` (e opcionalmente `/vendas`).
-    - Listagem paginada (30 por página).
-    - Filtros: Busca por nome, Seleção de Cidade, Categoria de Produto.
+### 3. Marketplace (Frontend Público)
+- **Nova Rota `/vendas`**:
+  - Grid de produtos com scroll infinito ou paginação.
+  - Filtros: Busca por nome, Seleção de Cidade, Filtro por Categoria.
+  - Card de Produto: Imagem principal, preço destacado, nome da empresa e cidade.
+- **Modal de Detalhes**: Galeria de fotos (slider), descrição completa e botão "Falar com vendedor" (WhatsApp).
 
-### Componentes de Visualização
-- **ProductCard**: Exibição em grid com Foto Destaque, Preço, Nome e Localização (Bairro - Cidade/UF).
-- **ProductDetailModal**:
-    - Galeria de imagens (slides).
-    - Detalhes do produto e da empresa vendedora.
-    - Botão "Falar com o Vendedor" (link direto para WhatsApp da empresa).
+### 4. Home
+- **Seção "Destaques do Marketplace"**: Carrossel ou grid com 10 itens aleatórios marcados como `is_promoted`.
 
-## 4. Integração na Home
-- Nova seção: "Produtos que estão vendendo aqui".
-- Carrossel ou Grid com os produtos promovidos mais recentes/aleatórios.
-
-## Detalhes Técnicos
-
-- **Tecnologias**: TanStack Start, Supabase (RLS + Storage), Tailwind CSS, Lucide Icons.
-- **Performance**: Uso de `useSuspenseQuery` para carregamento de dados e `createServerFn` para filtros complexos se necessário.
-- **Validação**: Triggers no banco de dados para garantir que apenas empresas aprovadas promovam produtos e para impor o limite de 10 itens.
-
----
-
-### Questões para Discussão
-1. As categorias de produtos devem ser fixas (enum) ou dinâmicas (tabela separada)?
-2. O botão "Falar com o vendedor" deve abrir o WhatsApp diretamente ou exibir também o e-mail/telefone fixo?
-3. O limite de 10 produtos é por empresa no total ou apenas 10 produtos *promovidos* na vitrine global?
+## Próximos Passos
+1. Atualizar hooks de dados.
+2. Criar interface de galeria no formulário.
+3. Desenvolver a página pública de marketplace.

@@ -2,15 +2,26 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PageShell } from "@/components/PageShell";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
-import { Search, MapPin, Tag, ShoppingBag, Store, MessageSquare, ChevronLeft, ChevronRight, X, Phone } from "lucide-react";
+import { 
+  Search, MapPin, Tag, ShoppingBag, Store, MessageSquare, 
+  ChevronLeft, ChevronRight, X, Phone, Filter, SlidersHorizontal 
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Slider } from "@/components/ui/slider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useAuth } from "@/features/auth/use-auth";
 
 export const Route = createFileRoute("/vendas")({

@@ -43,6 +43,7 @@ const KEY_MAP: Record<string, keyof AdminStats> = {
   cities_total: "cities",
   neighborhoods_total: "neighborhoods",
   categories_total: "categories",
+  products_total: "products",
 };
 
 function zeroStats(): AdminStats {

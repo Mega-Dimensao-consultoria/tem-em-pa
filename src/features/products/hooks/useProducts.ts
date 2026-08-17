@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getProductCategories } from "../functions/marketplace.functions";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { queryKeys } from "@/lib/queryKeys";
@@ -8,6 +9,7 @@ export type ProductInput = {
   description: string | null;
   price: number | null;
   category: string | null;
+  product_category_id: string | null;
   is_promoted: boolean;
   image_url_1: string | null;
   image_url_2: string | null;
@@ -28,7 +30,7 @@ export function useProducts(companyId: string) {
       const { data, error } = await supabase
         .from("products")
         .select(`
-          id, name, description, price, is_active, is_promoted, category,
+          id, name, description, price, is_active, is_promoted, category, product_category_id,
           image_url_1, image_url_2, image_url_3, image_url_4, image_url_5,
           image_url_6, image_url_7, image_url_8, image_url_9, image_url_10
         `)
@@ -71,5 +73,13 @@ export function useDeleteProduct(companyId: string) {
       qc.invalidateQueries({ queryKey: queryKeys.owner.products(companyId) });
     },
     onError: (e: unknown) => toast.error((e as Error).message),
+  });
+}
+
+export function useProductCategories() {
+  return useQuery({
+    queryKey: ["product-categories-public"],
+    queryFn: () => getProductCategories(),
+    staleTime: 5 * 60 * 1000,
   });
 }

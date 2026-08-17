@@ -12,11 +12,13 @@ import { adminKeys } from "@/features/admin/functions/keys";
 export function CategoryRow({
   category,
   onEdit,
+  type = "company",
 }: {
   category: AdminCategory;
   onEdit: (editing: EditingCategory) => void;
+  type?: "company" | "product";
 }) {
-  const deleteCategory = useDeleteCategory();
+  const deleteCategory = useDeleteCategory(type);
   const [seoOpen, setSeoOpen] = useState(false);
 
   const startEdit = () =>
@@ -26,15 +28,22 @@ export function CategoryRow({
       slug: category.slug,
       icon: category.icon ?? "",
       sort_order: category.sort_order ?? 0,
+      type,
     });
 
   return (
     <tr className="border-t border-border transition hover:bg-muted/40">
       <td className="px-4 py-3">
-        <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-accent text-accent-foreground">
-          <CategoryIcon name={category.icon} />
-        </span>
-        <span className="sr-only">Ícone: {category.icon || "padrão"}</span>
+        {type === "company" ? (
+          <>
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-accent text-accent-foreground">
+              <CategoryIcon name={category.icon} />
+            </span>
+            <span className="sr-only">Ícone: {category.icon || "padrão"}</span>
+          </>
+        ) : (
+          <span className="text-muted-foreground text-xs">—</span>
+        )}
       </td>
       <td className="px-4 py-3">
         <button
@@ -60,15 +69,17 @@ export function CategoryRow({
             <Pencil className="mr-1 h-4 w-4" aria-hidden="true" />
             Editar
           </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => setSeoOpen(true)}
-            aria-label={`Editar SEO da categoria ${category.name}`}
-          >
-            <Search className="mr-1 h-4 w-4" aria-hidden="true" />
-            SEO
-          </Button>
+          {type === "company" && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setSeoOpen(true)}
+              aria-label={`Editar SEO da categoria ${category.name}`}
+            >
+              <Search className="mr-1 h-4 w-4" aria-hidden="true" />
+              SEO
+            </Button>
+          )}
           <ConfirmDestructive
             trigger={
               <Button
@@ -84,9 +95,9 @@ export function CategoryRow({
             title="Excluir categoria?"
             description={
               <p>
-                Isso pode afetar empresas vinculadas a{" "}
-                <strong>{category.name}</strong>. Recomendamos mover essas
-                empresas para outra categoria antes.
+                Isso pode afetar {type === "company" ? "empresas" : "produtos"} vinculados a{" "}
+                <strong>{category.name}</strong>. Recomendamos mover esses
+                itens para outra categoria antes.
               </p>
             }
             confirmText="Excluir"
@@ -96,22 +107,24 @@ export function CategoryRow({
           />
         </div>
       </td>
-      <SeoOverrideDialog
-        table="categories"
-        id={category.id}
-        open={seoOpen}
-        onOpenChange={setSeoOpen}
-        title={category.name}
-        previewUrl={`https://www.temnaminhacidade.com.br/exemplo/categoria/${category.slug}`}
-        initial={{
-          seo_title: category.seo_title,
-          seo_description: category.seo_description,
-          og_image_url: category.og_image_url,
-          canonical_url: category.canonical_url,
-          noindex: category.noindex,
-        }}
-        invalidateKeys={[adminKeys.categories()]}
-      />
+      {type === "company" && (
+        <SeoOverrideDialog
+          table="categories"
+          id={category.id}
+          open={seoOpen}
+          onOpenChange={setSeoOpen}
+          title={category.name}
+          previewUrl={`https://www.temnaminhacidade.com.br/exemplo/categoria/${category.slug}`}
+          initial={{
+            seo_title: category.seo_title,
+            seo_description: category.seo_description,
+            og_image_url: category.og_image_url,
+            canonical_url: category.canonical_url,
+            noindex: category.noindex,
+          }}
+          invalidateKeys={[adminKeys.categories()]}
+        />
+      )}
     </tr>
   );
 }

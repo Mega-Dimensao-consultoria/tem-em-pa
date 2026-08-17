@@ -4,16 +4,84 @@ import { supabase } from "@/integrations/supabase/client";
 import { PageShell } from "@/components/PageShell";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Search, MapPin, Tag, ShoppingBag, Store, MessageSquare, ChevronLeft, ChevronRight, X, Phone } from "lucide-react";
+import { 
+  Search, MapPin, Tag, ShoppingBag, Store, MessageSquare, 
+  ChevronLeft, ChevronRight, Filter, SlidersHorizontal 
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useAuth } from "@/features/auth/use-auth";
+import { Slider } from "@/components/ui/slider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const Route = createFileRoute("/vendas")({
+  head: ({ loaderData }) => {
+    const products = (loaderData as any)?.products as MarketplaceProduct[] | undefined;
+    const scripts = [];
+    
+    // Se houver produtos, adicione JSON-LD de carrossel de produtos
+    if (products && products.length > 0) {
+      const itemList = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "itemListElement": products.map((p, i) => ({
+          "@type": "ListItem",
+          "position": i + 1,
+          "url": `https://www.temnaminhacidade.com.br/vendas?id=${p.id}`,
+          "name": p.name,
+          "image": p.image_url_1,
+          "offers": p.price ? {
+            "@type": "Offer",
+            "price": p.price,
+            "priceCurrency": "BRL"
+          } : undefined
+        }))
+      };
+      scripts.push({ type: "application/ld+json", children: JSON.stringify(itemList) });
+    }
+
+    return {
+      meta: [
+        { title: "Marketplace — O que estão vendendo na minha cidade?" },
+        { name: "description", content: "Explore produtos, móveis, eletrônicos e ofertas exclusivas de empresas e vendedores locais na sua região." },
+        { property: "og:title", content: "Marketplace Local — Tem na minha cidade" },
+        { property: "og:description", content: "Conectando quem precisa com quem oferece o melhor produto na sua cidade." },
+        { name: "robots", content: "index, follow, max-snippet:-1, max-image-preview:large" },
+      ],
+      scripts
+    };
+  },
+  loader: async ({ context: { queryClient } }) => {
+    // Carregamento inicial de produtos para o SEO (sem filtros aplicados)
+    const { data } = await supabase
+      .from("products")
+      .select(`
+        *,
+        company:companies(
+          id,
+          name,
+          whatsapp,
+          city:cities(name, state)
+        )
+      `)
+      .eq("is_active", true)
+      .eq("companies.status", "approved")
+      .not("image_url_1", "is", null)
+      .order("is_promoted", { ascending: false })
+      .order("created_at", { ascending: false })
+      .limit(10);
+    
+    return { products: data };
+  },
   component: MarketplacePage,
 });
 
@@ -34,6 +102,7 @@ type MarketplaceProduct = {
   image_url_8: string | null;
   image_url_9: string | null;
   image_url_10: string | null;
+  product_category_id: string | null;
   company: {
     id: string;
     name: string;
@@ -47,11 +116,24 @@ type MarketplaceProduct = {
 
 function MarketplacePage() {
   const [search, setSearch] = useState("");
+  const [categoryId, setCategoryId] = useState<string>("all");
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000]);
+  const [minPriceInput, setMinPriceInput] = useState("0");
+  const [maxPriceInput, setMaxPriceInput] = useState("5000");
   const [selectedProduct, setSelectedProduct] = useState<MarketplaceProduct | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
+  const { data: categories = [] } = useQuery({
+    queryKey: ["product-categories-public"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("product_categories").select("*").order("sort_order");
+      if (error) throw error;
+      return data;
+    }
+  });
+
   const { data: products, isLoading } = useQuery({
-    queryKey: ["marketplace-products", search],
+    queryKey: ["marketplace-products", search, categoryId, priceRange],
     queryFn: async () => {
       let query = supabase
         .from("products")
@@ -66,19 +148,50 @@ function MarketplacePage() {
         `)
         .eq("is_active", true)
         .eq("companies.status", "approved")
-        .not("image_url_1", "is", null)
-        .order("is_promoted", { ascending: false })
-        .order("created_at", { ascending: false });
+        .not("image_url_1", "is", null);
 
       if (search) {
         query = query.ilike("name", `%${search}%`);
       }
+      
+      if (categoryId !== "all") {
+        query = query.eq("product_category_id", categoryId);
+      }
 
-      const { data, error } = await query.limit(50);
+      if (priceRange[0] > 0) {
+        query = query.gte("price", priceRange[0]);
+      }
+      if (priceRange[1] < 5000) {
+        query = query.lte("price", priceRange[1]);
+      }
+
+      const { data, error } = await query
+        .order("is_promoted", { ascending: false })
+        .order("created_at", { ascending: false })
+        .limit(50);
+
       if (error) throw error;
       return (data as unknown as MarketplaceProduct[]) || [];
     },
   });
+
+  const handlePriceInputChange = (type: "min" | "max", val: string) => {
+    if (type === "min") {
+      setMinPriceInput(val);
+      const num = Number(val);
+      if (!isNaN(num)) setPriceRange([num, priceRange[1]]);
+    } else {
+      setMaxPriceInput(val);
+      const num = Number(val);
+      if (!isNaN(num)) setPriceRange([priceRange[0], num]);
+    }
+  };
+
+  const handleSliderChange = (vals: number[]) => {
+    setPriceRange([vals[0], vals[1]]);
+    setMinPriceInput(vals[0].toString());
+    setMaxPriceInput(vals[1].toString());
+  };
 
   const openProduct = (p: MarketplaceProduct) => {
     setSelectedProduct(p);
@@ -109,14 +222,80 @@ function MarketplacePage() {
               Descubra produtos e oportunidades incríveis oferecidos por empresas e empreendedores da sua região.
             </p>
             
-            <div className="relative mt-8 max-w-xl mx-auto">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input
-                placeholder="O que você está procurando hoje?"
-                className="h-14 pl-12 pr-4 rounded-full border-primary/20 bg-background shadow-lg focus-visible:ring-primary"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+            <div className="mt-8 max-w-4xl mx-auto space-y-6">
+              <div className="relative max-w-xl mx-auto">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input
+                  placeholder="O que você está procurando hoje?"
+                  className="h-14 pl-12 pr-4 rounded-full border-primary/20 bg-background shadow-lg focus-visible:ring-primary"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center gap-4 bg-background/50 backdrop-blur-sm p-4 rounded-2xl border border-primary/10">
+                <div className="flex items-center gap-2">
+                  <Tag className="h-4 w-4 text-primary" />
+                  <Select value={categoryId} onValueChange={setCategoryId}>
+                    <SelectTrigger className="w-[180px] bg-background">
+                      <SelectValue placeholder="Todas Categorias" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todas Categorias</SelectItem>
+                      {categories.map(c => (
+                        <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center gap-4 min-w-[300px] px-4">
+                  <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">Preço</span>
+                  <div className="flex-1 space-y-4">
+                    <Slider
+                      value={priceRange}
+                      min={0}
+                      max={5000}
+                      step={50}
+                      onValueChange={handleSliderChange}
+                    />
+                    <div className="flex items-center gap-2">
+                      <div className="relative">
+                        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground">R$</span>
+                        <Input 
+                          className="h-7 w-20 pl-6 text-xs bg-background" 
+                          value={minPriceInput}
+                          onChange={(e) => handlePriceInputChange("min", e.target.value)}
+                        />
+                      </div>
+                      <span className="text-muted-foreground"> até </span>
+                      <div className="relative">
+                        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground">R$</span>
+                        <Input 
+                          className="h-7 w-20 pl-6 text-xs bg-background" 
+                          value={maxPriceInput}
+                          onChange={(e) => handlePriceInputChange("max", e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-muted-foreground hover:text-primary"
+                  onClick={() => {
+                    setSearch("");
+                    setCategoryId("all");
+                    setPriceRange([0, 5000]);
+                    setMinPriceInput("0");
+                    setMaxPriceInput("5000");
+                  }}
+                >
+                  Limpar
+                </Button>
+              </div>
             </div>
           </div>
         </div>

@@ -100,7 +100,7 @@ export async function fetchAll<T>(
 export async function getSitemapCounts() {
   const sb = sitemapClient();
 
-  const [companiesHead, hoodsHead, activeCities] = await Promise.all([
+  const [companiesHead, hoodsHead, productsHead, activeCities] = await Promise.all([
     sb
       .from("companies")
       .select("id", { count: "estimated", head: true })
@@ -108,6 +108,10 @@ export async function getSitemapCounts() {
       .or("noindex.is.null,noindex.eq.false"),
     sb
       .from("neighborhoods")
+      .select("id", { count: "estimated", head: true })
+      .eq("is_active", true),
+    sb
+      .from("products")
       .select("id", { count: "estimated", head: true })
       .eq("is_active", true),
     fetchAll<{ id: string; slug: string | null; noindex: boolean | null }>(
@@ -131,6 +135,7 @@ export async function getSitemapCounts() {
   return {
     companyCount: companiesHead.count ?? 0,
     neighborhoodCount: hoodsHead.count ?? 0,
+    productCount: productsHead.count ?? 0,
     cityCount: activeSlugsById.size,
     activeSlugsById,
   };

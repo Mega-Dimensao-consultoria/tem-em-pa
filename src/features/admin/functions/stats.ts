@@ -21,6 +21,7 @@ export type AdminStats = {
   cities: number;
   neighborhoods: number;
   categories: number;
+  products: number;
 };
 
 const KEY_MAP: Record<string, keyof AdminStats> = {
@@ -42,6 +43,7 @@ const KEY_MAP: Record<string, keyof AdminStats> = {
   cities_total: "cities",
   neighborhoods_total: "neighborhoods",
   categories_total: "categories",
+  products_total: "products",
 };
 
 function zeroStats(): AdminStats {
@@ -64,6 +66,7 @@ function zeroStats(): AdminStats {
     cities: 0,
     neighborhoods: 0,
     categories: 0,
+    products: 0,
   };
 }
 

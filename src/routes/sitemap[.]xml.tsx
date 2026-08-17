@@ -17,7 +17,7 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const { companyCount, neighborhoodCount, cityCount } =
+        const { companyCount, neighborhoodCount, cityCount, productCount } =
           await getSitemapCounts();
 
         const children: { path: string }[] = [{ path: "/sitemap-main.xml" }];
@@ -35,6 +35,11 @@ export const Route = createFileRoute("/sitemap.xml")({
         const hoodPages = Math.max(1, Math.ceil(neighborhoodCount / SITEMAP_PAGE_SIZE));
         for (let i = 1; i <= hoodPages; i += 1) {
           children.push({ path: `/sitemap-neighborhoods/${i}` });
+        }
+        
+        const productPages = Math.max(1, Math.ceil(productCount / SITEMAP_PAGE_SIZE));
+        for (let i = 1; i <= productPages; i += 1) {
+          children.push({ path: `/sitemap-products/${i}` });
         }
 
         return renderSitemapIndex(children);

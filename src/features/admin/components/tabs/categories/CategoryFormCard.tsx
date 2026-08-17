@@ -21,6 +21,7 @@ export type EditingCategory = {
   slug: string;
   icon: string;
   sort_order: number;
+  type?: "company" | "product";
 };
 
 export function CategoryFormCard({
@@ -34,7 +35,7 @@ export function CategoryFormCard({
   onCancel: () => void;
   onSaved: () => void;
 }) {
-  const saveCategory = useSaveCategory();
+  const saveCategory = useSaveCategory(editing.type || "company");
   const nameId = useId();
   const slugId = useId();
   const orderId = useId();
@@ -66,7 +67,7 @@ export function CategoryFormCard({
             {editing.id ? "Editar categoria" : "Nova categoria"}
           </DialogTitle>
           <DialogDescription>
-            Defina o nome, a ordem de exibição e escolha um ícone visual para a categoria.
+            Defina o nome, a ordem de exibição {editing.type !== "product" ? "e escolha um ícone visual" : ""} para a categoria.
           </DialogDescription>
         </DialogHeader>
 
@@ -99,7 +100,7 @@ export function CategoryFormCard({
               aria-describedby={`${slugId}-help`}
             />
             <p id={`${slugId}-help`} className="text-xs text-muted-foreground">
-              Aparece na URL: /categoria/{editing.slug || "exemplo"}
+              Aparece na URL: {editing.type === "product" ? "/vendas?categoria=" : "/categoria/"}{editing.slug || "exemplo"}
             </p>
           </div>
           <div className="space-y-2">
@@ -113,14 +114,16 @@ export function CategoryFormCard({
               }
             />
           </div>
-          <div className="space-y-2 sm:col-span-2">
-            <Label htmlFor={iconId}>Ícone</Label>
-            <IconPicker
-              id={iconId}
-              value={editing.icon}
-              onChange={(next) => onChange({ ...editing, icon: next })}
-            />
-          </div>
+          {editing.type !== "product" && (
+            <div className="space-y-2 sm:col-span-2">
+              <Label htmlFor={iconId}>Ícone</Label>
+              <IconPicker
+                id={iconId}
+                value={editing.icon}
+                onChange={(next) => onChange({ ...editing, icon: next })}
+              />
+            </div>
+          )}
         </div>
 
         <DialogFooter>

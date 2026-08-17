@@ -43,6 +43,7 @@ import { Route as PreviewTokenRouteImport } from './routes/preview.$token'
 import { Route as SitemapCitiesPageRouteImport } from './routes/sitemap-cities/$page'
 import { Route as SitemapCompaniesPageRouteImport } from './routes/sitemap-companies/$page'
 import { Route as SitemapNeighborhoodsPageRouteImport } from './routes/sitemap-neighborhoods/$page'
+import { Route as SitemapProductsPageRouteImport } from './routes/sitemap-products.$page'
 import { Route as SuporteRedefinir2faRouteImport } from './routes/suporte.redefinir-2fa'
 import { Route as UHandleRouteImport } from './routes/u.$handle'
 import { Route as CitySlugBairroBairroSlugRouteImport } from './routes/$citySlug.bairro.$bairroSlug'
@@ -244,6 +245,11 @@ const SitemapNeighborhoodsPageRoute =
     path: '/sitemap-neighborhoods/$page',
     getParentRoute: () => rootRouteImport,
   } as any)
+const SitemapProductsPageRoute = SitemapProductsPageRouteImport.update({
+  id: '/sitemap-products/$page',
+  path: '/sitemap-products/$page',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SuporteRedefinir2faRoute = SuporteRedefinir2faRouteImport.update({
   id: '/suporte/redefinir-2fa',
   path: '/suporte/redefinir-2fa',
@@ -434,6 +440,7 @@ export interface FileRoutesByFullPath {
   '/sitemap-cities/$page': typeof SitemapCitiesPageRoute
   '/sitemap-companies/$page': typeof SitemapCompaniesPageRoute
   '/sitemap-neighborhoods/$page': typeof SitemapNeighborhoodsPageRoute
+  '/sitemap-products/$page': typeof SitemapProductsPageRoute
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/u/$handle': typeof UHandleRoute
   '/$citySlug/': typeof CitySlugIndexRoute
@@ -494,6 +501,7 @@ export interface FileRoutesByTo {
   '/sitemap-cities/$page': typeof SitemapCitiesPageRoute
   '/sitemap-companies/$page': typeof SitemapCompaniesPageRoute
   '/sitemap-neighborhoods/$page': typeof SitemapNeighborhoodsPageRoute
+  '/sitemap-products/$page': typeof SitemapProductsPageRoute
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/u/$handle': typeof UHandleRoute
   '/$citySlug': typeof CitySlugIndexRoute
@@ -559,6 +567,7 @@ export interface FileRoutesById {
   '/sitemap-cities/$page': typeof SitemapCitiesPageRoute
   '/sitemap-companies/$page': typeof SitemapCompaniesPageRoute
   '/sitemap-neighborhoods/$page': typeof SitemapNeighborhoodsPageRoute
+  '/sitemap-products/$page': typeof SitemapProductsPageRoute
   '/suporte/redefinir-2fa': typeof SuporteRedefinir2faRoute
   '/u/$handle': typeof UHandleRoute
   '/$citySlug/': typeof CitySlugIndexRoute
@@ -624,6 +633,7 @@ export interface FileRouteTypes {
     | '/sitemap-cities/$page'
     | '/sitemap-companies/$page'
     | '/sitemap-neighborhoods/$page'
+    | '/sitemap-products/$page'
     | '/suporte/redefinir-2fa'
     | '/u/$handle'
     | '/$citySlug/'
@@ -684,6 +694,7 @@ export interface FileRouteTypes {
     | '/sitemap-cities/$page'
     | '/sitemap-companies/$page'
     | '/sitemap-neighborhoods/$page'
+    | '/sitemap-products/$page'
     | '/suporte/redefinir-2fa'
     | '/u/$handle'
     | '/$citySlug'
@@ -748,6 +759,7 @@ export interface FileRouteTypes {
     | '/sitemap-cities/$page'
     | '/sitemap-companies/$page'
     | '/sitemap-neighborhoods/$page'
+    | '/sitemap-products/$page'
     | '/suporte/redefinir-2fa'
     | '/u/$handle'
     | '/$citySlug/'
@@ -804,6 +816,7 @@ export interface RootRouteChildren {
   SitemapCitiesPageRoute: typeof SitemapCitiesPageRoute
   SitemapCompaniesPageRoute: typeof SitemapCompaniesPageRoute
   SitemapNeighborhoodsPageRoute: typeof SitemapNeighborhoodsPageRoute
+  SitemapProductsPageRoute: typeof SitemapProductsPageRoute
   SuporteRedefinir2faRoute: typeof SuporteRedefinir2faRoute
   UHandleRoute: typeof UHandleRoute
   ApiPublicContactSubmitRoute: typeof ApiPublicContactSubmitRoute
@@ -1058,6 +1071,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap-neighborhoods/$page'
       fullPath: '/sitemap-neighborhoods/$page'
       preLoaderRoute: typeof SitemapNeighborhoodsPageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-products/$page': {
+      id: '/sitemap-products/$page'
+      path: '/sitemap-products/$page'
+      fullPath: '/sitemap-products/$page'
+      preLoaderRoute: typeof SitemapProductsPageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/suporte/redefinir-2fa': {
@@ -1374,6 +1394,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapCitiesPageRoute: SitemapCitiesPageRoute,
   SitemapCompaniesPageRoute: SitemapCompaniesPageRoute,
   SitemapNeighborhoodsPageRoute: SitemapNeighborhoodsPageRoute,
+  SitemapProductsPageRoute: SitemapProductsPageRoute,
   SuporteRedefinir2faRoute: SuporteRedefinir2faRoute,
   UHandleRoute: UHandleRoute,
   ApiPublicContactSubmitRoute: ApiPublicContactSubmitRoute,

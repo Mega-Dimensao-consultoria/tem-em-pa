@@ -21,6 +21,7 @@ export type AdminStats = {
   cities: number;
   neighborhoods: number;
   categories: number;
+  products: number;
 };
 
 const KEY_MAP: Record<string, keyof AdminStats> = {

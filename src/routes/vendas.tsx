@@ -128,14 +128,80 @@ function MarketplacePage() {
               Descubra produtos e oportunidades incríveis oferecidos por empresas e empreendedores da sua região.
             </p>
             
-            <div className="relative mt-8 max-w-xl mx-auto">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input
-                placeholder="O que você está procurando hoje?"
-                className="h-14 pl-12 pr-4 rounded-full border-primary/20 bg-background shadow-lg focus-visible:ring-primary"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+            <div className="mt-8 max-w-4xl mx-auto space-y-6">
+              <div className="relative max-w-xl mx-auto">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input
+                  placeholder="O que você está procurando hoje?"
+                  className="h-14 pl-12 pr-4 rounded-full border-primary/20 bg-background shadow-lg focus-visible:ring-primary"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center gap-4 bg-background/50 backdrop-blur-sm p-4 rounded-2xl border border-primary/10">
+                <div className="flex items-center gap-2">
+                  <Tag className="h-4 w-4 text-primary" />
+                  <Select value={categoryId} onValueChange={setCategoryId}>
+                    <SelectTrigger className="w-[180px] bg-background">
+                      <SelectValue placeholder="Todas Categorias" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todas Categorias</SelectItem>
+                      {categories.map(c => (
+                        <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center gap-4 min-w-[300px] px-4">
+                  <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">Preço</span>
+                  <div className="flex-1 space-y-4">
+                    <Slider
+                      value={priceRange}
+                      min={0}
+                      max={5000}
+                      step={50}
+                      onValueChange={handleSliderChange}
+                    />
+                    <div className="flex items-center gap-2">
+                      <div className="relative">
+                        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground">R$</span>
+                        <Input 
+                          className="h-7 w-20 pl-6 text-xs bg-background" 
+                          value={minPriceInput}
+                          onChange={(e) => handlePriceInputChange("min", e.target.value)}
+                        />
+                      </div>
+                      <span className="text-muted-foreground"> até </span>
+                      <div className="relative">
+                        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground">R$</span>
+                        <Input 
+                          className="h-7 w-20 pl-6 text-xs bg-background" 
+                          value={maxPriceInput}
+                          onChange={(e) => handlePriceInputChange("max", e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-muted-foreground hover:text-primary"
+                  onClick={() => {
+                    setSearch("");
+                    setCategoryId("all");
+                    setPriceRange([0, 5000]);
+                    setMinPriceInput("0");
+                    setMaxPriceInput("5000");
+                  }}
+                >
+                  Limpar
+                </Button>
+              </div>
             </div>
           </div>
         </div>

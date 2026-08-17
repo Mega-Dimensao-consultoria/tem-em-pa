@@ -2,11 +2,20 @@ import { useState } from "react";
 import { z } from "zod";
 import { Loader2, Plus, Star } from "lucide-react";
 import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
 import { ImageUpload } from "@/components/upload/ImageUpload";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +37,7 @@ type ProductFormData = {
   description: string | null;
   price: number | null;
   category: string | null;
+  product_category_id: string | null;
   is_promoted: boolean;
   image_url_1: string | null;
   image_url_2: string | null;
@@ -52,6 +62,16 @@ export function ProductForm({
 }) {
   const [images, setImages] = useState<(string | null)[]>(Array(10).fill(null));
   const [isPromoted, setIsPromoted] = useState(false);
+  const [productCategoryId, setProductCategoryId] = useState<string>("none");
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ["product-categories-public"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("product_categories").select("*").order("sort_order");
+      if (error) throw error;
+      return data;
+    }
+  });
 
   const updateImage = (index: number, val: string | null) => {
     setImages((prev) => {
@@ -88,6 +108,7 @@ export function ProductForm({
       name: parsed.data.name,
       description: parsed.data.description || null,
       category: parsed.data.category || null,
+      product_category_id: productCategoryId === "none" ? null : productCategoryId,
       price: typeof parsed.data.price === "number" ? parsed.data.price : null,
       is_promoted: parsed.data.is_promoted,
       image_url_1: images[0],
@@ -104,6 +125,7 @@ export function ProductForm({
 
     setImages(Array(10).fill(null));
     setIsPromoted(false);
+    setProductCategoryId("none");
     (e.target as HTMLFormElement).reset();
   }
 
@@ -136,8 +158,22 @@ export function ProductForm({
           <Input id="pp" name="price" inputMode="decimal" placeholder="0,00" />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="pc">Categoria</Label>
-          <Input id="pc" name="category" placeholder="Ex: Eletrônicos, Móveis..." maxLength={50} />
+          <Label htmlFor="pc">Categoria (Opção de texto livre)</Label>
+          <Input id="pc" name="category" placeholder="Ex: iPhone Semi-novo, Oferta única..." maxLength={50} />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="pcf">Categoria do Marketplace *</Label>
+          <Select value={productCategoryId} onValueChange={setProductCategoryId}>
+            <SelectTrigger id="pcf" className="bg-background">
+              <SelectValue placeholder="Selecione uma categoria fixa" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Selecione uma categoria...</SelectItem>
+              {categories.map((c) => (
+                <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

@@ -7,7 +7,18 @@ export type ProductInput = {
   name: string;
   description: string | null;
   price: number | null;
+  category: string | null;
+  is_promoted: boolean;
   image_url_1: string | null;
+  image_url_2: string | null;
+  image_url_3: string | null;
+  image_url_4: string | null;
+  image_url_5: string | null;
+  image_url_6: string | null;
+  image_url_7: string | null;
+  image_url_8: string | null;
+  image_url_9: string | null;
+  image_url_10: string | null;
 };
 
 export function useProducts(companyId: string) {
@@ -16,7 +27,11 @@ export function useProducts(companyId: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("id, name, description, price, image_url_1, is_active")
+        .select(`
+          id, name, description, price, is_active, is_promoted, category,
+          image_url_1, image_url_2, image_url_3, image_url_4, image_url_5,
+          image_url_6, image_url_7, image_url_8, image_url_9, image_url_10
+        `)
         .eq("company_id", companyId)
         .order("created_at", { ascending: false });
       if (error) throw error;

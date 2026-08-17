@@ -22,6 +22,7 @@ import { Route as SitemapMainDotxmlRouteImport } from './routes/sitemap-main[.]x
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as TermosRouteImport } from './routes/termos'
+import { Route as VendasRouteImport } from './routes/vendas'
 import { Route as CitySlugIndexRouteImport } from './routes/$citySlug.index'
 import { Route as CitySlugBuscarRouteImport } from './routes/$citySlug.buscar'
 import { Route as CitySlugEventosRouteImport } from './routes/$citySlug.eventos'
@@ -133,6 +134,11 @@ const SobreRoute = SobreRouteImport.update({
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
   path: '/termos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VendasRoute = VendasRouteImport.update({
+  id: '/vendas',
+  path: '/vendas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CitySlugIndexRoute = CitySlugIndexRouteImport.update({
@@ -409,6 +415,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/vendas': typeof VendasRoute
   '/$citySlug/buscar': typeof CitySlugBuscarRoute
   '/$citySlug/eventos': typeof CitySlugEventosRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -469,6 +476,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/vendas': typeof VendasRoute
   '/$citySlug/buscar': typeof CitySlugBuscarRoute
   '/$citySlug/eventos': typeof CitySlugEventosRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -532,6 +540,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/vendas': typeof VendasRoute
   '/$citySlug/buscar': typeof CitySlugBuscarRoute
   '/$citySlug/eventos': typeof CitySlugEventosRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
@@ -596,6 +605,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sobre'
     | '/termos'
+    | '/vendas'
     | '/$citySlug/buscar'
     | '/$citySlug/eventos'
     | '/admin'
@@ -656,6 +666,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sobre'
     | '/termos'
+    | '/vendas'
     | '/$citySlug/buscar'
     | '/$citySlug/eventos'
     | '/admin'
@@ -718,6 +729,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sobre'
     | '/termos'
+    | '/vendas'
     | '/$citySlug/buscar'
     | '/$citySlug/eventos'
     | '/_authenticated/admin'
@@ -782,6 +794,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SobreRoute: typeof SobreRoute
   TermosRoute: typeof TermosRoute
+  VendasRoute: typeof VendasRoute
   AuthTwoFactorRoute: typeof AuthTwoFactorRoute
   CheckoutRetornoRoute: typeof CheckoutRetornoRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
@@ -898,6 +911,13 @@ declare module '@tanstack/react-router' {
       path: '/termos'
       fullPath: '/termos'
       preLoaderRoute: typeof TermosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendas': {
+      id: '/vendas'
+      path: '/vendas'
+      fullPath: '/vendas'
+      preLoaderRoute: typeof VendasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$citySlug/': {
@@ -1344,6 +1364,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SobreRoute: SobreRoute,
   TermosRoute: TermosRoute,
+  VendasRoute: VendasRoute,
   AuthTwoFactorRoute: AuthTwoFactorRoute,
   CheckoutRetornoRoute: CheckoutRetornoRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,

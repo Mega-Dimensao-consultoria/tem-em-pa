@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { queryOptions } from "@tanstack/react-query";
-import { Sparkles, ShieldCheck, Store, Mail as MailIcon } from "lucide-react";
+import { queryOptions, useQuery } from "@tanstack/react-query";
+import { Sparkles, ShieldCheck, Store, Mail as MailIcon, ChevronRight, ShoppingBag, MapPin } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { CityAutocomplete } from "@/components/CityAutocomplete";
 import { ContactDialog } from "@/features/contact/ContactDialog";
@@ -12,6 +12,11 @@ import { listActiveCities } from "@/features/cities/functions/list";
 import { seoGlobalsServerQO } from "@/features/seo/functions/getGlobals";
 import { resolveSeo, buildSeoHead } from "@/lib/seo/render";
 import type { SeoGlobals } from "@/lib/seo/types";
+
+import { supabase } from "@/integrations/supabase/client";
+import { cn } from "@/lib/utils";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const BASE = "https://www.temnaminhacidade.com.br";
 
@@ -64,6 +69,84 @@ export const Route = createFileRoute("/")({
   notFoundComponent: () => null,
 });
 
+function PromotedProductsGrid() {
+  const { data: products, isLoading } = useQuery({
+    queryKey: ["homepage-promoted-products"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select(`
+          id, name, price, is_promoted, image_url_1,
+          company:companies(
+            id,
+            name,
+            city:cities(name, state)
+          )
+        `)
+        .eq("is_active", true)
+        .eq("is_promoted", true)
+        .eq("companies.status", "approved")
+        .not("image_url_1", "is", null)
+        .order("created_at", { ascending: false })
+        .limit(8);
+
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {Array(4).fill(0).map((_, i) => (
+          <div key={i} className="space-y-3 animate-pulse">
+            <div className="aspect-square bg-muted rounded-2xl" />
+            <div className="h-4 bg-muted rounded w-3/4" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (!products || products.length === 0) return null;
+
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {products.map((p) => (
+        <Link 
+          key={p.id} 
+          to="/vendas"
+          className="group block"
+        >
+          <Card className="overflow-hidden border-border/50 hover:border-primary/30 transition-all rounded-2xl">
+            <div className="relative aspect-square bg-muted overflow-hidden">
+              <img
+                src={p.image_url_1!}
+                alt={p.name}
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              {p.price && (
+                <div className="absolute bottom-2 right-2">
+                  <Badge className="bg-background/90 backdrop-blur-sm text-primary font-bold shadow-sm">
+                    R$ {Number(p.price).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                  </Badge>
+                </div>
+              )}
+            </div>
+            <CardContent className="p-3">
+              <h3 className="font-semibold text-sm line-clamp-1 group-hover:text-primary transition-colors">{p.name}</h3>
+              <div className="flex items-center gap-1 mt-1 text-[10px] text-muted-foreground uppercase tracking-wider font-medium">
+                <MapPin className="h-2.5 w-2.5" />
+                <span>{(p.company as any).city.name}</span>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
 function Hub() {
   return (
     <PageShell>
@@ -104,6 +187,23 @@ function Hub() {
         title="Empresas em destaque agora"
         subtitle="Selecionadas em tempo real entre as empresas com destaque ativo."
       />
+
+      <section className="mx-auto max-w-6xl px-4 py-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+          <div>
+            <h2 className="font-display text-3xl font-bold tracking-tight">O que estão vendendo?</h2>
+            <p className="text-muted-foreground mt-1">Confira os últimos produtos anunciados no marketplace local.</p>
+          </div>
+          <Link 
+            to="/vendas" 
+            className="text-sm font-bold text-primary hover:underline flex items-center gap-1 group"
+          >
+            Ver tudo no marketplace
+            <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </div>
+        <PromotedProductsGrid />
+      </section>
 
       <FaqSection />
 

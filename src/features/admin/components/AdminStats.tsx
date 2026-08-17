@@ -12,6 +12,7 @@ export function AdminStats() {
     { label: "Comentários p/ moderar", value: data?.reviewsPending ?? "—", tone: data?.reviewsPending ? "warn" : "muted" },
     { label: "Denúncias abertas", value: data?.reportsPending ?? "—", tone: data?.reportsPending ? "danger" : "muted" },
     { label: "Usuários", value: data?.users ?? "—", tone: "muted" },
+    { label: "Produtos", value: data?.products ?? "—", tone: "muted" },
   ];
 
   return (

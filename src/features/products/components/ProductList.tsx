@@ -12,7 +12,7 @@ export type ProductRowItem = {
   description: string | null;
   price: number | null;
   category: string | null;
-  is_promoted: boolean;
+  is_promoted: boolean | null;
   is_active: boolean;
   image_url_1: string | null;
   image_url_2?: string | null;

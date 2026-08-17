@@ -70,7 +70,7 @@ export function MarketplaceAdminTab() {
   });
 
   const toggleCompany = useMutation({
-    mutationFn: (args: { companyId: string; isActive: boolean }) => toggleCompanyProducts(args),
+    mutationFn: (args: { companyId: string; isActive: boolean }) => toggleCompanyProducts({ data: args }),
     onSuccess: () => {
       toast.success("Produtos da empresa atualizados");
       qc.invalidateQueries({ queryKey: ["admin-products"] });

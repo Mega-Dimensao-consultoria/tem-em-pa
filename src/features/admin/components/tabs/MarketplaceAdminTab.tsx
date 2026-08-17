@@ -44,11 +44,13 @@ export function MarketplaceAdminTab() {
   const { data, isLoading } = useQuery({
     queryKey: ["admin-products", page, pageSize, search, status, categoryId],
     queryFn: () => getAdminProducts({ 
-      page, 
-      pageSize, 
-      search, 
-      status, 
-      categoryId: categoryId === "all" ? undefined : categoryId 
+      data: {
+        page, 
+        pageSize, 
+        search, 
+        status, 
+        categoryId: categoryId === "all" ? undefined : categoryId 
+      }
     }),
   });
 

@@ -188,6 +188,23 @@ function Hub() {
         subtitle="Selecionadas em tempo real entre as empresas com destaque ativo."
       />
 
+      <section className="mx-auto max-w-6xl px-4 py-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+          <div>
+            <h2 className="font-display text-3xl font-bold tracking-tight">O que estão vendendo?</h2>
+            <p className="text-muted-foreground mt-1">Confira os últimos produtos anunciados no marketplace local.</p>
+          </div>
+          <Link 
+            to="/vendas" 
+            className="text-sm font-bold text-primary hover:underline flex items-center gap-1 group"
+          >
+            Ver tudo no marketplace
+            <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </div>
+        <PromotedProductsGrid />
+      </section>
+
       <FaqSection />
 
       <section className="mx-auto max-w-6xl px-4 pb-20 pt-8">

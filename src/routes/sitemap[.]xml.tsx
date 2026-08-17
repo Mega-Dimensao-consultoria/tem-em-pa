@@ -17,7 +17,7 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const { companyCount, neighborhoodCount, cityCount } =
+        const { companyCount, neighborhoodCount, cityCount, productCount } =
           await getSitemapCounts();
 
         const children: { path: string }[] = [{ path: "/sitemap-main.xml" }];

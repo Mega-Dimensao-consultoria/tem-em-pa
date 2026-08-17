@@ -161,7 +161,7 @@ export function ProductForm({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="none">Selecione uma categoria...</SelectItem>
-              {categories.map((c) => (
+              {categories.map((c: any) => (
                 <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
               ))}
             </SelectContent>

@@ -25,6 +25,14 @@ import {
 import { useAuth } from "@/features/auth/use-auth";
 
 export const Route = createFileRoute("/vendas")({
+  head: () => ({
+    meta: [
+      { title: "Marketplace — O que estão vendendo na minha cidade?" },
+      { name: "description", content: "Explore produtos, móveis, eletrônicos e ofertas exclusivas de empresas e vendedores locais na sua região." },
+      { property: "og:title", content: "Marketplace Local — Tem na minha cidade" },
+      { property: "og:description", content: "Conectando quem precisa com quem oferece o melhor produto na sua cidade." },
+    ],
+  }),
   component: MarketplacePage,
 });
 

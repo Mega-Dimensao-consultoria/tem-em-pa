@@ -28,18 +28,14 @@ export function useAdminCategories(type: "company" | "product" = "company") {
   return useQuery({
     queryKey: type === "company" ? adminKeys.categories() : ["admin", "product-categories"],
     queryFn: async () => {
-      const table = type === "company" ? "categories" : "product_categories";
-      const columns = type === "company" 
-        ? "id, name, slug, icon, sort_order, seo_title, seo_description, og_image_url, canonical_url, noindex"
-        : "id, name, slug, sort_order";
+      const query = type === "company" 
+        ? supabase.from("categories").select("id, name, slug, icon, sort_order, seo_title, seo_description, og_image_url, canonical_url, noindex")
+        : supabase.from("product_categories").select("id, name, slug, sort_order");
       
-      const { data, error } = await supabase
-        .from(table as any)
-        .select(columns)
-        .order("sort_order");
+      const { data, error } = await query.order("sort_order");
       
       if (error) throw error;
-      return data as AdminCategory[];
+      return (data as any) as AdminCategory[];
     },
   });
 }
@@ -47,25 +43,23 @@ export function useAdminCategories(type: "company" | "product" = "company") {
 export function useSaveCategory(type: "company" | "product" = "company") {
   return useAdminMutation<CategoryPayload, { id: string }>({
     mutationFn: async ({ id, name, slug, icon, sort_order }) => {
-      const table = type === "company" ? "categories" : "product_categories";
       const payload: any = { name, slug, sort_order };
       if (type === "company") payload.icon = icon;
 
       if (id) {
-        const { error } = await supabase
-          .from(table as any)
+        const { error } = await (supabase.from(type === "company" ? "categories" : "product_categories") as any)
           .update(payload)
           .eq("id", id);
         if (error) throw error;
         return { id };
       }
-      const { data, error } = await supabase
-        .from(table as any)
+      
+      const { data, error } = await (supabase.from(type === "company" ? "categories" : "product_categories") as any)
         .insert(payload)
         .select("id")
         .single();
       if (error) throw error;
-      return { id: data.id };
+      return { id: (data as any).id };
     },
     audit: (vars, { id }) => ({
       action: vars.id ? `${type}_category.update` : `${type}_category.create`,
@@ -85,8 +79,9 @@ export function useSaveCategory(type: "company" | "product" = "company") {
 export function useDeleteCategory(type: "company" | "product" = "company") {
   return useAdminMutation<{ id: string; name: string }>({
     mutationFn: async ({ id }) => {
-      const table = type === "company" ? "categories" : "product_categories";
-      const { error } = await supabase.from(table as any).delete().eq("id", id);
+      const { error } = await (supabase.from(type === "company" ? "categories" : "product_categories") as any)
+        .delete()
+        .eq("id", id);
       if (error) throw error;
     },
     audit: ({ id, name }) => ({

@@ -2,11 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PageShell } from "@/components/PageShell";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { 
   Search, MapPin, Tag, ShoppingBag, Store, MessageSquare, 
-  ChevronLeft, ChevronRight, X, Phone, Filter, SlidersHorizontal 
+  ChevronLeft, ChevronRight, Filter, SlidersHorizontal 
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useAuth } from "@/features/auth/use-auth";
 
 export const Route = createFileRoute("/vendas")({
   head: () => ({
@@ -53,6 +52,7 @@ type MarketplaceProduct = {
   image_url_8: string | null;
   image_url_9: string | null;
   image_url_10: string | null;
+  product_category_id: string | null;
   company: {
     id: string;
     name: string;
@@ -66,11 +66,24 @@ type MarketplaceProduct = {
 
 function MarketplacePage() {
   const [search, setSearch] = useState("");
+  const [categoryId, setCategoryId] = useState<string>("all");
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000]);
+  const [minPriceInput, setMinPriceInput] = useState("0");
+  const [maxPriceInput, setMaxPriceInput] = useState("5000");
   const [selectedProduct, setSelectedProduct] = useState<MarketplaceProduct | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
+  const { data: categories = [] } = useQuery({
+    queryKey: ["product-categories-public"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("product_categories").select("*").order("sort_order");
+      if (error) throw error;
+      return data;
+    }
+  });
+
   const { data: products, isLoading } = useQuery({
-    queryKey: ["marketplace-products", search],
+    queryKey: ["marketplace-products", search, categoryId, priceRange],
     queryFn: async () => {
       let query = supabase
         .from("products")
@@ -85,19 +98,50 @@ function MarketplacePage() {
         `)
         .eq("is_active", true)
         .eq("companies.status", "approved")
-        .not("image_url_1", "is", null)
-        .order("is_promoted", { ascending: false })
-        .order("created_at", { ascending: false });
+        .not("image_url_1", "is", null);
 
       if (search) {
         query = query.ilike("name", `%${search}%`);
       }
+      
+      if (categoryId !== "all") {
+        query = query.eq("product_category_id", categoryId);
+      }
 
-      const { data, error } = await query.limit(50);
+      if (priceRange[0] > 0) {
+        query = query.gte("price", priceRange[0]);
+      }
+      if (priceRange[1] < 5000) {
+        query = query.lte("price", priceRange[1]);
+      }
+
+      const { data, error } = await query
+        .order("is_promoted", { ascending: false })
+        .order("created_at", { ascending: false })
+        .limit(50);
+
       if (error) throw error;
       return (data as unknown as MarketplaceProduct[]) || [];
     },
   });
+
+  const handlePriceInputChange = (type: "min" | "max", val: string) => {
+    if (type === "min") {
+      setMinPriceInput(val);
+      const num = Number(val);
+      if (!isNaN(num)) setPriceRange([num, priceRange[1]]);
+    } else {
+      setMaxPriceInput(val);
+      const num = Number(val);
+      if (!isNaN(num)) setPriceRange([priceRange[0], num]);
+    }
+  };
+
+  const handleSliderChange = (vals: number[]) => {
+    setPriceRange([vals[0], vals[1]]);
+    setMinPriceInput(vals[0].toString());
+    setMaxPriceInput(vals[1].toString());
+  };
 
   const openProduct = (p: MarketplaceProduct) => {
     setSelectedProduct(p);

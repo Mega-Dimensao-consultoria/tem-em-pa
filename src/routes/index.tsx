@@ -88,11 +88,11 @@ function Hub() {
 
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground">
             <span className="inline-flex items-center gap-1.5">
-              <ShieldCheck className="h-4 w-4 text-secondary" /> Empresas verificadas
+              <ShieldCheck className="h-4 w-4 text-secondary" /> apoiando os pequenos negócios!
             </span>
-            <span className="text-border">•</span>
+            <span className="text-border">--&gt;</span>
             <span className="inline-flex items-center gap-1.5">
-              <Store className="h-4 w-4 text-secondary" /> Comércio local
+              <Store className="h-4 w-4 text-secondary" /> Na sua cidade
             </span>
           </div>
         </div>

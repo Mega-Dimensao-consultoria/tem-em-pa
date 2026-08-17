@@ -4,22 +4,22 @@ const PILLARS = [
   {
     icon: MapPin,
     title: "Perto de você",
-    text: "Empresas organizadas por cidade, bairro e categoria, para achar rápido quem atende na sua região.",
+    text: "Empresas e pequenos negócios, todos organizados por cidade, bairro e categoria, para achar rápido quem atende na sua região. Conectando quem precisa com quem oferece o serviço!",
   },
   {
     icon: Users,
     title: "Gratuito para usar",
-    text: "Buscar comércios, serviços e eventos é 100% gratuito para moradores e visitantes.",
+    text: "procurar comércios, serviços e eventos é 100% gratuito para moradores e visitantes. Basta selecionara sua cidade, e encontrar aquele profissional que fará o serviço que você precisa.",
   },
   {
     icon: Star,
     title: "Avaliações reais",
-    text: "Opiniões de clientes de verdade e empresas verificadas para você escolher com confiança.",
+    text: "As opiniões dos clientes são reais! Gostou do serviço de alguém que conheceu em nossa plataforma? Então deixe sua avaliação e indique para mais pessoas.",
   },
   {
     icon: Store,
     title: "Feito para o comércio local",
-    text: "Cadastro básico gratuito em qualquer cidade do Brasil, com página própria e contato direto.",
+    text: "Cadastre seu pequeno negócio gratuitamente, logo que aprovamos o seu cadastro, você recebe um mini-site para que você possa divulgar seus produtos e serviços e deixar sua marca online.",
   },
 ];
 

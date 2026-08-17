@@ -1668,6 +1668,38 @@ export type Database = {
       }
     }
     Views: {
+      company_promotions_public: {
+        Row: {
+          company_id: string | null
+          ends_at: string | null
+          id: string | null
+          starts_at: string | null
+          status: Database["public"]["Enums"]["promotion_status"] | null
+        }
+        Insert: {
+          company_id?: string | null
+          ends_at?: string | null
+          id?: string | null
+          starts_at?: string | null
+          status?: Database["public"]["Enums"]["promotion_status"] | null
+        }
+        Update: {
+          company_id?: string | null
+          ends_at?: string | null
+          id?: string | null
+          starts_at?: string | null
+          status?: Database["public"]["Enums"]["promotion_status"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_promotions_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reviews_public: {
         Row: {
           comment: string | null
@@ -1677,6 +1709,7 @@ export type Database = {
           is_anonymous: boolean | null
           owner_reply: string | null
           owner_reply_at: string | null
+          photos: string[] | null
           rating: number | null
           status: Database["public"]["Enums"]["review_status"] | null
           user_id: string | null
@@ -1689,6 +1722,7 @@ export type Database = {
           is_anonymous?: boolean | null
           owner_reply?: string | null
           owner_reply_at?: string | null
+          photos?: string[] | null
           rating?: number | null
           status?: Database["public"]["Enums"]["review_status"] | null
           user_id?: never
@@ -1701,6 +1735,7 @@ export type Database = {
           is_anonymous?: boolean | null
           owner_reply?: string | null
           owner_reply_at?: string | null
+          photos?: string[] | null
           rating?: number | null
           status?: Database["public"]["Enums"]["review_status"] | null
           user_id?: never

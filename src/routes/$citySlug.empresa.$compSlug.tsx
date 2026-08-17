@@ -71,7 +71,7 @@ const privateBySlugQO = (p: SlugParams) =>
           .eq("company_id", companyId)
           .eq("is_active", true),
         supabase
-          .from("reviews")
+          .from("reviews_public")
           .select("id, rating, comment, created_at, owner_reply, owner_reply_at, photos")
           .eq("company_id", companyId)
           .eq("status", "approved")

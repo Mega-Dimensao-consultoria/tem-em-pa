@@ -74,7 +74,7 @@ export function CategoriesTab({ type = "company" }: { type?: "company" | "produc
             </thead>
             <tbody>
               {pg.paged.map((c) => (
-                <CategoryRow key={c.id} category={c} onEdit={setEditing} />
+                <CategoryRow key={c.id} category={c} onEdit={setEditing} type={type} />
               ))}
             </tbody>
           </table>

@@ -1,0 +1,18 @@
+GRANT EXECUTE ON FUNCTION public.get_or_create_neighborhood(uuid, text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.company_moderation_enabled() TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.list_promoted_companies(uuid, integer) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.get_public_profile_reviews(text, integer) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.get_site_page_version_by_token(uuid) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.sitemap_cities_page(integer, integer) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.sitemap_companies_page(integer, integer) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.sitemap_neighborhoods_page(integer, integer) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.get_my_reviews() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.get_company_reviews_for_owner(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.company_promotion_eligibility(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.admin_grant_promotion(uuid, timestamptz, timestamptz) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.admin_cancel_promotion(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.admin_reseed_stats() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.admin_merge_companies(uuid, uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.admin_resolve_review_report(uuid, text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.purge_email_dlq() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.retry_email_dlq() TO authenticated;
